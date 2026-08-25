@@ -67,6 +67,9 @@ The protected difference is visible in the accepted sources:
   the raw-return artifact kind and hash, and detects event/ledger corruption on reads. It does
   not dispatch an operator, independently prove that a tool call occurred, validate opaque state
   or boundary semantics, decode a raw return, resolve an answer, or establish a claim.
+- Event and ledger checks now require the named `BoundaryRef` to resolve and rehash as a genuine
+  `BoundaryChart`, in addition to requiring the raw-return artifact. They do not validate the
+  chart's opaque projections, determinations, use frontiers, seed, compatibility, or open roles.
 - `ProgramIR` has only the canonical runtime terminators: typed `Return`, nonempty `Branch`, and
   `Probe` with an explicit resume target. Its verifier rechecks returns and target closure and
   rejects presently unguarded branch-only recurrence. A probe step suspends and a resumption

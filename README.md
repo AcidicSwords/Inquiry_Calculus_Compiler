@@ -122,9 +122,9 @@ shape discrepancy conservatively: it requires the canonical `BoundaryRef` and se
 the plan's optional `DistinctionRef`, alongside parent, state, question, operator, raw return,
 grain, route, binding, backend-version, and provenance references. The SQLite event ledger writes
 the event artifact and head-linked ledger row atomically; it rejects forks/stale parents and
-non-raw return artifacts, and revalidates event/raw-return identity on read. It does not dispatch
-a probe, validate opaque state/boundary/operator contracts, decode the result, resolve an answer,
-or prove a semantic interpretation.
+non-raw return or non-chart boundary artifacts, and revalidates event/raw-return/boundary identity
+on read. It does not dispatch a probe, validate opaque state/boundary/operator contracts, decode
+the result, resolve an answer, or prove a semantic interpretation.
 
 Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and
 program routes each preserve their input/output types and referenced route identity. Checking

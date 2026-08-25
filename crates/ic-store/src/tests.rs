@@ -1,7 +1,8 @@
 use ic_core::{
-    ActualEvent, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryRef, EventRef, GrainRef,
-    OperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnError, RawReturnRef, RouteRef,
-    StateRef, TyIR, TypeArtifact,
+    ActualEvent, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef,
+    DeterminationPresentationRef, EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef,
+    ProvenanceRef, QueryRef, RawReturn, RawReturnError, RawReturnRef, RelationRef, RelationUseRef,
+    RouteRef, StateRef, TyIR, TypeArtifact, TypeRef,
 };
 
 use super::*;
@@ -40,11 +41,35 @@ async fn event_fixture(
         .insert(&raw_envelope)
         .await
         .expect("raw return must insert");
+    let chart_field = stored_ref(store, b"boundary-chart-field").await;
+    let chart = BoundaryChart::new(
+        QueryRef::from_artifact_ref(chart_field),
+        TypeRef::from_artifact_ref(chart_field),
+        TypeRef::from_artifact_ref(chart_field),
+        TypeRef::from_artifact_ref(chart_field),
+        RelationRef::from_artifact_ref(chart_field),
+        RelationRef::from_artifact_ref(chart_field),
+        DeterminationPresentationRef::from_artifact_ref(chart_field),
+        None,
+        vec![],
+        vec![],
+        RelationUseRef::from_artifact_ref(chart_field),
+        FormulaRef::from_artifact_ref(chart_field),
+        None,
+        GrainRef::from_artifact_ref(chart_field),
+        HorizonRef::from_artifact_ref(chart_field),
+    );
+    let boundary = BoundaryRef::from_artifact_ref(
+        store
+            .insert(&chart.envelope().expect("boundary chart must encode"))
+            .await
+            .expect("boundary chart must insert"),
+    );
     ActualEvent::new(
         ledger_parent,
         StateRef::from_artifact_ref(stored_ref(store, b"state-before").await),
         QueryRef::from_artifact_ref(stored_ref(store, b"question").await),
-        BoundaryRef::from_artifact_ref(stored_ref(store, b"boundary").await),
+        boundary,
         None,
         OperatorRef::from_artifact_ref(stored_ref(store, b"operator").await),
         ic_core::RawReturnRef::from_artifact_ref(raw_return),
@@ -140,6 +165,28 @@ async fn actual_event_append_rejects_stale_parent_and_detects_ledger_corruption(
         store.append_actual_event(&wrong_raw_event).await,
         Err(StoreError::RawReturn(
             RawReturnError::UnexpectedArtifactKind { .. }
+        ))
+    ));
+    let wrong_boundary = BoundaryRef::from_artifact_ref(stored_ref(&store, b"not-boundary").await);
+    let wrong_boundary_event = ActualEvent::new(
+        first.ledger_parent(),
+        first.state_before(),
+        first.question(),
+        wrong_boundary,
+        first.distinction(),
+        first.operator(),
+        first.raw_return(),
+        first.state_after(),
+        first.grain(),
+        first.route(),
+        first.binding(),
+        first.backend_version(),
+        first.provenance(),
+    );
+    assert!(matches!(
+        store.append_actual_event(&wrong_boundary_event).await,
+        Err(StoreError::BoundaryChart(
+            ic_core::BoundaryChartError::UnexpectedArtifactKind { .. }
         ))
     ));
     let first_ref = store

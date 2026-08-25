@@ -7,8 +7,8 @@
 use std::{collections::BTreeSet, str::FromStr};
 
 use ic_core::{
-    ActualEvent, ActualEventError, ArtifactEnvelope, ArtifactError, ArtifactRef, EventRef,
-    RawReturn, RawReturnError, RawReturnRef,
+    ActualEvent, ActualEventError, ArtifactEnvelope, ArtifactError, ArtifactRef, BoundaryChart,
+    BoundaryChartError, BoundaryRef, EventRef, RawReturn, RawReturnError, RawReturnRef,
 };
 use sqlx::{
     SqlitePool,
@@ -179,6 +179,7 @@ impl ArtifactStore {
         let envelope = event.envelope()?;
         let encoded = envelope.encode()?;
         self.verify_raw_return(event.raw_return()).await?;
+        self.verify_boundary_chart(event.boundary()).await?;
         let mut transaction = self.pool.begin().await?;
 
         let unique_references: BTreeSet<_> = event.referenced_artifacts().into_iter().collect();
@@ -273,6 +274,7 @@ impl ArtifactStore {
             return Err(StoreError::EventLedgerCorrupt(event_ref));
         }
         self.verify_raw_return(event.raw_return()).await?;
+        self.verify_boundary_chart(event.boundary()).await?;
         Ok(Some(event))
     }
 
@@ -316,6 +318,21 @@ impl ArtifactStore {
         }
         Ok(())
     }
+
+    async fn verify_boundary_chart(&self, boundary: BoundaryRef) -> Result<(), StoreError> {
+        let envelope = self.get(boundary.as_artifact_ref()).await?.ok_or(
+            StoreError::MissingReferencedArtifact(boundary.as_artifact_ref()),
+        )?;
+        let chart = BoundaryChart::from_envelope(&envelope)?;
+        let calculated = chart.boundary_ref()?;
+        if calculated != boundary {
+            return Err(StoreError::CorruptReference {
+                stored: boundary.as_artifact_ref(),
+                calculated: calculated.as_artifact_ref(),
+            });
+        }
+        Ok(())
+    }
 }
 
 fn parse_artifact_ref(bytes: Vec<u8>) -> Result<ArtifactRef, StoreError> {
@@ -349,6 +366,9 @@ pub enum StoreError {
 
     #[error("raw-return encoding failed")]
     RawReturn(#[from] RawReturnError),
+
+    #[error("boundary-chart encoding failed")]
+    BoundaryChart(#[from] BoundaryChartError),
 
     #[error("expected artifact reference {expected}, but envelope calculated {calculated}")]
     ReferenceMismatch {

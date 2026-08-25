@@ -11,8 +11,9 @@ use std::{fmt, str::FromStr};
 use thiserror::Error;
 
 use crate::{
-    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef, DistinctionRef,
-    GrainRef, QueryRef, RawReturn, RawReturnError, RawReturnRef,
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart,
+    BoundaryChartError, DistinctionRef, GrainRef, QueryRef, RawReturn, RawReturnError,
+    RawReturnRef,
 };
 
 /// Canonical artifact kind for one ordinary, realized actuality occurrence.
@@ -399,9 +400,36 @@ pub fn check_raw_return<C: RawReturnCatalog>(
     Ok(())
 }
 
+/// Verifies the typed raw-return and boundary-chart identities retained by an actual event.
+///
+/// This does not validate an actual dispatch or the opaque state, question, operator, route,
+/// backend, provenance, or chart-field semantics. Those contracts remain distinct later work.
+pub fn check_actual_event<C: ActualEventCatalog>(
+    event: &ActualEvent,
+    catalog: &C,
+) -> Result<(), ActualEventCheckError> {
+    check_raw_return(event, catalog)?;
+    let chart = catalog
+        .resolve_boundary_chart(event.boundary)
+        .ok_or(ActualEventCheckError::UnresolvedBoundary(event.boundary))?;
+    let calculated = chart.boundary_ref()?;
+    if calculated != event.boundary {
+        return Err(ActualEventCheckError::BoundaryIdentityMismatch {
+            reference: event.boundary,
+            calculated,
+        });
+    }
+    Ok(())
+}
+
 /// Minimal catalog required to verify the preserved opaque raw return.
 pub trait RawReturnCatalog {
     fn resolve_raw_return(&self, reference: RawReturnRef) -> Option<RawReturn>;
+}
+
+/// The currently available catalog boundary for actual-event identity checking.
+pub trait ActualEventCatalog: RawReturnCatalog {
+    fn resolve_boundary_chart(&self, reference: BoundaryRef) -> Option<BoundaryChart>;
 }
 
 /// Errors from the currently available actual-event validation boundary.
@@ -411,11 +439,20 @@ pub enum ActualEventCheckError {
     Encoding(#[from] ActualEventError),
     #[error(transparent)]
     RawReturn(#[from] RawReturnError),
+    #[error(transparent)]
+    BoundaryChart(#[from] BoundaryChartError),
     #[error("raw return {0} is unavailable from the declared catalog")]
     UnresolvedRawReturn(RawReturnRef),
     #[error("catalog raw return {reference} hashes to {calculated}, not its claimed identity")]
     RawReturnIdentityMismatch {
         reference: RawReturnRef,
         calculated: RawReturnRef,
+    },
+    #[error("boundary chart {0} is unavailable from the declared catalog")]
+    UnresolvedBoundary(BoundaryRef),
+    #[error("catalog boundary chart {reference} hashes to {calculated}, not its claimed identity")]
+    BoundaryIdentityMismatch {
+        reference: BoundaryRef,
+        calculated: BoundaryRef,
     },
 }
