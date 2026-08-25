@@ -1,4 +1,4 @@
-use ic_core::{ArtifactKind, ArtifactRef, BindingVersionRef, TyIR, TypeArtifact};
+use ic_core::{ArtifactKind, ArtifactRef, BindingVersionRef, RawReturn, TyIR, TypeArtifact};
 
 use super::*;
 
@@ -49,6 +49,24 @@ async fn insertion_fetch_and_duplicate_insertion_are_exact() {
     assert_eq!(
         store.get(first_ref).await.expect("fetch must pass"),
         Some(artifact)
+    );
+}
+
+#[tokio::test]
+async fn raw_returns_persist_as_opaque_immutable_artifacts_without_decoding() {
+    let store = migrated_store().await;
+    let raw = RawReturn::new(vec![0, 0xff, b'{', b'"', 0, b'}']);
+    let envelope = raw.envelope().expect("raw return must encode");
+    let reference = store.insert(&envelope).await.expect("insert must pass");
+    let stored = store
+        .get(reference)
+        .await
+        .expect("fetch must pass")
+        .expect("raw return must be stored");
+    assert_eq!(stored.canonical_payload(), raw.bytes());
+    assert_eq!(
+        RawReturn::from_envelope(&stored).expect("raw return must remain decodable"),
+        raw
     );
 }
 

@@ -76,6 +76,7 @@ or passing.
 | P5-RUNTIME-002 empty, dangling, and unguarded branch control-flow rejection | PASS | `ic-runtime::program::runtime_verifier_rejects_empty_dangling_and_unguarded_branch_control_flow` |
 | P6-RAW-001 raw-return opaque byte preservation and content identity | PASS | `raw_return_identity::raw_return_preserves_exact_opaque_bytes_and_domain_separates_identity` |
 | P6-RAW-002 raw-return envelope-domain rejection | PASS | `raw_return_identity::raw_return_rejects_the_wrong_envelope_domain` |
+| P6-RAW-003 raw-return opaque artifact-store round trip | PASS | `ic-store::tests::raw_returns_persist_as_opaque_immutable_artifacts_without_decoding` |
 
 ## Pending specification and plan categories
 
