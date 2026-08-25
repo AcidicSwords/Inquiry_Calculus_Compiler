@@ -62,6 +62,7 @@ or passing.
 | P3-IPROG-002 malformed first-order program rejection | PASS | `iprog_identity::rejects_malformed_inquiry_program_encodings` |
 | P3-IPROG-003 explicit named environment identity, declared dependencies, and duplicate-name rejection | PASS | `iprog_identity::{first_order_return_and_ask_round_trip_without_closures,rejects_duplicate_explicit_environment_names}` |
 | P3-IPROG-004 structural program checking revalidates result, typed forms, query, and continuation | PASS | `relation_schema::first_order_program_check_rejects_forged_or_result_mismatched_continuations` |
+| P3-IPROG-005 stable Ask-with-environment byte/hash vector | PASS | `fixtures/iprogs/iprog-v2-ask-environment.json` |
 
 ## Pending specification and plan categories
 

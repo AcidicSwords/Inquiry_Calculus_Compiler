@@ -3,9 +3,61 @@ use ic_core::{
     IProgArtifact, IProgError, IProgIR, IProgRef, ProgramBinding, QueryRef, TypeRef, TypeSymbol,
     TypedFormRef,
 };
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+struct KnownVector {
+    kind: String,
+    schema_version: u32,
+    payload_hex: String,
+    encoded_hex: String,
+    sha256: String,
+}
 
 fn artifact(byte: u8) -> ArtifactRef {
     ArtifactRef::from_bytes([byte; 32])
+}
+
+fn ask_environment_vector() -> KnownVector {
+    serde_json::from_str(include_str!(
+        "../../../fixtures/iprogs/iprog-v2-ask-environment.json"
+    ))
+    .expect("known inquiry-program vector must be valid JSON")
+}
+
+#[test]
+fn ask_with_environment_matches_independent_canonical_vector() {
+    let program = IProgArtifact::new(
+        TypeRef::from_artifact_ref(artifact(0x11)),
+        IProgIR::Ask {
+            question: QueryRef::from_artifact_ref(artifact(0x33)),
+            environment: vec![ProgramBinding::new(
+                TypeSymbol::new("standing").expect("environment name must be valid"),
+                TypedFormRef::from_artifact_ref(artifact(0x55)),
+            )],
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: IProgRef::from_artifact_ref(artifact(0x44)),
+        },
+    );
+    let envelope = program.envelope().expect("program must encode");
+    let vector = ask_environment_vector();
+    assert_eq!(envelope.kind().as_str(), vector.kind);
+    assert_eq!(envelope.schema_version(), vector.schema_version);
+    assert_eq!(
+        hex::encode(envelope.canonical_payload()),
+        vector.payload_hex
+    );
+    assert_eq!(
+        hex::encode(envelope.encode().expect("program must encode")),
+        vector.encoded_hex
+    );
+    assert_eq!(
+        envelope
+            .artifact_ref()
+            .expect("program must hash")
+            .to_string(),
+        vector.sha256
+    );
 }
 
 #[test]
