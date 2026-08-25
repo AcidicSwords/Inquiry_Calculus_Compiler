@@ -12,9 +12,9 @@ decoded/undefined/unknown results and can tie a single-open-port direct decoder 
 ordinary event record. Phase 6 now has canonical ordinary-event identity and append-only journal
 linkage. A derived structural view can now connect one preserved decoded candidate to its exact
 declared observation use; general supported-answer materialization remains reserved for the
-Phase 6/7 actuality-and-resolution boundary. Phase 11 now has canonical claim identity and
-structural provenance checking, but no canonical support-environment identity or claim admission
-linkage.
+Phase 6/7 actuality-and-resolution boundary. Phase 11 now has canonical claim and candidate
+support-environment identity with structural provenance checking, but no `SupportRef` resolution
+or claim admission linkage.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -33,8 +33,8 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> Given an oriented typed finite incompatibility pair and canonical candidate claim records, what
-> is the smallest canonical support-environment and claim-linkage boundary that can establish
+> Given a canonical candidate support environment and an oriented typed finite incompatibility
+> pair, what is the smallest checked `SupportRef`/claim-admission linkage that can establish
 > standing, determination relevance, and non-circularity without turning failed search,
 > projection, incomplete coverage, or caller-declared data into exteriority or silently collapsing
 > semantic and execution coverage?
@@ -329,8 +329,12 @@ dependency boundary — and carries applicability, independent-check success, an
 policy as caller declarations, none of which has an evaluator in this phase. Several incomparable
 environments may support one claim, and one closing route suffices. The engine reasons from the
 declarations it is given: it does not verify that an ingress fact is grounded or that a declared
-check ran, and the `SupportRef` fields carried by relation uses and departure witnesses are still
-opaque and unconnected to any `ClaimRef`.
+check ran. `SupportEnvironmentArtifact` now preserves a tagged claim-or-relation target, premises,
+actual returns, checker/assumption/dependency identities, applicability, and scope under one
+content address; it rechecks claim/raw-return identities, relation schemas, and claim-target
+context but does not evaluate opaque roles or close a route. The `SupportRef` fields carried by
+relation uses and departure witnesses are still
+opaque and unconnected to a resolved support environment or `ClaimRef`.
 
 ## Known later questions
 

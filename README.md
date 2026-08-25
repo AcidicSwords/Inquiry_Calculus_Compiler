@@ -208,8 +208,16 @@ source question, preserved raw-return references, resolution paths, scope, appli
 declared lifecycle status. Its checker rehashes the typed/provenance references, rejects duplicate
 references and malformed status tags, and is intentionally not an admission rule: `Standing` in a
 claim artifact is only a stated status, not proof that any support route closed. The derived
-least-fixed-point standing engine remains separate until support-environment identity and
-claim/support linkage are implemented.
+least-fixed-point standing engine remains separate.
+
+`SupportEnvironmentArtifact` now gives a candidate support route canonical identity: tagged
+claim-or-relation target, generic premise references, preserved raw returns, checker and assumption references, open
+dependencies, applicability, and scope. Its checker rehashes a claim target and actual
+returns; it rehashes a relation target as a relation schema, and requires a claim target's declared
+context to agree. It deliberately does not run
+opaque checkers, evaluate assumptions or open dependencies, assert closure, map a `SupportRef`
+back to an environment, or admit the target claim as standing. Those remain the next
+claim/support-admission boundary.
 
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates

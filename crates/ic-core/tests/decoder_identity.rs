@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use ic_core::{
     ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef,
     ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
-    ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
+    ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DecodedObservationError, DecoderRef, DeterminationPresentationRef, DischargeMode,
     FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
     FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
@@ -12,7 +12,9 @@ use ic_core::{
     ProbeOperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
     RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
     RelationUse, RelationUseContext, RelationUseRef, ResolutionCatalog, ResolutionPath,
-    ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, StateRef, SupportRef, TyIR,
+    ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, StateRef, SupportEnvironmentArtifact,
+    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef, TyIR,
     TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
     decode_actual_event, match_decoded_observation_use,
 };
@@ -31,6 +33,8 @@ struct Catalog {
     paths: BTreeMap<ResolutionPathRef, ResolutionPath>,
     charts: BTreeMap<BoundaryRef, BoundaryChart>,
     operators: BTreeMap<ProbeOperatorRef, ProbeOperator>,
+    claims: BTreeMap<ClaimRef, ClaimArtifact>,
+    support_environments: BTreeMap<SupportEnvironmentRef, SupportEnvironmentArtifact>,
 }
 
 impl Catalog {
@@ -93,6 +97,23 @@ impl Catalog {
     fn insert_path(&mut self, path: ResolutionPath) -> ResolutionPathRef {
         let reference = path.resolution_path_ref().expect("path must encode");
         self.paths.insert(reference, path);
+        reference
+    }
+
+    fn insert_claim(&mut self, claim: ClaimArtifact) -> ClaimRef {
+        let reference = claim.claim_ref().expect("claim must encode");
+        self.claims.insert(reference, claim);
+        reference
+    }
+
+    fn insert_support_environment(
+        &mut self,
+        environment: SupportEnvironmentArtifact,
+    ) -> SupportEnvironmentRef {
+        let reference = environment
+            .support_environment_ref()
+            .expect("support environment must encode");
+        self.support_environments.insert(reference, environment);
         reference
     }
 }
@@ -186,6 +207,19 @@ impl ObservationResultCatalog for Catalog {
     }
 }
 
+impl SupportEnvironmentCatalog for Catalog {
+    fn resolve_claim(&self, reference: ClaimRef) -> Option<ClaimArtifact> {
+        self.claims.get(&reference).cloned()
+    }
+
+    fn resolve_support_environment(
+        &self,
+        reference: SupportEnvironmentRef,
+    ) -> Option<SupportEnvironmentArtifact> {
+        self.support_environments.get(&reference).cloned()
+    }
+}
+
 fn artifact(byte: u8) -> ArtifactRef {
     ArtifactRef::from_bytes([byte; 32])
 }
@@ -197,6 +231,7 @@ fn port(name: &str, ty: TypeRef) -> RelationPort {
 struct Fixture {
     catalog: Catalog,
     query: QueryRef,
+    relation: RelationRef,
     answer_type: TypeRef,
     other_type: TypeRef,
     raw_type: TypeRef,
@@ -329,6 +364,7 @@ fn fixture() -> Fixture {
     Fixture {
         catalog,
         query,
+        relation,
         answer_type: unit,
         other_type,
         raw_type,
@@ -460,6 +496,120 @@ fn claim_identity_preserves_candidate_provenance_without_claiming_standing() {
     assert!(matches!(
         ClaimArtifact::decode_payload(&malformed),
         Err(ClaimError::UnknownStatus)
+    ));
+}
+
+#[test]
+fn support_environment_identity_preserves_candidate_support_without_closure() {
+    let mut fixture = fixture();
+    let path = fixture.catalog.insert_path(ResolutionPath::new(
+        fixture.raw_type,
+        fixture.raw_type,
+        ResolutionPathIR::Identity,
+    ));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x51));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0x52));
+    let claim = fixture.catalog.insert_claim(
+        ClaimArtifact::new(
+            artifact(0x50),
+            fixture.query,
+            vec![fixture.decoded_raw],
+            vec![path],
+            scope,
+            applicability,
+            ClaimStatus::Candidate,
+        )
+        .expect("claim must canonicalize"),
+    );
+    let environment = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Claim(claim),
+        vec![artifact(0x59)],
+        vec![fixture.decoded_raw],
+        vec![artifact(0x53)],
+        vec![artifact(0x54)],
+        vec![artifact(0x55)],
+        applicability,
+        scope,
+    )
+    .expect("support environment must canonicalize");
+    assert_eq!(environment.premises(), [artifact(0x59)]);
+    assert!(environment.check(&fixture.catalog).is_ok());
+    assert_eq!(
+        SupportEnvironmentArtifact::from_envelope(
+            &environment
+                .envelope()
+                .expect("support environment must encode"),
+        )
+        .expect("support environment must decode"),
+        environment
+    );
+    let environment_ref = fixture
+        .catalog
+        .insert_support_environment(environment.clone());
+    assert_eq!(
+        environment_ref.as_support_ref().as_artifact_ref(),
+        environment_ref.as_artifact_ref()
+    );
+    assert_eq!(
+        SupportEnvironmentCatalog::resolve_support_environment(&fixture.catalog, environment_ref),
+        Some(environment)
+    );
+    let relation_environment = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Relation(fixture.relation),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        applicability,
+        scope,
+    )
+    .expect("relation-targeted environment must remain representable");
+    assert!(relation_environment.check(&fixture.catalog).is_ok());
+    let mismatched_context = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Claim(claim),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        applicability,
+        ScopeRef::from_artifact_ref(artifact(0x56)),
+    )
+    .expect("mismatched environment remains representable");
+    assert!(matches!(
+        mismatched_context.check(&fixture.catalog),
+        Err(SupportEnvironmentArtifactCheckError::ClaimContextMismatch(
+            "scope"
+        ))
+    ));
+    assert!(matches!(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Claim(claim),
+            vec![artifact(0x59), artifact(0x59)],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        ),
+        Err(SupportEnvironmentArtifactError::DuplicatePremise(reference))
+            if reference == artifact(0x59)
+    ));
+    assert!(matches!(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Claim(claim),
+            Vec::new(),
+            vec![fixture.decoded_raw, fixture.decoded_raw],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        ),
+        Err(SupportEnvironmentArtifactError::DuplicateActualReturn(reference))
+            if reference == fixture.decoded_raw
     ));
 }
 

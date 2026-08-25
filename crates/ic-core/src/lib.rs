@@ -172,7 +172,12 @@ pub use separator::{
     SeparatorProblemError, SeparatorProblemRef, StructureViewRef,
 };
 pub use sixfold::{GammaError, ReciprocalOccurrence, ReciprocalOccurrenceError, RoleComparison};
-pub use standing::{ClaimRef, Standing, StandingProblem, SupportEnvironment, standing};
+pub use standing::{
+    ClaimRef, SUPPORT_ENVIRONMENT_ARTIFACT_KIND, SUPPORT_ENVIRONMENT_SCHEMA_VERSION, Standing,
+    StandingProblem, SupportEnvironment, SupportEnvironmentArtifact,
+    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportSubjectRef, standing,
+};
 pub use ty::{
     BindingVersionRef, TYPE_ARTIFACT_KIND, TYPE_SCHEMA_VERSION, TYPED_FORM_ARTIFACT_KIND,
     TYPED_FORM_SCHEMA_VERSION, TyIR, TypeArtifact, TypeCatalog, TypeCheckError, TypeError,
