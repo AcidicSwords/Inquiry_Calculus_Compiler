@@ -5,6 +5,8 @@
 //! [`DepartureWitness`](crate::DepartureWitness), does not establish relation membership or
 //! support, and cannot make an unknown observation exterior.
 
+use std::collections::BTreeSet;
+
 use thiserror::Error;
 
 use crate::ArtifactRef;
@@ -115,5 +117,107 @@ pub enum FiniteCellError {
     CoordinateCountMismatch {
         source_coordinates: usize,
         candidate_coordinates: usize,
+    },
+}
+
+/// One directly listed ordered pair in a finite incompatibility relation.
+///
+/// The pair is only a member of its caller-declared finite table. It does not by itself establish
+/// that the relation is typed, standing, relevant to a determination, or supported by a warrant.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FiniteIncompatibilityWitness {
+    source_value: ArtifactRef,
+    candidate_value: ArtifactRef,
+}
+
+impl FiniteIncompatibilityWitness {
+    #[must_use]
+    pub const fn source_value(self) -> ArtifactRef {
+        self.source_value
+    }
+
+    #[must_use]
+    pub const fn candidate_value(self) -> ArtifactRef {
+        self.candidate_value
+    }
+}
+
+/// A finite, ordered table of positively declared incompatible observation-value pairs.
+///
+/// Absence from this table remains absence of a witness, not compatibility, equality,
+/// interiority, or no-departure evidence.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct FiniteIncompatibilityTable {
+    pairs: BTreeSet<(ArtifactRef, ArtifactRef)>,
+}
+
+impl FiniteIncompatibilityTable {
+    /// Creates one finite table, rejecting duplicated declarations that would add no distinction.
+    pub fn new(pairs: Vec<(ArtifactRef, ArtifactRef)>) -> Result<Self, FiniteIncompatibilityError> {
+        let mut declared = BTreeSet::new();
+        for pair in pairs {
+            if !declared.insert(pair) {
+                return Err(FiniteIncompatibilityError::DuplicatePair {
+                    source_value: pair.0,
+                    candidate_value: pair.1,
+                });
+            }
+        }
+        Ok(Self { pairs: declared })
+    }
+
+    #[must_use]
+    pub const fn pairs(&self) -> &BTreeSet<(ArtifactRef, ArtifactRef)> {
+        &self.pairs
+    }
+}
+
+/// Result of checking two finite observations against a finite incompatibility table.
+///
+/// Only [`FiniteIncompatibilityResult::Incompatible`] carries a positive pair witness. A missing
+/// observation remains `Unknown`, and an observed pair absent from the table remains `NoWitness`.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum FiniteIncompatibilityResult {
+    /// The observed ordered pair appears in the declared finite table.
+    Incompatible(FiniteIncompatibilityWitness),
+    /// Both values are observed but this table supplies no incompatibility witness for the pair.
+    NoWitness,
+    /// At least one value is not established through the declared observation route.
+    Unknown,
+}
+
+/// Finds a positive finite incompatibility witness without inferring a negative conclusion.
+///
+/// This is a derived finite checker. It does not turn a table membership into a standing relation
+/// use, type-check either value, establish observation provenance, certify table coverage, or
+/// produce a [`DepartureWitness`](crate::DepartureWitness).
+#[must_use]
+pub fn check_finite_incompatibility(
+    table: &FiniteIncompatibilityTable,
+    source: FiniteObservation,
+    candidate: FiniteObservation,
+) -> FiniteIncompatibilityResult {
+    let (FiniteObservation::Observed(source_value), FiniteObservation::Observed(candidate_value)) =
+        (source, candidate)
+    else {
+        return FiniteIncompatibilityResult::Unknown;
+    };
+    if table.pairs.contains(&(source_value, candidate_value)) {
+        FiniteIncompatibilityResult::Incompatible(FiniteIncompatibilityWitness {
+            source_value,
+            candidate_value,
+        })
+    } else {
+        FiniteIncompatibilityResult::NoWitness
+    }
+}
+
+/// Errors from constructing a finite incompatibility table.
+#[derive(Clone, Copy, Debug, Eq, Error, PartialEq)]
+pub enum FiniteIncompatibilityError {
+    #[error("finite incompatibility table repeats ({source_value}, {candidate_value})")]
+    DuplicatePair {
+        source_value: ArtifactRef,
+        candidate_value: ArtifactRef,
     },
 }

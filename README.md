@@ -125,6 +125,12 @@ observed equality only within that table. Its 65,536-pair binary fixture is a ma
 separator breaker, not a typed observation result, incompatibility certificate, departure witness,
 or exteriority claim.
 
+The companion finite incompatibility checker accepts only a caller-declared ordered pair table:
+one listed observed pair yields a positive finite witness, an unlisted observed pair yields
+`NoWitness`, and an unknown observation remains `Unknown`. It neither type-checks values nor
+establishes that the table is standing, supported, relevant, covered, or connected to a
+`RelationUse` or `DepartureWitness`.
+
 Phase 4 also represents an oriented `NegationUse` declaration as a distinct immutable relation
 use tied to one determination presentation. Its semantic coverage (`ExactExhaustive`,
 `ExactOnField`, `CertifiedPartial`, or `WorkingOpen`) is identity data and deliberately differs

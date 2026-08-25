@@ -59,6 +59,11 @@ The protected difference is visible in the accepted sources:
   same-table result. Its exhaustive binary fixture covers 65,536 pairs. It neither gives those
   coordinate values typed observation provenance nor establishes relevance, standing
   incompatibility, support, a `DepartureWitness`, or exteriority.
+- The derived `check_finite_incompatibility` checker adds the smallest positive pair condition:
+  an observed ordered pair listed in a caller-declared finite table yields a witness; an unlisted
+  observed pair is `NoWitness`; either unknown input is `Unknown`. It does not type-check values,
+  admit the table as standing, prove relevance/coverage/support, connect to a relation use, or
+  establish departure/exteriority.
 - `NegationUse` now records one distinct oriented relation-use declaration, its source
   determination, candidate field, structural soundness-program reference, semantic-coverage
   declaration, indexed context, and provenance. Its checker rejects a different presentation

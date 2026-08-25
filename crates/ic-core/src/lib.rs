@@ -59,8 +59,9 @@ pub use factorization::{
     determine_through_exact, determine_through_exact_family,
 };
 pub use finite_cell::{
-    FiniteCellComparison, FiniteCellError, FiniteCellSeparator, FiniteObservation,
-    compare_finite_observation_cells,
+    FiniteCellComparison, FiniteCellError, FiniteCellSeparator, FiniteIncompatibilityError,
+    FiniteIncompatibilityResult, FiniteIncompatibilityTable, FiniteIncompatibilityWitness,
+    FiniteObservation, check_finite_incompatibility, compare_finite_observation_cells,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,
