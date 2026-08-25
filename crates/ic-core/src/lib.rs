@@ -39,8 +39,10 @@ pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,
 };
 pub use cue::{
-    ExactFiniteCueBasisError, ExactFiniteCueBasisResult, FiniteCueSeparator,
-    check_exact_finite_cue_basis,
+    ExactFiniteCueBasisCandidate, ExactFiniteCueBasisError, ExactFiniteCueBasisResult,
+    ExactFiniteCueFrontier, ExactFiniteCueFrontierError, FiniteCueSeparator,
+    FiniteResourcePreorder, InsufficientExactFiniteCueBasis, check_exact_finite_cue_basis,
+    select_nondominated_exact_finite_cue_bases,
 };
 pub use departure::{
     DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureCatalog,

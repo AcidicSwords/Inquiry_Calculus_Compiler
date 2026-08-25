@@ -159,6 +159,13 @@ The protected difference is visible in the accepted sources:
   constant protected signature and rejects context/domain mismatches. It does not certify input
   coverage/support/applicability, select a resource-minimal basis, claim global minimality or
   impossibility, or schedule a query.
+- `select_nondominated_exact_finite_cue_bases` now adds finite declared-preorder selection over a
+  caller-supplied candidate set. It validates reflexivity/transitivity over the represented
+  resource identities, retains every incomparable sufficient basis, removes only strictly
+  dominated sufficient candidates, and preserves a concrete separator for each insufficient
+  candidate. It neither supplies resource facts, generates candidates, establishes supplied-set
+  exhaustiveness, certifies exact input coverage/support/applicability, nor claims global minima,
+  impossibility, or policy selection.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

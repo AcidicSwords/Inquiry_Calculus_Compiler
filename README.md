@@ -150,8 +150,11 @@ Phase 13 has an exact finite discriminator-basis checker. Given caller-certified
 deterministic, exactly covered cue and protected signatures over one indexed domain, it verifies
 that every protectedly distinct pair has a differing cue answer or returns a concrete unseparated
 pair. It permits an empty basis only when the protected signature is constant. It does not certify
-the input tables' coverage/support/applicability, choose a resource-minimal basis, claim global
-minimality or impossibility, or define a query-selection policy.
+the input tables' coverage/support/applicability, claim global minimality or impossibility, or
+define a query-selection policy. Given a separate finite declared resource preorder and a
+caller-supplied candidate set, it can additionally retain the nondominated sufficient candidates
+and preserve concrete separators for insufficient ones. That frontier is relative to the supplied
+candidates; it neither generates candidates nor proves the candidate set exhaustive.
 
 Phase 4 also represents an oriented `NegationUse` declaration as a distinct immutable relation
 use tied to one determination presentation. Its semantic coverage (`ExactExhaustive`,
