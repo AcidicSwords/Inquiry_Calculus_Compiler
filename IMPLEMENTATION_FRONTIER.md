@@ -5,8 +5,9 @@ Reciprocal-Boundary / Positive-Negation Edition.
 
 **Accepted implementation state:** Phase 3 first-order source-program syntax/checking, Phase 4
 determination-presentation/departure/negation-declaration identity checking, and Phase 5
-structural runtime control-flow checking pass on 2026-08-25. Supported answer materialization
-remains reserved for the Phase 6/7 actuality-and-resolution boundary.
+structural runtime control-flow checking pass on 2026-08-25. Phase 7 typed resolution-path
+identity and interface composition checking also pass. Supported answer materialization remains
+reserved for the Phase 6/7 actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -63,6 +64,10 @@ The protected difference is visible in the accepted sources:
   rejects presently unguarded branch-only recurrence. A probe step suspends and a resumption
   carries a `RawReturnRef`; neither step calls an operator, records an event, decodes a result, or
   chooses a raw-return-dependent continuation.
+- `ResolutionPath` now records typed identity, decoder, relation, composition, and program route
+  syntax with exact source/target type composition. Its checker validates only types and composed
+  interfaces; it does not run or admit the referenced route, derive a decoder result, or create a
+  supported answer.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

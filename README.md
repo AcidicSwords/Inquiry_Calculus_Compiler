@@ -121,6 +121,12 @@ not an actuality assertion, attempt, event, completion, interpretation, check, o
 canonical boundary/event reference versus implementation-plan optional distinction discrepancy
 remains open, so no `ActualEvent` record or journal schema has been chosen prematurely.
 
+Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and
+program routes each preserve their input/output types and referenced route identity. Checking
+revalidates types and exact composition interfaces, including cycle rejection. It does not run a
+decoder, relation, or program; name a supported answer set; resolve a raw return; or turn a
+partial result into an exact answer.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

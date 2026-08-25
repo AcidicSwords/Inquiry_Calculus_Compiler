@@ -77,6 +77,9 @@ or passing.
 | P6-RAW-001 raw-return opaque byte preservation and content identity | PASS | `raw_return_identity::raw_return_preserves_exact_opaque_bytes_and_domain_separates_identity` |
 | P6-RAW-002 raw-return envelope-domain rejection | PASS | `raw_return_identity::raw_return_rejects_the_wrong_envelope_domain` |
 | P6-RAW-003 raw-return opaque artifact-store round trip | PASS | `ic-store::tests::raw_returns_persist_as_opaque_immutable_artifacts_without_decoding` |
+| P7-RESOLUTION-IR-001 typed resolution-route identity round trip | PASS | `resolution_identity::resolution_paths_round_trip_without_executing_their_route` |
+| P7-RESOLUTION-IR-002 identity and exact composition-interface validation | PASS | `resolution_identity::resolution_paths_check_identity_and_exact_composition_interfaces` |
+| P7-RESOLUTION-IR-003 malformed resolution-path rejection | PASS | `resolution_identity::resolution_paths_reject_malformed_envelopes` |
 
 ## Pending specification and plan categories
 
@@ -94,7 +97,7 @@ or passing.
 | Reciprocal representation and learning, fixtures 65-70 | PENDING | Phases 4, 12-16 |
 | Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PENDING | Phases 4, 10, 12-16 |
 | Return/Branch/Probe runtime and continuation descent | PARTIAL | Phase 5: typed Return/Branch/Probe control flow, structural verification, and non-actual suspension/resume pass; operator contracts, actual dispatch, raw-dependent continuation selection, and runtime persistence remain pending |
-| Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return identity passes; attempt/event shape, journal ordering, replay, and resolution remain pending |
+| Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return identity passes. Phase 7: typed resolution-route identity and composition checking pass; attempt/event shape, journal ordering, route execution, answer sets, replay, and full resolution remain pending |
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |
 | Retained/access/active separation and recurrent memory crawl | PENDING | Phase 9 |
 | Surface/backend/raw-return compilation boundaries | PENDING | Phase 10 |

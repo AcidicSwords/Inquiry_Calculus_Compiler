@@ -15,6 +15,7 @@ mod raw_return;
 mod relation;
 mod relation_expr;
 mod relation_use;
+mod resolution;
 mod ty;
 
 pub use artifact::{
@@ -65,6 +66,11 @@ pub use relation_expr::{
 pub use relation_use::{
     PortBinding, RELATION_USE_ARTIFACT_KIND, RELATION_USE_SCHEMA_VERSION, RelationCatalog,
     RelationUse, RelationUseCheckError, RelationUseContext, RelationUseError, RelationUseRef,
+};
+pub use resolution::{
+    DecoderRef, RESOLUTION_PATH_ARTIFACT_KIND, RESOLUTION_PATH_SCHEMA_VERSION, ResolutionCatalog,
+    ResolutionPath, ResolutionPathCheckError, ResolutionPathError, ResolutionPathIR,
+    ResolutionPathRef,
 };
 pub use ty::{
     BindingVersionRef, TYPE_ARTIFACT_KIND, TYPE_SCHEMA_VERSION, TYPED_FORM_ARTIFACT_KIND,
