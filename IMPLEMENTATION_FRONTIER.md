@@ -49,8 +49,10 @@ The protected difference is visible in the accepted sources:
   source and candidate observation uses, their typed fillings, incompatibility use, support,
   scope, applicability, and grain. Its checker rehashes every resolved identity, type-checks its
   forms, requires the presentation's source and indexed context, and rejects relation uses with
-  different scope/applicability/grain/horizon. Constructing or checking it evaluates no relation
-  and proves neither incompatibility nor exteriority.
+  different scope/applicability/grain/horizon. Each source/candidate observation use must also
+  bind its declared form and answer, and the incompatibility use must bind the two declared
+  answers. Constructing or checking it evaluates no relation and proves neither incompatibility
+  nor exteriority.
 - The derived `compare_finite_observation_cells` checker now supplies the exact finite
   cell-exclusion discriminator: an observed unequal coordinate gives a separator; no separator
   with any unknown coordinate remains `Unknown`; a completely observed equal table is only a

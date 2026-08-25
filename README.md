@@ -115,7 +115,9 @@ failed equality, search, retrieval, projection, unknown status, or protected non
 departure. Its current structural check rehashes and checks the named presentation, forms, and
 relation uses; requires the presentation's distinction, source, binding, scope, applicability,
 grain, and horizon; and rejects a use outside that context. It still does not evaluate an
-observation, establish incompatibility, or certify non-circular positive evidence.
+observation, establish incompatibility, or certify non-circular positive evidence. Each
+observation use must bind its claimed form/answer pair, and the incompatibility use must bind
+the two claimed answers; those structural links are not relation evaluation.
 
 For the exact finite special case, a derived cell comparator can expose one observed unequal
 coordinate, retain `Unknown` when the table lacks a positive separator, and distinguish fully

@@ -497,7 +497,7 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
     ));
     let relation = catalog.insert_schema(RelationSchema::new(
         binding,
-        Vec::new(),
+        vec![port("left", unit), port("right", unit)],
         RelationBodyIR::BindingNative {
             contract: artifact(0x38),
         },
@@ -513,11 +513,32 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
         support,
         None,
     );
-    let source_observation =
-        catalog.insert_relation_use(RelationUse::new(relation, Vec::new(), context));
+    let source_observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                source,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                source_answer,
+            ),
+        ],
+        context,
+    ));
     let candidate_observation = catalog.insert_relation_use(RelationUse::new(
         relation,
-        Vec::new(),
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                candidate,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                candidate_answer,
+            ),
+        ],
         RelationUseContext::new(
             scope,
             applicability,
@@ -530,7 +551,16 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
     ));
     let incompatibility = catalog.insert_relation_use(RelationUse::new(
         relation,
-        Vec::new(),
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                source_answer,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                candidate_answer,
+            ),
+        ],
         RelationUseContext::new(
             scope,
             applicability,
@@ -580,7 +610,16 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
 
     let wrong_context = catalog.insert_relation_use(RelationUse::new(
         relation,
-        Vec::new(),
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                source,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                source_answer,
+            ),
+        ],
         RelationUseContext::new(
             ScopeRef::from_artifact_ref(artifact(0x39)),
             applicability,
@@ -610,6 +649,52 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
         context_mismatch.check(&catalog),
         Err(DepartureWitnessCheckError::RelationUseContextMismatch(reference))
             if reference == wrong_context
+    ));
+
+    let disconnected = DepartureWitness::new(
+        distinction,
+        source,
+        candidate,
+        presentation,
+        candidate_observation,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        support,
+        scope,
+        applicability,
+        grain,
+    );
+    assert!(matches!(
+        disconnected.check(&catalog),
+        Err(DepartureWitnessCheckError::ClaimedPairNotBound {
+            claim: "source observation",
+            relation_use,
+        }) if relation_use == candidate_observation
+    ));
+
+    let disconnected_incompatibility = DepartureWitness::new(
+        distinction,
+        source,
+        candidate,
+        presentation,
+        source_observation,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        candidate_observation,
+        support,
+        scope,
+        applicability,
+        grain,
+    );
+    assert!(matches!(
+        disconnected_incompatibility.check(&catalog),
+        Err(DepartureWitnessCheckError::ClaimedPairNotBound {
+            claim: "incompatibility",
+            relation_use,
+        }) if relation_use == candidate_observation
     ));
 }
 

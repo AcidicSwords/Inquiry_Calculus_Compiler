@@ -291,10 +291,25 @@ impl DepartureWitness {
                 });
             }
         }
-        for use_ref in [
-            self.source_observation,
-            self.candidate_observation,
-            self.incompatibility,
+        for (claim, use_ref, left, right) in [
+            (
+                "source observation",
+                self.source_observation,
+                self.source,
+                self.source_answer,
+            ),
+            (
+                "candidate observation",
+                self.candidate_observation,
+                self.candidate,
+                self.candidate_answer,
+            ),
+            (
+                "incompatibility",
+                self.incompatibility,
+                self.source_answer,
+                self.candidate_answer,
+            ),
         ] {
             let relation_use = catalog
                 .resolve_relation_use(use_ref)
@@ -318,6 +333,12 @@ impl DepartureWitness {
                     use_ref,
                 ));
             }
+            if !relation_use_binds_pair(&relation_use, left, right) {
+                return Err(DepartureWitnessCheckError::ClaimedPairNotBound {
+                    claim,
+                    relation_use: use_ref,
+                });
+            }
         }
         Ok(())
     }
@@ -339,6 +360,27 @@ impl DepartureWitness {
             self.applicability.as_artifact_ref(),
             self.grain.as_artifact_ref(),
         ]
+    }
+}
+
+fn relation_use_binds_pair(
+    relation_use: &RelationUse,
+    left: TypedFormRef,
+    right: TypedFormRef,
+) -> bool {
+    let left_bindings = relation_use
+        .bindings()
+        .iter()
+        .filter(|binding| binding.value() == left)
+        .count();
+    if left == right {
+        left_bindings >= 2
+    } else {
+        left_bindings >= 1
+            && relation_use
+                .bindings()
+                .iter()
+                .any(|binding| binding.value() == right)
     }
 }
 
@@ -438,4 +480,9 @@ pub enum DepartureWitnessCheckError {
     },
     #[error("relation use {0} does not match the departure witness context")]
     RelationUseContextMismatch(RelationUseRef),
+    #[error("{claim} relation use {relation_use} does not bind its claimed pair")]
+    ClaimedPairNotBound {
+        claim: &'static str,
+        relation_use: RelationUseRef,
+    },
 }
