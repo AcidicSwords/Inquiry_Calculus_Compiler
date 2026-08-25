@@ -69,6 +69,8 @@ An `OpenQuery` partitions every relation port into an explicitly typed binding o
 open section. Checked `Bind` and `Expose` move exactly one port across that boundary while
 leaving a nonempty question. `Plug` can construct a complete typed candidate assignment, but it
 does not evaluate the relation, establish fiber membership, or manufacture actuality.
+A completion fiber is represented only as a source-query-derived view that revalidates the
+query; it is never collapsed into a selected completion.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

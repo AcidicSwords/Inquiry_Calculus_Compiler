@@ -23,8 +23,9 @@ pub use formula::{
     FormulaCheckError, FormulaError, FormulaIR, FormulaRef, RelationRef, RelationSignature, TermIR,
 };
 pub use query::{
-    CompletionCandidate, OPEN_QUERY_ARTIFACT_KIND, OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery,
-    OpenQueryCheckError, OpenQueryError, OpenQueryPlugError, OpenQueryTransformError, QueryRef,
+    CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,
+    OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError,
+    OpenQueryError, OpenQueryFiberError, OpenQueryPlugError, OpenQueryTransformError, QueryRef,
 };
 pub use relation::{
     RELATION_SCHEMA_ARTIFACT_KIND, RELATION_SCHEMA_VERSION, RelationBodyIR, RelationCheckError,

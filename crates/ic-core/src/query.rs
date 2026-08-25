@@ -91,6 +91,37 @@ impl CompletionCandidate {
     }
 }
 
+/// A derived reference to the completion fiber of one checked open query.
+///
+/// The view is neither a selected filling nor evidence that any filling belongs to the relation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct CompletionFiberView {
+    source: QueryRef,
+}
+
+impl CompletionFiberView {
+    #[must_use]
+    pub const fn source(&self) -> QueryRef {
+        self.source
+    }
+
+    /// Revalidates the referenced query before a consumer treats this as its fiber view.
+    pub fn check<C: OpenQueryCatalog>(&self, catalog: &C) -> Result<(), CompletionFiberViewError> {
+        let query = catalog
+            .resolve_open_query(self.source)
+            .ok_or(CompletionFiberViewError::UnresolvedQuery(self.source))?;
+        let calculated = query.query_ref()?;
+        if calculated != self.source {
+            return Err(CompletionFiberViewError::QueryReferenceIdentityMismatch {
+                reference: self.source,
+                calculated,
+            });
+        }
+        query.check(catalog)?;
+        Ok(())
+    }
+}
+
 impl OpenQuery {
     #[must_use]
     pub const fn new(
@@ -371,6 +402,22 @@ impl OpenQuery {
             bindings,
         })
     }
+
+    /// Produces the derived view of this query's completion fiber without evaluating it.
+    pub fn completion_fiber_view<C: RelationCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<CompletionFiberView, OpenQueryFiberError> {
+        self.check(catalog)?;
+        Ok(CompletionFiberView {
+            source: self.query_ref()?,
+        })
+    }
+}
+
+/// A catalog capable of resolving a content-addressed open query for a derived view.
+pub trait OpenQueryCatalog: RelationCatalog {
+    fn resolve_open_query(&self, reference: QueryRef) -> Option<OpenQuery>;
 }
 
 fn reference(encoded: &mut Vec<u8>, value: ArtifactRef) {
@@ -580,4 +627,33 @@ pub enum OpenQueryPlugError {
 
     #[error("plugging omits open port {0}")]
     MissingAnswerPort(TypeSymbol),
+}
+
+/// Errors from constructing a completion-fiber view from a direct query.
+#[derive(Debug, Error)]
+pub enum OpenQueryFiberError {
+    #[error(transparent)]
+    Check(#[from] OpenQueryCheckError),
+
+    #[error(transparent)]
+    Query(#[from] OpenQueryError),
+}
+
+/// Errors from resolving a derived completion-fiber view.
+#[derive(Debug, Error)]
+pub enum CompletionFiberViewError {
+    #[error(transparent)]
+    Query(#[from] OpenQueryError),
+
+    #[error(transparent)]
+    Check(#[from] OpenQueryCheckError),
+
+    #[error("open query {0} is not available from the declared catalog")]
+    UnresolvedQuery(QueryRef),
+
+    #[error("catalog query {reference} hashes to {calculated}, not its claimed identity")]
+    QueryReferenceIdentityMismatch {
+        reference: QueryRef,
+        calculated: QueryRef,
+    },
 }

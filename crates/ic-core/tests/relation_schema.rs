@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
     DischargeMode, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef,
-    OpenPort, OpenQuery, OpenQueryCheckError, PortBinding, RelationBodyIR, RelationCatalog,
-    RelationCheckError, RelationError, RelationPort, RelationRef, RelationSchema,
+    OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError, PortBinding, RelationBodyIR,
+    RelationCatalog, RelationCheckError, RelationError, RelationPort, RelationRef, RelationSchema,
     RelationSignature, RelationUse, RelationUseCheckError, RelationUseContext, ScopeRef,
     SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm,
     TypedFormRef,
@@ -27,6 +27,7 @@ struct Catalog {
     signatures: BTreeMap<RelationRef, RelationSignature>,
     schemas: BTreeMap<RelationRef, RelationSchema>,
     forms: BTreeMap<TypedFormRef, TypedForm>,
+    queries: BTreeMap<ic_core::QueryRef, OpenQuery>,
 }
 
 impl Catalog {
@@ -55,6 +56,12 @@ impl Catalog {
     fn insert_form(&mut self, form: TypedForm) -> TypedFormRef {
         let reference = form.typed_form_ref().expect("form fixture must encode");
         self.forms.insert(reference, form);
+        reference
+    }
+
+    fn insert_query(&mut self, query: OpenQuery) -> ic_core::QueryRef {
+        let reference = query.query_ref().expect("query fixture must encode");
+        self.queries.insert(reference, query);
         reference
     }
 }
@@ -89,6 +96,12 @@ impl FormulaCatalog for Catalog {
 impl RelationCatalog for Catalog {
     fn resolve_relation_schema(&self, reference: RelationRef) -> Option<RelationSchema> {
         self.schemas.get(&reference).cloned()
+    }
+}
+
+impl OpenQueryCatalog for Catalog {
+    fn resolve_open_query(&self, reference: ic_core::QueryRef) -> Option<OpenQuery> {
+        self.queries.get(&reference).cloned()
     }
 }
 
@@ -407,6 +420,12 @@ fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
         query
     );
     assert!(query.check(&catalog).is_ok());
+    let query_ref = catalog.insert_query(query.clone());
+    let fiber = query
+        .completion_fiber_view(&catalog)
+        .expect("checked query must admit a derived fiber view");
+    assert_eq!(fiber.source(), query_ref);
+    assert!(fiber.check(&catalog).is_ok());
 
     let completion = query
         .plug(
