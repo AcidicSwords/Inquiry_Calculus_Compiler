@@ -1,3 +1,8 @@
+use std::{
+    env,
+    time::{SystemTime, UNIX_EPOCH},
+};
+
 use ic_core::{
     ActualEvent, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef,
     DeterminationPresentationRef, EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef,
@@ -217,6 +222,51 @@ async fn actual_event_append_rejects_stale_parent_and_detects_ledger_corruption(
         store.get_actual_event(second_ref).await,
         Err(StoreError::EventLedgerCorrupt(reference)) if reference == second_ref
     ));
+}
+
+#[tokio::test]
+async fn event_ledger_reopens_and_revalidates_immutable_history_after_restart() {
+    let nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system clock must be after Unix epoch")
+        .as_nanos();
+    let path = env::temp_dir().join(format!(
+        "inquiry-calculus-restart-{}-{nonce}.sqlite",
+        std::process::id()
+    ));
+    let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
+
+    let store = ArtifactStore::open(&url)
+        .await
+        .expect("file-backed store must open");
+    store.migrate().await.expect("migrations must apply");
+    let event = event_fixture(&store, None, b"restart-backend").await;
+    let event_ref = store
+        .append_actual_event(&event)
+        .await
+        .expect("event must append before restart");
+    store.close().await;
+
+    let restarted = ArtifactStore::open(&url)
+        .await
+        .expect("file-backed store must reopen");
+    restarted
+        .migrate()
+        .await
+        .expect("embedded migrations must reapply harmlessly");
+    assert_eq!(
+        restarted
+            .get_actual_event(event_ref)
+            .await
+            .expect("reopened event must verify"),
+        Some(event)
+    );
+    restarted
+        .verify_event_ledger()
+        .await
+        .expect("reopened ledger must verify");
+    restarted.close().await;
+    std::fs::remove_file(path).expect("temporary restart database must be removable");
 }
 
 #[tokio::test]

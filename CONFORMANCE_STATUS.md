@@ -81,6 +81,7 @@ or passing.
 | P6-EVENT-IR-002 event raw-return recheck without decoding | PASS | `event_identity::actual_event_rechecks_the_opaque_raw_return_without_decoding_or_interpreting_it` |
 | P6-EVENT-IR-003 event boundary-chart recheck without inferring open chart roles | PASS | `event_identity::actual_event_requires_a_rehashed_boundary_chart_without_checking_its_open_roles` |
 | P6-EVENT-STORE-001 append-only ledger ordering, idempotence, raw/boundary-kind rejection, and parent corruption detection | PASS | `ic-store::tests::{actual_events_append_in_order_and_recheck_stored_identity,actual_event_append_rejects_stale_parent_and_detects_ledger_corruption}` |
+| P6-EVENT-STORE-002 file-backed journal restart and immutable ledger revalidation | PASS | `ic-store::tests::event_ledger_reopens_and_revalidates_immutable_history_after_restart` |
 | P7-RESOLUTION-IR-001 typed resolution-route identity round trip | PASS | `resolution_identity::resolution_paths_round_trip_without_executing_their_route` |
 | P7-RESOLUTION-IR-002 identity and exact composition-interface validation | PASS | `resolution_identity::resolution_paths_check_identity_and_exact_composition_interfaces` |
 | P7-RESOLUTION-IR-003 malformed resolution-path rejection | PASS | `resolution_identity::resolution_paths_reject_malformed_envelopes` |
@@ -109,7 +110,7 @@ or passing.
 | Reciprocal representation and learning, fixtures 65-70 | PENDING | Phases 4, 12-16 |
 | Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PARTIAL | Phase 4: exact finite determination-through factorization/kernel separators, exact finite recovery constancy/separators, and informational tagged-family factorization pass; all other derived breakers and non-exact contracts remain pending |
 | Return/Branch/Probe runtime and continuation descent | PARTIAL | Phase 5: typed Return/Branch/Probe control flow, structural verification, and non-actual suspension/resume pass; operator contracts, actual dispatch, raw-dependent continuation selection, and runtime persistence remain pending |
-| Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return plus canonical event identity and append-only parent-linked ledger checks pass. Phase 7: typed resolution-route identity and composition checking pass; request/attempt, dispatch, opaque-contract validation, crash/restart replay, route execution, answer sets, and full resolution remain pending |
+| Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return, canonical event identity, append-only parent-linked ledger checks, and file-backed restart/revalidation pass. Phase 7: typed resolution-route identity and composition checking pass; request/attempt, dispatch, opaque-contract validation, state-transition replay, route execution, answer sets, and full resolution remain pending |
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |
 | Retained/access/active separation and recurrent memory crawl | PENDING | Phase 9 |
 | Surface/backend/raw-return compilation boundaries | PENDING | Phase 10 |

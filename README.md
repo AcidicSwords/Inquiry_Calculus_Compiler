@@ -126,6 +126,11 @@ non-raw return or non-chart boundary artifacts, and revalidates event/raw-return
 on read. It does not dispatch a probe, validate opaque state/boundary/operator contracts, decode
 the result, resolve an answer, or prove a semantic interpretation.
 
+The event ledger has a file-backed restart witness: closing its single connection and reopening the
+database preserves canonical event identity and parent-linked order after embedded migrations are
+reapplied. This is a persistence and integrity check only; state-transition replay, dispatch, raw
+return resolution, and accepted-state reconstruction remain later contracts.
+
 Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and
 program routes each preserve their input/output types and referenced route identity. Checking
 revalidates types and exact composition interfaces, including cycle rejection. It does not run a

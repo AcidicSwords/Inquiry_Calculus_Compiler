@@ -46,6 +46,11 @@ impl ArtifactStore {
         Ok(())
     }
 
+    /// Closes the single authoritative SQLite connection before a restart or controlled handoff.
+    pub async fn close(self) {
+        self.pool.close().await;
+    }
+
     /// Inserts an envelope under its calculated content reference.
     #[tracing::instrument(skip(self, envelope))]
     pub async fn insert(&self, envelope: &ArtifactEnvelope) -> Result<ArtifactRef, StoreError> {

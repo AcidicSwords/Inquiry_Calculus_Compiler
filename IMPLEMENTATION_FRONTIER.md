@@ -70,6 +70,10 @@ The protected difference is visible in the accepted sources:
 - Event and ledger checks now require the named `BoundaryRef` to resolve and rehash as a genuine
   `BoundaryChart`, in addition to requiring the raw-return artifact. They do not validate the
   chart's opaque projections, determinations, use frontiers, seed, compatibility, or open roles.
+- The file-backed SQLite journal has a restart witness: after the authoritative connection closes,
+  reopening and reapplying embedded migrations preserves the immutable event identity and ordered
+  ledger chain. This is persistence/revalidation only, not replay of state transition semantics,
+  dispatch, resolution, or accepted interpretation.
 - `ProgramIR` has only the canonical runtime terminators: typed `Return`, nonempty `Branch`, and
   `Probe` with an explicit resume target. Its verifier rechecks returns and target closure and
   rejects presently unguarded branch-only recurrence. A probe step suspends and a resumption
