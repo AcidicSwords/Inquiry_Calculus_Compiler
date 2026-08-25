@@ -11,8 +11,8 @@ use thiserror::Error;
 
 use crate::{
     ArtifactRef, FormulaCatalog, RelationCatalog, RelationUse, RelationUseCheckError,
-    RelationUseError, RelationUseRef, TypeCatalog, TypeCheckError, TypeError, TypedForm,
-    TypedFormRef,
+    RelationUseError, RelationUseRef, TypeCatalog, TypeCheckError, TypeError, TypeSymbol,
+    TypedForm, TypedFormRef,
 };
 
 /// One coordinate of a finite represented observation.
@@ -345,6 +345,64 @@ pub struct TypedFiniteIncompatibilityUseWitness {
     incompatibility_use: RelationUseRef,
 }
 
+/// The explicit port roles used to read one ordinary relation use as an oriented incompatibility.
+///
+/// The roles are an input to this derived check, not a new semantic relation or persisted
+/// certificate. They make the source/candidate orientation inspectable without relying on a
+/// port-name convention.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct TypedFiniteIncompatibilityRoles {
+    source_port: TypeSymbol,
+    candidate_port: TypeSymbol,
+}
+
+impl TypedFiniteIncompatibilityRoles {
+    /// Creates distinct named source and candidate roles.
+    pub fn new(
+        source_port: TypeSymbol,
+        candidate_port: TypeSymbol,
+    ) -> Result<Self, TypedFiniteIncompatibilityRoleError> {
+        if source_port == candidate_port {
+            return Err(TypedFiniteIncompatibilityRoleError::DuplicateRolePort(
+                source_port,
+            ));
+        }
+        Ok(Self {
+            source_port,
+            candidate_port,
+        })
+    }
+
+    #[must_use]
+    pub const fn source_port(&self) -> &TypeSymbol {
+        &self.source_port
+    }
+
+    #[must_use]
+    pub const fn candidate_port(&self) -> &TypeSymbol {
+        &self.candidate_port
+    }
+}
+
+/// A finite incompatibility/use witness that retains the declared typed port roles.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct TypedFiniteOrientedIncompatibilityUseWitness {
+    witness: TypedFiniteIncompatibilityUseWitness,
+    roles: TypedFiniteIncompatibilityRoles,
+}
+
+impl TypedFiniteOrientedIncompatibilityUseWitness {
+    #[must_use]
+    pub const fn witness(&self) -> &TypedFiniteIncompatibilityUseWitness {
+        &self.witness
+    }
+
+    #[must_use]
+    pub const fn roles(&self) -> &TypedFiniteIncompatibilityRoles {
+        &self.roles
+    }
+}
+
 impl TypedFiniteIncompatibilityUseWitness {
     #[must_use]
     pub const fn pair(self) -> TypedFiniteIncompatibilityWitness {
@@ -362,6 +420,17 @@ impl TypedFiniteIncompatibilityUseWitness {
 pub enum TypedFiniteIncompatibilityUseResult {
     /// A listed typed pair is bound by the named non-generated incompatibility use.
     Incompatible(TypedFiniteIncompatibilityUseWitness),
+    /// Both values are established, but the finite table gives no positive pair witness.
+    NoWitness,
+    /// At least one value remains unknown through the caller's declared route.
+    Unknown,
+}
+
+/// The outcome of checking a finite incompatibility use with explicit source/candidate ports.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum TypedFiniteOrientedIncompatibilityUseResult {
+    /// The positive pair occurs at the declared source and candidate ports, respectively.
+    Incompatible(TypedFiniteOrientedIncompatibilityUseWitness),
     /// Both values are established, but the finite table gives no positive pair witness.
     NoWitness,
     /// At least one value remains unknown through the caller's declared route.
@@ -462,6 +531,65 @@ pub fn check_typed_finite_incompatibility_use<C: FiniteTypedIncompatibilityUseCa
     })
 }
 
+/// Checks a finite incompatibility pair at explicit named source/candidate ports.
+///
+/// This is the smallest structural orientation check available over an ordinary `RelationUse`:
+/// callers must name both distinct ports, and the check verifies that the positive pair occurs at
+/// those exact ports. It does not infer port roles from spelling and does not establish standing,
+/// admission, observation actuality, relevance, non-circularity, coverage, or departure.
+pub fn check_typed_finite_oriented_incompatibility_use<C: FiniteTypedIncompatibilityUseCatalog>(
+    table: &TypedFiniteIncompatibilityTable,
+    catalog: &C,
+    incompatibility_use: RelationUseRef,
+    roles: TypedFiniteIncompatibilityRoles,
+    source: TypedFiniteObservation,
+    candidate: TypedFiniteObservation,
+) -> Result<TypedFiniteOrientedIncompatibilityUseResult, TypedFiniteOrientedIncompatibilityUseError>
+{
+    let result = check_typed_finite_incompatibility_use(
+        table,
+        catalog,
+        incompatibility_use,
+        source,
+        candidate,
+    )?;
+    match result {
+        TypedFiniteIncompatibilityUseResult::Incompatible(witness) => {
+            let relation_use = catalog.resolve_relation_use(incompatibility_use).ok_or(
+                TypedFiniteOrientedIncompatibilityUseError::UnresolvedRelationUse(
+                    incompatibility_use,
+                ),
+            )?;
+            let source_matches = relation_use.bindings().iter().any(|binding| {
+                binding.port() == roles.source_port()
+                    && binding.value() == witness.pair().source_value()
+            });
+            let candidate_matches = relation_use.bindings().iter().any(|binding| {
+                binding.port() == roles.candidate_port()
+                    && binding.value() == witness.pair().candidate_value()
+            });
+            if !source_matches || !candidate_matches {
+                return Err(
+                    TypedFiniteOrientedIncompatibilityUseError::ClaimedPairAtWrongRoles {
+                        incompatibility_use,
+                        source_port: roles.source_port().clone(),
+                        candidate_port: roles.candidate_port().clone(),
+                    },
+                );
+            }
+            Ok(TypedFiniteOrientedIncompatibilityUseResult::Incompatible(
+                TypedFiniteOrientedIncompatibilityUseWitness { witness, roles },
+            ))
+        }
+        TypedFiniteIncompatibilityUseResult::NoWitness => {
+            Ok(TypedFiniteOrientedIncompatibilityUseResult::NoWitness)
+        }
+        TypedFiniteIncompatibilityUseResult::Unknown => {
+            Ok(TypedFiniteOrientedIncompatibilityUseResult::Unknown)
+        }
+    }
+}
+
 fn check_typed_finite_form<C: FiniteTypedObservationCatalog>(
     catalog: &C,
     role: &'static str,
@@ -547,4 +675,28 @@ pub enum TypedFiniteIncompatibilityUseError {
     GeneratedIncompatibilityUse(RelationUseRef),
     #[error("incompatibility use {0} does not bind the positively witnessed ordered pair")]
     ClaimedPairNotBound(RelationUseRef),
+}
+
+/// Errors from declaring or checking explicit finite incompatibility port roles.
+#[derive(Debug, Error)]
+pub enum TypedFiniteIncompatibilityRoleError {
+    #[error("source and candidate incompatibility roles name the same port {0}")]
+    DuplicateRolePort(TypeSymbol),
+}
+
+/// Errors while checking the source/candidate orientation of a finite incompatibility use.
+#[derive(Debug, Error)]
+pub enum TypedFiniteOrientedIncompatibilityUseError {
+    #[error(transparent)]
+    Use(#[from] TypedFiniteIncompatibilityUseError),
+    #[error("incompatibility use {0} is unavailable")]
+    UnresolvedRelationUse(RelationUseRef),
+    #[error(
+        "incompatibility use {incompatibility_use} does not bind the positive pair at source port {source_port} and candidate port {candidate_port}"
+    )]
+    ClaimedPairAtWrongRoles {
+        incompatibility_use: RelationUseRef,
+        source_port: TypeSymbol,
+        candidate_port: TypeSymbol,
+    },
 }

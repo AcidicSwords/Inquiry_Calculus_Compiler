@@ -8,10 +8,13 @@ use ic_core::{
     RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
     RelationUseRef, ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef,
     TypeSymbol, TypedFiniteIncompatibilityError, TypedFiniteIncompatibilityResult,
+    TypedFiniteIncompatibilityRoleError, TypedFiniteIncompatibilityRoles,
     TypedFiniteIncompatibilityTable, TypedFiniteIncompatibilityUseError,
-    TypedFiniteIncompatibilityUseResult, TypedFiniteObservation, TypedForm, TypedFormRef,
-    check_finite_incompatibility, check_typed_finite_incompatibility,
-    check_typed_finite_incompatibility_use, compare_finite_observation_cells,
+    TypedFiniteIncompatibilityUseResult, TypedFiniteObservation,
+    TypedFiniteOrientedIncompatibilityUseError, TypedFiniteOrientedIncompatibilityUseResult,
+    TypedForm, TypedFormRef, check_finite_incompatibility, check_typed_finite_incompatibility,
+    check_typed_finite_incompatibility_use, check_typed_finite_oriented_incompatibility_use,
+    compare_finite_observation_cells,
 };
 
 fn artifact(value: u8) -> ArtifactRef {
@@ -382,6 +385,58 @@ fn typed_finite_incompatibility_requires_its_declared_use_to_bind_the_positive_p
         ),
         Err(TypedFiniteIncompatibilityUseError::GeneratedIncompatibilityUse(reference))
             if reference == generated_use
+    ));
+}
+
+#[test]
+fn typed_finite_incompatibility_keeps_explicit_source_and_candidate_port_roles() {
+    let mut catalog = TypedCatalog::default();
+    let binding = BindingVersionRef::from_artifact_ref(artifact(80));
+    let source = catalog.typed_form(binding, TyIR::Bool, artifact(81));
+    let candidate = catalog.typed_form(binding, TyIR::Nat, artifact(82));
+    let table = TypedFiniteIncompatibilityTable::new(vec![(source, candidate)])
+        .expect("one typed pair must be valid");
+    let incompatibility_use =
+        catalog.incompatibility_use(source, candidate, ic_core::DischargeMode::Check);
+    let roles = TypedFiniteIncompatibilityRoles::new(
+        TypeSymbol::new("source").expect("valid source role"),
+        TypeSymbol::new("candidate").expect("valid candidate role"),
+    )
+    .expect("roles must differ");
+    assert!(matches!(
+        check_typed_finite_oriented_incompatibility_use(
+            &table,
+            &catalog,
+            incompatibility_use,
+            roles.clone(),
+            TypedFiniteObservation::Observed(source),
+            TypedFiniteObservation::Observed(candidate),
+        ),
+        Ok(TypedFiniteOrientedIncompatibilityUseResult::Incompatible(witness))
+            if witness.roles() == &roles
+                && witness.witness().incompatibility_use() == incompatibility_use
+    ));
+    let reversed_roles = TypedFiniteIncompatibilityRoles::new(
+        TypeSymbol::new("candidate").expect("valid candidate role"),
+        TypeSymbol::new("source").expect("valid source role"),
+    )
+    .expect("roles must differ");
+    assert!(matches!(
+        check_typed_finite_oriented_incompatibility_use(
+            &table,
+            &catalog,
+            incompatibility_use,
+            reversed_roles,
+            TypedFiniteObservation::Observed(source),
+            TypedFiniteObservation::Observed(candidate),
+        ),
+        Err(TypedFiniteOrientedIncompatibilityUseError::ClaimedPairAtWrongRoles { .. })
+    ));
+    let duplicate = TypeSymbol::new("source").expect("valid source role");
+    assert!(matches!(
+        TypedFiniteIncompatibilityRoles::new(duplicate.clone(), duplicate),
+        Err(TypedFiniteIncompatibilityRoleError::DuplicateRolePort(port))
+            if port.as_str() == "source"
     ));
 }
 

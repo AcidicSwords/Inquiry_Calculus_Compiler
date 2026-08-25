@@ -92,11 +92,14 @@ pub use finite_cell::{
     FiniteIncompatibilityResult, FiniteIncompatibilityTable, FiniteIncompatibilityWitness,
     FiniteObservation, FiniteTypedIncompatibilityUseCatalog, FiniteTypedObservationCatalog,
     TypedFiniteIncompatibilityError, TypedFiniteIncompatibilityResult,
+    TypedFiniteIncompatibilityRoleError, TypedFiniteIncompatibilityRoles,
     TypedFiniteIncompatibilityTable, TypedFiniteIncompatibilityUseError,
     TypedFiniteIncompatibilityUseResult, TypedFiniteIncompatibilityUseWitness,
-    TypedFiniteIncompatibilityWitness, TypedFiniteObservation, check_finite_incompatibility,
+    TypedFiniteIncompatibilityWitness, TypedFiniteObservation,
+    TypedFiniteOrientedIncompatibilityUseError, TypedFiniteOrientedIncompatibilityUseResult,
+    TypedFiniteOrientedIncompatibilityUseWitness, check_finite_incompatibility,
     check_typed_finite_incompatibility, check_typed_finite_incompatibility_use,
-    compare_finite_observation_cells,
+    check_typed_finite_oriented_incompatibility_use, compare_finite_observation_cells,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,

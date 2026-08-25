@@ -140,10 +140,11 @@ the two sides may have distinct declared types. An invalid declaration is an exp
 error, an unlisted valid pair remains `NoWitness`, and an unavailable value remains `Unknown`.
 Its derived use-bound checker additionally requires a named, non-generated `RelationUse` to
 rehash, check, and bind a positive listed pair. Generic relation uses do not yet name typed
-left/right incompatibility roles, so this is pair membership rather than an orientation check.
-Both forms remain derived finite evidence only: they do not actualize an observation, admit a
-standing incompatibility relation, establish relevance, coverage, support, or non-circularity, or
-establish departure/exteriority.
+left/right incompatibility roles, so a second derived checker receives explicit distinct named
+source/candidate ports and verifies the positive pair at those exact ports; it never infers roles
+from a naming convention. These forms remain derived finite evidence only: they do not actualize
+an observation, admit a standing incompatibility relation, establish relevance, coverage, support,
+or non-circularity, or establish departure/exteriority.
 
 `TaggedExteriorClaim` is a derived role view, not a new `PosNeg` carrier or stored history
 species. It retains one immutable negation-use tag, source, candidate, named departure-witness,

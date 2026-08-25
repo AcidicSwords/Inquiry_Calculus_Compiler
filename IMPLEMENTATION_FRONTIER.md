@@ -31,11 +31,11 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> Given a typed finite incompatibility pair tied to a named non-generated relation use, what is the
-> smallest typed role, provenance, and admission boundary that can establish its standing,
-> determination relevance, non-circularity, and oriented use without turning failed search,
-> projection, incomplete coverage, or caller-declared data into exteriority or silently collapsing
-> semantic and execution coverage?
+> Given a typed finite incompatibility pair tied to explicit source/candidate roles in a named,
+> non-generated relation use, what is the smallest provenance and admission boundary that can
+> establish its standing, determination relevance, and non-circularity without turning failed
+> search, projection, incomplete coverage, or caller-declared data into exteriority or silently
+> collapsing semantic and execution coverage?
 
 The protected difference is visible in the accepted sources:
 
@@ -112,6 +112,12 @@ The protected difference is visible in the accepted sources:
   data has no typed left/right incompatibility-port roles, so this proves pair membership, not
   orientation. It neither admits the table or use, connects `SupportRef` to the standing engine,
   establishes relevance/non-circularity/coverage, evaluates a relation, or establishes departure.
+- `check_typed_finite_oriented_incompatibility_use` accepts a checked pair/use result together
+  with two explicitly distinct `TypeSymbol` ports and verifies that the source and candidate forms
+  occur at those exact ports. Swapping roles is rejected. The roles are check inputs rather than
+  inferred port spelling or a persisted authority record, so this still neither establishes
+  standing/admission, observation actuality, determination relevance, non-circularity, coverage,
+  or departure.
 - `TaggedExteriorClaim` now preserves the next dependent role as a derived view: immutable
   negation-use tag, source, candidate, departure-witness, and separately typed execution-coverage
   identity. Its checker rehashes and structurally checks the named use and witness, then requires
@@ -296,9 +302,9 @@ The protected difference is visible in the accepted sources:
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The decoded
 candidate/observation-use equality and finite-pair/use membership are now checked structurally.
-The next discriminator must reject a purported departure whose incompatibility use lacks typed
-role orientation, separately admitted standing/relevance/non-circularity evidence, or more than
-caller-declared finite-table support.
+The same pair is now checked at explicit source/candidate role ports. The next discriminator must
+reject a purported departure whose use lacks separately admitted standing/relevance/non-circularity
+evidence or has no more than caller-declared finite-table support.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
 `T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty
