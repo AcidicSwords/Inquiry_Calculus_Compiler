@@ -91,6 +91,12 @@ one distinction orientation, typed source, claim-local relational-web reference,
 applicability, grain, horizon, support, and optional predecessor presentation. It is neither a
 complete fact store nor a departure, negation use, exterior, return, or standing revision.
 
+Phase 4 also has canonical `DepartureWitness` identity. It binds a source determination
+presentation to typed source/candidate observations, their typed fillings, an incompatibility-use
+identity, support, and context. The artifact itself is not an exterior predicate and cannot turn
+failed equality, search, retrieval, projection, unknown status, or protected non-equivalence into
+departure.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

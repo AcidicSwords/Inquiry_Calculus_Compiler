@@ -4,9 +4,9 @@
 Reciprocal-Boundary / Positive-Negation Edition.
 
 **Accepted implementation state:** Phase 3 first-order program syntax and structural checking
-pass on 2026-08-25; Phase 4 claim-local determination-presentation identity and source/ancestry
-checking pass. Supported answer materialization remains reserved for the Phase 6/7
-actuality-and-resolution boundary.
+pass on 2026-08-25; Phase 4 claim-local determination-presentation checking and positive
+departure-witness identity pass. Supported answer materialization remains reserved for the Phase
+6/7 actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -22,11 +22,11 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before claiming a candidate has departed from a standing source determination, resolve:
+Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> What is the smallest positive, relevant, non-circular `DepartureWitness` representation and
-> check that distinguishes supported incompatibility from failed equality, retrieval, search,
-> projection, or protected non-equivalence?
+> What is the smallest catalog check that ties `DepartureWitness` to its exact standing
+> presentation and declared relation-use context, while leaving relation evaluation,
+> incompatibility semantics, and non-circular derivation as later represented boundaries?
 
 The protected difference is visible in the accepted sources:
 
@@ -42,11 +42,15 @@ The protected difference is visible in the accepted sources:
   presentation, and recursively checks an optional predecessor. An ancestry edge may change the
   web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
   or horizon. It does not admit the web or generate departure.
+- `DepartureWitness` now canonically retains the source/candidate forms, source presentation,
+  source and candidate observation uses, their typed fillings, incompatibility use, support,
+  scope, applicability, and grain. Constructing it evaluates no relation and proves neither
+  incompatibility nor exteriority.
 
-Different answers determine whether exteriority rests on positive determination-relevant evidence
-or on absence/error conflation. The next discriminator must accept only a typed, supported,
-source-presentation-relevant incompatibility certificate and reject failed equality, failed
-search/retrieval, chart projection, and bare protected difference.
+Different answers determine whether certificate components actually describe one standing
+determination or merely coexist in an artifact. The next discriminator must reject a forged
+presentation/reference, a source that differs from the presentation source, and observation or
+incompatibility uses whose scope/applicability/grain differs from the claimed witness context.
 
 ## Known later questions
 

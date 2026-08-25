@@ -66,6 +66,8 @@ or passing.
 | P4-DETERMINATION-IR-001 claim-local determination-presentation canonical identity and ancestry | PASS | `determination_identity::determination_presentations_round_trip_with_explicit_context_and_ancestry` |
 | P4-DETERMINATION-IR-002 malformed determination-presentation rejection | PASS | `determination_identity::determination_presentations_reject_malformed_encodings` |
 | P4-DETERMINATION-IR-003 typed source and context-preserving predecessor validation | PASS | `determination_identity::determination_presentation_check_rejects_forged_source_and_incompatible_ancestry` |
+| P4-DEPARTURE-IR-001 positive departure-witness canonical identity | PASS | `departure_identity::departure_witnesses_round_trip_with_all_positive_evidence_roles` |
+| P4-DEPARTURE-IR-002 malformed departure-witness rejection | PASS | `departure_identity::departure_witnesses_reject_malformed_encodings` |
 
 ## Pending specification and plan categories
 
