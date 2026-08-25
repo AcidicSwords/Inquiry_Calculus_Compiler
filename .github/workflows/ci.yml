@@ -32,3 +32,44 @@ jobs:
 
       - name: Test workspace
         run: cargo test --locked --workspace --all-features
+
+  specification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Install pinned official Tectonic
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/tectonic-0.17.0-x86_64-unknown-linux-gnu.tar.gz"
+          binary_dir="$RUNNER_TEMP/tectonic-0.17.0"
+          url="https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-x86_64-unknown-linux-gnu.tar.gz"
+          sha256="1a715688baf591e650c8aeb160ae934e181685eecbb38b317de30b269ac5d606"
+
+          curl --fail --location --silent --show-error "$url" --output "$archive"
+          echo "$sha256  $archive" | sha256sum --check -
+          mkdir -p "$binary_dir"
+          tar --extract --gzip --file "$archive" --directory "$binary_dir"
+          "$binary_dir/tectonic" --version
+          echo "$binary_dir" >> "$GITHUB_PATH"
+
+      - name: Compile canonical specification
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p target/tex
+          tectonic -X compile \
+            --keep-logs \
+            --outdir target/tex \
+            Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex \
+            2>&1 | tee target/tex/tectonic-driver.log
+
+          reference_errors='undefined references?|reference .* undefined|multiply[- ]defined labels?|label .* multiply defined|duplicate labels?|destination with the same identifier'
+          if grep --extended-regexp --ignore-case --line-number "$reference_errors" target/tex/*.log; then
+            echo "Canonical specification contains unresolved or duplicate references." >&2
+            exit 1
+          fi

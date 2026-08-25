@@ -1,46 +1,266 @@
 # Inquiry Calculus v1.1 — Comprehensive Implementation Plan
+## Successor Reciprocal-Boundary / Positive-Negation Edition
 
-**Status:** Implementation-facing successor specification  
-**Scope:** Reference implementation architecture and build plan  
-**Source of truth:** The Inquiry Calculus v1.1 material, canonical additions, implementation successors, executable probes, and research returns established in this conversation  
-**Purpose:** Give an implementation agent enough exact structure to build the system without inventing semantic machinery
+**Status:** Current implementation-facing specification
+
+**Standing semantic authority:** Inquiry Calculus v1.1 together with its canonical additions, modified only by the successor reciprocal-boundary semantics established in the present implementation inquiry
+
+**Predecessor:** `Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md` as recorded by Git commit `49dc381ac230326aa28be6c157ece0d21a31eaa2`
+
+**Supersession rule:** This stable-path document supersedes the predecessor as the current implementation-facing plan. The predecessor remains retrievable from Git as ancestry and regression evidence; no competing live predecessor-plan path is retained.
+
+**Purpose:** Specify the smallest complete implementation architecture that realizes the standing calculus after the reciprocal-boundary correction without introducing semantic machinery not required by the calculus.
 
 ---
 
 # 0. Executive statement
 
-The project is ready to move from recursive architecture discovery into implementation.
+The implementation architecture remains fundamentally the one established for Inquiry Calculus v1.1:
 
-The semantic architecture is sufficiently settled. The remaining uncertainty is localized to explicit research gates and optimization choices rather than the fundamental shape of the system.
+- relations are the semantic substrate;
+- forms are typed and recursively reifiable;
+- questions are partially bound typed relations;
+- inquiry programs are first-order `Return | Ask(q, κ)` structures;
+- runtime execution lowers to `Return | Branch | Probe`;
+- actual returns remain distinct from generated possibilities and interpretations;
+- holes retain surrounding relational constraints;
+- protected equivalence remains consequence-relative;
+- standing remains independently warranted;
+- authoritative history is append-only and actuality-preserving;
+- folds retain ancestry, residuals, recovery, and reopening conditions;
+- representation and probe bases may grow;
+- self-revision remains predecessor-judged and cannot self-warrant.
 
-The implementation target is a persistent typed relational inquiry runtime in which:
+The major successor correction is concentrated in the reciprocal-boundary core.
 
-- questions are partial bindings of represented relations;
-- answer-dependent inquiry programs are first-order, inspectable, persistable syntax;
-- reciprocal inquiry preserves answer paths and provenance;
-- the sixfold reciprocal profile is a derived view rather than a dedicated runtime ontology;
-- runtime execution reduces to `Return`, `Branch`, and `Probe`;
-- raw actuality is immutable and precedes interpretation;
-- question and return traces are derived from one authoritative event spine;
-- holes, residual fibers, and protected completion classes drive continued inquiry;
-- cue-guided memory traversal is recurrent and question-conditioned;
-- residual inquiry, cue extension, reciprocal repair, fold reopening, and fresh discrimination share one separator problem;
-- generative question capability is distinct from currently materialized questions and from question-selection policy;
-- question generation within a binding can only exploit distinctions expressible by the admitted question language;
-- materialization gaps are handled by generation, while expressibility gaps open governed binding-extension inquiry;
-- binding growth is classified as definitional extension, conservative observational extension, or rebinding;
-- historical actuality is never rewritten under later bindings;
-- standing is positive, least-fixed-point, provenance-carrying, and non-self-licensing;
-- folds compress traversal or representation only under explicit regenerative and reopening contracts;
-- self-revision is predecessor-judged and cannot warrant itself.
+The predecessor architecture began from reciprocal relations or boundary projections and then compiled path-preserving round trips. That preserved answer dependence and branch provenance, but it still treated "the other side" as already supplied by the reciprocal distinction.
 
-The implementation should remain deliberately small until a protected fixture demonstrates the need for stronger infrastructure.
+The successor semantics makes the missing dependency explicit:
+
+\[
+\boxed{
+\text{determination}
+\to
+\text{typed negation}
+\to
+\text{positive determination of that negation}
+\to
+\text{return}
+}
+\]
+
+and then recursively repeats the same act from the positively determined exterior.
+
+The sixfold remains:
+
+\[
+\boxed{
+\Xi_D
+=
+(S_X,O_X,R_X;S_Y,O_Y,R_Y)
+}
+\]
+
+but the six roles are no longer jointly open independent slots.
+
+They arise through a dependent reciprocal program:
+
+\[
+\boxed{
+\begin{aligned}
+S_X
+&\to
+\operatorname{NegField}_D^X(S_X)
+\to
+O_X
+\to
+\operatorname{RetField}_D^X(O_X),\\
+O_X
+&\rightsquigarrow
+S_Y
+\to
+\operatorname{NegField}_D^Y(S_Y)
+\to
+O_Y
+\to
+\operatorname{RetField}_D^Y(O_Y).
+\end{aligned}
+}
+\]
+
+The implementation recursion further established several corrections required to make this conception exact:
+
+1. **Typed negation is not Boolean complement.** It is a role played by an ordinary oriented typed relation with positive exteriority evidence and explicit semantic coverage.
+
+2. **Exteriority is not an unexplained predicate.** A negation incidence is sound when it can be transformed into a positive determination-departure witness: source and candidate are placed in incompatible cells by a standing discriminator relevant to the current source determination.
+
+3. **Exteriority is determination-relative, not equivalent to protected non-equivalence.** A candidate may be exterior to the current determination while still protected-equivalent to the source under the current horizon.
+
+4. **A live determination may admit multiple lawful negation relations.** They form a tagged family, not an untagged semantic union. Provenance must survive the return.
+
+5. **Semantic negation coverage is distinct from execution/generator coverage.** A semantically exhaustive relation may be only partly explored; a semantically partial relation may be exhaustively executed.
+
+6. **Return is reverse section, not state mutation.** For \(N\subseteq X\times Y\), after \(N(x,y)\), the pure return field is:
+   \[
+   N^{-1}[y].
+   \]
+
+7. **A source is always a candidate in the reverse section of the same incidence, but need not be uniquely recovered.** Exact return stability is therefore a fiber-level determination claim.
+
+8. **Recovery is not a new semantic primitive.** A return fiber recovers a protected source relation when the protected observation induced by that relation is constant over the return fiber.
+
+9. **Multiple negation relations can jointly carry information that no one relation carries alone.** Their exploratory exterior space is a tagged sum; their accumulated return information is a product signature.
+
+10. **State-changing redetermination is not pure hole re-solving after adding a compatible exterior constraint.** Monotone compatible constraint addition cannot change an already determined source class. Genuine semantic change requires reconciliation/revision of the standing web, changed applicability, changed grain, changed binding, or prior underdetermination.
+
+11. **\(\Gamma_D\) becomes a downstream compatibility contract.** It does not manufacture six arbitrary role fillings into a sixfold.
+
+12. **The sixfold is still a derived view over ordinary typed questions, fibers, resolutions, and actual events.** No dedicated authoritative sixfold history or runtime species is required.
+
+These corrections do not replace the rest of the implementation plan. They give the existing separator, representation-growth, probe-invention, actuality, history, folding, binding-extension, and self-revision mechanisms their canonical reciprocal generator.
+
+The current implementation center is therefore:
+
+\[
+\boxed{
+\begin{array}{c}
+\text{standing determination presentation}\\
+\downarrow\\
+\text{positive determination-departure relation}\\
+\downarrow\\
+\text{coverage-indexed typed negation use}\\
+\downarrow\\
+\text{tagged positive exterior occurrence}\\
+\downarrow\\
+\text{reverse-section return fiber}\\
+\downarrow\\
+\text{protected recovery}\\
+\downarrow\\
+\text{seed/reorientation}\\
+\downarrow\\
+\text{reciprocal repetition}\\
+\downarrow\\
+\text{residual separator}\\
+\downarrow\\
+\text{representation / probe / binding growth when required}.
+\end{array}
+}
+\]
+
+No Boolean complement, symmetric "other side", scalar similarity metric, hidden exterior oracle, or state-changing `Redet` primitive belongs in the implementation.
 
 ---
 
-# 1. Governing implementation invariant
+# 1. Authority and relationship to v1.1
 
-The implementation must preserve consequential distinctions across every transformation.
+This document is not a replacement calculus.
+
+It is the implementation successor obtained by correcting the generative interpretation of reciprocal distinction while preserving every v1.1 structure not broken by that correction.
+
+The following remain standing:
+
+\[
+\boxed{
+\text{RELATION is the semantic primitive.}
+}
+\]
+
+\[
+\boxed{
+\mathsf{Form}_{\mathbb B}
+=
+\sum_{A:\mathsf{Ty}_{\mathbb B}}
+\llbracket A\rrbracket_{\mathbb B}.
+}
+\]
+
+\[
+\boxed{
+\text{Question}
+=
+\text{partially bound typed relation}.
+}
+\]
+
+\[
+\boxed{
+\text{Hole}
+=
+\text{removed filling with surrounding relations retained}.
+}
+\]
+
+\[
+\boxed{
+\text{actuality}
+\neq
+\text{generation}
+\neq
+\text{interpretation}
+\neq
+\text{warrant}.
+}
+\]
+
+\[
+\boxed{
+\mathsf{IProg}
+=
+\mathsf{Return}_I
+\mid
+\mathsf{Ask}(q,\kappa).
+}
+\]
+
+\[
+\boxed{
+\mathsf{Prog}
+=
+\mathsf{Return}
+\mid
+\mathsf{Branch}
+\mid
+\mathsf{Probe}.
+}
+\]
+
+\[
+\boxed{
+\mathsf{Stand}
+=
+\mu T.
+}
+\]
+
+\[
+\boxed{
+\text{folds preserve ancestry and reopening}.
+}
+\]
+
+\[
+\boxed{
+\text{self-revision is predecessor-judged}.
+}
+\]
+
+The regenerative determination criterion remains constitutional:
+
+\[
+\boxed{
+Determines_{\mathcal H}(W,x)
+\iff
+\operatorname{Sol}_W/\equiv_{\mathcal H}
+=
+\{[x]_{\mathcal H}\}.
+}
+\]
+
+The successor gives this criterion a stronger reciprocal interpretation: a web determines \(x\) exactly when its remaining lawful fillings contain only one protected source class. Positive-negation inquiry explores forms outside the current determination and asks what source structure survives the reciprocal return.
+
+---
+
+# 2. Governing implementation invariant
 
 For every implementation transformation
 
@@ -48,59 +268,102 @@ For every implementation transformation
 T:A\to B,
 \]
 
-the required question is:
+ask:
 
 \[
 \boxed{
-\text{Can any protected continuation distinguish execution before and after }T?
+\text{Can a protected continuation distinguish execution before and after }T?
 }
 \]
 
-If yes, the distinction must remain represented, versioned, or recoverable.
+If yes, preserve the distinction explicitly or retain enough authoritative ancestry/residual structure to regenerate it.
 
-If no protected continuation can distinguish the difference under the declared horizon and regime, the implementation may fold or quotient it, but only with a recovery and reopening contract where later protected use may inspect it.
+If no, quotienting/folding is permitted only relative to a declared:
 
-The implementation therefore follows:
+- horizon;
+- grain;
+- scope;
+- applicability regime;
+- continuation family;
+- recovery contract;
+- unlock condition.
+
+The positive-negation successor adds a second implementation discipline:
 
 \[
 \boxed{
-\text{refine where protected consequences split; fold where they do not.}
+\text{a candidate exterior cannot become exterior merely because a generator calls it "other".}
 }
 \]
 
-This law applies to:
-
-- semantic representation;
-- compilation;
-- prompt rendering;
-- provider adaptation;
-- memory retrieval;
-- cue planning;
-- question generation;
-- method learning;
-- binding extension;
-- standing;
-- persistence;
-- replay;
-- self-revision.
+Every oriented negative relation must have a non-circular positive departure contract.
 
 ---
 
-# 2. Non-negotiable separations
+# 3. Constitutional positive-negation law
 
-The implementation must never silently identify the following:
+The semantic primitive remains relation.
+
+The primitive act of reciprocal inquiry is:
+
+\[
+\boxed{
+\textbf{POSITIVELY DETERMINE A LAWFUL TYPED NEGATION OF THE LIVE
+DETERMINATION, THEN RETURN THROUGH THE RELATION THAT LICENSED IT.}
+}
+\]
+
+For source determination \(x\):
+
+\[
+x
+\to
+N_D^X[x]
+\to
+?y[N_D^X(x,y)]
+\to
+y
+\to
+(N_D^X)^{-1}[y].
+\]
+
+Logical negation, a negative relation, its section, and one positive exterior filling remain distinct:
+
+\[
+\boxed{
+\neg x
+\neq
+N_D^X
+\neq
+N_D^X[x]
+\neq
+y.
+}
+\]
+
+No new ontological carrier called `PosNeg` is introduced.
+
+`PosNeg` is a role:
+
+\[
+\operatorname{PosNeg}_D^X(x,y)
+\iff
+N_D^X(x,y)
+\]
+
+under an admitted `NegationUse`.
+
+---
+
+# 4. Non-negotiable separations
+
+The implementation must preserve at least:
 
 \[
 \begin{aligned}
 \mathsf{Question}
 &\neq
-\mathsf{Probe},\\
-\mathsf{Probe}
-&\neq
-\mathsf{SurfacePlan},\\
-\mathsf{SurfacePlan}
-&\neq
-\mathsf{BackendRequest},\\
+\mathsf{RenderedPrompt},\\
 \mathsf{Generated}
 &\neq
 \mathsf{Actual},\\
@@ -113,154 +376,132 @@ The implementation must never silently identify the following:
 \mathsf{Check}
 &\neq
 \mathsf{Warrant},\\
-\mathsf{Warrant}
+\mathsf{Claim}
 &\neq
-\mathsf{Standing},\\
+\mathsf{StandingClaim},\\
 \mathsf{Retained}
 &\neq
-\mathsf{Accessible},\\
 \mathsf{Accessible}
-&\neq
-\mathsf{Active},\\
+\neq
 \mathsf{Active}
-&\neq
+\neq
 \mathsf{Standing},\\
-\mathsf{MaterializedQuestion}
+\mathsf{BoundaryProjection}
 &\neq
-\mathsf{GenerableQuestion},\\
-\mathsf{GenerableQuestion}
+\mathsf{PositiveNegation},\\
+\mathsf{NegationUse}
 &\neq
-\mathsf{SelectedQuestion},\\
+\mathsf{BooleanComplement},\\
+\mathsf{ExteriorDeparture}
+&\neq
+\mathsf{ProtectedNonEquivalence},\\
+\mathsf{Unknown}
+&\neq
+\mathsf{Negative},\\
+\mathsf{NegationCoverage}
+&\neq
+\mathsf{GeneratorCoverage},\\
+\mathsf{NegationFrontier}
+&\neq
+\mathsf{CombinedNegationRelation},\\
+\mathsf{ReturnFiber}
+&\neq
+\mathsf{SelectedReturnFilling},\\
+\mathsf{PureReturn}
+&\neq
+\mathsf{SemanticReconciliation},\\
+\mathsf{LocalRecovery}
+&\neq
+\mathsf{SchemaRecovery},\\
+\mathsf{OccurrenceRecovery}
+&\neq
+\mathsf{FamilyRecovery},\\
+\mathsf{GenerationCapability}
+&\neq
+\mathsf{MaterializedQuestionSet}
+\neq
+\mathsf{SelectionPolicy},\\
 \mathsf{MaterializationGap}
 &\neq
 \mathsf{ExpressibilityGap},\\
 \mathsf{DefinitionalExtension}
 &\neq
-\mathsf{ConservativeObservationalExtension},\\
 \mathsf{ConservativeObservationalExtension}
-&\neq
+\neq
 \mathsf{Rebinding},\\
-\mathsf{TraversalLearning}
-&\neq
-\mathsf{SemanticWarrant},\\
-\approx_{\mathcal H,\mathcal D}
-&\neq
-\equiv_{\mathcal H},\\
-\mathsf{NotFound}
-&\neq
-\mathsf{Impossible},\\
 \mathsf{SelfApplication}
 &\neq
 \mathsf{SelfWarrant}.
 \end{aligned}
 \]
 
-A type, record, cache, database schema, or convenience API that collapses any of these distinctions is a defect unless a protected-equivalence licence explicitly justifies the collapse.
+Any representation that fuses these without an explicit equivalence licence is defective.
 
 ---
 
-# 3. Architectural dependency direction
+# 5. Implementation classes
 
-All implementation decisions must respect:
+Every component belongs to one of three classes.
 
-\[
-\boxed{
-\text{semantic relations}
-\to
-\text{typed IR}
-\to
-\text{compiler/runtime}
-\to
-\text{persistence/indexes/backends}
-}
-\]
+## 5.1 Constitutional machinery
 
-Never allow:
+Required for semantics:
 
-- provider SDK structure;
-- storage schema;
-- framework abstractions;
-- host-language callbacks;
-- cache layout;
-- prompt format;
-- embedding space;
-
-to determine semantics merely because they are convenient.
-
-No provider, model, database, scheduler, vector index, or framework is a semantic oracle.
-
----
-
-# 4. Three implementation classes
-
-Every planned component belongs to exactly one of these classes.
-
-## 4.1 Constitutional machinery
-
-Required to preserve the semantics already established.
-
-Examples:
-
-- `TyIR`;
+- type universe;
 - typed forms;
-- relation schemas;
+- represented relation schemas;
 - partial binding;
-- `OpenQuery`;
 - first-order `IProg`;
-- protected path provenance;
-- `Return | Branch | Probe`;
-- immutable raw return;
+- runtime `Return | Branch | Probe`;
 - actual event spine;
-- hole/fiber representation;
+- raw-return preservation;
+- holes/fibers;
 - protected completion fields;
+- determination presentations;
+- departure witnesses;
+- coverage-indexed negation uses;
+- return fibers;
+- protected recovery;
 - standing;
-- binding versions and bridges;
-- fold recovery and reopening.
+- binding versions;
+- folds/recovery/reopening;
+- predecessor-judged revision.
 
-These must be implemented correctly before optimization.
+## 5.2 Derived structures
 
-## 4.2 Derived implementation structures
+Rebuildable where practical:
 
-Useful but not semantic primitives.
-
-Examples:
-
-- sixfold view;
-- question trace;
-- return trace;
 - active view;
+- boundary chart;
+- negation frontier;
+- duplicate exterior grouping;
+- sixfold occurrence view;
+- question/return trace projections;
+- return-signature family;
+- recovery profile;
 - cue plan;
-- materialized discriminator basis;
 - operator occurrence graph;
-- method lookup;
-- standing cache;
-- access indexes;
 - affected-fold index;
-- cross-binding transported views.
+- transported cross-binding view.
 
-These should be rebuildable where feasible.
+## 5.3 Research/optimization gates
 
-## 4.3 Research/optimization gates
+Current remaining gates include:
 
-Must remain explicit rather than guessed.
+- exact admission/minimization rule for the source determination presentation \(W_D(x)\);
+- open-ended negation/generator fairness;
+- learned question-selection policy;
+- cross-binding standing lift beyond the conservative rule;
+- vector retrieval strict-gain threshold;
+- production scaling thresholds.
 
-Current examples:
-
-- the smallest useful open-ended separator generator regime;
-- question-selection optimization;
-- exact-to-approximate cue-planning threshold;
-- whether vector retrieval provides protected strict gain;
-- when resumable/fair generator machinery becomes necessary;
-- cross-binding standing lift into an enlarged horizon;
-- when SQLite/serial semantic execution reaches a measured boundary.
+These must not block implementation of the settled semantic spine.
 
 ---
 
-# 5. Reference implementation stack
+# 6. Reference implementation stack
 
-Use Rust for the reference implementation.
-
-Recommended baseline:
+Use:
 
 ```text
 Rust
@@ -282,29 +523,18 @@ PostgreSQL
 Kafka
 Neo4j
 vector database
-distributed workflow system
-generic multi-agent framework
-actor framework
+generic agent framework
+distributed workflow engine
 Kubernetes
 ```
 
-The first architecture is a single-process reference runtime with one authoritative writer.
-
-All semantic identities must be independent of:
-
-- SQLite row IDs;
-- process memory addresses;
-- provider request IDs;
-- filesystem locations;
-- scheduler task IDs.
+The first implementation is a single-process semantic controller with one authoritative writer.
 
 ---
 
-# 6. Repository shape
+# 7. Repository shape
 
-Start smaller than the final logical decomposition.
-
-Recommended workspace:
+Recommended starting structure:
 
 ```text
 inquiry-calculus/
@@ -329,29 +559,15 @@ inquiry-calculus/
 └── tests/
 ```
 
-Do not pre-create a large collection of empty crates.
+Do not create a crate merely because a conceptual noun exists.
 
-Split `ic-core` only when there is actual independent variation or dependency pressure. Likely later splits are:
-
-```text
-ic-types
-ic-rel
-ic-program
-ic-standing
-ic-retrieval
-ic-learning
-ic-provider
-```
-
-A module boundary must be earned by a protected implementation distinction, not aesthetic layering.
+Split only after real independent variation or dependency pressure appears.
 
 ---
 
-# 7. Immutable artifact identity
+# 8. Immutable semantic identity
 
-All immutable semantic/program objects are content-addressed.
-
-Core references:
+Use content-addressed immutable artifacts.
 
 ```rust
 pub struct ArtifactRef([u8; 32]);
@@ -359,68 +575,40 @@ pub struct ArtifactRef([u8; 32]);
 pub struct TypeRef(ArtifactRef);
 pub struct FormRef(ArtifactRef);
 pub struct RelationRef(ArtifactRef);
+pub struct RelationUseRef(ArtifactRef);
 pub struct QueryRef(ArtifactRef);
+pub struct IProgRef(ArtifactRef);
 pub struct ProgramRef(ArtifactRef);
-pub struct OperatorRef(ArtifactRef);
-pub struct ReturnRef(ArtifactRef);
 pub struct EventRef(ArtifactRef);
 pub struct ClaimRef(ArtifactRef);
-pub struct MethodRef(ArtifactRef);
-pub struct PatchRef(ArtifactRef);
 pub struct BindingVersionRef(ArtifactRef);
+pub struct NegationUseRef(ArtifactRef);
 ```
 
-Canonical serialization must be explicitly defined.
+Canonical serialization must explicitly define ordering and encoding.
 
-Do not assume arbitrary JSON serialization is canonical.
+Semantic identity must never depend on:
 
-Every hash input includes:
-
-```text
-object kind
-schema version
-canonical payload
-```
-
-Required properties:
-
-\[
-Decode(Canonical(x))=x
-\]
-
-and:
-
-\[
-Canonical(x)=Canonical(y)\Rightarrow Ref(x)=Ref(y).
-\]
-
-Committed records may never contain dangling artifact references.
-
-Orphan immutable artifacts are acceptable.
+- database row IDs;
+- process memory addresses;
+- provider request IDs;
+- filesystem paths;
+- scheduler IDs.
 
 ---
 
-# 8. Typed form universe
+# 9. Typed form universe
 
-Represent:
+Retain:
 
 \[
 \mathsf{Form}_{\mathbb B}
 =
 \sum_{A:\mathsf{Ty}_{\mathbb B}}
-\llbracket A\rrbracket_{\mathbb B}
+\llbracket A\rrbracket_{\mathbb B}.
 \]
 
-without a universal dynamic escape hatch.
-
-```rust
-pub struct TypedFormRef {
-    pub ty: TypeRef,
-    pub value: ArtifactRef,
-}
-```
-
-Reference type IR:
+Reference IR:
 
 ```rust
 enum TyIR {
@@ -462,29 +650,13 @@ enum TyIR {
 }
 ```
 
-The type language is representational syntax.
-
-A binding supplies semantic interpretation where applicable.
-
-Implement:
-
-```rust
-fn check_value(
-    binding: BindingVersionRef,
-    ty: TypeRef,
-    value: ArtifactRef,
-) -> Result<TypeCertificate>;
-
-fn type_of(form: FormRef) -> Result<TypeRef>;
-```
-
-No semantic boundary may accept an untyped generic payload.
+No dynamically typed semantic escape hatch.
 
 ---
 
-# 9. Relation schemas
+# 10. Relation schemas
 
-Core relation representation:
+Relations remain authoritative semantic structure.
 
 ```rust
 struct RelSchemaIR {
@@ -492,7 +664,6 @@ struct RelSchemaIR {
     binding: BindingVersionRef,
 
     ports: Vec<NamedPort>,
-
     body: FormulaRef,
 
     laws: Vec<LawRef>,
@@ -500,57 +671,48 @@ struct RelSchemaIR {
 }
 ```
 
-Ports:
+Relations may be:
 
-```rust
-struct NamedPort {
-    name: Symbol,
-    ty: TypeRef,
-}
-```
+- deterministic;
+- nondeterministic;
+- partial;
+- multiport;
+- cross-typed;
+- binding-native.
 
-Reference formula language:
-
-```rust
-enum FormulaIR {
-    True,
-    False,
-
-    Eq(TermExprRef, TermExprRef),
-
-    Rel {
-        relation: RelationRef,
-        args: Vec<TermExprRef>,
-    },
-
-    And(Vec<FormulaRef>),
-    Or(Vec<FormulaRef>),
-
-    Exists {
-        domain: TypeRef,
-        body: FormulaRef,
-    },
-
-    ForAll {
-        domain: TypeRef,
-        body: FormulaRef,
-    },
-
-    BindingNative {
-        binding: BindingVersionRef,
-        operator: NativeFormulaRef,
-        args: Vec<TermExprRef>,
-    },
-}
-```
-
-No host callback can decide semantic truth inside a relation schema.
+No host callback silently decides relation meaning.
 
 ---
 
-# 10. Questions are partially bound relations
+# 11. Relation uses
 
-A question is not a separate primitive linguistic species.
+A relation schema and a relation's use in a live inquiry are protected-different.
+
+Use:
+
+```rust
+struct RelationUseIR {
+    relation: RelationRef,
+
+    scope: ScopeRef,
+    applicability: ApplicabilityRef,
+
+    grain: GrainRef,
+    horizon: HorizonRef,
+
+    authority: DischargeMode,
+
+    support: SupportRef,
+}
+```
+
+A relation may be standing globally while one specific use is inapplicable.
+
+A relation may be semantically defined while one current use has only working support.
+
+---
+
+# 12. Questions remain partial bindings
 
 ```rust
 struct OpenQueryIR {
@@ -567,7 +729,7 @@ struct OpenQueryIR {
 }
 ```
 
-Each open port carries discharge authority:
+Per open port:
 
 ```rust
 enum DischargeMode {
@@ -579,27 +741,23 @@ enum DischargeMode {
 }
 ```
 
-A `Generate` return cannot discharge `Probe`, `Check`, or `Warrant`.
+Required operations:
 
-Implement:
-
-```rust
-bind_port
-expose_port
-plug_answer
-normalize_query
-compose_relations
-dependent_bind
-completion_fiber
+```text
+Bind
+Expose
+Plug
+Normalize
+Compose
+DependentBind
+CompletionFiber
 ```
-
-Binding one port must preserve the represented relation on every remaining open port.
 
 ---
 
-# 11. Source inquiry programs
+# 13. Source inquiry programs
 
-Canonical source language:
+Retain:
 
 \[
 K
@@ -609,9 +767,7 @@ K
 \mathsf{Ask}(q,\kappa).
 \]
 
-Do not serialize Rust closures.
-
-Use first-order syntax:
+Use first-order inspectable syntax.
 
 ```rust
 enum IProgIR {
@@ -626,70 +782,1155 @@ enum IProgIR {
 }
 ```
 
-The continuation is checked under:
+No arbitrary Rust closures.
 
-```text
-Γ, answer : SuppAns(question)
-```
+The actual answer may construct the later question.
 
-and instantiated by capture-safe substitution:
-
-```rust
-fn apply_continuation(
-    continuation: IProgRef,
-    supported_answer: FormRef,
-) -> Result<IProgRef>;
-```
-
-Use de Bruijn indices or another explicit hygienic binder scheme.
-
-A later question may depend on the actual returned answer.
-
-This must be possible without host controller logic.
+This remains essential to the reciprocal sixfold.
 
 ---
 
-# 12. Pure registered operators
+# 14. The source determination presentation
 
-Deterministic source operations may be registered as typed pure operators:
+The successor semantics requires an explicit source determination presentation:
+
+\[
+W_D^X(x).
+\]
+
+This is a represented relational web relative to which current reciprocal departure is judged.
+
+It is not automatically:
+
+- every fact known about \(x\);
+- every standing relation mentioning \(x\);
+- every protected continuation;
+- one globally unique essence.
+
+Reference:
 
 ```rust
-struct PureOpContract {
-    id: PureOpRef,
+struct DeterminationPresentationIR {
+    distinction: DistinctionRef,
+    orientation: Orientation,
 
-    input: Vec<TypeRef>,
-    output: TypeRef,
+    source: FormRef,
 
-    semantic_relation: RelationRef,
+    web: RelationalWebRef,
 
-    implementation: ProgramRef,
-    implementation_version: ArtifactRef,
+    scope: ScopeRef,
+    applicability: ApplicabilityRef,
+
+    grain: GrainRef,
+    horizon: HorizonRef,
+
+    support: SupportRef,
+
+    status: DeterminationPresentationStatus,
 }
 ```
 
-Examples:
+The exact canonical admission/minimization law for `web` remains a research gate.
 
-```text
-projection
-finite-set intersection
-comparison
-arithmetic
-tuple construction
-normalization
-```
+The safe initial implementation rule is:
 
-The implementation is versioned and tied to represented semantics.
+> use the support/dependency web of the specific standing determination occupying the source role; do not automatically add unrelated standing facts merely because they concern the same form.
 
-No hidden native callback gains semantic authority merely by being deterministic.
+Regenerative minimization may later compress this web, but compression must retain the predecessor presentation as ancestry.
 
 ---
 
-# 13. Reciprocal distinction representation
+# 15. Departure witness: the least positive exterior certificate
 
-A reciprocal distinction is represented by its actual relation/boundary structure, not by six independent fields.
+Exteriority itself is not a primitive.
+
+For source \(x:X\), candidate \(y:Y\), use positive represented observations:
+
+\[
+d_X:X\rightsquigarrow A,
+\]
+
+\[
+d_Y:Y\rightsquigarrow B,
+\]
+
+with supported answers:
+
+\[
+d_X(x,a),
+\qquad
+d_Y(y,b),
+\]
+
+and a standing incompatibility relation:
+
+\[
+\perp\hookrightarrow A\times B,
+\qquad
+a\perp b.
+\]
+
+Additionally, the source-side discriminator must be relevant to the current determination presentation.
+
+Then:
+
+\[
+\boxed{
+Depart_D(x,y)
+}
+\]
+
+is witnessed.
+
+A derived certificate may be:
 
 ```rust
-struct DistinctionIR {
+struct DepartureWitnessIR {
+    distinction: DistinctionRef,
+
+    source: FormRef,
+    candidate: FormRef,
+
+    source_presentation:
+        DeterminationPresentationRef,
+
+    source_observation:
+        RelationUseRef,
+
+    candidate_observation:
+        RelationUseRef,
+
+    source_answer:
+        FormRef,
+
+    candidate_answer:
+        FormRef,
+
+    incompatibility:
+        RelationUseRef,
+
+    support:
+        SupportRef,
+
+    scope:
+        ScopeRef,
+
+    applicability:
+        ApplicabilityRef,
+
+    grain:
+        GrainRef,
+}
+```
+
+No undefined `ExteriorIR` is required.
+
+---
+
+# 16. Departure is not protected non-equivalence
+
+The implementation must permit:
+
+\[
+Depart_D(x,y)
+\land
+x\equiv_{\mathcal H}y.
+\]
+
+This is a useful positive near-negation: the current determination presentation places \(y\) outside the source, while the protected horizon cannot yet inspect a consequential difference.
+
+Likewise:
+
+\[
+x\not\equiv_{\mathcal H}y
+\]
+
+does not automatically prove:
+
+\[
+Depart_D(x,y).
+\]
+
+The protected distinction may depend on a relation outside the current determination presentation.
+
+Therefore:
+
+\[
+\boxed{
+\text{determination departure}
+\neq
+\text{protected consequence separation}.
+}
+\]
+
+---
+
+# 17. Cell exclusion and boundary crossing are derived
+
+For exact same-carrier conjunctive determination cells:
+
+\[
+C_W(x)
+=
+\bigcap_jC_j(x),
+\]
+
+positive constitutive separator existence and cell exclusion coincide.
+
+The implementation recursion exhaustively checked 65,536 finite feature/source/candidate cases with no mismatch.
+
+But in incomplete regimes, raw signature mismatch is not enough. A separate exhaustive ternary fixture showed 12 of 36 source/candidate combinations where raw signatures differed but no positive incompatible observation existed.
+
+Therefore:
+
+\[
+\boxed{
+\text{unknown}
+\neq
+\text{departure}.
+}
+\]
+
+Boundary crossing is stronger:
+
+\[
+\boxed{
+BoundaryCross
+=
+DepartureWitness
++
+Traversal/SuccessionProvenance.
+}
+\]
+
+A candidate can be positively exterior without an observed crossing path.
+
+---
+
+# 18. Typed negation is a supported relation role
+
+An oriented typed negation is an ordinary relation:
+
+\[
+N_D^X
+\hookrightarrow
+X\times Y.
+\]
+
+A use is lawful when:
+
+1. it is well typed;
+2. orientation is explicit;
+3. applicability and scope are explicit;
+4. every admitted edge has a sound departure derivation at the claimed authority;
+5. semantic coverage is explicit;
+6. warrant is explicit.
+
+Use:
+
+```rust
+struct NegationUseIR {
+    relation: RelationRef,
+
+    distinction: DistinctionRef,
+    orientation: Orientation,
+
+    source_determination:
+        DeterminationPresentationRef,
+
+    candidate_field:
+        RelationRef,
+
+    soundness_derivation:
+        ProgramRef,
+
+    soundness:
+        ExteriorSoundness,
+
+    semantic_coverage:
+        NegationCoverage,
+
+    applicability:
+        ApplicabilityRef,
+
+    scope:
+        ScopeRef,
+
+    grain:
+        GrainRef,
+
+    horizon:
+        HorizonRef,
+
+    provenance:
+        Vec<ArtifactRef>,
+}
+```
+
+---
+
+# 19. Negation soundness is non-circular
+
+For exact soundness:
+
+\[
+\boxed{
+N_D^X(x,y)
+\Rightarrow
+\exists w:
+DepartureWitness_D(x,y,w).
+}
+\]
+
+The negation relation cannot use its own asserted "negativity" as the sole reason the candidate is exterior.
+
+Possible independent formation routes include:
+
+- exact disjoint answer cells;
+- standing incompatibility/apartness;
+- exact residual determination classes;
+- binding-native incompatibility;
+- actual checked boundary departure;
+- cross-binding comparison with a standing bridge.
+
+These are provenance routes, not semantic negation variants.
+
+---
+
+# 20. Typed negation is not Boolean complement
+
+The implementation must never use:
+
+```text
+not source -> negative
+not proved source -> negative
+not in current results -> negative
+```
+
+unless a binding explicitly supplies an exact exhaustive complement law.
+
+The implementation recursion established that soundness and exhaustiveness are different.
+
+In the exact four-element finite comparison there were:
+
+- 284 sound source-relative exterior fields;
+- 60 exhaustive complements;
+- 168 nonempty sound strict partial fields.
+
+Therefore exhaustive complement cannot be a constitutional requirement.
+
+---
+
+# 21. Negation semantic coverage
+
+Use:
+
+```rust
+enum NegationCoverage {
+    ExactExhaustive {
+        regime: RegimeRef,
+        certificate: ArtifactRef,
+    },
+
+    ExactOnField {
+        field: RelationRef,
+        certificate: ArtifactRef,
+    },
+
+    CertifiedPartial,
+
+    WorkingOpen,
+}
+```
+
+Interpretation:
+
+- `ExactExhaustive`: all admissible exteriors in the declared full regime;
+- `ExactOnField`: complete only on a declared candidate field;
+- `CertifiedPartial`: every represented edge is sound, but no completeness claim;
+- `WorkingOpen`: soundness and/or coverage remains provisional.
+
+An empty exact exhaustive field is protected-different from an empty unsearched working field.
+
+---
+
+# 22. Semantic coverage and execution coverage remain separate
+
+A relation may be semantically exhaustive while the runtime has explored only part of its section.
+
+A semantically partial relation may be fully enumerated.
+
+Therefore:
+
+\[
+\boxed{
+NegationCoverage
+\neq
+GeneratorCoverage.
+}
+\]
+
+Do not reuse one enum for both.
+
+---
+
+# 23. Negative frontiers are tagged families
+
+A determination may admit:
+
+\[
+\mathcal N_D^X
+=
+\{\mathfrak N_i\}_{i\in I}.
+\]
+
+Targets may differ:
+
+\[
+N_i
+\hookrightarrow
+X\times Y_i.
+\]
+
+For source \(x\):
+
+\[
+\boxed{
+NegFront_D^X(x)
+=
+\sum_{i\in I_x}
+N_i[x].
+}
+\]
+
+Each occurrence is tagged:
+
+\[
+(i,y).
+\]
+
+Do not create an authoritative untagged union.
+
+The same exterior form reached by two uses may have different reverse return fibers.
+
+The recursion established a direct breaker:
+
+\[
+N_1^{-1}[y]
+\neq
+N_2^{-1}[y]
+\]
+
+even when both produce the same \(y\).
+
+Therefore relation-use provenance is part of the reciprocal occurrence.
+
+---
+
+# 24. Frontier implementation
+
+Derived:
+
+```rust
+struct ActiveNegationUseIR {
+    use_ref: NegationUseRef,
+
+    source: FormRef,
+
+    candidate_field: FiberRef,
+
+    semantic_coverage:
+        NegationCoverage,
+
+    execution_status:
+        GeneratorCoverage,
+}
+```
+
+Optional derived view:
+
+```rust
+struct NegationFrontierViewIR {
+    source: FormRef,
+
+    distinction: DistinctionRef,
+    orientation: Orientation,
+
+    members:
+        Vec<ActiveNegationUseIR>,
+
+    collective_coverage:
+        Option<CollectiveCoverageRef>,
+
+    regime:
+        ArtifactRef,
+}
+```
+
+No `CombinedNegationIR`.
+
+---
+
+# 25. Collective coverage requires a certificate
+
+From:
+
+\[
+CertifiedPartial(N_1),
+\quad
+CertifiedPartial(N_2)
+\]
+
+one may not infer exhaustive collective coverage.
+
+Collective exactness over candidate field \(C\) requires:
+
+\[
+\forall y\in C(x),
+\quad
+Depart_D(x,y)
+\Rightarrow
+\exists i:N_i(x,y).
+\]
+
+Store a derived certificate when established.
+
+---
+
+# 26. Positive negation
+
+Given an admitted `NegationUse`:
+
+\[
+\operatorname{NegField}_D^X(x)
+=
+\operatorname{Sec}^{Y}_{N_D^X}(x).
+\]
+
+Then:
+
+\[
+?y[N_D^X(x,y)]
+\]
+
+is an ordinary `OpenQuery`.
+
+The result occupies the role:
+
+\[
+O_X.
+\]
+
+Its authority is inherited from the query route.
+
+A generated \(O_X\) is not an actualized \(O_X\).
+
+A working negation relation cannot support an exact closure claim merely because a candidate was generated successfully.
+
+---
+
+# 27. Pure return is reverse section
+
+After:
+
+\[
+N_D^X(x,y),
+\]
+
+define:
+
+\[
+\boxed{
+RetField_D^X(y)
+=
+\operatorname{Sec}^{X}_{N_D^X}(y).
+}
+\]
+
+Implementation:
+
+```rust
+fn return_field(
+    negation_use: NegationUseRef,
+    exterior: FormRef,
+) -> Result<FiberRef>;
+```
+
+No generic `Redet` primitive is required.
+
+Because \(N_D^X(x,y)\) holds:
+
+\[
+\boxed{
+x\in RetField_D^X(y).
+}
+\]
+
+But source membership does not imply unique source recovery.
+
+The previous recursion exhaustively confirmed many finite incidences with ambiguous reverse sections.
+
+---
+
+# 28. Selected return roles and return fibers are different
+
+The sixfold role \(R_X\) is a supported selected filling/class from:
+
+\[
+RetField_D^X(O_X).
+\]
+
+It is not the fiber itself.
+
+Exact return stability requires:
+
+\[
+\boxed{
+RetField_D^X(O_X)
+/\equiv_{\mathcal H}
+=
+\{[S_X]_{\mathcal H}\}.
+}
+\]
+
+One observed \(R_X\equiv_{\mathcal H}S_X\) is insufficient when another protected class remains in the return fiber.
+
+The same applies to \(R_Y\).
+
+---
+
+# 29. Protected relation recovery
+
+Let \(\rho\) be a source relation use.
+
+Derive the protected observation signature:
+
+\[
+\chi_{\rho,\mathcal H}.
+\]
+
+Then:
+
+\[
+x
+\equiv_{\rho,\mathcal H}
+x'
+\iff
+\chi_{\rho,\mathcal H}(x)
+=
+\chi_{\rho,\mathcal H}(x').
+\]
+
+For exterior \(y\), local recovery is:
+
+\[
+\boxed{
+Recover_{\mathcal H}(x\mid y;\rho)
+\iff
+RetField_D^X(y)
+/\equiv_{\rho,\mathcal H}
+=
+\{[x]_{\rho,\mathcal H}\}.
+}
+\]
+
+Equivalently, every source still possible through the return agrees on the protected consequence of \(\rho\).
+
+No source relation is added to the return fiber to make this true.
+
+The relation inspects the fiber; it does not construct it.
+
+---
+
+# 30. Recovery profile of a source web
+
+For source web:
+
+\[
+W_x,
+\]
+
+define:
+
+\[
+\boxed{
+Recov_{W_x,\mathcal H}(x,y)
+=
+\{
+\rho\in W_x:
+Recover_{\mathcal H}(x\mid y;\rho)
+\}.
+}
+\]
+
+An exterior may recover some source relations while failing to recover the entire source class.
+
+This gives the exact interpretation of:
+
+> positive negation discovers how much of the source may be recovered without identity.
+
+No scalar recovery percentage belongs in the semantic core.
+
+---
+
+# 31. Near-negation order
+
+For two exterior candidates:
+
+\[
+y_1,y_2,
+\]
+
+define:
+
+\[
+y_1
+\succeq_{W_x,\mathcal H}
+y_2
+\]
+
+when:
+
+\[
+Recov_{W_x,\mathcal H}(x,y_2)
+\subseteq
+Recov_{W_x,\mathcal H}(x,y_1).
+\]
+
+This is a partial/preorder of protected recovery.
+
+Cost/risk/time may be combined by a product/Pareto order.
+
+Do not create a universal scalar negation distance.
+
+---
+
+# 32. Family return information
+
+For each negation use:
+
+\[
+\sigma_i(x)
+=
+N_i[x].
+\]
+
+Include applicability status where protected.
+
+The family signature is:
+
+\[
+\boxed{
+\sigma_{\mathcal N}(x)
+=
+\prod_i\bar\sigma_i(x).
+}
+\]
+
+For deterministic/exact signatures:
+
+\[
+\boxed{
+\ker\sigma_{\mathcal N}
+=
+\bigcap_i\ker\bar\sigma_i.
+}
+\]
+
+Adding another lawful signature can refine but not coarsen the family observational partition.
+
+---
+
+# 33. Schema recovery
+
+A protected source observation \(\chi_{\rho,\mathcal H}\) is recoverable from the entire negation family when:
+
+\[
+\boxed{
+\ker\sigma_{\mathcal N}
+\subseteq
+\ker\chi_{\rho,\mathcal H}.
+}
+\]
+
+Equivalently, when factorization is available:
+
+\[
+\boxed{
+\chi_{\rho,\mathcal H}
+=
+h\circ\sigma_{\mathcal N}.
+}
+\]
+
+The implementation recursion established a minimal three-state witness where neither member signature alone recovered a target observation but the product did.
+
+Therefore joint gain belongs in:
+
+\[
+\boxed{
+\text{return-signature product}
+}
+\]
+
+not in a semantic union of negation relations.
+
+---
+
+# 34. Local recovery and family recovery remain separate
+
+Historical occurrence:
+
+\[
+(i,y)
+\]
+
+uses:
+
+\[
+Ret_i(y).
+\]
+
+Later addition of another negation relation must not retroactively narrow that historical return fiber.
+
+Family/schema recovery concerns the currently available representation.
+
+Occurrence recovery concerns the information carried by one realized path.
+
+History remains version-local.
+
+---
+
+# 35. Pure return is not state-changing redetermination
+
+This is a critical correction to the motivating patch.
+
+Suppose source web \(W_X\) already determines \(S_X\):
+
+\[
+Sol_{W_X}/\equiv_{\mathcal H}
+=
+\{[S_X]_{\mathcal H}\}.
+\]
+
+Add a compatible exterior constraint \(C_O\) that \(S_X\) itself satisfies.
+
+Then:
+
+\[
+Sol_{W_X\cup\{C_O\}}
+=
+Sol_{W_X}\cap Sol_{C_O}.
+\]
+
+Since \(S_X\) remains in the intersection and the intersection is a subset of the already single protected class:
+
+\[
+\boxed{
+Sol_{W_X\cup\{C_O\}}/\equiv_{\mathcal H}
+=
+\{[S_X]_{\mathcal H}\}.
+}
+\]
+
+Therefore compatible monotone constraint addition cannot transform an already determined source into a protectedly different source.
+
+So the statement:
+
+> redetermination is hole re-solve after adding the exterior
+
+does **not** survive as the generic state-changing semantics.
+
+Instead:
+
+\[
+\boxed{
+\text{pure return}
+=
+\text{reverse-section reconstruction}.
+}
+\]
+
+\[
+\boxed{
+\text{state-changing redetermination}
+=
+\text{reconciliation/revision of the standing web}.
+}
+\]
+
+---
+
+# 36. Reconciliation / semantic revision
+
+A sufficiently authoritative positive exterior may invalidate or refine standing relations.
+
+Then:
+
+\[
+W_t
+\to
+W_{t+1}
+\]
+
+may:
+
+- narrow applicability;
+- retract a relation;
+- supersede a relation;
+- split a representation;
+- revise a binding;
+- reopen a fold;
+- replace a support environment.
+
+Only afterward is a new determination solved under the successor web.
+
+This path requires actuality/check/warrant authority appropriate to the claim being revised.
+
+A generated exterior alone cannot mutate standing semantics.
+
+---
+
+# 37. Seed/reorientation
+
+After \(O_X\), construct the \(Y\)-oriented seed:
+
+\[
+Seed_Y(O_X,S_Y).
+\]
+
+If the representation is already appropriate:
+
+\[
+S_Y=O_X.
+\]
+
+Otherwise use an explicit represented transformation/bridge.
+
+The roles remain distinct even if protected-equivalent:
+
+\[
+O_X
+\equiv_{\mathcal H}
+S_Y
+\]
+
+does not collapse the role provenance.
+
+Reorientation is an inquiry transformation, not proof of reciprocal symmetry.
+
+---
+
+# 38. Successor sixfold semantics
+
+The six roles remain:
+
+\[
+\Xi_D
+=
+(S_X,O_X,R_X;S_Y,O_Y,R_Y).
+\]
+
+Their dependency is:
+
+\[
+\boxed{
+\begin{aligned}
+S_X
+&\xrightarrow{N_i^X}
+O_X\\
+&\xrightarrow{(N_i^X)^{-1}}
+Ret_X(O_X)
+\ni R_X,\\[1mm]
+O_X
+&\xrightarrow{Seed_Y}
+S_Y\\
+&\xrightarrow{N_j^Y}
+O_Y\\
+&\xrightarrow{(N_j^Y)^{-1}}
+Ret_Y(O_Y)
+\ni R_Y.
+\end{aligned}
+}
+\]
+
+Both negation-use tags \(i,j\) remain part of the occurrence provenance.
+
+The sixfold closure claim is indexed by:
+
+- source determination presentations;
+- negation-use regimes;
+- semantic negation coverage;
+- execution/generator coverage;
+- protected horizon;
+- grain;
+- binding.
+
+No context-free `Close_D(Ξ)` claim is sufficient.
+
+---
+
+# 39. Sixfold source program
+
+A schematic source program is:
+
+\[
+\boxed{
+\begin{aligned}
+\mathsf{Recip}(D,S_X)
+={}&
+\mathsf{Ask}
+(
+?O_X[N_i^X(S_X,O_X)],
+\lambda O_X.\\
+&
+\mathsf{Ask}
+(
+?R_X[
+R_X\in Ret_i^X(O_X)
+],
+\lambda R_X.\\
+&
+\mathsf{Ask}
+(
+?S_Y[
+Seed_Y(O_X,S_Y)
+],
+\lambda S_Y.\\
+&
+\mathsf{Ask}
+(
+?O_Y[
+N_j^Y(S_Y,O_Y)
+],
+\lambda O_Y.\\
+&
+\mathsf{Ask}
+(
+?R_Y[
+R_Y\in Ret_j^Y(O_Y)
+],
+\lambda R_Y.\\
+&
+\mathsf{Return}_I(
+\Xi_D,
+Residuals(\Xi_D)
+)))))).
+\end{aligned}
+}
+\]
+
+In practice the generator emits candidate programs for applicable \(N_i,N_j\) rather than embedding one global relation.
+
+No new runtime opcode is required.
+
+---
+
+# 40. Canonical reciprocal residuals
+
+Retain the four useful role comparisons as witnessed breakers:
+
+\[
+S_X
+\stackrel?{\equiv}_{\mathcal H}
+R_X,
+\]
+
+\[
+O_X
+\stackrel?{\equiv}_{\mathcal H}
+S_Y,
+\]
+
+\[
+O_Y
+\stackrel?{\equiv}_{\mathcal H}
+S_X,
+\]
+
+\[
+S_Y
+\stackrel?{\equiv}_{\mathcal H}
+R_Y.
+\]
+
+But exact closure uses fibers and coverage.
+
+For example:
+
+\[
+Ret_X(O_X)/\equiv_{\mathcal H}
+=
+\{[S_X]_{\mathcal H}\}
+\]
+
+is stronger than observing one stable \(R_X\).
+
+No breaker found under partial negation coverage remains `Unknown` with respect to unrepresented exteriors.
+
+---
+
+# 41. \(\Gamma_D\) becomes a downstream check
+
+`\Gamma_D` no longer fills six arbitrary slots.
+
+Generation order is:
+
+1. source determination;
+2. applicable negation use;
+3. positive exterior;
+4. return fiber/filling;
+5. seed bridge;
+6. reciprocal negation use;
+7. reciprocal exterior;
+8. reciprocal return;
+9. residual computation;
+10. \(\Gamma_D\) compatibility checking.
+
+Therefore:
+
+\[
+\boxed{
+\text{generation}
+\neq
+\text{compatibility}.
+}
+\]
+
+`\Gamma_D` cannot supply missing role fillings.
+
+---
+
+# 42. Boundary representation
+
+A distinction may still retain:
+
+\[
+D
+=
+(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D).
+\]
+
+But boundary projection is only candidate incidence.
+
+Do not infer:
+
+\[
+\pi_X(z)=x
+\land
+\pi_Y(z)=y
+\Rightarrow
+N_D^X(x,y).
+\]
+
+Reference derived boundary chart:
+
+```rust
+struct BoundaryChartIR {
+    id: BoundaryRef,
+
+    query: QueryRef,
+
     x_ty: TypeRef,
     y_ty: TypeRef,
 
@@ -698,166 +1939,495 @@ struct DistinctionIR {
     pi_x: RelationRef,
     pi_y: RelationRef,
 
-    compatibility: FormulaRef,
+    x_determination:
+        DeterminationPresentationRef,
 
-    traversal: Option<RelationRef>,
+    y_determination:
+        Option<DeterminationPresentationRef>,
+
+    negation_frontier_x:
+        Vec<NegationUseRef>,
+
+    negation_frontier_y:
+        Vec<NegationUseRef>,
+
+    seed_y:
+        RelationUseRef,
+
+    compatibility:
+        FormulaRef,
+
+    traversal:
+        Option<RelationRef>,
+
+    grain: GrainRef,
+    horizon: HorizonRef,
+}
+```
+
+No stored return relation is needed generically; it is reverse section of the actual negation use.
+
+---
+
+# 43. Sixfold occurrence view
+
+Derived:
+
+```rust
+struct SixfoldOccurrenceViewIR {
+    distinction: DistinctionRef,
+
+    sx: FormRef,
+
+    neg_x_use: NegationUseRef,
+    ox: FormRef,
+    ox_occurrence: Option<EventRef>,
+
+    return_x_fiber: FiberRef,
+    rx: Option<FormRef>,
+
+    sy: FormRef,
+    seed_support: SupportRef,
+
+    neg_y_use: NegationUseRef,
+    oy: FormRef,
+    oy_occurrence: Option<EventRef>,
+
+    return_y_fiber: FiberRef,
+    ry: Option<FormRef>,
+
+    recovery_x:
+        Vec<RecoveryCheckRef>,
+
+    recovery_y:
+        Vec<RecoveryCheckRef>,
+
+    residuals:
+        Vec<SeparatorProblemRef>,
+
+    compatibility:
+        Option<ArtifactRef>,
+}
+```
+
+This is not authoritative history.
+
+---
+
+# 44. Variation and the determination boundary
+
+The successor gives variation and positive negation complementary roles.
+
+Interior search:
+
+\[
+?x'[
+V(x,x')
+\land
+\text{no warranted departure under the declared determination regime}
+].
+\]
+
+Positive exterior search:
+
+\[
+?y[
+N_D(x,y)
+].
+\]
+
+Important:
+
+\[
+\boxed{
+\text{no departure witness}
+\neq
+\text{interior}
+}
+\]
+
+when determination/separator coverage is incomplete.
+
+Conceptually:
+
+\[
+\boxed{
+\begin{aligned}
+\text{interior frontier}
+&=
+\text{maximum variation absorbed by the determination},\\
+\text{exterior frontier}
+&=
+\text{maximum protected relational recovery despite departure}.
+\end{aligned}
+}
+\]
+
+The boundary is established by the interaction of these fronts, not by a hidden metric.
+
+---
+
+# 45. Holes and regenerative understanding
+
+The existing hole machinery remains unchanged.
+
+For a relational web:
+
+\[
+W,
+\]
+
+remove filling \(x\):
+
+\[
+Hole_x(W).
+\]
+
+Then solve:
+
+\[
+Sol(Hole_x(W)).
+\]
+
+Regenerative determination remains:
+
+\[
+Sol(Hole_x(W))/\equiv_{\mathcal H}
+=
+\{[x]_{\mathcal H}\}.
+\]
+
+The successor clarifies two different directions:
+
+\[
+\boxed{
+\begin{aligned}
+\text{backward regeneration}:&
+\quad
+W_x\to Hole_x(W_x)\to[x]_{\mathcal H},\\
+\text{forward reciprocal inquiry}:&
+\quad
+x\to\text{positive exterior}\to\text{return/recovery}\to\Delta.
+\end{aligned}
+}
+\]
+
+They share fiber/determination machinery but are not the same operation.
+
+---
+
+# 46. Generic separator problem remains the common residual engine
+
+Use:
+
+```rust
+struct SeparatorProblemIR {
+    residual: ProtectedCompletionFieldRef,
+
+    target: Option<ProtectedClassRef>,
 
     grain: GrainRef,
     horizon: HorizonRef,
 
-    provenance: SupportRef,
+    binding: BindingVersionRef,
+
+    available_structure: StructureViewRef,
+
+    generator_regime: GeneratorRegimeRef,
+
+    effectivity: EffectivityRef,
 }
 ```
 
-The oriented double cover must reuse the same underlying boundary point rather than duplicate it.
+The same problem represents:
 
-The sixfold:
+- ordinary residual inquiry;
+- cue extension;
+- return-fiber ambiguity;
+- recovery failure;
+- reciprocal residual;
+- fold reopening;
+- representation-gap witness refinement.
 
-\[
-\Xi_D(z)
-=
-(S_X,O_X,R_X;S_Y,O_Y,R_Y)
-\]
-
-is a derived protected view.
-
-Do not make `SixfoldIR` authoritative.
+No sixfold-specific separator subsystem.
 
 ---
 
-# 14. Reciprocal inquiry compiles to two answer-dependent round trips
+# 47. Recovery failure becomes separator inquiry
 
-Let:
-
-\[
-F_z:X\rightsquigarrow Y,
-\qquad
-G_z:Y\rightsquigarrow X.
-\]
-
-The protected first-return path from \(x_0\) is:
+If:
 
 \[
-x_0\to y_1\to x_1.
+x_1,x_2\in Ret_D(y)
 \]
 
-Compile it as:
+and:
 
 \[
-\mathsf{Ask}
-\left(
-q_F(x_0),
-\lambda y_1.
-\mathsf{Ask}
-\left(
-q_G(y_1),
-\lambda x_1.
-\mathsf{Return}(x_0,y_1,x_1)
-\right)
-\right).
+x_1
+\not\equiv_{\rho,\mathcal H}
+x_2,
 \]
 
-The opposite orientation is compiled independently from \(y_0\).
+then the return does not recover \(\rho\).
 
-Implement:
+That pair directly generates a `SeparatorProblemIR`.
 
-```rust
-fn compile_roundtrip(
-    relation: RelationRef,
-    orientation: Orientation,
-    seed: FormRef,
-    context: ContextRef,
-) -> Result<IProgRef>;
-```
+Likewise, if a selected sixfold role comparison fails, the mismatching protected classes become the residual field.
+
+---
+
+# 48. Question construction remains small
+
+The admitted internal constructor family remains:
+
+\[
+\boxed{
+Bind,\ Expose,\ Continue,\ Residualize,\ Instantiate.
+}
+\]
+
+Derived uses include:
+
+- positive-negation questions;
+- reverse return questions;
+- seed questions;
+- reciprocal orientation;
+- cue extension;
+- parameter variation;
+- registered probe invocation;
+- separator follow-up.
+
+No special `NegateQuestion`, `ReturnQuestion`, or `SixfoldQuestion` primitive is required.
+
+---
+
+# 49. Generator regimes remain distinct from materialization and policy
+
+Retain:
+
+\[
+\boxed{
+\text{generable inquiry}
+\neq
+\text{currently materialized candidates}
+\neq
+\text{selected inquiry}.
+}
+\]
+
+`NegationUse` families participate in the existing generator regime.
+
+An open family uses the same fairness machinery as any other open generator; do not create negation-specific scheduling.
+
+---
+
+# 50. Adaptive omission remains consequence-relative
+
+A reciprocal role or negation route may be skipped only when it cannot change the current protected residual or discharge another live obligation.
+
+The semantic frontier remains present even when traversal omits it.
+
+Question policy may prefer:
+
+- stronger recovery;
+- new coverage;
+- predicted residual contraction;
+- lower execution cost;
+- stronger warrant;
+- currently executable routes.
+
+Policy is never semantic authority.
+
+---
+
+# 51. Materialization gap versus expressibility gap
+
+Retain:
+
+## 51.1 Materialization gap
+
+A lawful separator/question/negation route exists in the admitted language but is not currently materialized.
+
+Continue generation.
+
+## 51.2 Expressibility gap
+
+Independent protected evidence requires a distinction, but the admitted representation/question/probe language cannot express any lawful separator.
+
+Create:
+
+\[
+RepresentationGap.
+\]
+
+Do not search forever in the same language.
+
+Positive-negation inquiry is now one canonical source of such witnessed gaps.
+
+---
+
+# 52. Representation invention
+
+Suppose a sixfold/recovery residual establishes:
+
+\[
+x\not\equiv_{\mathcal H}y
+\]
+
+while current representation gives:
+
+\[
+\eta(x)=\eta(y).
+\]
 
 Then:
 
-```rust
-fn compile_reciprocal_first_return(
-    distinction: DistinctionRef,
-    x_seed: FormRef,
-    y_seed: FormRef,
-    context: ContextRef,
-) -> Result<(IProgRef, IProgRef)>;
-```
-
-`IT`/"in terms of" is a compiler schema for this construction.
-
-It is not a semantic primitive.
-
----
-
-# 15. Path preservation is mandatory
-
-Ordinary relational composition may existentially remove intermediate answers:
-
 \[
-x\to y\to x'
-\quad\mapsto\quad
-x\to x'.
-\]
-
-That is too coarse whenever a protected continuation can inspect \(y\).
-
-The source/runtime history must preserve:
-
-```text
-question
-actual answer
-answer-dependent successor question
-successor answer
-ordering
-orientation
-relevant provenance
-```
-
-For nondeterministic relations, preserve branch correlation:
-
-\[
-\{(y_i,x_j):F(x,y_i)\land G(y_i,x_j)\},
-\]
-
-not merely:
-
-\[
-\{y_i\}
-\quad\text{and}\quad
-\{x_j\}.
-\]
-
-This is a compiler conformance obligation.
-
----
-
-# 16. Sixfold is a derived view
-
-Given two realized reciprocal round-trip paths:
-
-```rust
-struct SixfoldView {
-    s_x: FormRef,
-    o_x: FormRef,
-    r_x: FormRef,
-
-    s_y: FormRef,
-    o_y: FormRef,
-    r_y: FormRef,
+\boxed{
+RepresentationGap(x,y).
 }
-```
+\]
 
-Construct it from authoritative event/path history.
+Candidate repair may be:
 
-Do not persist it as a second truth unless profiling later justifies a cache.
+- new relation;
+- new context;
+- finer grain;
+- new representation coordinate;
+- new probe;
+- new decoder;
+- binding extension.
 
-The semantic roles remain protected.
+Thus:
 
-The runtime representation is compressed.
+\[
+\boxed{
+\text{positive reciprocal failure creates representation pressure}.
+}
+\]
 
 ---
 
-# 17. Runtime semantic core
+# 53. Attribute learning
 
-Lower source inquiry programs to:
+Represent an attribute as an ordinary relation:
+
+\[
+A
+\hookrightarrow
+X\times V_A.
+\]
+
+If recurring reciprocal/separator residuals are repeatedly discharged by \(A\), it becomes a candidate reusable coordinate.
+
+Admission may refine:
+
+\[
+\eta_{t+1}
+=
+\langle\eta_t,A\rangle.
+\]
+
+An attribute is therefore not a primitive property ontology.
+
+It is a reusable distinction axis with explicit applicability, range, support, and reopening conditions.
+
+Its own meaning remains open to reciprocal inquiry.
+
+---
+
+# 54. Question-space growth
+
+After representation extension:
+
+\[
+\eta_t
+\to
+\eta_{t+1},
+\]
+
+new typed relation schemas/questions may become constructible.
+
+Therefore generative inquiry can change its future question language:
+
+\[
+\boxed{
+Q^\infty(\Sigma_t)
+\subseteq
+Q^\infty(\Sigma_{t+1})
+}
+\]
+
+when the extension is strictly discriminating.
+
+This is the implementation mechanism for open-ended inquiry.
+
+---
+
+# 55. Probe and instrument invention
+
+If a protected distinction is known:
+
+\[
+x\not\equiv_{\mathcal H}y
+\]
+
+but every current probe agrees:
+
+\[
+\forall p\in\mathcal P_t,
+\quad
+p(x)=p(y),
+\]
+
+open:
+
+\[
+?p'[p'(x)\neq p'(y)].
+\]
+
+A new instrument is an implementation of a previously unavailable separator route.
+
+Distinguish:
+
+\[
+\boxed{
+\text{registered-but-unused probe}
+\neq
+\text{new probe capability proposal}.
+}
+\]
+
+The latter must pass binding/representation-extension admission.
+
+---
+
+# 56. Cross-domain transport
+
+A relation that survives reciprocal attack may be reified and transported.
+
+Do not transport source-domain mechanism automatically.
+
+Instead:
+
+\[
+m_{\mathbb B_1}
+\to
+A
+\to
+?m_{\mathbb B_2}
+\]
+
+where \(A\) is the relation preserved and the target binding supplies an implementation.
+
+Cross-domain transport therefore reuses the existing binding-bridge architecture.
+
+---
+
+# 57. Runtime semantic core
+
+Retain:
 
 \[
 P
@@ -869,22 +2439,9 @@ P
 \mathsf{Probe}.
 \]
 
-Reference block representation:
+Reference:
 
 ```rust
-struct ProgramIR {
-    result_ty: TypeRef,
-    entry: BlockId,
-    blocks: Vec<BlockIR>,
-}
-
-struct BlockIR {
-    id: BlockId,
-    params: Vec<BlockParam>,
-    instructions: Vec<PureInstr>,
-    terminator: Terminator,
-}
-
 enum Terminator {
     Return(ValueRef),
 
@@ -899,176 +2456,50 @@ enum Terminator {
 }
 ```
 
-The verifier checks:
+No new `Negate`, `ReturnFromNegation`, `Redet`, or `Sixfold` runtime opcode.
 
-```text
-block existence
-unique definitions
-use-before-definition
-instruction typing
-branch target typing
-probe answer/resume typing
-result typing
-finite local branching
-```
-
-Unbounded inquiry is handled by the outer recurrence, not hidden loops inside a single lowered program.
+All reciprocal operations compile from ordinary typed questions and fibers.
 
 ---
 
-# 18. Probe operators and authority
+# 58. LLM compiler factorization
 
-```rust
-struct ProbeOperatorIR {
-    question: QueryRef,
-
-    authority: DischargeMode,
-
-    distinction_context: DistinctionContextRef,
-
-    view: ActiveViewRef,
-
-    answer_contract: AnswerContractRef,
-
-    resolution: ResolutionPathRef,
-
-    route: RouteRef,
-}
-```
-
-Routes:
-
-```rust
-enum RouteIR {
-    Model(ModelRouteIR),
-    Environment(EnvironmentRouteIR),
-    Checker(CheckerRouteIR),
-    Warrant(WarrantRouteIR),
-}
-```
-
-A structured provider output does not upgrade `Generate` to `Check`.
-
-A checker route does not become `Warrant` merely because it is deterministic.
-
-Authority follows the typed contract.
-
----
-
-# 19. Answer contracts
-
-```rust
-struct AnswerContractIR {
-    answer_ty: TypeRef,
-    multiplicity: Multiplicity,
-    completeness: Completeness,
-    authority: DischargeMode,
-}
-```
-
-```rust
-enum Multiplicity {
-    One,
-    Many,
-}
-
-enum Completeness {
-    CompleteRequired,
-    PartialAllowed,
-}
-```
-
-A renderer/compiler may never silently strengthen:
-
-```text
-Many -> One
-PartialAllowed -> CompleteRequired
-Generate -> Check
-Check -> Warrant
-```
-
----
-
-# 20. LLM compiler factorization
-
-Preserve four distinct stages:
+Retain distinct:
 
 \[
 \boxed{
-\mathsf{ProbeOperatorIR}
+ProbeOperatorIR
 \neq
-\mathsf{SurfacePlanIR}
+SurfacePlanIR
 \neq
-\mathsf{BackendRequestIR}
+BackendRequestIR
 \neq
-\mathsf{RawReturnEnvelopeIR}.
+RawReturnEnvelopeIR.
 }
 \]
 
-## 20.1 Surface plan
+A prompt renderer for positive-negation inquiry must preserve:
 
-```rust
-struct SurfacePlanIR {
-    semantic_probe: ProbeRef,
+- source determination identity;
+- distinction/orientation;
+- actual negation-use identity;
+- open target port type;
+- scope;
+- applicability;
+- grain;
+- horizon;
+- discharge authority;
+- candidate coverage status;
+- whether a proposed answer is generative or must be actualized;
+- continuation dependency.
 
-    renderer: RendererRef,
-    renderer_version: ArtifactRef,
-
-    segments: Vec<SurfaceSegmentIR>,
-
-    context_selection: ContextSelectionRef,
-
-    surface_answer_contract: SurfaceAnswerContract,
-}
-```
-
-## 20.2 Backend request
-
-```rust
-struct BackendRequestIR {
-    surface_plan: SurfacePlanRef,
-
-    binding: ModelBindingRef,
-    endpoint: EndpointRef,
-
-    model_requested: ModelRef,
-
-    request_body: ArtifactRef,
-
-    adapter_version: ArtifactRef,
-
-    local_template: Option<ArtifactRef>,
-    tokenizer_version: Option<ArtifactRef>,
-}
-```
-
-The exact submitted request body is immutable.
-
-Provider/session/cache state must not become authoritative semantic state.
-
-## 20.3 Raw provider return
-
-```rust
-enum RawReturnEnvelopeIR {
-    ResponseObject {
-        raw: ArtifactRef,
-    },
-
-    Stream {
-        frames: Vec<ArtifactRef>,
-    },
-}
-```
-
-If stream order is protected, preserve ordered frames.
-
-Do not store only extracted text.
+The renderer must not paraphrase a partial certified opposition into "all alternatives to \(x\)."
 
 ---
 
-# 21. Actuality and event spine
+# 59. Actuality and paired history
 
-One authoritative event record:
+One authoritative occurrence record:
 
 ```rust
 struct ActualEvent {
@@ -1099,1016 +2530,185 @@ struct ActualEvent {
 }
 ```
 
-Append actuality before interpretation.
+A generated exterior and an actualized exterior are not interchangeable.
 
-Never mutate an old event to reflect a later interpretation, decoder, model, or binding.
-
----
-
-# 22. Paired actuality
-
-From the authoritative event spine derive:
+The paired history remains:
 
 \[
 Q\xrightarrow{\alpha}R\xrightarrow{\kappa}Q.
 \]
 
-Question trace:
+The positive-negation successor gives this an additional interpretation:
 
 \[
-T_Q=\kappa\circ\alpha.
+\boxed{
+\text{open distinction}
+\to
+\text{positive determination}
+\to
+\text{new distinction}.
+}
 \]
 
-Return trace:
-
-\[
-T_R=\alpha\circ\kappa.
-\]
-
-These are views over one history.
-
-Do not store competing authoritative question and return histories.
-
-Missing return:
-
-\[
-q_t\to\square\to q_{t+1}
-\]
-
-becomes residual fiber:
-
-\[
-\{r:\alpha(q_t,r)\land\kappa(r,q_{t+1})\}.
-\]
-
-Missing question is reconstructed reciprocally.
-
-No separate memory ontology is required.
+No new history species.
 
 ---
 
-# 23. Resolution
+# 60. Resolution
 
-Raw returns become supported semantic completions only through explicit resolution.
+Retain explicit resolution:
 
 ```rust
 enum ResolutionPathIR {
     Identity,
-
-    Decode {
-        decoder: DecoderRef,
-    },
-
-    Relation {
-        relation: RelationRef,
-    },
-
-    Compose {
-        first: ResolutionPathRef,
-        second: ResolutionPathRef,
-    },
-
-    Program {
-        program: ProgramRef,
-    },
-}
-```
-
-Decoder result:
-
-```rust
-enum DecodeResult {
-    Complete(Vec<TypedSubstitution>),
-
-    Partial(PartialSubstitution),
-
-    Ambiguous(Vec<TypedSubstitution>),
-
-    Invalid(DecodeFailure),
+    Decode { decoder: DecoderRef },
+    Relation { relation: RelationRef },
+    Compose { first: ResolutionPathRef, second: ResolutionPathRef },
+    Program { program: ProgramRef },
 }
 ```
 
 Partial answers remain partial.
 
-Ambiguity remains ambiguity.
-
-No finite search failure may be promoted into semantic impossibility.
+A partial exterior answer becomes a partial section/fiber and cannot silently become an exact sixfold role.
 
 ---
 
-# 24. Holes and residual fibers
+# 61. Memory state distinctions
 
-```rust
-struct HoleIR {
-    open_ty: TypeRef,
-
-    constraints: Vec<ResidualConstraintRef>,
-
-    horizon: HorizonRef,
-
-    provenance: Vec<ArtifactRef>,
-}
-```
-
-```rust
-struct FiberIR {
-    hole: HoleRef,
-
-    solution_query: RelationRef,
-
-    coverage: FiberCoverage,
-}
-```
-
-```rust
-enum FiberCoverage {
-    ExactFinite,
-    Symbolic,
-    ResourceBounded,
-}
-```
-
-A form is regeneratively determined at protected grain only when the residual field is certified to contain one protected equivalence class.
-
-Otherwise retain the residual.
-
----
-
-# 25. Protected completion field
-
-The separator architecture operates on:
-
-```rust
-struct ProtectedCompletionFieldIR {
-    source_fiber: FiberRef,
-
-    classes: ProtectedClassRepresentation,
-
-    horizon: HorizonRef,
-    grain: GrainRef,
-
-    coverage: CompletionCoverage,
-
-    provenance: Vec<ArtifactRef>,
-}
-```
-
-For finite exact cases:
-
-```rust
-ProtectedClassRepresentation::Finite(
-    Vec<ProtectedClassRef>
-)
-```
-
-For open cases, retain symbolic/residual representation.
-
-This is the common substrate for:
-
-- next-question generation;
-- cue refinement;
-- reciprocal repair;
-- fold reopening;
-- separator testing;
-- question selection.
-
----
-
-# 26. Memory state distinctions
-
-Implement the explicit separation:
+Retain:
 
 \[
-\boxed{
-Retained(m)
+Retained
 \neq
-Accessible(m\mid c)
+Accessible
 \neq
-Active(m,t)
+Active
 \neq
-Standing(m).
-}
+Standing.
 \]
 
-## 26.1 Retained
+A negation-use relation may be retained but not currently applicable.
 
-A form remains reachable through:
+A previously learned exterior route may be accessible but irrelevant to the live determination.
 
-- authoritative event history;
-- accepted semantic ancestry;
-- a fold recovery contract;
-- lawful reconstruction/reacquisition route.
-
-## 26.2 Accessible
-
-There is a current route from cue/question \(c\) to the retained form.
-
-## 26.3 Active
-
-The form currently changes the live inquiry field.
-
-## 26.4 Standing
-
-The form/claim has current warranted support.
-
-No implication among these is assumed without an explicit relation.
+A generated candidate may be active without standing.
 
 ---
 
-# 27. Active view
+# 62. Active view and recurrent crawl
 
-Use:
-
-```rust
-struct ActiveViewIR {
-    question: QueryRef,
-
-    active: Vec<FormRef>,
-
-    reserve: Vec<FormRef>,
-
-    occluded: Vec<OccludedRef>,
-}
-```
-
-```rust
-struct OccludedRef {
-    artifact: ArtifactRef,
-    licence: CompressionLicenceRef,
-}
-```
-
-The three-way interpretation is:
-
-```text
-active/relevant
-relevance-undetermined reserve
-certified irrelevant under licence
-```
-
-Only licensed irrelevant structure may be aggressively occluded.
-
-Reserve remains reachable.
-
----
-
-# 28. Access routes
-
-Question-conditioned memory retrieval uses route witnesses.
-
-```rust
-struct AccessWitnessIR {
-    cue: FormRef,
-    target: FormRef,
-
-    route: AccessRouteRef,
-
-    route_contract: AccessContract,
-
-    evidence: Vec<ArtifactRef>,
-
-    route_version: ArtifactRef,
-}
-```
-
-Initial exact routes:
-
-```text
-relation adjacency
-event ancestry
-ledger neighborhood
-question/return adjacency
-provenance backlink
-operator occurrence
-method occurrence
-support linkage
-fold expansion
-unlock linkage
-```
-
-Working routes may later include:
-
-```text
-lexical search
-vector similarity
-generated locators
-```
-
-A retrieval adjacency does not establish a semantic relation.
-
-A retrieval miss does not establish absence.
-
----
-
-# 29. Activation
-
-Accessible structure becomes active only through an ordinary consequential witness.
-
-Examples:
+Question-conditioned retrieval remains recurrent:
 
 \[
-StrictFiberRefinement,
-\]
-
-\[
-DischargesOpenDependency,
-\]
-
-\[
-ApplicableMethod,
-\]
-
-\[
-UnlocksOcclusion,
-\]
-
-\[
-ChangesProtectedContinuation.
-\]
-
-```rust
-struct ActivationWitnessIR {
-    cue: FormRef,
-    target: FormRef,
-
-    consequence_relation: RelationRef,
-
-    before: ArtifactRef,
-    after: ArtifactRef,
-
-    evidence: Vec<ArtifactRef>,
-}
-```
-
-Accessible forms without activation witnesses remain in reserve.
-
-No generic learned "relevance score" has semantic authority.
-
----
-
-# 30. Cue-guided recurrent memory crawl
-
-Retrieval is recurrent:
-
-\[
-c_n
+cue_n
 \to
-Retrieve(c_n)
+Retrieve
 \to
 Activate
 \to
-V_{n+1}
+Residual
 \to
-ResidualQuestion
+cue_{n+1}.
+\]
+
+Positive-negation and return-fiber residuals simply provide new cue/question forms to the same process.
+
+No `NegationMemory` subsystem.
+
+---
+
+# 63. Cue reconstruction and reciprocal inquiry
+
+Cue reconstruction:
+
+\[
+q_t
 \to
-c_{n+1}.
+\square
+\to
+q_{t+1}
 \]
 
-Represent operational crawl state:
+solves a missing historical filling from retained relational constraints.
 
-```rust
-struct CrawlStateIR {
-    root_question: QueryRef,
+Reciprocal inquiry:
 
-    current_cue: FormRef,
+\[
+x
+\to
+(i,y)
+\to
+Ret_i(y)
+\]
 
-    active_view: ActiveViewRef,
+opens outward and asks what source information returns.
 
-    residual: ProtectedCompletionFieldRef,
+They are complementary uses of the same relation/fiber machinery.
 
-    budget: Budget,
-
-    visited_routes: Vec<AccessRouteRef>,
-}
-```
-
-Stop on:
-
-```text
-Resolved
-NoProductiveResidual
-ResourceBounded
-Blocked
-Unknown
-```
-
-None means "nothing else exists in memory."
+Do not identify them, but implement them through the same generic solvers and separator engine.
 
 ---
 
-# 31. One generic separator problem
+# 64. Claims and standing
 
-This is the main compression produced by the recent exploration.
+A generated positive negation does not stand merely because it is structurally useful.
 
-Use:
+Retain:
 
 ```rust
-struct SeparatorProblemIR {
-    residual: ProtectedCompletionFieldRef,
+struct ClaimIR {
+    proposition: FormRef,
 
-    target: Option<ProtectedClassRef>,
+    support_envs:
+        Vec<SupportEnvironmentRef>,
 
-    grain: GrainRef,
-    horizon: HorizonRef,
+    applicability:
+        FormulaRef,
 
-    binding: BindingVersionRef,
-
-    available_structure: StructureViewRef,
-
-    generator_regime: GeneratorRegimeRef,
-
-    effectivity: EffectivityRef,
+    scope:
+        FormulaRef,
 }
 ```
 
-Interpretation:
+Standing remains least fixed point:
+
+\[
+Stand=\mu T.
+\]
+
+A negation relation's `soundness_derivation` must itself rely on standing support appropriate to its exact/working status.
+
+---
+
+# 65. Binding evolution
+
+Retain the three-way distinction:
 
 \[
 \boxed{
-\text{Which currently surviving protected classes still need to be kept apart?}
-}
-\]
-
-`target=None`:
-
-ordinary unresolved inquiry.
-
-`target=Some(t)`:
-
-regenerate or refine one target class, as in cue extension.
-
-The same object is used for:
-
-- residual next-question generation;
-- cue extension;
-- reciprocal mismatch repair;
-- reopening old folds;
-- fresh discrimination.
-
-Do not implement these as separate separator engines.
-
----
-
-# 32. Lawful internal question construction
-
-The current question language is generated from represented structure using only existing operations.
-
-The core constructor family is:
-
-\[
-\boxed{
-Bind,\ Expose,\ Continue,\ Residualize,\ Instantiate.
-}
-\]
-
-These derive:
-
-- reverse orientation;
-- reciprocal return;
-- alternative open ports;
-- answer-dependent next questions;
-- cue extension;
-- parameter variation;
-- registered probe invocation;
-- residual separator questions.
-
-Record derivation provenance:
-
-```rust
-enum GeneratorDerivationIR {
-    BindPort {
-        relation: RelationRef,
-        port: PortRef,
-    },
-
-    ExposePort {
-        relation: RelationRef,
-        port: PortRef,
-    },
-
-    ContinueFromAnswer {
-        predecessor: QueryRef,
-        continuation: IProgRef,
-    },
-
-    ResidualSeparator {
-        residual: ProtectedCompletionFieldRef,
-    },
-
-    InstantiateFamily {
-        family: QueryFamilyRef,
-        parameter: FormRef,
-    },
-
-    InvokeRegisteredProbe {
-        family: ProbeFamilyRef,
-        parameters: Vec<FormRef>,
-    },
-}
-```
-
-These are not new semantic primitives.
-
-They are provenance labels describing ordinary query/program construction.
-
----
-
-# 33. Generator regime
-
-The authoritative open-ended object is not a static discriminator list.
-
-```rust
-struct GeneratorRegimeIR {
-    routes: Vec<GeneratorRouteRef>,
-
-    coverage: GeneratorCoverage,
-
-    binding: BindingVersionRef,
-
-    effectivity: EffectivityRef,
-}
-```
-
-Coverage:
-
-```rust
-enum GeneratorCoverage {
-    ExactFinite {
-        certificate: ArtifactRef,
-    },
-
-    ConstructivelyComplete {
-        regime: BindingRegimeRef,
-        certificate: ArtifactRef,
-    },
-
-    FairOpenEnded {
-        effectivity: EffectivityRef,
-    },
-
-    Working {
-        effectivity: EffectivityRef,
-    },
-}
-```
-
-The currently materialized discriminator set is only:
-
-\[
-D_t
-=
-Materialize(\mathcal G_t,\epsilon).
-\]
-
-Do not confuse finite materialization with generative capability.
-
----
-
-# 34. Separator generator
-
-```rust
-trait SeparatorGenerator {
-    fn generate(
-        &self,
-        problem: &SeparatorProblemIR,
-        budget: GeneratorBudget,
-    ) -> SeparatorSearchResult;
-}
-```
-
-Result:
-
-```rust
-enum SeparatorSearchResult {
-    Generated {
-        candidates: Vec<GeneratedInquiry>,
-        coverage: SearchCoverage,
-    },
-
-    ExactNoSeparatorWithinRegime {
-        certificate: NoSeparatorCertificateRef,
-    },
-
-    ResourceBounded {
-        frontier: SearchFrontierRef,
-    },
-
-    Unknown {
-        residual: ProtectedCompletionFieldRef,
-    },
-}
-```
-
-Candidate:
-
-```rust
-struct GeneratedInquiry {
-    program: IProgRef,
-
-    origin: GeneratorDerivationRef,
-
-    predicted_partition:
-        Option<ProtectedPartitionRef>,
-
-    applicability: ApplicabilityRef,
-
-    cost_estimate: Option<CostVectorRef>,
-
-    provenance: Vec<ArtifactRef>,
-}
-```
-
-The output is `IProgRef`, not merely `QueryRef`, because later questions may depend on earlier answers.
-
----
-
-# 35. Generation and selection are separate
-
-Never identify:
-
-\[
-\text{can generate }q
-\]
-
-with:
-
-\[
-\text{will ask }q.
-\]
-
-Selection:
-
-```rust
-trait QuestionPolicy {
-    fn select(
-        &self,
-        problem: &SeparatorProblemIR,
-        candidates: &[GeneratedInquiry],
-    ) -> SelectionResult;
-}
-```
-
-Initial deterministic policy:
-
-1. require type-valid candidate;
-2. require applicable route;
-3. require sufficient discharge authority;
-4. prefer exact known separator over speculative candidate;
-5. prefer already executable route;
-6. deterministic stable tie-break.
-
-Do not implement learned question ranking in the first reference runtime.
-
----
-
-# 36. Adaptive question omission
-
-A candidate reciprocal/question role \(r\) may be omitted only when its answer cannot distinguish the current protected completion field.
-
-Let:
-
-\[
-\pi_r(\mathcal Z_t)
-\]
-
-be the answers \(r\) would induce over surviving protected completions.
-
-If:
-
-\[
-\left|
-\pi_r(\mathcal Z_t)/\equiv_{\mathcal H}
-\right|
-=1,
-\]
-
-then \(r\) is currently non-separating.
-
-It may be skipped under the current horizon.
-
-This is the lawful source of adaptive reciprocal compression.
-
-If the residual later splits, \(r\) may become live again.
-
----
-
-# 37. Cue sufficiency
-
-Given target class:
-
-\[
-t=[z]_{\mathcal H,g},
-\]
-
-and candidate cue atoms \(d\), define:
-
-\[
-Sep_t(d)
-=
-\{
-r\neq t:
-d\text{ separates }t\text{ from }r
-\}.
-\]
-
-Cue \(C\) is sufficient iff:
-
-\[
-\bigcup_{d\in C}Sep_t(d)
-=
-\mathcal Z_t\setminus\{t\}.
-\]
-
-Equivalently:
-
-\[
-Sol_{W+C}/\equiv_{\mathcal H,g}
-=
-\{t\}.
-\]
-
-Cue sufficiency is derived from the same separator relation.
-
-No `MinimalCue` semantic primitive exists.
-
----
-
-# 38. Cue minimization
-
-For small finite exact fields, use exact search.
-
-Possible claims:
-
-```rust
-enum CueOptimality {
-    ExactInclusionMinimal {
-        certificate: ArtifactRef,
-    },
-
-    ExactMinimumCardinality {
-        certificate: ArtifactRef,
-    },
-
-    ExactMinimumCost {
-        order: CostOrderRef,
-        certificate: ArtifactRef,
-    },
-
-    ParetoFrontier {
-        order: PartialOrderRef,
-    },
-
-    WorkingApproximation {
-        method: MethodRef,
-        regime: EffectivityRef,
-    },
-}
-```
-
-Exact and approximate planning must never share the same warrant tag.
-
-Minimum cues need not be unique.
-
-Do not impose a universal scalar cost.
-
----
-
-# 39. Grain-sensitive cue reopening
-
-Suppose coarse cue \(C_g\) gives:
-
-\[
-Sol_{W+C_g}/\equiv_{\mathcal H,g}
-=
-\{[z]_g\}.
-\]
-
-At finer grain \(g'\):
-
-\[
-\left|
-Sol_{W+C_g}/\equiv_{\mathcal H,g'}
-\right|
->1.
-\]
-
-Then:
-
-```text
-old cue
--> residual protected rivals
--> separator problem
--> additional question/probe
--> extended cue
--> finer regeneration
-```
-
-Do not store one horizon-independent `HigherResolutionCue`.
-
-The correct cue is regenerated relative to:
-
-```text
-grain
-horizon
-binding
-available generator regime
-resource regime
-```
-
----
-
-# 40. Materialization gap versus expressibility gap
-
-This is now constitutional implementation behavior.
-
-Let:
-
-\[
-D_t
-\]
-
-be currently materialized discriminators.
-
-Let:
-
-\[
-\mathcal Q_t
-\]
-
-be the full currently admitted generable question language.
-
-## 40.1 Materialization gap
-
-\[
-\forall d\in D_t,\ d(x)=d(y)
-\]
-
-but:
-
-\[
-\exists q\in\mathcal Q_t,\ q(x)\neq q(y).
-\]
-
-Action:
-
-```text
-continue lawful generation
-instantiate parameter family
-expose another port
-follow answer-dependent continuation
-invoke registered probe
-```
-
-No representation change is required.
-
-## 40.2 Expressibility gap
-
-\[
-\forall q\in\mathcal Q_t,\ q(x)=q(y)
-\]
-
-while independent protected evidence requires the classes to remain distinct.
-
-Action:
-
-```text
-RepresentationGapIR
--> binding/representation extension inquiry
-```
-
-Do not search forever inside the same observational language.
-
-Do not claim equivalence merely because current questions fail.
-
----
-
-# 41. Representation gap
-
-```rust
-struct RepresentationGapIR {
-    protected_difference:
-        ProtectedDifferenceWitnessRef,
-
-    admitted_regime:
-        GeneratorRegimeRef,
-
-    no_separator_certificate:
-        NoSeparatorCertificateRef,
-
-    residual:
-        ProtectedCompletionFieldRef,
-
-    grain: GrainRef,
-    horizon: HorizonRef,
-}
-```
-
-This object is only valid when:
-
-1. a protected difference is independently witnessed; and
-2. there is exact evidence of no separator in the declared admitted regime.
-
-Resource-bounded search failure is not sufficient.
-
----
-
-# 42. Fresh probe split
-
-`FreshProbe` must distinguish:
-
-\[
-\boxed{
-FreshWithinRegime
+\text{definitional extension}
 \neq
-ProposedRegimeExtension.
+\text{conservative observational extension}
+\neq
+\text{rebinding}.
 }
 \]
 
-A registered but unused sensor/query/operator family belongs to `FreshWithinRegime`.
+Positive-negation inquiry frequently produces candidate conservative observational extensions:
 
-An LLM proposing an unregistered measurement belongs to `ProposedRegimeExtension`.
+- new attribute;
+- new incompatibility relation;
+- new probe;
+- new observation coordinate.
 
-The latter is not executable until admitted through the binding-extension path.
-
----
-
-# 43. Binding versions
-
-Every semantic/event artifact carries a binding version.
-
-```rust
-struct BindingVersionIR {
-    id: BindingVersionRef,
-
-    parent: Option<BindingVersionRef>,
-
-    type_environment: ArtifactRef,
-
-    relation_environment: ArtifactRef,
-
-    probe_environment: ArtifactRef,
-
-    decoder_environment: ArtifactRef,
-
-    provenance: Vec<ArtifactRef>,
-}
-```
-
-Never mutate an old binding in place.
+Old actuality is never rewritten under a new binding.
 
 ---
 
-# 44. Three kinds of binding growth
+# 66. Binding bridges
 
-## 44.1 Definitional extension
-
-Every new observable factors through the old observational signature.
-
-Then the old observational quotient is unchanged.
-
-Examples:
-
-```text
-new name for old composition
-derived predicate
-compiled convenience method
-new index
-new exact macro/operator
-```
-
-No consequence-fold reopening is required merely because the language has more names.
-
-## 44.2 Conservative observational extension
-
-All old observations retain their meanings, while at least one genuinely new observation adds discriminatory power.
-
-Then:
-
-\[
-\equiv_{\mathbb B'}
-\subseteq
-\equiv_{\mathbb B}.
-\]
-
-Old classes may split.
-
-They cannot merge if all old observations are faithfully preserved.
-
-This triggers targeted reopening.
-
-## 44.3 Rebinding
-
-Some old typed meaning changes, or no faithful bridge exists.
-
-There is no quotient-monotonicity guarantee.
-
-Old and new meanings remain separately versioned.
-
-Cross-version use requires an explicit bridge.
-
----
-
-# 45. Binding bridge
+Retain:
 
 ```rust
 struct BindingBridgeIR {
@@ -2138,498 +2738,65 @@ struct BindingBridgeIR {
 }
 ```
 
-The transports are represented typed programs/relations, not host callbacks.
-
-Preservation condition for old query \(q\):
-
-\[
-J_R(
-Ans_{\mathbb B}(q,x)
-)
-=
-Ans_{\mathbb B'}(
-J_Qq,
-J_Ax
-).
-\]
-
-For nondeterministic/path-sensitive questions, compare the transported answer/path relation.
+Cross-binding recovery transports only when both return/opposition and protected observation diagrams commute.
 
 ---
 
-# 46. Bridge preservation warrant
+# 67. Folds and reopening
 
-```rust
-enum PreservationStatus {
-    Exact {
-        certificate: ArtifactRef,
-    },
+A fold remains lawful only under its protected horizon/licence.
 
-    ExactOnScope {
-        scope: ScopeRef,
-        certificate: ArtifactRef,
-    },
-
-    Working {
-        fixtures: Vec<FixtureRef>,
-        liabilities: Vec<OpenRef>,
-    },
-
-    Refuted {
-        breaker: ArtifactRef,
-    },
-}
-```
-
-A finite test suite cannot prove global conservativity unless the checker contract itself establishes exhaustive coverage.
-
-A bridge proposal does not classify itself.
-
----
-
-# 47. Binding extension admission
-
-Binding growth uses the existing patch/revision machinery.
-
-```rust
-struct BindingDeltaIR {
-    predecessor: BindingVersionRef,
-
-    proposed_types: Vec<TypeChangeRef>,
-    proposed_relations: Vec<RelationChangeRef>,
-    proposed_probes: Vec<ProbeChangeRef>,
-    proposed_decoders: Vec<DecoderChangeRef>,
-
-    proposed_bridge:
-        Option<BindingBridgeRef>,
-
-    target_gap:
-        Option<RepresentationGapRef>,
-}
-```
-
-Derived classification:
-
-```rust
-enum BindingChangeClass {
-    DefinitionalExtension {
-        elimination: EliminationCertificateRef,
-    },
-
-    ConservativeExtension {
-        bridge: BindingBridgeRef,
-        new_discrimination:
-            Vec<ProtectedSplitRef>,
-    },
-
-    Rebinding {
-        failed_preservations:
-            Vec<BreakerRef>,
-
-        cross_version_bridge:
-            Option<BindingBridgeRef>,
-    },
-}
-```
-
-Admission pipeline:
-
-```text
-RepresentationGap
--> CandidateBindingDelta
--> TypeCheck
--> PreservationCheck
--> ExecutabilityCheck
--> DiscriminationCheck
--> IndependentWarrant
--> Accept / Reject
-```
-
----
-
-# 48. Historical actuality is version-local
-
-An old event remains:
-
-```text
-Event @ BindingVersion_t
-```
-
-forever.
-
-Do not rewrite:
-
-```rust
-event.binding_version = latest_binding;
-```
-
-Later use under another binding is a derived bridge operation:
-
-\[
-Bridge_{t\to t'}(Event).
-\]
-
-This is essential for replay and provenance.
-
----
-
-# 49. Targeted reopening after conservative extension
-
-A new discriminator \(d\) affects fold \(F\) only if:
-
-\[
-\exists x,y\in F:
-Obs_d(x)\neq Obs_d(y).
-\]
-
-Define:
-
-```rust
-fn fold_affected_by_extension(
-    fold: FoldRef,
-    delta: BindingDeltaRef,
-) -> Result<bool>;
-```
-
-Reopen only implicated folds.
-
-Purely definitional extension should not reopen consequence-equivalence folds.
-
-A rebinding requires broader bridge-specific reevaluation because quotient refinement is not monotone.
-
----
-
-# 50. Claims and standing
-
-A claim exists before it stands.
-
-```rust
-struct ClaimIR {
-    proposition: FormRef,
-
-    support_envs:
-        Vec<SupportEnvironmentRef>,
-
-    applicability: FormulaRef,
-
-    scope: FormulaRef,
-}
-```
-
-Support environment:
-
-```rust
-struct SupportEnvironmentIR {
-    standing_dependencies:
-        Vec<FormRef>,
-
-    ingress_refs:
-        Vec<ArtifactRef>,
-
-    checker_refs:
-        Vec<ArtifactRef>,
-
-    assumptions:
-        Vec<FormRef>,
-
-    open_dependencies:
-        Vec<OpenRef>,
-}
-```
-
-Compute:
-
-\[
-Stand=\mu T.
-\]
-
-Use a simple monotone worklist first.
-
-Seed only from independent ingress.
-
-Rootless support cycles remain unstanding automatically.
-
----
-
-# 51. Cross-binding standing lift
-
-This is the principal remaining semantic research gate.
-
-Safe initial implementation behavior:
-
-1. transport the old claim and evidence through an exact conservative bridge;
-2. preserve the original:
-   - scope;
-   - applicability;
-   - grain;
-   - protected horizon;
-   - support provenance;
-3. retain its old standing as standing **relative to the transported old regime**;
-4. do not automatically promote it to an enlarged horizon;
-5. if the new observation refines applicability, scope, or protected classes, create explicit open dependencies/liabilities;
-6. require ordinary standing recomputation before granting standing over the enlarged regime.
-
-Represent the derived result as:
-
-```rust
-struct LiftedClaimViewIR {
-    source_claim: ClaimRef,
-
-    bridge: BindingBridgeRef,
-
-    transported_claim: FormRef,
-
-    preserved_scope: ScopeRef,
-    preserved_applicability: FormulaRef,
-    preserved_grain: GrainRef,
-    preserved_horizon: HorizonRef,
-
-    inherited_support:
-        Vec<SupportRef>,
-
-    new_open_dependencies:
-        Vec<OpenRef>,
-}
-```
-
-This is a derived cross-binding view, not a new claim ontology.
-
-Research gate:
-
-> determine the least rule that permits automatic reuse beyond the old horizon without silently broadening warrant.
-
-Until that is settled, use the conservative rule above.
-
----
-
-# 52. Operator occurrences
-
-```rust
-struct OperatorOccurrenceIR {
-    event: EventRef,
-
-    operator: OperatorRef,
-
-    state_before: StateRef,
-
-    raw_return: ReturnRef,
-
-    state_after: StateRef,
-
-    distinction:
-        Option<DistinctionRef>,
-}
-```
-
-The occurrence graph is a derived index into authoritative event history.
-
-It is not memory itself.
-
----
-
-# 53. Method folding
-
-```rust
-struct MethodFoldIR {
-    method: OperatorRef,
-
-    expansion:
-        Vec<OperatorRef>,
-
-    applicability:
-        FormulaRef,
-
-    horizon:
-        HorizonRef,
-
-    evidence_events:
-        Vec<EventRef>,
-
-    gain:
-        GainRef,
-
-    recovery:
-        RecoveryRef,
-
-    unlock:
-        Vec<UnlockConditionRef>,
-}
-```
-
-A method changes traversal/execution preference.
-
-It does not grant standing to its outputs.
-
-Folding never deletes actual history.
-
----
-
-# 54. Recovery contract
-
-Every consequential fold carries:
-
-```rust
-struct RecoveryContractIR {
-    folded: FormRef,
-
-    protected_target:
-        RelationalWebRef,
-
-    base_grain:
-        GrainRef,
-
-    base_horizon:
-        HorizonRef,
-
-    retained_constraints:
-        Vec<RelationRef>,
-
-    generator_regime:
-        GeneratorRegimeRef,
-
-    ancestry:
-        Vec<ArtifactRef>,
-
-    unlocks:
-        Vec<UnlockRef>,
-
-    recovery_kind:
-        RecoveryKind,
-}
-```
-
-```rust
-enum RecoveryKind {
-    Direct,
-    Reconstruct,
-    Reacquire,
-}
-```
-
-Do not store every possible future higher-resolution cue.
-
-Regenerate it from the reopened residual.
-
----
-
-# 55. Compression licence
-
-```rust
-struct CompressionLicenceIR {
-    fold: FormRef,
-
-    kind: CompressionKind,
-
-    protected_horizon:
-        HorizonRef,
-
-    protected_continuations:
-        Vec<FormRef>,
-
-    scope:
-        ScopeRef,
-
-    evidence:
-        Vec<ArtifactRef>,
-
-    residual:
-        ArtifactRef,
-
-    recovery:
-        RecoveryContractRef,
-
-    unlock:
-        Vec<UnlockRef>,
-
-    distortion:
-        Option<ArtifactRef>,
-}
-```
-
-Exact and approximate compression remain distinct.
-
-No approximation is allowed to masquerade as exact quotienting.
-
----
-
-# 56. Unlock and reopen
-
-Possible unlock triggers:
-
-```rust
-enum UnlockReasonIR {
-    NewSeparator,
-
-    NewProtectedContinuation,
-
-    NewObservation,
-
-    BindingExtended,
-
-    BindingRebound,
-
-    GrainChanged,
-
-    ScopeChanged,
-
-    ApplicabilityChanged,
-
-    AssumptionsChanged,
-
-    RecoveryContractInvalidated,
-
-    CompilerChanged,
-}
-```
-
-Reopening must:
-
-```text
-retain old fold as ancestry
-locate smallest implicated identification
-restore retained residual/provenance
-regenerate current separator problem
-refine active representation
-record why the old licence no longer applies
-```
-
----
-
-# 57. Surprise
-
-Mismatch requires a positive protected discriminator.
-
-Do not implement:
-
-```text
-if !prove_equivalent(predicted, actual):
-    mismatch
-```
-
-Instead:
-
-\[
-Mismatch_{\mathcal H}(\hat r,r)
-\iff
-\exists K\in\mathcal H:
-Obs(K,\hat r)\neq Obs(K,r).
-\]
+A new positive departure or new negation-use signature may distinguish forms previously identified.
 
 Then:
 
-```text
-MismatchWitness
--> Unlock
--> Reopen
--> SeparatorProblem
--> inquiry
-```
+\[
+\boxed{
+\text{new departure/return separator}
+\to
+Unlock
+\to
+Reopen.
+}
+\]
 
-Failure to find a separator is not proof of equivalence.
+The positive-negation successor therefore gives a canonical source of unlock witnesses but does not alter the compression machinery.
 
 ---
 
-# 58. Persistence
+# 68. Method learning
+
+Repeated reciprocal inquiry paths may be folded into methods.
+
+A method may accelerate:
+
+- choosing productive negation routes;
+- executing seed bridges;
+- solving common return fibers;
+- generating recurrent separators;
+- proposing recurring representation repairs.
+
+Method utility remains traversal learning.
+
+It does not warrant semantic outputs.
+
+---
+
+# 69. Self-revision
+
+The calculus presentation itself may occupy the source role.
+
+Generate candidate departure presentations that preserve much of the current protected structure while differing on a live residual.
+
+Return them against the predecessor.
+
+But acceptance remains predecessor-judged.
+
+The positive-negation generator can propose self-revision; it cannot license it.
+
+---
+
+# 70. Persistence model
 
 Use:
 
@@ -2644,108 +2811,84 @@ immutable content-addressed artifacts.
 Authoritative:
 
 ```text
-immutable artifacts
+relation/type/program artifacts
 actual events
+raw returns
 accepted patches
 binding versions
-binding bridge certificates
+standing support artifacts
+accepted negation-use contracts
+accepted determination presentations
 ```
 
 Derived/rebuildable:
 
 ```text
-question trace
-return trace
-operator occurrence index
+negation frontier
+departure witness indexes
+return fibers when deterministically reconstructible
+sixfold occurrence views
+recovery profiles
+return-signature families
 active views
-access indexes
-standing cache
-support reverse index
-method lookup
-unlock index
 cue plans
-separator candidates
+operator occurrence graph
 affected-fold index
-cross-binding transported views
 ```
 
-No authoritative `memory_state` table.
-
-No authoritative vector index.
-
-No authoritative current summary.
+Do not create an authoritative `current_sixfold` or `current_negation_frontier` table.
 
 ---
 
-# 59. Journal ordering
+# 71. Replay
 
-Preserve distinctions among:
+Replay uses historical:
 
-```text
-ledger append order
-domain succession
-boundary traversal
-program control flow
-```
+- binding version;
+- compiler version;
+- decoder version;
+- renderer version;
+- accepted relation-use contracts;
+- actual raw returns;
+- patch history.
 
-One does not imply another.
-
-If a protected relation depends on one of these, store/derive it explicitly.
-
----
-
-# 60. Replay
-
-Replay must reconstruct the protected accepted presentation from:
-
-```text
-authoritative event prefix
-accepted patch prefix
-historical binding versions
-compiler versions
-decoder versions
-renderer versions
-nondeterministic external returns
-```
-
-Pure deterministic computation may be rerun.
-
-External returns are immutable inputs to replay.
-
-Never silently rerun an irreversible probe when replaying.
+Later learned negation uses do not retroactively become part of earlier historical reciprocal occurrences.
 
 ---
 
-# 61. Failure taxonomy
+# 72. Failure taxonomy
 
 At minimum:
 
 ```rust
 enum FailureClass {
     TypeError,
-
     InvalidRelation,
 
-    CompilerDefect,
+    InvalidDeterminationPresentation,
 
+    DepartureWitnessFailure,
+    NegationSoundnessFailure,
+    NegationCoverageGap,
+
+    CompilerDefect,
     PathProjectionDefect,
 
     RendererDefect,
-
     ProviderFailure,
 
     UnknownActuality,
 
     DecoderFailure,
-
     ResolutionFailure,
+
+    ReturnAmbiguity,
+    RecoveryFailure,
 
     RetrievalMiss,
 
     MaterializationGap,
-
     ExpressibilityGap,
-
     RepresentationGap,
 
     BindingBridgeFailure,
@@ -2755,303 +2898,164 @@ enum FailureClass {
     ReplayDefect,
 
     FoldFailure,
-
-    RecoveryFailure,
+    RecoveryContractFailure,
 
     PerformanceBoundary,
-
     SpecificationGap,
-
     FixtureDefect,
 }
 ```
 
-Classify failure before modifying architecture.
+A failure to find a departure witness under partial coverage is not a proof of interiority.
 
 ---
 
-# 62. Concurrency
+# 73. Recurrent inquiry controller
 
-Initial execution model:
+One bounded iteration:
 
 ```text
-semantic controller: serial
-authoritative database commits: one writer
-pure computation: parallel if desired
-independent external probes: optionally concurrent only with represented independence
+1. reconstruct accepted presentation
+2. refresh standing
+3. identify current source question/determination
+4. materialize the source DeterminationPresentation
+5. construct active view / retrieve relevant structure
+6. derive applicable NegationUse family
+7. derive tagged NegationFrontier
+8. construct candidate positive-negation IProgs
+9. select one lawfully
+10. lower through Return/Branch/Probe
+11. actualize if required
+12. preserve raw return
+13. resolve supported exterior filling
+14. derive use-specific reverse return fiber
+15. compute local recovery / residual ambiguity
+16. seed/reorient if reciprocal continuation remains live
+17. repeat positive-negation/return on reciprocal side
+18. construct sixfold residuals
+19. apply Gamma compatibility
+20. send unresolved protected differences to SeparatorProblem
+21. detect representation/probe gaps when separators are inexpressible
+22. update claims/support
+23. reconcile standing semantics only if warranted actuality requires it
+24. fire unlocks/reopen folds
+25. generate next residual question
+26. decrement fuel
 ```
 
-Do not let scheduler order become semantic order accidentally.
-
-Add stronger concurrency only after an actual protected throughput or independence fixture requires it.
-
----
-
-# 63. Recurrent inquiry controller
-
-Use a bounded recurrence, not a generic autonomous-agent framework.
-
-```rust
-fn inquire(
-    state: InquiryStateRef,
-    fuel: u64,
-) -> Result<InquiryCheckpoint>;
-```
-
-One iteration:
+Stop states remain:
 
 ```text
-1. materialize current accepted presentation
-2. recompute/refresh standing
-3. recover current open question/residual
-4. construct active view
-5. run cue-guided access crawl as needed
-6. construct ProtectedCompletionField
-7. construct SeparatorProblem
-8. generate lawful candidate IProgs
-9. select one using deterministic QuestionPolicy
-10. lower to Return/Branch/Probe
-11. persist request/suspension if external
-12. actualize Probe
-13. preserve raw return
-14. append ActualEvent
-15. resolve/decode
-16. refine completion field
-17. update claims/support
-18. recompute standing
-19. fire unlocks/reopenings
-20. produce next residual question
-21. decrement fuel
-```
-
-Stop statuses:
-
-```rust
-enum InquiryStop {
-    Satisfied,
-    Impossible,
-    Equivalent,
-    Blocked,
-    Unknown,
-    ResourceBounded,
-}
+Satisfied
+Impossible
+Equivalent
+Blocked
+Unknown
+ResourceBounded
 ```
 
 ---
 
-# 64. Self-revision
+# 74. Revised conformance suite
 
-All semantic/compiler/binding/protection changes are candidate patches.
+The successor requires all predecessor constitutional fixtures plus the following reciprocal-boundary suite.
 
-```rust
-enum PatchRole {
-    Semantic,
-    Traversal,
-    Compiler,
-    Binding,
-    Protection,
-    Implementation,
-}
-```
+## 74.1 Determination and departure
 
-```rust
-struct PatchIR {
-    role: PatchRole,
+1. A source determination presentation is explicit and versioned.
+2. Unrelated retained facts are not automatically constitutive.
+3. Same-carrier exact cell exclusion has a constitutive separator witness.
+4. Exact finite cell exclusion and constitutive separator existence coincide.
+5. The 65,536-case finite feature fixture has zero mismatches.
+6. Unknown observation does not establish departure.
+7. Raw signature difference caused only by unknown remains unresolved.
+8. Protected non-equivalence alone does not establish departure.
+9. Departure may hold while source and candidate remain protected-equivalent.
+10. Boundary crossing contains departure plus traversal provenance.
+11. Departure does not imply observed crossing.
+12. Cross-typed departure may use two observations plus an incompatibility relation.
+13. Binding-native direct incompatibility may supply the witness without a shared observation codomain.
 
-    predecessor:
-        VersionRef,
+## 74.2 Typed negation
 
-    changes:
-        Vec<ChangeRef>,
+14. Boundary projection does not imply positive negation.
+15. A negation use maps every exact admitted edge to a positive departure witness.
+16. A proposed negation relation cannot use itself as its sole departure warrant.
+17. Exact exhaustive partition complement forms lawful exact negation.
+18. Certified partial opposition forms lawful partial negation.
+19. Unknown is not converted into negative incidence.
+20. Inapplicability is not converted into negative incidence.
+21. One oriented negation use does not synthesize its reverse.
+22. Exact semantic coverage and execution coverage remain distinct.
+23. Empty exact exhaustive field differs from empty unsearched field.
+24. No breaker under partial negation coverage does not establish reciprocal closure.
 
-    preserved_obligations:
-        Vec<ObligationRef>,
+## 74.3 Multiple negation uses
 
-    dispositions:
-        Vec<DispositionRef>,
+25. Same exterior form through different negation uses remains distinct when return fibers differ.
+26. Duplicate exterior grouping retains every witness/use.
+27. Heterogeneous target carriers combine through a tagged dependent family.
+28. `CertifiedPartial + CertifiedPartial` does not imply collective exhaustive coverage.
+29. Collective exactness requires a cover certificate.
+30. Untagged union fails the return-provenance breaker.
+31. Intersection and union introduce no new exterior candidate absent from their members.
+32. Ordinary relation composition may create a candidate relation but not automatic negation authority.
+33. Open negation-family traversal uses generic generator fairness.
 
-    strict_gain_or_defect:
-        ArtifactRef,
+## 74.4 Return and recovery
 
-    evidence:
-        Vec<ArtifactRef>,
+34. For every admitted incidence, the source belongs to the reverse return section.
+35. Source membership does not imply unique return determination.
+36. Return fiber containing two protected source classes yields a separator obligation.
+37. One selected stable `R_X` does not establish exact return closure if another protected class survives.
+38. Exact singleton protected return fiber establishes return stability.
+39. Raw relation differences ignored by the horizon do not constitute recovery failure.
+40. Protected relation difference inside a return fiber does constitute recovery failure.
+41. Local recovery equals protected-signature constancy on the return fiber.
+42. Raw containment recovery is only a special case.
+43. A source web can be partially recovered without unique source regeneration.
+44. Family schema recovery may succeed where each member signature fails.
+45. The three-state joint-recovery witness passes.
+46. Adding a return-signature coordinate refines but does not coarsen exact family observational equivalence.
+47. Historical local recovery is not retroactively strengthened by later learned negation uses.
 
-    regression_fixtures:
-        Vec<FixtureRef>,
+## 74.5 Return versus reconciliation
 
-    reopening_effects:
-        Vec<UnlockRef>,
-}
-```
+48. Compatible monotone constraint addition cannot produce a protectedly different filling from an already determining web.
+49. The general monotonicity theorem is tested against finite fixtures.
+50. Generated positive exterior does not mutate standing state.
+51. Actual/warranted exterior may open reconciliation.
+52. State-changing redetermination must expose revised/retracted/split predecessor relations, changed applicability, changed grain/binding, or prior underdetermination.
 
-Acceptance is predecessor-judged.
+## 74.6 Sixfold
 
-A candidate patch may not modify its own acceptance criteria and then use the modified criteria to pass.
+53. Sixfold roles are generated dependently, not independently.
+54. `O_X` is generated from a specific negation use.
+55. `R_X` arises from that use's reverse section.
+56. `O_X` and `S_Y` retain distinct roles even if seed identity is used.
+57. `O_Y` is independently generated from the \(Y\)-oriented frontier.
+58. `R_X != O_Y` and `R_Y != O_X` remain role distinctions.
+59. \(\Gamma_D\) cannot supply missing role fillings.
+60. Stable \(X\)-return may coexist with unstable \(Y\)-return.
+61. One-way negation does not imply reciprocal negation.
+62. Sixfold occurrence view reconstructs from ordinary history/fibers.
+63. Exact closure is indexed by negation semantic and execution coverage.
+64. No breaker under partial frontier remains `Unknown`, not absolute closure.
 
----
+## 74.7 Representation and learning
 
-# 65. LLM role
+65. Sixfold/recovery residual can generate `RepresentationGap`.
+66. New attribute can separate a previously collapsed protected pair.
+67. Admitted attribute enlarges constructible question space.
+68. New probe capability remains unadmitted until binding-extension checks pass.
+69. New negation-use signature may reopen a previous fold.
+70. Recurrent separator may become a candidate attribute without automatic standing.
 
-An LLM may:
-
-```text
-generate candidate distinctions
-generate candidate relations
-propose questions
-propose separator programs
-propose interpretations
-propose implementation patches
-render natural language
-generate candidate binding extensions
-```
-
-An LLM may not, merely by generation:
-
-```text
-establish external actuality
-certify semantic equivalence
-prove no separator exists
-grant standing
-admit a binding extension
-warrant its own patch
-declare a retrieval miss as absence
-```
-
-Every LLM output crosses an explicit typed authority boundary.
-
----
-
-# 66. Conformance suite
-
-The repository must eventually include executable fixtures for at least the following.
-
-## Typing and relation structure
-
-1. Well-typed relation composition succeeds.
-2. Ill-typed relation composition fails.
-3. Partial binding preserves every remaining open port.
-4. One relation schema can produce multiple differently oriented questions.
-5. No dynamic untyped payload crosses a semantic boundary.
-
-## Question and program structure
-
-6. `Ask` continuation can construct a question not determined before the answer.
-7. No host callback is required for answer-dependent continuation.
-8. `Generate` cannot discharge `Probe`.
-9. `Generate` cannot discharge `Check`.
-10. `Check` cannot automatically discharge `Warrant`.
-
-## Reciprocal distinction
-
-11. Boundary state is not duplicated by orientation.
-12. Boundary traversal is not forced to cross sides.
-13. Sixfold can be regenerated from two reciprocal path occurrences.
-14. One-way crossing can fail to expose return feedback.
-15. Two one-way crossings can fail to expose a distinction exposed by return questions.
-16. Explicit sixfold first-return and two-seed compiled round trips produce the same protected traces over finite exact fixtures.
-17. Nondeterministic branch correlation is preserved.
-18. Aggregate crossing and aggregate return sets fail the path-correlation breaker.
-19. Partial answer objects remain actual continuation binders.
-20. A reciprocal role is skipped only when every surviving protected completion agrees on its answer.
-
-## Actuality and resolution
-
-21. Raw external return is persisted before decoding.
-22. Raw return remains immutable after interpretation.
-23. Same operator can occur multiple times with different event IDs.
-24. Resolution provenance is explicit.
-25. Partial answer narrowing leaves a residual fiber.
-26. Ambiguity does not become a guessed singleton.
-
-## Paired actuality
-
-27. Question trace and return trace derive from one event spine.
-28. Missing return can be reconstructed from its residual cue when uniquely determined.
-29. Missing question can be reconstructed reciprocally.
-30. Reconstruction does not create a second memory ontology.
-
-## Memory/cue traversal
-
-31. A retained form may be inaccessible under the initial cue.
-32. Retrieval failure does not imply absence.
-33. Recurrent cue traversal can reach material inaccessible to one-shot retrieval.
-34. Accessibility does not imply activation.
-35. Activation does not imply standing.
-36. Reserve structure remains reachable.
-37. Licensed occluded structure requires reopening before re-entry.
-
-## Separator engine
-
-38. Ordinary residual inquiry and cue extension produce equivalent `SeparatorProblemIR` for extensionally identical residual fields.
-39. Separator candidates are `IProgRef`, not just flat `QueryRef`.
-40. Generation capability is independent from selection policy.
-41. A materialization gap can be solved without binding extension.
-42. Resource-bounded generation failure remains `Unknown`/`ResourceBounded`.
-43. Exact no-separator certification is distinguished from failure to find a separator.
-
-## Cue planning
-
-44. Finite sufficient cue hits every protected rival class.
-45. Inclusion-minimal cue need not be unique.
-46. Minimum-cardinality and minimum-cost cues can differ.
-47. Approximate cue planner cannot claim exact minimality.
-48. Finer grain can invalidate coarse cue sufficiency.
-49. Residual finer-grain classes generate separator obligations.
-50. Different protected horizons can require different cue extensions.
-
-## Expressibility and fresh discrimination
-
-51. In a linear fixture, queries inside the current represented span cannot distinguish a hidden orthogonal direction.
-52. A represented but unmaterialized independent direction repairs the materialization gap.
-53. A protected split outside the admitted observational language yields `RepresentationGapIR`.
-54. Boolean recombination of observationally identical finite signatures cannot create a separator.
-55. Registered-but-unused probe and unregistered proposed probe remain distinct.
-
-## Binding evolution
-
-56. Definitional extension leaves the old observational quotient unchanged.
-57. Conservative observational extension refines but never coarsens the old quotient.
-58. Reinterpretation of an old observation fails conservative-extension certification.
-59. Typed representation renaming with a faithful bridge may preserve semantics.
-60. Old `ActualEvent` retains its original binding version after extension.
-61. Cross-binding interpretation uses a bridge.
-62. Conservative extension preserves old `IProg` traces on its certified scope.
-63. Rebinding may change an early answer and therefore the future inquiry path.
-64. New conservative discriminators reopen only affected folds.
-65. Definitional extension does not reopen consequence folds merely because new names exist.
-
-## Standing and warrant
-
-66. Candidate claim does not automatically stand.
-67. Multiple support environments can support one claim.
-68. Rootless support cycle remains unstanding.
-69. Applicability and support remain separate.
-70. LLM-generated argument cannot self-promote.
-71. Cross-binding lifted evidence retains original horizon/scope.
-72. Enlarged horizon creates liabilities rather than automatic promotion.
-
-## Folding and reopening
-
-73. Fold retains evidence-event references.
-74. Fold never deletes authoritative events.
-75. Reopening restores the smallest implicated hidden structure.
-76. New separator can reopen old fold.
-77. New binding discriminator can reopen old quotient.
-78. Approximate fold retains distortion contract.
-
-## Self-revision
-
-79. Candidate patch cannot alter its own predecessor acceptance contract.
-80. Rejected patch leaves accepted state unchanged.
-81. Accepted patch retains predecessor ancestry.
-82. Historical replay uses historical compiler/binding versions.
-83. Self-revision cannot self-warrant.
+All predecessor typing, compiler, actuality, history, standing, fold, binding, and self-revision fixtures remain required.
 
 ---
 
-# 67. Build phases
-
-The agent should build in this order.
+# 75. Revised build phases
 
 ## Phase 0 — repository authority and scaffolding
 
@@ -3059,116 +3063,91 @@ Implement:
 
 ```text
 workspace
-pinned Rust toolchain
+toolchain pinning
 Cargo.lock
-schema migrations
-artifact canonicalization
+canonical artifacts
+migration framework
 decision/failure logs
 CI
 ```
 
-Gate:
-
-```text
-cargo check
-cargo test
-canonical encode/decode test
-stable content identity
-```
-
----
-
-## Phase 1 — typed form kernel
+## Phase 1 — typed forms and binding version identity
 
 Implement:
 
 ```text
 TyIR
 TypedFormRef
-type checking
-canonical artifacts
 BindingVersionRef
+type checking
+canonical identity
 ```
 
-Gate:
-
-```text
-well-typed values accepted
-ill-typed values rejected
-stable typed form identity
-```
-
----
-
-## Phase 2 — relation and open-query kernel
+## Phase 2 — relation and OpenQuery kernel
 
 Implement:
 
 ```text
 RelSchemaIR
+RelationUseIR
 FormulaIR
-TermExprIR
 Bind
 Expose
-OpenQueryIR
-completion fibers
+OpenQuery
+sections/fibers
 ```
 
-Gate:
-
-```text
-partial-binding fixtures
-relation composition fixtures
-multiple question orientations
-```
-
----
-
-## Phase 3 — first-order inquiry programs
+## Phase 3 — first-order IProg
 
 Implement:
 
 ```text
-IProgIR
-answer binder
+Return | Ask
+answer binders
 capture-safe substitution
-normalization
-PureOpContract
+program normalization
+pure registered operations
 ```
 
-Gate:
+## Phase 4 — determination, departure, typed negation, and reciprocal return
 
-```text
-serialized program round trip
-no host callbacks
-answer-dependent next question
-```
-
----
-
-## Phase 4 — reciprocal compilation
+This phase replaces the predecessor's simple reciprocal-compilation phase.
 
 Implement:
 
 ```text
-DistinctionIR
-orientation
-compile_roundtrip
-compile_reciprocal_first_return
-derived sixfold view
-path-preserving trace normalization
+DeterminationPresentationIR
+DepartureWitnessIR
+incompatibility checking
+NegationUseIR
+NegationCoverage
+NegationFrontierView
+tagged exterior occurrence
+positive-negation OpenQuery
+use-specific reverse return fiber
+protected relation signature
+local RecoveryCheck
+family return signatures
+schema recovery
+seed/reorientation
+SixfoldOccurrenceView
+fiber-level reciprocal residuals
+Gamma post-check
 ```
 
-Gate:
+Do **not** implement:
 
 ```text
-return-feedback breaker
-orientation-asymmetry breaker
-nondeterministic path-correlation breaker
-finite compiler-equivalence fixtures
+Boolean complement fallback
+primitive Exterior predicate
+CombinedNegationIR
+symmetric-negation assumption
+state-changing Redet primitive
+scalar near-negation metric
+authoritative sixfold store
 ```
 
----
+Phase 4 gates are the reciprocal conformance fixtures above.
 
 ## Phase 5 — runtime machine
 
@@ -3180,19 +3159,8 @@ Return
 Branch
 Probe
 verifier
-pure stepping
 suspension/resume
 ```
-
-Gate:
-
-```text
-well-typed lowering
-invalid program rejection
-live/replay resume consistency
-```
-
----
 
 ## Phase 6 — persistence and actuality
 
@@ -3200,117 +3168,66 @@ Implement:
 
 ```text
 SQLite journal
-content-addressed artifacts
+content-addressed store
 ActualEvent
 request-before-dispatch
 raw-return persistence
-crash/restart fixture
+crash/restart
 ```
 
-Gate:
-
-```text
-no committed dangling references
-raw return preserved before interpretation
-event binding version immutable
-```
-
----
-
-## Phase 7 — resolution and fibers
+## Phase 7 — resolution and general fibers
 
 Implement:
 
 ```text
 ResolutionPathIR
 decoder contracts
-partial answers
+partial/ambiguous results
 HoleIR
 FiberIR
 ProtectedCompletionFieldIR
 ```
-
-Gate:
-
-```text
-complete/partial/ambiguous results
-strict fiber refinement
-no finite-search false uniqueness
-```
-
----
 
 ## Phase 8 — paired actuality
 
 Implement:
 
 ```text
-question trace view
-return trace view
-missing return residual
-missing question residual
+question trace
+return trace
+missing return fiber
+missing question reconstruction
 event-path provenance
 ```
 
-Gate:
-
-```text
-one authoritative spine
-paired reconstruction fixtures
-```
-
----
-
-## Phase 9 — active views and memory crawl
+## Phase 9 — active views and recurrent memory access
 
 Implement:
 
 ```text
-ActiveViewIR
+ActiveView
 reserve
-occlusion licence
+occlusion licences
 access routes
-AccessWitnessIR
-ActivationWitnessIR
-CrawlStateIR
+activation witnesses
+CrawlState
 ```
-
-Gate:
-
-```text
-retained != accessible
-accessible != active
-one-shot miss vs recurrent recovery
-occlusion unlock
-```
-
----
 
 ## Phase 10 — LLM/backend compiler
 
 Implement:
 
 ```text
-ProbeOperatorIR
-AnswerContractIR
-SurfacePlanIR
-ContextSelectionIR
-BackendRequestIR
-RawReturnEnvelopeIR
+ProbeOperator
+AnswerContract
+SurfacePlan
+BackendRequest
+RawReturnEnvelope
 MockProvider
-one real provider adapter
+one real provider
 ```
 
-Gate:
-
-```text
-semantic probe != surface plan
-surface plan != backend request
-raw response != extracted text
-renderer cannot strengthen answer contract
-```
-
----
+Add reciprocal renderer fixtures ensuring coverage/authority are not silently strengthened.
 
 ## Phase 11 — standing
 
@@ -3321,465 +3238,332 @@ ClaimIR
 SupportEnvironmentIR
 independent ingress
 least-fixed-point standing
-simple monotone worklist
 ```
-
-Gate:
-
-```text
-rootless cycle
-alternative support environments
-open dependencies
-applicability != support
-```
-
----
 
 ## Phase 12 — generic separator engine
 
 Implement:
 
 ```text
-SeparatorProblemIR
-GeneratorRegimeIR
-GeneratorDerivationIR
-SeparatorGenerator
+SeparatorProblem
+GeneratorRegime
 GeneratedInquiry
 deterministic QuestionPolicy
 ```
 
-Use only current admitted constructors:
+Consume:
 
 ```text
-Bind
-Expose
-Continue
-Residualize
-Instantiate
+return ambiguity
+recovery failure
+sixfold mismatch
+cue ambiguity
+fold reopening
+ordinary residual ambiguity
 ```
 
-Gate:
-
-```text
-residual inquiry == cue separator form
-answer-dependent candidate program
-materialized basis != generator regime
-```
-
----
+through the same interface.
 
 ## Phase 13 — cue planning
 
-Implement:
-
-```text
-CuePlanIR
-finite separator matrix
-exact small-instance planner
-working approximate planner
-grain/horizon cue refinement
-```
-
-Gate:
-
-```text
-minimality nonuniqueness
-exact vs approximate warrant
-finer-grain reopening
-```
-
----
+Implement exact finite and working approximate cue planning.
 
 ## Phase 14 — representation-gap detection
 
 Implement:
 
 ```text
+MaterializationGap
 ExactNoSeparatorWithinRegime
-RepresentationGapIR
+RepresentationGap
 FreshWithinRegime
 ProposedRegimeExtension
 ```
-
-Start with exact finite/analytic fixture bindings.
-
-Gate:
-
-```text
-materialization gap solved by generation
-expressibility gap cannot be solved internally
-no-separator failure != no-separator certificate
-```
-
----
 
 ## Phase 15 — binding extension and bridges
 
 Implement:
 
 ```text
+definitional extension
+conservative observational extension
+rebinding
 BindingBridgeIR
-BindingDeltaIR
-definitional extension checker
-conservative-extension checker
-rebinding classification
-targeted fold affectedness
+targeted reopening
 ```
-
-Gate:
-
-```text
-definitional quotient unchanged
-conservative quotient refinement
-rebind breaker
-historical event version locality
-old IProg trace preservation under bridge
-```
-
----
 
 ## Phase 16 — method learning and folds
 
 Implement:
 
 ```text
-OperatorOccurrenceIR
-MethodFoldIR
-RecoveryContractIR
-CompressionLicenceIR
+operator occurrences
+method folds
+RecoveryContract
+CompressionLicence
 Unlock
 Reopen
 ```
 
-Gate:
+## Phase 17 — conservative cross-binding standing lift
+
+Use the already established safe rule:
 
 ```text
-fold preserves protected behavior
-history retained
-method applicability explicit
-reopening works
-binding extension reopens affected folds
+transport old standing only at old scope/applicability/grain/horizon
+reuse unaffected evidence
+open liabilities for new distinctions
+recompute before broader promotion
 ```
-
----
-
-## Phase 17 — cross-binding standing lift
-
-Implement the conservative initial rule:
-
-```text
-transport old claim/evidence
-retain original scope
-retain original applicability
-retain original grain
-retain original horizon
-reuse unaffected support
-create open liabilities for newly inspectable distinctions
-recompute standing before enlarged-horizon promotion
-```
-
-Gate:
-
-```text
-insensitive claim reuses support
-split equivalence claim reopens
-refined applicability creates dependency
-no silent horizon enlargement
-```
-
-Keep stronger automatic lift rules as a research gate.
-
----
 
 ## Phase 18 — predecessor-judged self-revision
 
-Implement:
+Implement candidate patches and locked predecessor acceptance.
+
+## Phase 19 — measured breadth only
+
+Only after witnessed need:
 
 ```text
-PatchIR
-PatchRole
-predecessor tests
-regression locking
-versioned replay
-binding/compiler/protection patch admission
-```
-
-Gate:
-
-```text
-candidate cannot self-promote
-candidate cannot rewrite its own judge
-old presentation reconstructible
-```
-
----
-
-## Phase 19 — autonomous breadth only after evidence
-
-Only now consider:
-
-```text
-learned question-selection policy
-open-ended fair generator execution
-resumable generator cursors
+learned question policy
+fair open-ended generation
 vector retrieval
 parallel semantic scheduling
 PostgreSQL
 distributed effects
-more provider adapters
-more binding-native methods
 ```
-
-Each requires a protected breaker or measured performance boundary.
 
 ---
 
-# 68. Vertical slices
+# 76. Revised vertical slices
 
-Do not wait for all phases before exercising end-to-end semantics.
-
-## Vertical slice A — one real recurrence
+## Slice A — positive-negation reciprocal recurrence
 
 Demonstrate:
 
 ```text
 typed relation
--> OpenQuery
--> reciprocal distinction
--> IProg
--> Probe
--> BackendRequest
--> RawReturn
--> ActualEvent
--> Resolution
--> residual next question
+-> source determination presentation
+-> positive departure witness
+-> admitted negation use
+-> positive-negation OpenQuery
+-> actual/generated exterior
+-> use-specific reverse return fiber
+-> recovery check
+-> seed/reorientation
+-> reciprocal positive negation
+-> reciprocal return
+-> residual question
 ```
 
 No fake semantic step.
 
----
+## Slice B — actual probe and standing
 
-## Vertical slice B — standing
-
-Extend A:
+Add:
 
 ```text
-resolved completion
--> claim
+Prompt/BackendRequest
+-> RawReturn
+-> Resolution
+-> ActualEvent
+-> Claim
 -> independent support
--> standing
+-> Standing
 ```
 
-Then demonstrate a rootless support cycle that does not stand.
+## Slice C — ambiguous return
 
----
+Demonstrate one exterior whose reverse section contains two protected source classes.
 
-## Vertical slice C — relational memory
+The runtime must generate a separator rather than select one silently.
+
+## Slice D — joint family recovery
+
+Construct two negation uses where neither member signature recovers a target observation but their product does.
+
+## Slice E — materialization versus expressibility
 
 Demonstrate:
 
 ```text
-old distinction leaves active context
-many unrelated events occur
-later residual cue makes old relation accessible
-recurrent crawl retrieves it
-later inquiry changes because of it
+existing lawful route but not materialized
 ```
 
-Removing the retained relation must break the fixture.
-
----
-
-## Vertical slice D — separator/cue unification
-
-Construct one residual field and feed it to:
+versus:
 
 ```text
-ordinary residual inquiry
-cue refinement
+no separator in admitted language
+-> RepresentationGap
 ```
 
-Both must compile to the same underlying separator obligation where extensionally identical.
+## Slice F — probe invention
+
+A sixfold/recovery residual remains inexpressible by the current probe basis.
+
+Admit a new probe through conservative binding extension and reopen the old residual.
+
+## Slice G — fold/reopen
+
+Learn/fold a recurrent reciprocal path.
+
+Introduce a new departure/signature that invalidates the fold licence.
+
+Reopen while preserving history.
+
+## Slice H — self-revision
+
+Use the same inquiry language on a reified implementation/specification claim.
+
+Candidate successor cannot change its own predecessor judge.
 
 ---
 
-## Vertical slice E — representation gap
+# 77. What may remain algorithmically simple first
 
-Demonstrate:
+Use deliberately simple correct algorithms:
 
 ```text
-protected split
-+ exact no separator in current language
--> RepresentationGapIR
--> CandidateBindingDelta
--> conservative extension
--> reopened fold
--> newly executable separator
-```
+determination presentation:
+    claim-local support/dependency web
 
-Old actuality remains unchanged.
+negation frontier:
+    deterministic finite list when finite
 
----
+negative-route selection:
+    stable deterministic policy
 
-## Vertical slice F — method folding
+return fibers:
+    exact finite enumeration where possible
 
-Demonstrate:
+recovery:
+    direct protected-signature constancy check
 
-```text
-repeated inquiry path
--> method fold
--> cheaper traversal
--> new protected separator
--> reopen
--> recover original constituent path
-```
+family signatures:
+    explicit tuple/product in finite fixtures
 
----
-
-## Vertical slice G — self-revision
-
-Reify a small renderer/compiler policy.
-
-Generate candidate successor.
-
-Judge it using locked predecessor obligations.
-
-Accept only with independent evidence and strict gain/repair.
-
----
-
-# 69. What should remain algorithmically simple first
-
-Implement semantically correct, deliberately simple versions of:
-
-```text
 standing:
-    full fixed-point worklist
+    full monotone fixed-point worklist
 
-question selection:
-    deterministic stable policy
-
-retrieval:
-    exact relation/index traversal
-
-fiber solving:
-    finite enumeration where possible,
-    otherwise symbolic residual
+separator selection:
+    deterministic exact-first policy
 
 cue minimization:
-    brute force below small threshold
+    brute force under threshold
 
-method discovery:
-    repeated exact path detection
+retrieval:
+    exact relational/index traversal
 
-active view:
-    conservative inclusion
-
-checkpointing:
-    simple periodic snapshots
-
-provider support:
-    mock + one real adapter
-
-binding preservation:
-    exact fixture-specific checkers first
+provider:
+    mock + one real backend
 ```
 
-Optimize only after measurement.
+Do not optimize before instrumentation.
 
 ---
 
-# 70. What must not be mocked in a "complete" slice
+# 78. What must not be mocked in a complete semantic slice
 
 These must be real:
 
 ```text
 typed relation identity
+source determination presentation
+departure witness
+negation-use provenance
+semantic negation coverage
 partial binding
-question identity
-answer-dependent continuation
-path provenance
+answer-dependent IProg
 raw return preservation
-event ancestry
-historical binding version
-explicit resolution
+actual event ancestry
+use-specific reverse return
+protected recovery
+residual separator generation
 standing separation
-residual question generation
-operator occurrence linkage
-fold recovery
-reopening
-binding bridge semantics
+binding version
+fold recovery/reopening
 ```
 
-External environments/providers may be mocked only as explicit bindings.
+External environments may be mocked only through explicit bindings.
 
 ---
 
-# 71. Deferred architecture
+# 79. Deferred architecture
 
 Do not build yet:
 
 ```text
+universal complement algebra
+global object-property ontology
+CombinedNegationIR
+global scalar near-negation score
+global semantic union of negative relations
+separate sixfold runtime/history
 general agent framework
-global task ontology
-generic scheduler
-distributed log
-graph database
-vector database
-provider-session semantic state
-global learned relevance model
-global scalar question utility
-universal minimal cue
-universal inquiry basis
+vector-first memory
+global learned relevance oracle
 automatic semantic rebinding
+universal minimal determination web
 ```
 
-Each remains absent until a concrete protected use requires it.
+Each requires a witnessed protected need.
 
 ---
 
-# 72. Implementation-agent protocol
+# 80. Implementation-agent protocol
 
-Put the following into `AGENTS.md`.
+Add to `AGENTS.md`:
 
 ```text
 FOR EVERY CONSEQUENTIAL CHANGE:
 
-1. Read IMPLEMENTATION_FRONTIER.md.
-2. Reconstruct the current accepted implementation state.
+1. Reconstruct current accepted semantic state.
+2. Read IMPLEMENTATION_FRONTIER.md.
 3. Identify the strongest live obligation.
-4. State the protected observable difference.
+4. State the protected observable consequence.
 5. State the smallest executable fixture.
-6. Check whether existing typed machinery already regenerates it.
-7. Prefer reuse over extension.
-8. Prefer extension over new abstraction.
-9. Implement the smallest responsible change.
-10. Run the targeted fixture.
-11. Preserve all actual returns and failure evidence.
-12. Classify failure before redesigning architecture.
-13. Run all completed phase gates.
-14. Run cold replay if authoritative or semantic state changed.
-15. Remove newly redundant machinery.
-16. Update DECISIONS.jsonl and FAILURES.jsonl.
-17. Regenerate IMPLEMENTATION_FRONTIER.md.
-18. Commit code, tests, and decision evidence together.
+6. Check whether existing typed relations/operators already regenerate it.
+7. Preserve the relation/generation/actuality/warrant boundaries.
+8. For reciprocal work, identify:
+   - source determination presentation
+   - departure witness
+   - negation-use identity
+   - semantic coverage
+   - execution coverage
+   - return fiber
+   - protected recovery
+9. Never infer exteriority from failed equality or failed search.
+10. Never infer exhaustive negation from a partial sound relation.
+11. Never erase NegationUse provenance from an exterior occurrence.
+12. Never mutate standing semantics from a merely generated exterior.
+13. Prefer generic SeparatorProblem over subsystem-specific residual logic.
+14. Preserve raw returns and actual history.
+15. Classify failure before changing architecture.
+16. Run targeted fixture.
+17. Run completed phase gates.
+18. Cold-replay semantic/history changes.
+19. Remove redundant machinery.
+20. Update decisions/failures/frontier.
+21. Commit code, fixtures, and evidence together.
 
 NEVER:
 
-- add a host semantic callback because a relation is inconvenient;
-- treat model output as standing;
-- treat retrieval failure as absence;
-- treat finite failure to distinguish as exact equivalence;
-- rewrite historical actuality under a newer binding;
-- let a candidate patch define its own acceptance rule;
-- add architecture solely because an earlier exploratory design contained it.
+- add Boolean complement as a default negation rule;
+- treat unknown as negative;
+- treat boundary projection as proof of reciprocal exteriority;
+- treat one stable return sample as exact return closure;
+- use a source relation to construct the return fiber it is supposed to test;
+- use a new negation relation to warrant its own exteriority;
+- collapse multiple negation uses into an untagged union;
+- reinterpret historical events using later negation/frontier knowledge;
+- let a candidate patch define its own acceptance criteria.
 ```
 
 ---
 
-# 73. Required project-state files
+# 81. Required project-state files
 
-Maintain:
+Retain:
 
 ```text
 IMPLEMENTATION_FRONTIER.md
@@ -3788,40 +3572,21 @@ DECISIONS.jsonl
 FAILURES.jsonl
 ```
 
-Decision record:
+Important decisions to record include:
 
-```json
-{
-  "id": "D-0001",
-  "question": "...",
-  "alternatives": ["...", "..."],
-  "protected_difference": "...",
-  "evidence": ["..."],
-  "chosen": "...",
-  "status": "EXACT|WORKING",
-  "reopen_if": ["..."]
-}
+```text
+determination presentation admission basis
+negation-use soundness route
+negation semantic coverage
+generator coverage
+return/recovery exactness
+binding extension classification
+fold/reopening effects
 ```
-
-Failure record:
-
-```json
-{
-  "id": "F-0001",
-  "fixture": "...",
-  "expected": "...",
-  "observed": "...",
-  "classification": "...",
-  "responsible_layer": "...",
-  "status": "OPEN|RESOLVED"
-}
-```
-
-These bootstrap files may later become ordinary retained project artifacts.
 
 ---
 
-# 74. CI gates
+# 82. CI gates
 
 Every change:
 
@@ -3830,529 +3595,561 @@ cargo fmt --check
 cargo clippy --all-targets --all-features -- -D warnings
 cargo test
 migration test
-artifact canonicalization test
-type/IR verifier tests
+canonical artifact test
+type/IR verifier
 ```
 
-Semantic/history changes additionally require:
+Reciprocal-core changes additionally:
+
+```text
+departure witness fixtures
+unknown-not-negative fixtures
+negation soundness fixtures
+coverage separation fixtures
+duplicate-use provenance breaker
+return-fiber ambiguity fixtures
+recovery fixtures
+joint-family-recovery fixture
+monotone-redetermination breaker
+sixfold dependency fixtures
+```
+
+History changes:
 
 ```text
 cold replay
-incremental vs replay equality
-historical version fixture
+historical version locality
 ```
 
-Compiler changes additionally require:
+Binding changes:
 
 ```text
-source-program preservation
-path-provenance preservation
-renderer contract fixtures
-```
-
-Standing changes additionally require:
-
-```text
-full fixed point vs incremental result
-rootless-cycle fixture
-support-environment fixtures
-```
-
-Binding changes additionally require:
-
-```text
-bridge preservation fixtures
-old-event immutability fixture
-old-IProg trace transport
+bridge preservation
 affected-fold reopening
+old-event immutability
 ```
 
 ---
 
-# 75. Observability
+# 83. Observability
 
-Log represented transformations, not hidden reasoning.
-
-Every inquiry occurrence should expose references for:
+Every reciprocal inquiry should expose references for:
 
 ```text
-binding_version
-question
-distinction
-active_view
-separator_problem
-generated_inquiry
-selection_policy
-probe
-surface_plan
-backend_request
-raw_return
-event
-resolution
-claim
-standing_update
-method
-fold
-patch
-grain
-horizon
+source determination presentation
+departure witness route
+negation use
+semantic negation coverage
+generator/execution coverage
+positive exterior occurrence
+raw return/event
+return fiber
+protected recovery profile
+seed bridge
+reciprocal negation use
+reciprocal exterior
+reciprocal return fiber
+sixfold residuals
+Gamma result
+separator problem
+representation-gap result
 ```
 
-The runtime should be able to answer:
+The system should answer:
 
 ```text
-Why was this question generable?
-Why was it selected?
-What residual classes did it separate?
-What context was active?
-What remained reserve?
-What was occluded and under which licence?
-What actually returned?
-How was it resolved?
-Why did a claim stand?
-Why was a fold reopened?
-Which binding interpreted this event?
-Why was a binding extension considered conservative or not?
+Why is this candidate exterior?
+Which relation made it exterior?
+Why is that relation allowed to constitute the source determination?
+Is this negation field exhaustive, field-relative, partial, or working?
+Has the field actually been fully explored?
+Which negation use produced this exterior?
+What does that use return?
+Which source relations are recovered?
+What remains ambiguous?
+Why was this reciprocal route selected?
+What historical event actualized it?
+What residual question was generated?
 ```
 
 ---
 
-# 76. Performance policy
+# 84. Performance policy
 
-Instrument before optimizing:
+Instrument:
 
 ```text
-artifact I/O
-journal writes
-relation queries
-fiber solve time
-active-view construction
-memory crawl depth
-separator generation count
-question-selection cost
-cue-planner search size
+determination web construction
+departure witness checking
+negation-frontier size
+negation section generation
+return-fiber solve time
+recovery check time
+family signature size
+separator generation
 standing iterations
-prompt context size
+memory crawl
+prompt context
 provider latency/cost
-fold recovery cost
-replay time
-bridge-check cost
+replay
+binding bridge checks
+fold reopen cost
 ```
 
-Cross architecture boundaries only when measured.
-
-Examples:
-
-```text
-SQLite write bottleneck
-    -> evaluate PostgreSQL
-
-exact cue search too expensive
-    -> working planner
-
-relational retrieval insufficient
-    -> test lexical/vector route
-
-standing recomputation dominates
-    -> semi-naive incrementalization
-
-open generator starvation appears
-    -> import fair/resumable generation
-
-parallel independent probes useful
-    -> introduce represented concurrency
-```
+Only cross architecture boundaries after measured evidence.
 
 ---
 
-# 77. Production migration path
+# 85. Production migration path
 
-Preserve semantic independence from physical layout.
-
-Expected path:
+Preserve:
 
 \[
 \boxed{
-\begin{array}{c}
-Rust\ monolith\\
+Rust\ monolith
 +
-SQLite\\
+SQLite
 +
-local\ content\ store\\
-\downarrow\\
-better\ reconstructible\ indexes\\
-\downarrow\\
-PostgreSQL/object\ storage\ if\ measured\\
-\downarrow\\
-parallel/distributed\ effect\ execution\ if\ measured.
-\end{array}
+content\ store
 }
 \]
 
-Do not migrate semantics with storage.
+until measured scale requires:
+
+- stronger relational DB;
+- object storage;
+- parallel effect execution;
+- distributed workers.
+
+Physical migration must not change semantic identity or history.
 
 ---
 
-# 78. Current research gates
+# 86. Current research gates
 
-The architecture no longer depends on resolving these before implementation.
+## 86.1 Determination-presentation admission
 
-## 78.1 Cross-binding standing lift
+This is now the principal unresolved reciprocal-semantic gate.
 
-Current safe rule:
+The system needs the smallest lawful \(W_D(x)\) that may define the current determination for departure judgment.
+
+Unsafe extremes:
 
 ```text
-transport old standing only at its old scope/applicability/grain/horizon
-reuse unaffected evidence
-create liabilities for newly inspectable distinctions
-recompute before broader promotion
+all standing facts about x
+    -> incidental differences become false identity criteria
+
+too-small hand-selected web
+    -> genuine departures disappear
 ```
 
-Research question:
+Current safe implementation:
 
-> Under what exact conditions can more of the old standing be promoted automatically through a conservative bridge?
+> use the claim-local support/dependency web of the standing determination occupying the source role; retain exact provenance; permit later regenerative minimization only as a reversible compression.
 
----
+The unresolved comparison is among:
 
-## 78.2 Open-ended generator completeness
+- all standing related constraints;
+- minimal regeneratively sufficient webs;
+- claim/support-local determination presentations;
+- possibly a family of admissible presentations when minima are nonunique.
 
-Finite and binding-native exact regimes can certify separator generation.
+This does not block implementation of the rest of the successor core.
 
-The general open-ended/LLM regime remains:
+## 86.2 Cross-binding standing lift
 
-```text
-Working
-or
-FairOpenEnded
-```
+Retain conservative rule until stronger theorem.
 
-until stronger coverage is established.
+## 86.3 Open-ended generator completeness
 
-Do not claim a universal finite inquiry basis.
+Do not claim universal finite negative/question basis.
 
----
+## 86.4 Learned policy
 
-## 78.3 Question-policy optimization
+Question/negation-route policy is optimization only.
 
-Later compare:
+## 86.5 Retrieval basis
 
-```text
-worst-case residual contraction
-expected protected information gain
-cost-aware decision trees
-learned program policies
-```
-
-The object of eventual optimization is an answer-dependent inquiry policy, not necessarily a flat question ranking.
+Add vectors only after measured protected miss.
 
 ---
 
-## 78.4 Retrieval basis
+# 87. Current relative fixed point
 
-Only after recurrent relational retrieval is implemented should the project test whether lexical/vector routes produce protected strict gain.
-
-No vector memory architecture is assumed.
-
----
-
-## 78.5 Resumable/fair generators
-
-Import stronger scheduler/generator machinery only if an actual fixture shows:
-
-```text
-starvation
-restart loss
-large open-ended generation
-generator-specific resumable state
-```
-
----
-
-# 79. Current relative fixed point
-
-The implementation should now treat the following as settled unless a future breaker reopens them:
+The following are now sufficiently settled for implementation.
 
 \[
 \boxed{
-\text{Question}
-=
-\text{partial represented relation binding}.
+\text{relation is the semantic primitive}.
 }
 \]
 
 \[
 \boxed{
-IProg
-=
-Return
-\mid
-Ask(q,\kappa)
-}
-\]
-
-with first-order answer-dependent continuation.
-
-\[
-\boxed{
-\text{runtime}
-=
-Return
-\mid
-Branch
-\mid
-Probe.
+\text{reciprocal inquiry begins from a live determination presentation}.
 }
 \]
 
 \[
 \boxed{
-\text{sixfold first-return behavior}
-=
-\text{two independently seeded path-preserving reciprocal round trips}.
+\text{positive exteriority is witnessed by determination-relevant positive incompatibility}.
 }
 \]
 
 \[
 \boxed{
-\text{sixfold is a derived view, not a separate authoritative runtime object}.
+\text{exteriority is not protected non-equivalence}.
 }
 \]
 
 \[
 \boxed{
-\text{path correlation must survive nondeterminism}.
+\text{unknown is neither interior nor exterior}.
 }
 \]
 
 \[
 \boxed{
-\text{retained}
+\text{typed negation is a supported oriented relation role}.
+}
+\]
+
+\[
+\boxed{
+\text{typed negation is not Boolean complement}.
+}
+\]
+
+\[
+\boxed{
+\text{soundness does not require exhaustive complement}.
+}
+\]
+
+\[
+\boxed{
+\text{semantic negation coverage is explicit}.
+}
+\]
+
+\[
+\boxed{
+\text{semantic coverage}
 \neq
-\text{accessible}
+\text{execution coverage}.
+}
+\]
+
+\[
+\boxed{
+\text{multiple negation relations form a tagged family}.
+}
+\]
+
+\[
+\boxed{
+\text{untagged semantic union loses reciprocal provenance}.
+}
+\]
+
+\[
+\boxed{
+\text{joint information accumulates through return-signature products}.
+}
+\]
+
+\[
+\boxed{
+\text{positive negation is a section filling}.
+}
+\]
+
+\[
+\boxed{
+\text{return is reverse section}.
+}
+\]
+
+\[
+\boxed{
+\text{return fiber}
 \neq
-\text{active}
+\text{selected return filling}.
+}
+\]
+
+\[
+\boxed{
+\text{recovery is protected determination by the return fiber}.
+}
+\]
+
+\[
+\boxed{
+\text{local recovery}
 \neq
-\text{standing}.
+\text{family schema recovery}.
 }
 \]
 
 \[
 \boxed{
-\text{cue motion is recurrent answer-dependent inquiry over retained relational structure}.
-}
-\]
-
-\[
-\boxed{
-\text{residual inquiry}
-=
-\text{cue extension}
-=
-\text{reciprocal repair}
-=
-\text{fold reopening}
-}
-\]
-
-at the level of the common separator problem, with different boundary conditions.
-
-\[
-\boxed{
-\text{generator regime}
+\text{pure reciprocal return}
 \neq
-\text{materialized discriminator set}
-\neq
-\text{question-selection policy}.
+\text{semantic reconciliation}.
 }
 \]
 
 \[
 \boxed{
-\text{internal question synthesis cannot create an observational dimension absent from the admitted language}.
+\text{compatible monotone constraint addition cannot change an already determined source class}.
 }
 \]
 
 \[
 \boxed{
-\text{materialization gap}
-\neq
-\text{expressibility gap}.
+\text{sixfold roles are generated dependently}.
 }
 \]
 
 \[
 \boxed{
-\text{expressibility gap}
-\to
-\text{governed binding-extension inquiry}.
+\Gamma_D\text{ is downstream compatibility, not role generation}.
 }
 \]
 
 \[
 \boxed{
-\text{binding growth}
-=
-\text{definitional extension}
-\mid
-\text{conservative observational extension}
-\mid
-\text{rebinding}.
+\text{sixfold is a derived view over ordinary programs, fibers, support, and events}.
 }
 \]
 
 \[
 \boxed{
-\text{conservative extension preserves old meaning and may only refine old observational equivalence}.
+\text{reciprocal residuals feed the generic separator engine}.
 }
 \]
 
 \[
 \boxed{
-\text{historical actuality is never rewritten under later bindings}.
+\text{separator failure may generate representation/probe/binding growth}.
 }
 \]
 
 \[
 \boxed{
-\text{standing is positive, provenance-carrying, and non-self-licensing}.
+\text{new representation may enlarge the future question universe}.
 }
 \]
 
 \[
 \boxed{
-\text{folds preserve ancestry and remain reopenable}.
+\text{standing, history, folds, bridges, and predecessor judgment remain unchanged in authority}.
 }
 \]
 
 ---
 
-# 80. Definition of first complete implementation
+# 88. Definition of the first complete successor implementation
 
-The first complete reference implementation exists when one repository can execute and replay:
+The successor reference implementation is complete when one repository can execute and cold-replay:
 
 \[
 \boxed{
 \begin{aligned}
 &\text{typed forms and relations}\\
 &\to
-\text{partial binding / OpenQuery}\\
+\text{standing source determination presentation}\\
 &\to
-\text{answer-dependent IProg}\\
+\text{positive departure witness}\\
 &\to
-\text{path-preserving reciprocal inquiry}\\
+\text{coverage-indexed typed negation use}\\
 &\to
-\text{question-conditioned active view}\\
+\text{tagged negative frontier}\\
+&\to
+\text{positive-negation question}\\
+&\to
+\text{generated or actual exterior occurrence}\\
+&\to
+\text{use-specific reverse return fiber}\\
+&\to
+\text{protected recovery}\\
+&\to
+\text{seed/reorientation}\\
+&\to
+\text{reciprocal negation and return}\\
+&\to
+\text{sixfold residuals}\\
+&\to
+\Gamma_D\text{ compatibility}\\
 &\to
 \text{generic separator problem}\\
 &\to
-\text{lawfully generated inquiry program}\\
+\text{representation/probe extension if required}\\
 &\to
-\text{Return/Branch/Probe runtime}\\
-&\to
-\text{immutable raw actuality}\\
-&\to
-\text{paired event history}\\
-&\to
-\text{explicit resolution}\\
-&\to
-\text{protected completion refinement}\\
+\text{raw actuality and paired history}\\
 &\to
 \text{standing}\\
 &\to
-\text{residual next question}\\
+\text{fold / recovery / reopening}\\
 &\to
-\text{recurrent cue-guided retrieval}\\
-&\to
-\text{operator occurrence learning}\\
-&\to
-\text{regenerative fold}\\
-&\to
-\text{separator-triggered reopening}\\
-&\to
-\text{representation-gap detection}\\
-&\to
-\text{governed binding extension/rebinding}\\
-&\to
-\text{cross-version replay}\\
+\text{binding extension / bridge}\\
 &\to
 \text{predecessor-judged self-revision}.
 \end{aligned}
 }
 \]
 
-No step may be supplied by an untyped hidden semantic controller.
+No step may be supplied by:
+
+- Boolean fallback;
+- hidden exterior predicate;
+- untyped "other" selector;
+- opaque LLM judgment;
+- mutable provider session;
+- semantic union that loses negation-use provenance;
+- state-changing return without revision evidence.
 
 ---
 
-# 81. Immediate coding order
+# 89. Immediate coding order
 
-For an implementation agent starting now:
+For implementation beginning now:
 
 ```text
-1. Phase 0: repository/scaffolding/canonical artifacts
-2. Phase 1: typed forms + binding version identity
-3. Phase 2: relation schemas + OpenQuery
-4. Phase 3: first-order IProg
-5. Phase 4: reciprocal compiler + path-preservation tests
-6. Phase 5: Return/Branch/Probe runtime
-7. Phase 6: event store + raw actuality
-8. Phase 7: resolution + holes/fibers
-9. Phase 8: paired actuality views
-10. Phase 9: active views + recurrent memory access
-11. Phase 10: LLM/backend compiler
-12. Phase 11: standing
-13. Phase 12: generic separator engine
-14. Phase 13: cue planning
-15. Phase 14: representation-gap detection
-16. Phase 15: binding extension/bridge/rebinding
-17. Phase 16: folds/recovery/method learning
-18. Phase 17: conservative cross-binding standing lift
-19. Phase 18: self-revision
-20. Phase 19: only measured breadth/optimization
+1. repository + canonical artifacts
+2. types + binding versions
+3. relation schemas + RelationUse
+4. OpenQuery + partial binding/fibers
+5. first-order IProg
+6. DeterminationPresentation
+7. DepartureWitness
+8. NegationUse + semantic coverage
+9. tagged NegationFrontier
+10. positive-negation query
+11. reverse return fiber
+12. protected RecoveryCheck
+13. family return signatures/schema recovery
+14. seed/reorientation
+15. SixfoldOccurrenceView + residuals + Gamma
+16. Return/Branch/Probe runtime
+17. event store + raw actuality
+18. resolution + general holes/fibers
+19. paired history
+20. active memory crawl
+21. LLM/backend compiler
+22. standing
+23. generic separator engine
+24. cue planning
+25. representation-gap detection
+26. binding extension/bridges
+27. folds/method learning/reopening
+28. cross-binding standing lift
+29. predecessor-judged self-revision
+30. only measured optimization/breadth
 ```
 
-Do not reorder later optimization work ahead of the semantic spine.
+The unsettled determination-presentation minimization rule should be isolated behind explicit provenance/status rather than delaying the rest of implementation.
 
 ---
 
-# 82. Principal live frontier after implementation begins
+# 90. Compact successor invariant
 
-The architecture is no longer blocked by a broad unknown.
-
-The principal remaining semantic research question is:
+The implementation may use the following as the compressed statement of the successor architecture:
 
 \[
 \boxed{
-\textbf{What is the least lawful cross-binding standing lift that
-reuses old support through a conservative observational extension
-without silently enlarging scope, applicability, grain, or protected horizon?}
+\begin{minipage}{0.92\linewidth}
+A live determination is represented by an explicit, supported relational
+presentation.  Its exterior is not presumed from a boundary projection and is
+not obtained by Boolean complement.  A candidate is positively established as
+outside the determination when a standing determination-relevant discriminator
+places source and candidate in incompatible typed cells.  An oriented relation
+whose admitted incidences have such departure witnesses may serve as a typed
+negation use, with semantic coverage stated independently of execution
+coverage.
+
+A determination may admit multiple negation uses.  They remain a tagged family:
+the relation use that licensed an exterior remains part of the reciprocal
+occurrence because different uses can return different source fields.  Inquiry
+partially binds one such relation to the source and positively determines an
+exterior filling.  Pure return is the reverse section of that same relation.
+The return fiber recovers a protected source relation exactly when every source
+still possible through that fiber agrees on the protected consequence of the
+relation.  Multiple negation uses accumulate reusable information through the
+product of their return signatures, not through an untagged semantic union.
+
+The exterior filling is then taken as a new center of determination through an
+explicit seed/reorientation relation, and the same operation is repeated in the
+reciprocal orientation.  The six dependent roles
+\((S_X,O_X,R_X;S_Y,O_Y,R_Y)\) are therefore a derived reciprocal trace, not six
+independent openings and not a separate history.  Exact reciprocal closure is
+fiber- and coverage-relative.  Gamma checks joint compatibility only after the
+dependent roles have been generated.
+
+A generated exterior does not revise standing semantics.  If warranted
+actuality invalidates the standing source web, reconciliation/revision produces
+a successor web; compatible monotone constraint addition alone cannot transform
+an already determined source into a protectedly different source.  Every
+surviving return ambiguity, recovery failure, seed mismatch, reciprocal
+mismatch, or compatibility failure becomes an ordinary protected residual and
+feeds the generic separator engine.
+
+When the required separator is absent only from current materialization,
+generation continues within the admitted language.  When no admitted
+question/probe/representation can express a witnessed protected distinction,
+the result is a representation or binding gap.  Recurrent separators may be
+reified as attributes, methods, probes, or representation coordinates; admitted
+extensions enlarge the later question language.  Actual question--return
+history remains authoritative, folds remain reopenable, standing remains
+independently warranted, and self-revision remains predecessor-judged.
+\end{minipage}
 }
 \]
-
-Until that is settled, the reference implementation uses the conservative lift rule from Phase 17.
-
-Everything earlier in the build can proceed independently.
 
 ---
 
-# 83. Final implementation directive
+# 91. Principal continuation
 
-The implementation agent should not attempt to reproduce the exploratory history of the project.
-
-It should implement the smallest current architecture capable of regenerating the protected behavior established by that history.
-
-The design center is:
+The reciprocal-boundary semantics is now sufficiently specified for implementation except for one authority question:
 
 \[
 \boxed{
-\textbf{REPRESENT RELATIONS EXACTLY;
-ASK THROUGH OPEN PORTS;
-LET ACTUAL RETURNS DETERMINE CONTINUATIONS;
-PRESERVE PATHS AND ACTUALITY;
-LET RESIDUAL PROTECTED CLASSES GENERATE SEPARATORS;
-FOLD ONLY WITH REGENERATION;
-AND EXTEND THE LANGUAGE ONLY THROUGH GOVERNED, VERSIONED BRIDGES.}
+\textbf{WHAT EXACT RELATIONAL PRESENTATION IS LICENSED TO COUNT AS
+THE CURRENT DETERMINATION \(W_D(x)\) FOR DEPARTURE JUDGMENT?}
 }
 \]
 
-Everything else is either a derived view, an optimization, or a research gate.
+The current safe implementation answer is:
+
+> the explicitly supported claim/dependency web of the standing determination currently occupying the source role, with every constitutive relation traceable to that standing claim; do not absorb all known facts about the source. Treat regenerative minimization as a later reversible compression rather than as a precondition for constructing the first implementation.
+
+The next research pass should test whether the eventual canonical object must be:
+
+1. one minimal regeneratively sufficient web;
+2. a family of incomparable sufficient webs;
+3. a claim-local support/dependency presentation;
+4. a quotient/fold over such a family.
+
+Until that distinction is settled, the implementation can proceed using explicit claim-local determination presentations with full provenance and reopening.
+
+---
+
+# 92. Final implementation directive
+
+Implement the successor from the smallest structure that regenerates its protected behavior:
+
+\[
+\boxed{
+\textbf{REPRESENT THE LIVE DETERMINATION;
+WITNESS DEPARTURE POSITIVELY;
+USE COVERAGE-INDEXED TYPED OPPOSITION;
+RETAIN THE OPPOSITION ROUTE;
+RETURN THROUGH ITS REVERSE SECTION;
+MEASURE WHAT THE RETURN ACTUALLY RECOVERS;
+REORIENT AND REPEAT;
+TURN SURVIVING DIFFERENCE INTO A SEPARATOR;
+EXTEND REPRESENTATION ONLY WHEN THE CURRENT LANGUAGE CANNOT EXPRESS IT;
+AND NEVER LET GENERATION, HISTORY, OR REVISION CLAIM MORE WARRANT THAN
+THEIR EXPLICIT ROUTES PROVIDE.}
+}

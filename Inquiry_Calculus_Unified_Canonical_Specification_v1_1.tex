@@ -38,8 +38,15 @@
 \setlist[enumerate]{leftmargin=1.7em}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
+\setlength{\emergencystretch}{2em}
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{2}
+\makeatletter
+\renewcommand{\@pnumwidth}{3em}
+\renewcommand{\@tocrmarg}{4em}
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{4.5em}{3.8em}}
+\makeatother
 
 \newtheorem{definition}{Definition}[section]
 \newtheorem{law}[definition]{Law}
@@ -78,7 +85,11 @@
 \newcommand{\Con}{\operatorname{Con}}
 \newcommand{\Sep}{\operatorname{Sep}}
 \newcommand{\Prof}{\operatorname{Prof}}
-\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Depart}{\operatorname{Depart}}
+\newcommand{\NegField}{\operatorname{NegField}}
+\newcommand{\RetField}{\operatorname{RetField}}
+\newcommand{\PosNeg}{\operatorname{PosNeg}}
+\newcommand{\Sig}{\operatorname{Sig}}
 \newcommand{\Occ}{\operatorname{Occ}}
 \newcommand{\Trav}{\operatorname{Trav}}
 \newcommand{\Stand}{\operatorname{Stand}}
@@ -103,10 +114,15 @@
 \newcommand{\bind}{\mathbin{\mathsf{bind}}}
 \newcommand{\numeq}[1]{\tag{#1}}
 
+\crefname{definition}{definition}{definitions}
+\crefname{law}{law}{laws}
+\crefname{theorem}{theorem}{theorems}
+
 \title{\textbf{Inquiry Calculus}\\
-\large A Unified, Well-Typed Relational Programming Language for Recursive Distinction, Regenerative Abstraction, Question Programs, Boundary Traversal, Representation Invention, Realized Perception, Warranted Revision, and LLM-Native Inquiry}
+\large Successor Reciprocal-Boundary / Positive-Negation Edition\\
+\normalsize A Unified, Well-Typed Relational Programming Language for Recursive Distinction, Regenerative Abstraction, Question Programs, Boundary Traversal, Representation Invention, Realized Perception, Warranted Revision, and LLM-Native Inquiry}
 \author{}
-\date{Version 1.1 --- Unified Canonical Specification\\24 August 2026}
+\date{Version 1.1 --- Unified Canonical Specification\\Positive-Negation Successor Edition --- 25 August 2026}
 
 \begin{document}
 \maketitle
@@ -114,15 +130,15 @@
 \begin{abstract}
 This document specifies Inquiry Calculus v1.1 as the single forward semantic, programming-language, compiler, and runtime authority for the project.  Version 1.1 preserves the typed relation, question, probe, actuality, history, warrant, compression, and self-revision machinery of v1.0, but corrects the level at which the calculus begins.  The primary represented unit is now a typed \emph{form}: any consequentially represented value, relation, distinction, question, operator, program, or reified construction that may lawfully enter further typed relations.  Object-role and operator-role are therefore not primitive ontological species; they are roles a represented form may occupy under a typed interface.
 
-Every pair of represented forms shares at least the coarsest relation of joint admission to the current represented field.  Inquiry seeks consequentially finer relations.  A realized distinction is not exhausted by a binary label or by a four-cell display.  It is a recursively compositional boundary form
+Every pair of represented forms shares at least the coarsest relation of joint admission to the current represented field.  Inquiry seeks consequentially finer relations.  A realized distinction is not exhausted by a binary label or by a four-cell display.  It admits a recursively compositional candidate-boundary form
 \[
 D=(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D)
 \]
-with a boundary point \(z:B_D\) that regenerates reciprocal sides \(x_z=\pi_X(z)\) and \(y_z=\pi_Y(z)\).  Full reciprocal determination at \(z\) consists of two oriented triads: each side determines itself, determines its other, and redetermines itself through the other.  The resulting sixfold profile
+whose projections supply candidate side incidence, but neither projection is thereby an exterior or a negation.  Reciprocal inquiry begins from an explicit supported determination presentation, positively witnesses departure through a typed oriented negation use, fills that negation, and returns through the reverse section of the same relation.  After an explicit seed/reorientation, the process repeats from the exterior.  The resulting dependent sixfold occurrence
 \[
-\Xi_D(z)=(S_x,O_x,R_x;S_y,O_y,R_y)
+\Xi_D(\omega)=(S_X,O_X,R_X;S_Y,O_Y,R_Y)
 \]
-is carried by the oriented double cover \(\widetilde B_D=B_D\times\{+,-\}\).  The familiar four-cell square is only a projection of this profile.  Inquiry alternates reciprocal orientation while moving along the boundary; realized succession carries full reciprocal profiles rather than merely static labels.
+retains the two negation-use identities, their semantic and execution coverage, the use-specific return fibers, protected recovery, seed support, residuals, and provenance.  The six roles are not independent slots, and \(\Gamma_D\) checks joint compatibility only after they have been generated.  The oriented double cover \(\widetilde B_D=B_D\times\{+,-\}\) records orientation without synthesizing a reverse negation.  The familiar four-cell square remains only a projection of the dependent occurrence.
 
 A question remains a partially bound typed relation.  Version 1.1 makes explicit that partial binding is a regenerative abstraction: bind the known ports, preserve the relation, and the remaining open section/fiber is the question.  Removing a filling while preserving all relations through which it mattered leaves a structured hole.  The intersection of the solution fibers of a relational web is the field of lawful replacements.  A representation understands or determines a form, relative to a protected horizon, when this residual web regenerates a unique protected equivalence class and the discriminators needed to reopen the abstraction remain available.
 
@@ -130,7 +146,7 @@ This yields a direct account of generative inquiry and scientific representation
 
 The source inquiry language is an answer-dependent question-program calculus
 \[
-K::=\mathsf{Return}(a)\mid\mathsf{Ask}(q,\kappa),
+K::=\mathsf{Return}_I(a)\mid\mathsf{Ask}(q,\kappa),
 \]
 which may execute directly in an ordinary LLM chat when its open ports are generative, and lowers through typed discharge authority to the runtime effect language
 \[
@@ -138,7 +154,7 @@ P::=\mathsf{Return}\mid\mathsf{Branch}\mid\mathsf{Probe}.
 \]
 A semantic question compiles to deterministic computation, LLM generation, an actual probe, an independent checker, a warrant operation, or a mixed program according to the modes of its open ports.  Raw return, decoded completion, interpretation, checking, warrant, and standing remain distinct.  Realized history remains authoritative evidence; learned distinctions, representations, question paths, and operator folds are compact regenerative structures over that history rather than replacements for it.
 
-The result is a recursively closed, well-typed calculus for forming distinctions, opening holes, generating and executing questions, inventing representations and probes, traversing reciprocal boundaries, preserving actuality, learning regenerative forms and operator paths, folding and reopening structure, and applying the same operations to its own presentation without self-warrant.
+The result is a recursively closed, well-typed calculus for forming distinctions, positively determining typed exteriority, returning through use-specific fibers, opening holes, generating and executing questions, inventing representations and probes, traversing reciprocal boundaries, preserving actuality, learning regenerative forms and operator paths, folding and reopening structure, and applying the same operations to its own presentation without self-warrant.
 \end{abstract}
 
 \tableofcontents
@@ -151,6 +167,8 @@ The result is a recursively closed, well-typed calculus for forming distinctions
 \subsection{Forward authority}
 
 This specification is designed to be the one cohesive document from which the active Inquiry Calculus is reconstructed.  Earlier project documents remain regression ancestry, derivation evidence, and sources of counterexamples.  They do not silently override this document merely because they contain older notation or a larger architecture.
+
+The immediately preceding stable-path canonical specification is retained at Git commit \texttt{49dc381}; the project authority records preserve the full identifier.  It remains ancestry and regression evidence rather than coequal forward authority.
 
 A later successor may replace this document only by a predecessor-judged revision that:
 \begin{enumerate}
@@ -225,7 +243,7 @@ then the representation is insufficient and inquiry must preserve the obligation
 \end{law}
 
 \begin{law}[Regenerative distinction]
-A realized distinction point is not merely a label placed between two pre-existing objects.  It is a typed regenerative form from which its reciprocal sides and the protected relation by which they differ are recoverable at the admitted grain.  Distinctions may themselves be reified as sides of further distinctions, opened at finer grain, or interpreted as operators under typed interfaces.
+A realized distinction occurrence is not merely a label placed between two pre-existing objects.  It is a typed regenerative form from which its candidate sides, the supported determination presentation, the relation uses that positively witness departure, and every protected return/recovery obligation are recoverable at the admitted grain.  Distinctions may themselves be reified as sides of further distinctions, opened at finer grain, or interpreted as operators under typed interfaces.
 \end{law}
 
 \begin{law}[Relational exclusion]
@@ -274,7 +292,7 @@ A semantic question is an open typed relation.  Its inquiry role is:
 \textbf{CONSEQUENTIAL OCCLUSION}.
 }
 \]
-It allocates representational resolution to an unresolved distinction and permits certified consequence-null surrounding structure to be omitted from the active view.
+It directs resolution toward an unresolved distinction and permits certified consequence-null context to be omitted from the active view.
 \end{law}
 
 \begin{law}[Boundary law]
@@ -284,7 +302,32 @@ A consequential local distinction is represented by a factorization
 D^+ \xleftarrow{\pi_+} B_D \xrightarrow{\pi_-} D^- .
 }
 \]
-The boundary carrier is neither side by role.  A boundary position holds both reciprocal projections.
+The boundary carrier is neither side by role.  A boundary position holds both candidate projections.  Projection alone establishes neither exteriority nor a typed negation use.
+\end{law}
+
+\begin{law}[Positive-negation recurrence]\label{law:positive-negation-recurrence}
+The constitutive reciprocal act is:
+\[
+\boxed{
+\begin{gathered}
+\textbf{POSITIVELY DETERMINE A LAWFUL TYPED NEGATION}\\
+\textbf{OF THE LIVE DETERMINATION, THEN RETURN THROUGH}\\
+\textbf{THE RELATION THAT LICENSED IT.}
+\end{gathered}
+}
+\]
+For source determination \(x\) and an admitted oriented relation use \(u\), the dependency is
+\[
+x\longrightarrow N_u[x]
+\longrightarrow ?y[N_u(x,y)]
+\longrightarrow y
+\longrightarrow N_u^{-1}[y].
+\]
+The exterior filling may then be seeded as a new source and the recurrence applied in the reciprocal orientation.  Boolean complement, boundary projection, failed search, non-equivalence, and unknown status do not supply the departure witness required by this law.
+\end{law}
+
+\begin{law}[Return is not reconciliation]\label{law:return-not-reconciliation}
+Pure reciprocal return computes the reverse section of the same typed relation use.  It does not mutate the standing source web.  A protected change of standing meaning requires separately actualized, checked, and warranted retraction, revision, changed applicability, changed grain, changed binding, or evidence that the predecessor presentation was underdetermined.
 \end{law}
 
 \begin{law}[Traversal law]
@@ -719,10 +762,17 @@ The reference relation language uses:
 
 The metalanguage is classical set-theoretic unless a binding explicitly chooses another logic.  Expressibility and decidability of complement or quantification inside a binding remain separate questions.
 
-Logical negation is not identified with reciprocal exterior:
+Logical negation is not identified with contextual typed negation or positive reciprocal exterior:
 \[
-\boxed{\neg\phi\neq \text{reciprocal exterior in general}.}
+\boxed{
+\neg\phi
+\neq N_u
+\neq N_u[x]
+\neq y
+\quad\text{in general}.
+}
 \]
+Here \(N_u\) is an ordinary supported oriented relation playing a negation role, \(N_u[x]\) is its source-bound section, and \(y\) is one positively supported filling.  The logical connective remains part of the formula language; it neither creates a \(\mathsf{NegationUse}\) nor supplies its coverage or departure evidence.
 
 \subsection{Minimal generating basis}
 
@@ -1405,37 +1455,27 @@ Each name records which factor in the chain
 currently lacks a lawful realization.
 \end{definition}
 
-\part{Reciprocal Boundary, Sixfold Distinction, and Occlusion Calculus}
+\part{Positive Negation, Reciprocal Return, and Occlusion Calculus}
 
-\section{Distinction schemas and boundary points}
+\section{Candidate-boundary schemas}
 
-\begin{definition}[Typed distinction schema]
+\begin{definition}[Typed distinction schema]\label{def:distinction-schema}
 A local typed distinction schema is
 \[
-\boxed{
-D=(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D)
-}
+\boxed{D=(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D)}
 \]
-where \(X,Y\) are side carriers, \(B_D\) is the boundary-point carrier,
+where \(X,Y\) are candidate side carriers, \(B_D\) is a boundary-point carrier,
 \[
 \pi_X:B_D\to X,
 \qquad
 \pi_Y:B_D\to Y,
 \]
-and \(\Gamma_D\) is the binding-supplied compatibility/discrimination relation constraining the reciprocal determinations that may jointly occupy one boundary point.
+and \(\Gamma_D\) is a binding-supplied downstream compatibility relation for a dependently generated reciprocal occurrence.  The schema does not contain determination presentations, negation uses, seeds, or return fibers; those belong to an occurrence of inquiry over \(D\).
 \end{definition}
 
-For \(z:B_D\), define the reciprocal side projections
-\[
-\boxed{
-x_z=\pi_X(z),
-\qquad
-y_z=\pi_Y(z).
-}
-\]
-The orientation labels \(+\) and \(-\) may be used for \(X\) and \(Y\), but they carry no truth value or privileged status.
+For \(z:B_D\), write \(x_z=\pi_X(z)\) and \(y_z=\pi_Y(z)\).  The orientation labels \(+\) and \(-\) may be used for \(X\) and \(Y\), but carry no truth value or privileged status.
 
-\begin{definition}[Boundary incidence]
+\begin{definition}[Candidate boundary incidence]\label{def:boundary-incidence}
 \[
 \boxed{
 \partial_D(x,y)
@@ -1443,289 +1483,366 @@ The orientation labels \(+\) and \(-\) may be used for \(X\) and \(Y\), but they
 \exists z:B_D.\,\pi_X(z)=x\land\pi_Y(z)=y.
 }
 \]
-\end{definition}
-
-\begin{definition}[Reciprocal exterior]
-\[
-\boxed{
-\Ext_D(x)
-=
-\{y:Y:\exists z.\,\pi_X(z)=x\land\pi_Y(z)=y\}.
-}
-\]
-The reciprocal side is positive relational content induced by the shared distinction rather than mere logical negation.
+This incidence makes \(x\) and \(y\) available in one candidate chart.  It is not a departure witness, a negation relation, a crossing, or a completed sixfold occurrence.
 \end{definition}
 
 \begin{definition}[Boundary-point profile]
 \[
-\Prof_D(x)
-=
-\{z:B_D:\pi_X(z)=x\}.
-\]
-Exact boundary-profile equality is
-\[
-\boxed{
+\Prof_D(x)=\{z:B_D:\pi_X(z)=x\},
+\qquad
 x_1\equiv_D^{\mathrm{prof}}x_2
 \iff
 \Prof_D(x_1)=\Prof_D(x_2).
-}
 \]
+Profile equality remains a candidate-incidence observation and does not define contextual exteriority.
 \end{definition}
 
-\begin{law}[Distinction points are regenerative forms]
-A boundary point \(z\) may be reified as a form.  At its declared grain it regenerates at least its two side projections and the distinction schema under which they meet:
+\begin{law}[Boundary points remain regenerative candidate forms]\label{law:boundary-point-regeneration}
+A boundary point \(z\) may be reified and at its declared grain regenerates
 \[
-\boxed{
-z\rightsquigarrow(D,x_z,y_z).
-}
+z\rightsquigarrow(D,\pi_X(z),\pi_Y(z)).
 \]
-When finer reciprocal information is protected, the sixfold profile defined below is part of what must remain recoverable.
+This preserves candidate-chart ancestry only.  When a reciprocal occurrence is protected, its determination presentations, use identities, fibers, recovery, seed, events, and residuals must be recovered separately; none is inferred from \(z\).
 \end{law}
 
-\section{Sixfold reciprocal determination}
+\section{Live determination and positive departure}
 
-The four oriented pairings \(x\mid x\), \(y\mid x\), \(x\mid y\), and \(y\mid y\) do not fully determine who performs a determination after the reciprocal side has been admitted.  Version 1.1 therefore distinguishes three determinations from each orientation.
-
-\begin{definition}[Oriented reciprocal triad]
-For \(z:B_D\), write
+\begin{definition}[Determination presentation]\label{def:determination-presentation}
+For distinction \(D\), orientation \(\alpha\in\{X,Y\}\), and live source \(s\), a determination presentation
 \[
-\boxed{
-\Theta_X(z)
-=
-(S_X(z),O_X(z),R_X(z))
-}
+\boxed{W_D^\alpha(s)}
 \]
-and
-\[
-\boxed{
-\Theta_Y(z)
-=
-(S_Y(z),O_Y(z),R_Y(z)).
-}
-\]
-Their roles are:
-\begin{itemize}
-\item \(S_X(z)\): the \(X\)-side determines itself from its own orientation;
-\item \(O_X(z)\): the \(X\)-side determines its reciprocal \(Y\)-side;
-\item \(R_X(z)\): after that reciprocal determination has been admitted, the \(X\)-side redetermines itself through its relation to the determined \(Y\)-side;
-\item \(S_Y,O_Y,R_Y\): the exact reciprocal roles from the \(Y\)-orientation.
-\end{itemize}
+is an explicit versioned relational web supported as constitutive of the standing source determination, indexed by declared scope, applicability, grain, protected horizon, binding, and provenance.  It is not automatically every retained fact, every standing relation mentioning \(s\), every protected continuation, or a globally unique essence.  Until a stronger admission/minimization law is warranted, the canonical reversible presentation is the support/dependency web of the specific standing claim occupying the source role.  Regenerative minimization must retain that predecessor presentation as ancestry.
 \end{definition}
 
-\begin{definition}[Sixfold reciprocal profile]
+\begin{definition}[Positive departure witness]\label{def:departure-witness}
+Let \(s:A\) be the live source under \(W=W_D^\alpha(s)\), and let \(e:E\) be a candidate.  A positive departure witness consists of typed represented observations
 \[
-\boxed{
-\Xi_D(z)
-=
-(S_X,O_X,R_X;S_Y,O_Y,R_Y)_z.
-}
-\]
-A profile is lawful only when
-\[
-\boxed{
-\Gamma_D(z,S_X,O_X,R_X,S_Y,O_Y,R_Y)
-}
-\]
-holds in the binding.
-\end{definition}
-
-\begin{law}[Reciprocal redetermination is not opposite-side description]
-In general,
-\[
-\boxed{
-R_X(z)\neq O_Y(z),
+d_A:A\rightsquigarrow C_A,
 \qquad
-R_Y(z)\neq O_X(z).
-}
+d_E:E\rightsquigarrow C_E,
 \]
-\(O_Y\) is the \(Y\)-orientation's determination of \(X\).  \(R_X\) is the \(X\)-orientation's redetermination of itself after its own reciprocal determination of \(Y\) has constrained the field.  The four-cell projection must not silently identify these roles.
+supported fillings \(d_A(s,a)\) and \(d_E(e,b)\), and a standing incompatibility use \(a\perp b\) with \(\perp\hookrightarrow C_A\times C_E\), such that the source observation is relevant to \(W\).  A binding-native direct incompatibility may discharge the same role without a shared observation codomain.  Write
+\[
+\boxed{\Depart_{D,W}^{\alpha}(s,e)}
+\]
+when such a non-circular certificate exists at the declared authority, scope, applicability, and grain.
+\end{definition}
+
+\begin{law}[Departure is positive and determination-relative]\label{law:departure-relative}
+Failure of equality, search, retrieval, generation, or proof does not establish \(\Depart\).  Incomplete observation remains \(\mathsf{Unknown}\), neither interior nor exterior.  Moreover,
+\[
+\Depart_{D,W}^{\alpha}(s,e)\not\Rightarrow s\not\eqH e,
+\qquad
+s\not\eqH e\not\Rightarrow\Depart_{D,W}^{\alpha}(s,e).
+\]
+A positively exterior candidate may remain a useful protected near-departure, while a protected difference may depend on a relation absent from the current presentation.
 \end{law}
 
-\begin{definition}[Relational exclusion at a distinction]
-Two candidate determinations \(a,b\) are jointly unlawful at \(z\) exactly when no admissible completion of the sixfold profile satisfies \(\Gamma_D\) with both determinations fixed.  Apparent contradiction therefore means failure of joint realizability under one declared distinction schema, scope, grain, and binding.  It may be resolved by rejecting a determination, changing scope, refining grain, adding a missing side/relation, or rebinding.
-\end{definition}
-
-\section{Oriented double cover}
-
-\begin{definition}[Double cover]
+\begin{definition}[Derived boundary crossing]\label{def:boundary-crossing}
 \[
 \boxed{
-\widetilde B_D=B_D\times\{+,-\}.
+\mathsf{BoundaryCross}
+=
+\mathsf{DepartureWitness}
++
+\mathsf{Traversal/SuccessionProvenance}.
 }
 \]
-The covering projection is
-\[
-p:\widetilde B_D\to B_D,
-\qquad
-p(z,\sigma)=z.
-\]
-The two lifts of one boundary point are
-\[
-\widetilde z_+=(z,+),
-\qquad
-\widetilde z_-=(z,-).
-\]
-Attach the oriented triads by
-\[
-\Theta(\widetilde z_+)=\Theta_X(z),
-\qquad
-\Theta(\widetilde z_-)=\Theta_Y(z).
-\]
+Positive exteriority need not include an observed crossing path, and a candidate boundary projection alone supplies neither term.
 \end{definition}
 
-\begin{definition}[Orientation involution]
+\section{Typed negation uses and tagged frontiers}
+
+\begin{definition}[Relation use and negation use]\label{def:negation-use}
+A relation use is an immutable occurrence of a typed represented relation with explicit relation identity, bindings, orientation, scope, applicability, grain, support, and warrant.  An oriented typed negation use \(u\) over \(D\) additionally carries
+\[
+N_u\hookrightarrow A\times E_u,
+\qquad
+W_D^\alpha(s),
+\qquad
+\mathsf{coverage}_{sem}(u),
+\]
+and a soundness derivation mapping every admitted exact incidence \(N_u(s,e)\) to a non-circular witness of \(\Depart_{D,W}^{\alpha}(s,e)\).  Typed negation is thus a supported role played by an ordinary oriented relation, not Boolean complement or a new ontological carrier.  One oriented use never synthesizes its reverse.
+\end{definition}
+
+\begin{definition}[Positive-negation filling]\label{def:positive-negation}
+For admitted use \(u\), define
+\[
+\NegField_u(s)=N_u[s]=\{e:E_u:N_u(s,e)\}.
+\]
+An occurrence
+\[
+\boxed{\PosNeg(u;s,e,w)}
+\]
+records \(e\in\NegField_u(s)\), its departure witness \(w\), and the use identity.  \(\PosNeg\) names this role, not an additional carrier.  The distinctions
+\[
+\neg s\neq N_u\neq N_u[s]\neq e
+\]
+are mandatory.
+\end{definition}
+
+\begin{definition}[Semantic and execution coverage]\label{def:negation-coverage}
+Every negation use declares semantic coverage such as exact exhaustive, certified partial, or open, together with its applicability domain and certificate.  Separately, an occurrence declares what portion of that semantic field was materialized or executed.  Therefore
+\[
+\boxed{\mathsf{coverage}_{sem}(u)\neq\mathsf{coverage}_{exec}(u,\omega).}
+\]
+An empty exact exhaustive field differs from an empty unsearched field.  No breaker found under partial semantic or execution coverage establishes only \(\mathsf{Unknown}\), not absolute closure.
+\end{definition}
+
+\begin{definition}[Tagged negation frontier]\label{def:negation-frontier}
+For the admitted use family \(\mathcal U_D^\alpha(s)\), the live exterior frontier is the tagged dependent sum
 \[
 \boxed{
-\iota(z,+)=(z,-),
-\qquad
-\iota(z,-)=(z,+).
+\mathcal N_D^\alpha(s)
+=
+\sum_{u\in\mathcal U_D^\alpha(s)}
+\{u\}\times\NegField_u(s).
 }
 \]
-Hence \(\iota^2=\mathsf{id}\).
+If the same exterior is reached through two uses, both occurrences remain.  Heterogeneous target carriers remain typed by the dependent sum.  Exact collective coverage requires an explicit cover certificate; partial members do not become exhaustive merely by union, and an untagged union is unlawful when return provenance is protected.
 \end{definition}
 
-The double cover preserves the fact that reciprocal determination can be inspected from either orientation without identifying those orientations or requiring physical movement from one side to the other.
+Ordinary intersection, union, and composition may generate candidate relations, but do not confer negation authority.  They introduce no exterior candidate absent from their admitted members unless the composed relation independently earns a sound negation-use warrant.  Open use families are traversed under the ordinary resource-bounded fairness rules.
 
-\section{Distinction recursion and re-entry}
+\section{Reverse-section return and protected recovery}
+
+\begin{definition}[Use-specific return fiber]\label{def:return-fiber}
+For an admitted incidence \(N_u(s,e)\), pure return is the reverse section
+\[
+\boxed{
+\RetField_u(e)
+=
+N_u^{-1}[e]
+=
+\{s':A:N_u(s',e)\}.
+}
+\]
+The source \(s\) necessarily belongs to this fiber, but need not be uniquely recovered.  A selected return role \(R\in\RetField_u(e)\) is not the fiber.  Exact source closure requires
+\[
+\RetField_u(e)/{\equiv_{\mathcal H}}=\{[s]_{\mathcal H}\}
+\]
+under the declared semantic and execution coverage.
+\end{definition}
+
+\begin{definition}[Protected recovery]\label{def:protected-recovery}
+For a protected represented observation \(r:A\rightsquigarrow C\), define its protected signature at \(a\) by
+\[
+\Sig_{r,\mathcal H}(a)
+=
+\{[c]_{\mathcal H}:r(a,c)\}.
+\]
+A return fiber \(F\subseteq A\) locally recovers \(r\) when
+\[
+\boxed{
+\Recover_{\mathcal H}(r,F)
+\iff
+\forall a,a'\in F.\,
+\Sig_{r,\mathcal H}(a)=\Sig_{r,\mathcal H}(a').
+}
+\]
+Recovery is thus protected determination by the return fiber, not a scalar similarity and not a new primitive.  Raw relation differences ignored by \(\mathcal H\) do not defeat recovery; a protected signature difference does.
+\end{definition}
+
+\begin{definition}[Source-web recovery profile]\label{def:web-recovery}
+For a source presentation \(W=W_D^\alpha(s)\), admitted use \(u\), and exterior \(e\), define
+\[
+\boxed{
+\mathsf{Recov}_{W,\mathcal H}(s,e;u)
+=
+\{r\in W:\Recover_{\mathcal H}(r,\RetField_u(e))\}.
+}
+\]
+An exterior may recover some constitutive source relations without regenerating the entire protected source class.  This set-valued profile is semantic; no universal scalar recovery percentage is introduced.
+\end{definition}
+
+\begin{definition}[Near-negation recovery order]\label{def:near-negation-order}
+For two admitted tagged exterior occurrences \((u_1,e_1)\) and \((u_2,e_2)\), write
+\[
+(u_1,e_1)\succeq_{W,\mathcal H}(u_2,e_2)
+\iff
+\mathsf{Recov}_{W,\mathcal H}(s,e_2;u_2)
+\subseteq
+\mathsf{Recov}_{W,\mathcal H}(s,e_1;u_1).
+\]
+This is only a protected recovery preorder.  Cost, risk, and time may be combined by an explicit product or Pareto order, never by a primitive scalar negation distance.
+\end{definition}
+
+\begin{definition}[Negation-family return signature]\label{def:family-signature}
+For each admitted negation use \(u_i\), let
+\[
+\bar\sigma_i(s)
+=
+(\mathsf{applicability}_i(s),N_{u_i}[s])
+\]
+with applicability retained whenever protected.  The tagged family signature is
+\[
+\boxed{
+\sigma_{\mathcal U}(s)=\prod_i\bar\sigma_i(s).
+}
+\]
+For deterministic exact signatures,
+\[
+\boxed{
+\ker\sigma_{\mathcal U}=\bigcap_i\ker\bar\sigma_i.
+}
+\]
+Adding a lawful coordinate may refine but cannot coarsen the exact family observational partition.  Information accumulates through this product, not through an untagged union of negation relations.
+\end{definition}
+
+\begin{definition}[Schema and family recovery]\label{def:family-recovery}
+A protected source observation \(\chi_{r,\mathcal H}\) is recoverable from the admitted negation-use family when
+\[
+\boxed{
+\ker\sigma_{\mathcal U}
+\subseteq
+\ker\chi_{r,\mathcal H}.
+}
+\]
+Equivalently, where factorization is available, there is an \(h\) such that
+\[
+\boxed{
+\chi_{r,\mathcal H}=h\circ\sigma_{\mathcal U}.
+}
+\]
+Family recovery may therefore succeed when no member signature alone recovers the observation; the canonical three-state breaker witnesses this joint gain.  Occurrence-local recovery remains fixed by the use, fiber, and evidence available at that historical occurrence and is not retroactively strengthened by a later learned use.
+\end{definition}
+
+\begin{theorem}[Compatible monotone return cannot revise a determined source]\label{thm:monotone-return}
+If a web \(W\) already determines exactly \([s]_{\mathcal H}\), and a compatible constraint \(C\) admits \(s\), then
+\[
+\operatorname{Sol}(W\land C)
+=
+\operatorname{Sol}(W)\cap\operatorname{Sol}(C)
+\]
+still has only \([s]_{\mathcal H}\) as its protected class.  Hence adding a compatible exterior constraint cannot transform an already determined source into a protectedly different source.  A state-changing redetermination must expose a warranted revision route of the kind required by \cref{law:return-not-reconciliation}.
+\end{theorem}
+
+\section{Dependent reciprocal occurrence and sixfold view}
+
+\begin{definition}[Seed and reorientation]\label{def:reciprocal-seed}
+After \(\PosNeg(u_X;S_X,O_X,w_X)\), a supported typed seed relation
+\[
+\sigma_{X\to Y}:E_{u_X}\rightsquigarrow Y
+\]
+selects or determines \(S_Y\) from \(O_X\).  Identity may be used only when the carriers and intended roles justify it.  \(O_X\) and \(S_Y\) remain distinct roles and the seed's support and provenance remain explicit.
+\end{definition}
+
+\begin{definition}[Dependent sixfold occurrence]\label{def:dependent-sixfold}
+A reciprocal occurrence \(\omega\) over \(D\) is generated in the following dependency order:
+\[
+\boxed{
+\begin{aligned}
+W_D^X(S_X),\ u_X
+&\longrightarrow
+\PosNeg(u_X;S_X,O_X,w_X)
+\longrightarrow
+F_X=\RetField_{u_X}(O_X)
+\ni R_X,\\
+O_X
+&\xrightarrow{\sigma_{X\to Y}}
+S_Y,\\
+W_D^Y(S_Y),\ u_Y
+&\longrightarrow
+\PosNeg(u_Y;S_Y,O_Y,w_Y)
+\longrightarrow
+F_Y=\RetField_{u_Y}(O_Y)
+\ni R_Y.
+\end{aligned}
+}
+\]
+The derived role view is
+\[
+\boxed{\Xi_D(\omega)=(S_X,O_X,R_X;S_Y,O_Y,R_Y).}
+\]
+The occurrence also carries \(u_X,u_Y\), both coverage records, \(F_X,F_Y\), local and family recovery results, seed support, boundary-point provenance when one exists, ordinary event references, and unresolved residuals.  It is reconstructed from ordinary questions, fibers, support, and events; it is not a separate authoritative history species.
+\end{definition}
+
+\begin{law}[Roles remain distinct and asymmetric]\label{law:sixfold-role-distinction}
+The six roles in \cref{def:dependent-sixfold} are dependent rather than independent.  In general
+\[
+R_X\neq O_Y,
+\qquad
+R_Y\neq O_X.
+\]
+Stable return in one orientation may coexist with unstable return in the other, and one-way negation does not imply reciprocal negation.  Exact reciprocal closure is relative to both negation semantic coverage and occurrence execution coverage.
+\end{law}
+
+\begin{definition}[Protected reciprocal return stability]\label{def:reciprocal-return-stability}
+For a completed occurrence \(\omega\), protected reciprocal return stability holds when
+\[
+F_X/{\equiv_{\mathcal H}}=\{[S_X]_{\mathcal H}\},
+\qquad
+F_Y/{\equiv_{\mathcal H}}=\{[S_Y]_{\mathcal H}\},
+\]
+and every declared protected recovery obligation succeeds under the occurrence's semantic and execution coverage.  Literal uniqueness is not required unless the horizon distinguishes literal representatives.  This is the successor form of protected mutual determination; it is a property of the two same-use fibers, not of boundary incidence or \(\Gamma_D\) alone.
+\end{definition}
+
+\begin{law}[Gamma is downstream]\label{law:gamma-downstream}
+Only after the dependent roles, use identities, fibers, recovery results, and seed have been supplied may the binding check
+\[
+\boxed{\Gamma_D(\omega).}
+\]
+\(\Gamma_D\) cannot manufacture a missing role, negation use, departure witness, return filling, or recovery result.  Compatibility failure becomes an ordinary protected residual rather than retroactive evidence that an ungenerated role existed.
+\end{law}
+
+The principal reciprocal residuals are return ambiguity, protected recovery failure, seed mismatch, reciprocal mismatch, and downstream compatibility failure.  They enter the generic separator problem.  If a witnessed protected distinction has no expression in the admitted representation/probe language, the result is a representation or binding gap rather than endless search within the same language.
+
+\section{Orientation, recursion, and re-entry}
+
+\begin{definition}[Oriented double cover]\label{def:double-cover}
+\[
+\widetilde B_D=B_D\times\{+,-\},
+\qquad
+p(z,\alpha)=z,
+\]
+with involution \(\iota(z,+)=(z,-)\) and \(\iota(z,-)=(z,+)\).  The cover records which orientation is under inquiry.  Applying \(\iota\) changes orientation only; it does not construct \(u_Y\), prove departure, or execute the reciprocal branch.
+\end{definition}
 
 \begin{definition}[Distinction reification]
-A realized distinction point may be reified:
+A boundary point or completed reciprocal occurrence may be reified without erasing its type or provenance:
 \[
-\boxed{
-\operatorname{QuoteDist}_D:B_D\to\mathsf{Form}_{\B}.
-}
+\operatorname{QuoteDist}_D:
+B_D+\mathsf{RecipOccurrence}_D
+\to\mathsf{Form}_{\B}.
 \]
-Thus if \(z\) distinguishes \(x,y\), then \(\ulcorner z\urcorner\) may itself occupy a side of another typed distinction \(D'\).
+It may then occupy a side of another typed distinction.  A schematic derived former
+\[
+\Delta:\mathsf{Form}_{\B}\times\mathsf{Form}_{\B}
+\rightharpoonup\mathsf{Form}_{\B}
+\]
+is lawful only when its typed distinction schema, scope, presentation, and support obligations are discharged.  Construction ancestry is one projection of the global relational graph; constituents remain independently recomposable.
 \end{definition}
 
-A schematic derived distinction former may therefore be written
-\[
-\boxed{
-\Delta:
-\mathsf{Form}_{\B}\times\mathsf{Form}_{\B}
-\rightharpoonup
-\mathsf{Form}_{\B},
-}
-\]
-where the partiality records that a lawful typed distinction schema, scope, and compatibility relation must exist.
+\section{Candidate polarity and traversal}
 
-For example,
+Given candidate incidence \(\partial_D\), one may derive the face-level polarity
 \[
-x=\Delta(a,b),
+A^{\perp_D}=\{y\in Y:\forall x\in A,\ \partial_D(x,y)\},
 \qquad
-y=\Delta(c,d),
-\qquad
-z=\Delta(x,y),
-\qquad
-w=\Delta(z,e)
+E^{\perp_D}=\{x\in X:\forall y\in E,\ \partial_D(x,y)\},
 \]
-are ordinary recursive compositions when each typing obligation is discharged.  This construction ancestry is only one projection of the global relational graph; the constituents remain independently recomposable.
+and \(\operatorname{cl}_D(A)=A^{\perp_D\perp_D}\).  This is a chart operation only.  It supplies neither the positive evidence of \cref{def:departure-witness} nor the use authority of \cref{def:negation-use}, and it does not replace use-specific return fibers or the dependent sixfold occurrence.
 
-\section{Distinction residuals and mutual determination}
-
-Given \(z:B_D\), its compatibility relation induces residual solution fields:
-\[
-\boxed{
-\operatorname{Sol}^{X}_{z}(y)
-=
-\{x:X:\partial_D(x,y)\text{ and the protected profile constraints at }z\text{ are satisfiable}\},
-}
-\]
-\[
-\boxed{
-\operatorname{Sol}^{Y}_{z}(x)
-=
-\{y:Y:\partial_D(x,y)\text{ and the protected profile constraints at }z\text{ are satisfiable}\}.
-}
-\]
-When a more explicit compatibility relation \(\Gamma_z\hookrightarrow X\times Y\) is available, these reduce to \(\{x:\Gamma_z(x,y)\}\) and \(\{y:\Gamma_z(x,y)\}\).
-
-\begin{definition}[Protected mutual determination]
-\[
-\boxed{
-MutuallyDetermines_{\mathcal H}(z;x,y)
-}
-\]
-holds when
-\[
-\operatorname{Sol}^{X}_{z}(y)/{\equiv_{\mathcal H}}=\{[x]_{\mathcal H}\}
-\]
-and
-\[
-\operatorname{Sol}^{Y}_{z}(x)/{\equiv_{\mathcal H}}=\{[y]_{\mathcal H}\}.
-\]
-Literal uniqueness is not required unless the protected horizon distinguishes the literal representatives.
-\end{definition}
-
-\section{Polarity as a derived construction}
-
-Given incidence \(\partial_D\), define
-\[
-A^{\perp_D}
-=
-\{y\in Y:\forall x\in A,\ \partial_D(x,y)\},
-\]
-\[
-E^{\perp_D}
-=
-\{x\in X:\forall y\in E,\ \partial_D(x,y)\}.
-\]
-Then
-\[
-\operatorname{cl}_D(A)=A^{\perp_D\perp_D}
-\]
-is a Galois-style closure.
-
-\begin{law}[Exact profile is not double closure]
+\begin{law}[Candidate profile is not double closure]
 In general,
 \[
-\boxed{
 \operatorname{cl}_D(\{x\})
 \neq
 [x]_{\equiv_D^{\mathrm{prof}}}.
-}
 \]
-Polarity is a derived face-level tool.  It does not replace exact reciprocal-profile equality, the sixfold profile, or the whole inquiry calculus.
+Candidate polarity remains a useful face-level construction but cannot erase exact boundary-profile differences or any protected occurrence-level distinction.
 \end{law}
 
-\section{Boundary traversal}
-
-\begin{definition}[Base traversal]
+\begin{definition}[Boundary traversal]
 \[
-\boxed{
-T_D:B_D\rightsquigarrow B_D.
-}
+T_D:B_D\rightsquigarrow B_D,
+\qquad
+\tau_D:(z,\alpha)\rightsquigarrow(z',\alpha)
+\iff T_D(z,z').
 \]
-A base path is \(z_0\to z_1\to\cdots\to z_n\) with \(T_D(z_i,z_{i+1})\).
+Base traversal, orientation change, reciprocal-question execution, and binding-defined realized/domain succession are four distinct relations.  A crossing is derived only as in \cref{def:boundary-crossing}.
 \end{definition}
-
-\begin{definition}[Lifted boundary advance]
-For orientation \(\sigma\in\{+,-\}\), define the lifted advance
-\[
-\boxed{
-\tau_D:(z,\sigma)\rightsquigarrow(z',\sigma)
-\iff
-T_D(z,z').
-}
-\]
-\end{definition}
-
-Reciprocal inquiry may alternate orientation and advance:
-\[
-(z_t,+)
-\xrightarrow{\iota}
-(z_t,-)
-\xrightarrow{\tau_D}
-(z_{t+1},-)
-\xrightarrow{\iota}
-(z_{t+1},+)
-\xrightarrow{\tau_D}\cdots.
-\]
-This is the exact form of looking across the reciprocal distinction while moving along its boundary.  A side-changing world/domain transition remains a separate binding-supplied experiment.
-
-\begin{law}[Crossing is derived]
-A transition from a realization classified on one side to a realization classified on the reciprocal side may be constructed as a test, intervention, or domain succession.  It is not the constitutive definition of boundary traversal.
-\end{law}
 
 \section{Question-conditioned occlusion}
 
@@ -1792,41 +1909,41 @@ A nonempty frame defect is lawful for a local question coordinate when surroundi
 \boxed{FD_{\mathcal H}(q)=\varnothing.}
 \]
 
-\section{Square and cube as projections of the sixfold profile}
+\section{Square and cube as projections of dependent occurrences}
 
 \begin{definition}[Four-cell square projection]
-The traditional reciprocal square is the projection
+For a completed reciprocal occurrence \(\omega\), the traditional square is the projection
 \[
 \boxed{
-Sq_D(z)
+Sq_D(\omega)
 =
 \begin{pmatrix}
-S_X(z) & O_X(z)\\
-O_Y(z) & S_Y(z)
+S_X & O_X\\
+O_Y & S_Y
 \end{pmatrix}.
 }
 \]
-It intentionally omits \(R_X(z)\) and \(R_Y(z)\).  It is therefore a useful view, not a complete definition of the boundary point.
+It intentionally omits \(R_X,R_Y\), both negation-use identities, coverage, fibers, recovery, seed support, residuals, and provenance.  It is therefore a useful view, not a complete definition of the occurrence or boundary point.
 \end{definition}
 
 \begin{definition}[Reciprocal succession prism]
-If realized succession carries \(z_t\) to \(z_{t+1}\), the full derived cube/prism is
+If realized succession carries reciprocal occurrence \(\omega_t\) to \(\omega_{t+1}\), the full derived cube/prism is
 \[
 \boxed{
 \mathcal C_t(D)
 =
-(\Xi_D(z_t),\lambda_t,\Xi_D(z_{t+1})).
+(\Xi_D(\omega_t),\lambda_t,\Xi_D(\omega_{t+1})).
 }
 \]
 The square-cube display
 \[
-(Sq_D(z_t),\lambda_t,Sq_D(z_{t+1}))
+(Sq_D(\omega_t),\lambda_t,Sq_D(\omega_{t+1}))
 \]
 is a projection of this richer succession object.
 \end{definition}
 
 \begin{law}[Arrangement, reciprocal orientation, and succession remain distinct]
-The sixfold profile describes reciprocal arrangement at one boundary point; the double cover records orientation; \(T_D\) records inquiry traversal; \(\lambda_{\mathrm{real}}\) records binding-defined realized/domain succession.  None is identified with another without an explicit bridge.
+The dependent sixfold view describes one completed reciprocal occurrence; the double cover records orientation; \(T_D\) records inquiry traversal; \(\lambda_{\mathrm{real}}\) records binding-defined realized/domain succession.  None is identified with another without an explicit bridge.
 \end{law}
 
 \part{Probe, Perception, and Executable Inquiry}
@@ -2051,7 +2168,7 @@ For \(\mathsf{Ask}(q,\kappa)\),
 \[
 \kappa:\mathsf{SuppAns}(q)\to\mathsf{IProg}(A)
 \]
-is an answer-dependent continuation.  The continuation may construct a new relation/question from the returned distinction rather than selecting only among a fixed textual checklist.
+is an answer-dependent continuation represented as inspectable first-order program data with an explicit environment and capture-safe answer binding.  It is not an opaque host-language closure or hidden model policy.  The continuation may construct a new relation/question from the returned distinction rather than selecting only among a fixed textual checklist.
 \end{definition}
 
 \subsection{Source typing}
@@ -2104,16 +2221,25 @@ A source inquiry program specifies open typed relations and answer-dependent con
 
 \subsection{Canonical derived combinators}
 
-\begin{definition}[Reciprocal completion]
-For a distinction point \(z\), \(\mathsf{Recip}(z)\) is the derived inquiry program that opens the six reciprocal determination roles
+\begin{definition}[Dependent reciprocal program]\label{def:recip-program}
+For distinction \(D\) and supported source presentation \(W_D^X(S_X)\), \(\mathsf{Recip}(D,W_D^X(S_X))\) is the derived source program that composes ordinary questions in the order
 \[
-S_X,O_X,R_X,S_Y,O_Y,R_Y
+\boxed{
+\begin{aligned}
+&?u_X[\mathsf{ApplicableNegationUse}(D,X,W_D^X,S_X,u_X)]\\
+\bind{}&?(O_X,w_X)[\PosNeg(u_X;S_X,O_X,w_X)]\\
+\bind{}&\mathsf{ReturnFiber}(F_X=\RetField_{u_X}(O_X))\\
+\bind{}&?R_X[R_X\in F_X]\ \bind{}\mathsf{RecoveryCheck}(F_X)\\
+\bind{}&?S_Y[\sigma_{X\to Y}(O_X,S_Y)]\ \bind{}\mathsf{Present}(W_D^Y(S_Y))\\
+\bind{}&?u_Y[\mathsf{ApplicableNegationUse}(D,Y,W_D^Y,S_Y,u_Y)]\\
+\bind{}&?(O_Y,w_Y)[\PosNeg(u_Y;S_Y,O_Y,w_Y)]\\
+\bind{}&\mathsf{ReturnFiber}(F_Y=\RetField_{u_Y}(O_Y))\\
+\bind{}&?R_Y[R_Y\in F_Y]\ \bind{}\mathsf{RecoveryCheck}(F_Y)\\
+\bind{}&?\gamma[\gamma=\mathsf{Check}(\Gamma_D(\omega))].
+\end{aligned}
+}
 \]
-and then opens the compatibility question
-\[
-?\Gamma[\Gamma_D(z,S_X,O_X,R_X,S_Y,O_Y,R_Y)].
-\]
-It is a macro over ordinary open relations, not a new primitive effect.
+Each continuation receives the supported answer set of its predecessor and may retain multiple live uses, exteriors, returns, or seeds.  If a boundary point \(z\) supplied the candidate chart, its provenance is carried through \(\omega\); it does not generate any role.  The final \(\Gamma_D\) question is reached only after the dependent occurrence exists.  This program is a macro over \(\mathsf{Return}_I\), \(\mathsf{Ask}\), partial binding, sections, and ordinary checks, not a primitive effect or six-slot oracle.
 \end{definition}
 
 \begin{definition}[Hole solving]
@@ -2327,7 +2453,7 @@ Compilation is staged:
 \boxed{
 \begin{gathered}
 \text{typed forms/relation schema}\to\text{open relation/question}\to\mathsf{IProg}\\
-\to\OpenIR\to\text{sixfold-aware boundary chart}\to\text{active view}\\
+\to\OpenIR\to\text{positive-negation/dependent reciprocal chart}\to\text{active view}\\
 \to\ProbeIR\to\text{backend code}\to\Prog.
 \end{gathered}
 }
@@ -2347,7 +2473,7 @@ Normalization may alpha-rename ports, normalize joins/hiding, expand derived log
 \Comp_{\Normalize(q)}\cong\Comp_q.
 \]
 
-\subsection{Stage 2: construct the local distinction chart}
+\subsection{Stage 2: construct the local reciprocal chart}
 
 The compiler constructs or selects:
 \[
@@ -2355,12 +2481,18 @@ The compiler constructs or selects:
 \mathcal B_q=
 (
 D_q,
-B_q,
-\widetilde B_q,
-\pi_X,
-\pi_Y,
+W_q,
+\partial_q,
+\mathcal U_q^X,
+\mathcal U_q^Y,
+\mathcal N_q^X,
+\mathcal N_q^Y,
+\mathsf{coverage}_{sem},
+\mathsf{coverage}_{exec},
+\sigma_q,
+\mathcal F_q,
+\mathcal R_q,
 \Gamma_q,
-\Xi_q,
 T_q,
 g_q,
 \mathcal H_q
@@ -2368,7 +2500,7 @@ g_q,
 }
 \]
 
-For a multi-answer question, this may be a family of overlapping local boundary charts.  The compiler must not invent a global binary partition when the semantic answer structure does not provide one.
+Here \(W_q\) is the versioned source determination presentation; \(\partial_q\) contains candidate boundary incidence and status; \(\mathcal U_q^\alpha\) and \(\mathcal N_q^\alpha\) retain typed use identities and tagged frontiers; \(\mathcal F_q\) and \(\mathcal R_q\) retain use-specific return fibers and recovery results.  Seed and reciprocal fields may remain open.  For a multi-answer question, this may be a family of overlapping charts.  The compiler must not invent a global binary partition, a reverse negation, an exterior from projection, or a completed sixfold when the semantic answer structure does not provide one.
 
 \subsection{Stage 3: compute the active view}
 
@@ -2486,6 +2618,11 @@ A canonical renderer must preserve:
 \item open port names and types;
 \item scope and applicability;
 \item boundary orientation when protected;
+\item source determination-presentation identity and version;
+\item every negation-use identity and its departure-witness provenance;
+\item semantic coverage independently from execution/materialization coverage;
+\item candidate, open, generated, actual, checked, standing, and unknown status without strengthening;
+\item use-specific return-fiber, selected-return, seed, and recovery provenance when present;
 \item discharge route;
 \item resolution criterion;
 \item any comparator required for recurrent probing.
@@ -2626,6 +2763,10 @@ The record preserves:
 \item the discharge/actualization route;
 \item provenance, backend version, binding version, and required replay metadata.
 \end{itemize}
+
+\begin{law}[Reciprocal actuality is ordinary actuality]\label{law:reciprocal-actuality}
+A generated negation use, exterior candidate, return candidate, seed, recovery claim, or sixfold view is not thereby actual.  Every external/model/tool result enters history through the ordinary event spine before decoding or interpretation.  Partial, failed, or one-sided reciprocal attempts remain reconstructible as ordinary events and residuals.  A completed \(\Xi_D(\omega)\) is a derived view over those events, relation uses, fibers, and support; it is never a substitute authoritative history.
+\end{law}
 
 \section{State and working presentation}
 
@@ -2976,13 +3117,15 @@ Let \(m:M\) be a retained representation of a protected form or distinction \(z\
 Regen_{\mathcal H}(m,z)
 }
 \]
-when there exist typed reconstruction relations that recover every protected component required by the current horizon from \(m\), and the reconstructions are protected-equivalent to the corresponding components of \(z\).  For a distinction point, this includes at least its reciprocal side classes and, when protected, its sixfold reciprocal profile:
+when there exist typed reconstruction relations that recover every protected component required by the current horizon from \(m\), and the reconstructions are protected-equivalent to the corresponding components of \(z\).  For a reciprocal occurrence, this includes its candidate side classes and, when protected, its determination presentations, use-tagged dependent sixfold view, return fibers, recovery judgments, coverage, seed, residuals, and provenance:
 \[
 \rho_X(m)\equiv_{\mathcal H}x_z,
 \qquad
 \rho_Y(m)\equiv_{\mathcal H}y_z,
 \qquad
-\rho_{\Xi}(m)\equiv_{\mathcal H}\Xi_D(z).
+\rho_{\Xi}(m)\equiv_{\mathcal H}\Xi_D(\omega),
+\qquad
+\rho_{use/fib}(m)\equiv_{\mathcal H}(u_X,u_Y,F_X,F_Y).
 \]
 \end{definition}
 
@@ -4071,6 +4214,93 @@ RelSchema {
 }
 \end{lstlisting}
 
+\subsection{Relation-use and reciprocal records}
+
+These are conceptual typed records.  They do not require new runtime effects or authoritative database tables; content-addressed implementations may represent them as ordinary artifacts and references.
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+RelationUse {
+    id
+    relation_schema_ref
+    typed_bindings{}
+    orientation
+    scope
+    applicability
+    grain
+    support_ref
+    warrant_ref
+}
+
+DeterminationPresentation {
+    id
+    distinction_ref
+    orientation
+    source_ref
+    relational_web_ref
+    scope
+    applicability
+    grain
+    protected_horizon_ref
+    support_ref
+    status
+    predecessor_ref
+}
+
+DepartureWitness {
+    id
+    distinction_ref
+    source_ref
+    candidate_ref
+    source_presentation_ref
+    source_observation_use_ref
+    candidate_observation_use_ref
+    source_answer_ref
+    candidate_answer_ref
+    incompatibility_use_ref
+    support_ref
+    scope
+    applicability
+    grain
+}
+
+NegationUse {
+    id
+    relation_use_ref
+    distinction_ref
+    orientation
+    source_presentation_ref
+    candidate_field_ref
+    soundness_derivation_ref
+    semantic_coverage
+    scope
+    applicability
+    grain
+    warrant_ref
+}
+
+SixfoldOccurrenceView {
+    distinction_ref
+    boundary_ref_optional
+    source_x_ref
+    negation_x_use_ref
+    exterior_x_ref
+    return_x_fiber_ref
+    selected_return_x_ref_optional
+    recovery_x_ref
+    seed_use_ref
+    source_y_ref
+    negation_y_use_ref
+    exterior_y_ref
+    return_y_fiber_ref
+    selected_return_y_ref_optional
+    recovery_y_ref
+    semantic_and_execution_coverage_refs[]
+    event_refs[]
+    residual_refs[]
+    gamma_result_ref_optional
+}
+\end{lstlisting}
+
 \subsection{Open query record}
 
 \begin{lstlisting}[basicstyle=\ttfamily\small]
@@ -4093,12 +4323,25 @@ OpenQuery {
 BoundaryChart {
     id
     query_id
+    distinction_ref
+    source_presentation_ref
+    reciprocal_presentation_ref_optional
     plus_carrier
     boundary_carrier
     minus_carrier
     plus_projection
     minus_projection
     orientation
+    candidate_status
+    negation_x_use_refs[]
+    negation_y_use_refs[]
+    semantic_coverage_refs[]
+    execution_coverage_refs[]
+    seed_use_ref_optional
+    return_fiber_refs[]
+    recovery_refs[]
+    reciprocal_status
+    downstream_gamma_result_ref_optional
     traversal_relation
     grain
     protected_horizon_ref
@@ -4289,21 +4532,25 @@ Ledger append serialization, if used for persistence, must not be interpreted as
 
 For state \(s_t\) and open consequential residual:
 \begin{enumerate}
-\item \textbf{Open}: form or select a well-typed question \(q_t=?_I R[\beta]\).
-\item \textbf{Differentiate}: construct/update the question coordinate, reciprocal distinction, sixfold boundary profile obligations, and boundary chart.
-\item \textbf{Occlude}: compute an active view, hiding only licensed consequence-null structure.
-\item \textbf{Route}: dispatch each open port according to its discharge mode.
-\item \textbf{Compile}: produce pure computation, LLM prompt, checker call, native method, or actual probe program.
-\item \textbf{Probe}: if actualization is required, execute the probe and preserve the raw return first.
-\item \textbf{Resolve}: decode the return into zero, one, or several supported semantic completions with explicit path provenance.
-\item \textbf{Retain}: append authoritative event occurrence and operator links.
-\item \textbf{Reconcile}: construct candidate semantic/traversal patches without rewriting history.
-\item \textbf{Warrant}: update standing through support environments and the least fixed point.
-\item \textbf{Traverse}: alternate reciprocal orientation as useful while advancing/refining the current boundary, or open the next distinction exposed by the return.
-\item \textbf{Represent}: when a protected consequence splits inside a current representation cell, open separator questions for context, representation, grain, probe/tool, language, or binding.
-\item \textbf{Learn}: test regenerative sufficiency, detect recurrent question/probe paths and representation gaps, and propose distinction/representation refinements, operator folds, or probe-basis extensions.
-\item \textbf{Reopen}: fire any unlock conditions invalidated by the new protected future.
-\item \textbf{Recur}: continue on unresolved consequential residue.
+\item \textbf{Reconstruct}: recover accepted presentation and refresh standing without rewriting history.
+\item \textbf{Present}: identify the live source determination and materialize its explicit \(W_D^\alpha(s)\).
+\item \textbf{View}: retrieve relevant structure and hide only licensed consequence-null material.
+\item \textbf{Negation frontier}: derive applicable, warranted, coverage-indexed uses and their tagged candidate frontiers.
+\item \textbf{Open}: construct a positive-negation \(\mathsf{IProg}\) under one retained use identity.
+\item \textbf{Route and compile}: dispatch each open port according to authority and lower through \(\mathsf{Return}/\mathsf{Branch}/\mathsf{Probe}\).
+\item \textbf{Actualize}: where required, execute and preserve the raw return before decoding or interpretation.
+\item \textbf{Resolve}: retain zero, one, or several supported exterior completions with path and use provenance.
+\item \textbf{Return}: derive the same-use reverse section, preserving the whole return fiber separately from any selected \(R_\alpha\).
+\item \textbf{Recover}: compute protected local and applicable family recovery; turn ambiguity into residual rather than premature closure.
+\item \textbf{Reorient}: if a reciprocal continuation remains live, establish the seed and repeat the positive-negation/return recurrence from the reciprocal source.
+\item \textbf{Derive}: construct the dependent sixfold occurrence view and its residuals from ordinary questions, fibers, support, and events.
+\item \textbf{Check}: apply \(\Gamma_D\) only after the dependent roles exist.
+\item \textbf{Separate}: send unresolved protected return, recovery, seed, reciprocal, or compatibility differences to the generic separator problem.
+\item \textbf{Represent}: for an inexpressible witnessed difference, open representation, probe, language, or binding extension rather than declaring equivalence.
+\item \textbf{Retain/warrant}: append ordinary event/operator links and update support without treating generated exteriority as standing.
+\item \textbf{Reconcile}: revise or retract standing source semantics only through actualized, checked, warranted evidence.
+\item \textbf{Learn/reopen}: test regenerative sufficiency, propose reusable forms/operators, and fire invalidated unlocks.
+\item \textbf{Recur}: continue on the next consequential residual under the resource horizon.
 \end{enumerate}
 
 \section{Compact recurrence}
@@ -4312,18 +4559,20 @@ For state \(s_t\) and open consequential residual:
 \boxed{
 \begin{aligned}
 s_t
-&\xrightarrow{\operatorname{Open}(q_t)}
-(D_t,\eta_{q_t})\\
-&\xrightarrow{\Compile}
-o_t\\
-&\xrightarrow{\Actualize}
-r_t\\
-&\xrightarrow{\operatorname{Append}}
-H_{t+1}^{evt}\\
-&\xrightarrow{\Decode/\operatorname{Resolve}}
-S_t\subseteq A(q_t)\\
-&\xrightarrow{\operatorname{BoundaryUpdate}}
-b_{t+1}\\
+&\xrightarrow{\operatorname{Present}}
+W_D^X(S_X)\\
+&\xrightarrow{\operatorname{NegUse/Depart}}
+(u_X,\mathcal N_D^X(S_X))\\
+&\xrightarrow{\operatorname{Open/Compile/Actualize}}
+(O_X,H_{t+1}^{evt})\\
+&\xrightarrow{\operatorname{ReverseSection/Recover}}
+(F_X,R_X,\rho_X)\\
+&\xrightarrow{\operatorname{Seed/Reorient}}
+W_D^Y(S_Y)\\
+&\xrightarrow{\operatorname{ReciprocalRepeat}}
+(u_Y,O_Y,F_Y,R_Y,\rho_Y)\\
+&\xrightarrow{\operatorname{Derive}/\Gamma_D}
+(\Xi_D(\omega),\mathcal R_t)\\
 &\xrightarrow{\operatorname{ResidualOpen}}
 q_{t+1}.
 \end{aligned}
@@ -4357,6 +4606,7 @@ Inquiry may relatively stop as:
 \item \(\mathsf{Equivalent}\): remaining alternatives are exactly protected-equivalent under the admitted horizon;
 \item \(\mathsf{Blocked}\): a required external return/capability is unavailable;
 \item \(\mathsf{Unknown}\): executable inquiry cannot currently discriminate the live alternatives.
+\item \(\mathsf{ResourceBounded}\): declared fuel or resource limits were reached with a live finite or open frontier remaining.
 \end{itemize}
 
 \(\mathsf{Unknown}\) is not failure of the calculus.  It is the lawful result when the semantic frontier is not executable or no warranted separator is currently available.
@@ -4605,11 +4855,16 @@ Every active question must satisfy:
 A conforming implementation of a protected distinction must:
 \begin{enumerate}
 \item preserve the typed distinction schema and boundary-point identity;
-\item retain both reciprocal side projections;
-\item distinguish the six oriented determination roles when protected;
-\item represent the four-cell square only as a projection unless a proof shows the omitted redeterminations are redundant;
+\item retain both candidate side projections without treating them as exteriority evidence;
+\item represent the live determination presentation with its version, support, scope, applicability, grain, and horizon;
+\item require a positive, relevant, non-circular departure witness for every exact negation incidence;
+\item preserve oriented negation-use identity and semantic coverage independently of execution coverage;
+\item distinguish a selected return filling from the same-use reverse return fiber and record protected recovery;
+\item generate the six oriented roles dependently with seed and use provenance when protected;
+\item represent the four-cell square only as a projection unless a proof shows every omitted use/fiber/recovery distinction redundant;
+\item apply \(\Gamma_D\) only as a downstream compatibility check;
 \item keep orientation reversal distinct from along-boundary advance and from domain/world crossing;
-\item preserve enough residual structure to regenerate protected sides and reopen finer grain when required.
+\item preserve enough residual structure to regenerate protected sides, relation uses, fibers, recovery, and reopening routes at finer grain.
 \end{enumerate}
 
 \section{Source question-program conformance}
@@ -4620,7 +4875,111 @@ A conforming source inquiry runtime/compiler must:
 \item permit partial supported answers to generate continuations without forcing premature singleton completion;
 \item preserve per-port discharge authority when lowering to the runtime effect language;
 \item distinguish relational exclusion established by question semantics from surface suppression performed by prompt rendering;
+\item compile reciprocal completion as the answer-dependent program of \cref{def:recip-program}, not as six independent openings;
+\item retain use provenance and partial answer sets through every reciprocal continuation;
 \item allow unresolved residuals and representation defects to generate new questions.
+\end{enumerate}
+
+\section{Successor reciprocal-boundary fixture obligations}\label{sec:successor-fixtures}
+
+The following seventy fixtures are additional to, and do not replace, the predecessor typing, compiler, actuality, history, standing, fold, binding, and self-revision fixtures.
+
+\subsection{Determination and departure}
+\begin{enumerate}
+\item A source determination presentation is explicit and versioned.
+\item Unrelated retained facts are not automatically constitutive.
+\item Same-carrier exact cell exclusion has a constitutive separator witness.
+\item Exact finite cell exclusion and constitutive separator existence coincide.
+\item The 65,536-case finite feature fixture has zero mismatches.
+\item Unknown observation does not establish departure.
+\item Raw signature difference caused only by unknown remains unresolved.
+\item Protected non-equivalence alone does not establish departure.
+\item Departure may hold while source and candidate remain protected-equivalent.
+\item Boundary crossing contains departure plus traversal provenance.
+\item Departure does not imply observed crossing.
+\item Cross-typed departure may use two observations plus an incompatibility relation.
+\item Binding-native direct incompatibility may supply the witness without a shared observation codomain.
+\end{enumerate}
+
+\subsection{Typed negation}
+\begin{enumerate}\setcounter{enumi}{13}
+\item Boundary projection does not imply positive negation.
+\item A negation use maps every exact admitted edge to a positive departure witness.
+\item A proposed negation relation cannot use itself as its sole departure warrant.
+\item Exact exhaustive partition complement forms lawful exact negation.
+\item Certified partial opposition forms lawful partial negation.
+\item Unknown is not converted into negative incidence.
+\item Inapplicability is not converted into negative incidence.
+\item One oriented negation use does not synthesize its reverse.
+\item Exact semantic coverage and execution coverage remain distinct.
+\item Empty exact exhaustive field differs from empty unsearched field.
+\item No breaker under partial negation coverage does not establish reciprocal closure.
+\end{enumerate}
+
+\subsection{Multiple negation uses}
+\begin{enumerate}\setcounter{enumi}{24}
+\item The same exterior form through different negation uses remains distinct when return fibers differ.
+\item Duplicate exterior grouping retains every witness and use.
+\item Heterogeneous target carriers combine through a tagged dependent family.
+\item \(\mathsf{CertifiedPartial}+\mathsf{CertifiedPartial}\) does not imply collective exhaustive coverage.
+\item Collective exactness requires a cover certificate.
+\item Untagged union fails the return-provenance breaker.
+\item Intersection and union introduce no new exterior candidate absent from their members.
+\item Ordinary relation composition may create a candidate relation but not automatic negation authority.
+\item Open negation-family traversal uses generic generator fairness.
+\end{enumerate}
+
+\subsection{Return and recovery}
+\begin{enumerate}\setcounter{enumi}{33}
+\item For every admitted incidence, the source belongs to the reverse return section.
+\item Source membership does not imply unique return determination.
+\item A return fiber containing two protected source classes yields a separator obligation.
+\item One selected stable \(R_X\) does not establish exact return closure if another protected class survives.
+\item An exact singleton protected return fiber establishes return stability.
+\item Raw relation differences ignored by the horizon do not constitute recovery failure.
+\item Protected relation difference inside a return fiber does constitute recovery failure.
+\item Local recovery equals protected-signature constancy on the return fiber.
+\item Raw containment recovery is only a special case.
+\item A source web can be partially recovered without unique source regeneration.
+\item Family schema recovery may succeed where each member signature fails.
+\item The three-state joint-recovery witness passes.
+\item Adding a return-signature coordinate refines but does not coarsen exact family observational equivalence.
+\item Historical local recovery is not retroactively strengthened by later learned negation uses.
+\end{enumerate}
+
+\subsection{Return versus reconciliation}
+\begin{enumerate}\setcounter{enumi}{47}
+\item Compatible monotone constraint addition cannot produce a protectedly different filling from an already determining web.
+\item The general monotonicity theorem is tested against finite fixtures.
+\item Generated positive exterior does not mutate standing state.
+\item Actual and warranted exterior may open reconciliation.
+\item State-changing redetermination exposes predecessor revision/retraction/splitting, changed applicability, grain or binding, or prior underdetermination.
+\end{enumerate}
+
+\subsection{Dependent sixfold}
+\begin{enumerate}\setcounter{enumi}{52}
+\item Sixfold roles are generated dependently, not independently.
+\item \(O_X\) is generated from a specific negation use.
+\item \(R_X\) arises from that use's reverse section.
+\item \(O_X\) and \(S_Y\) retain distinct roles even if seed identity is used.
+\item \(O_Y\) is independently generated from the \(Y\)-oriented frontier.
+\item \(R_X\neq O_Y\) and \(R_Y\neq O_X\) remain role distinctions.
+\item \(\Gamma_D\) cannot supply missing role fillings.
+\item Stable \(X\)-return may coexist with unstable \(Y\)-return.
+\item One-way negation does not imply reciprocal negation.
+\item The sixfold occurrence view reconstructs from ordinary history and fibers.
+\item Exact closure is indexed by negation semantic and execution coverage.
+\item No breaker under a partial frontier remains \(\mathsf{Unknown}\), not absolute closure.
+\end{enumerate}
+
+\subsection{Representation and learning}
+\begin{enumerate}\setcounter{enumi}{64}
+\item A sixfold/recovery residual can generate \(\mathsf{RepresentationGap}\).
+\item A new attribute can separate a previously collapsed protected pair.
+\item An admitted attribute enlarges the constructible question space.
+\item A new probe capability remains unadmitted until binding-extension checks pass.
+\item A new negation-use signature may reopen a previous fold.
+\item A recurrent separator may become a candidate attribute without automatic standing.
 \end{enumerate}
 
 \section{Probe conformance}
@@ -4653,7 +5012,7 @@ Every standing hard relation must expose:
 
 \section{Learning conformance}
 
-A learned method/probe/operator must not confer warrant on semantic outputs merely because the traversal method is useful.  Semantic and traversal patches remain distinct.  A learned regenerative form must expose the protected sides/profile/reopening behavior it claims to regenerate, or explicitly declare an approximate/reacquisition-only contract.  A new probe/tool is not admitted as a semantic discriminator merely because it was generated; the nonredundant distinction must be demonstrated through independently grounded occurrences.
+A learned method/probe/operator must not confer warrant on semantic outputs merely because the traversal method is useful.  Semantic and traversal patches remain distinct.  A learned regenerative form must expose the protected candidate sides, determination presentation, negation-use provenance, return/recovery behavior, and reopening routes it claims to regenerate, or explicitly declare an approximate/reacquisition-only contract.  A new probe/tool is not admitted as a semantic discriminator merely because it was generated; the nonredundant distinction must be demonstrated through independently grounded occurrences.
 
 \section{Self-revision conformance}
 
@@ -4707,9 +5066,16 @@ R\preceq_{\mathrm{rel}}S,\\
 \qquad
 \operatorname{Sec},\operatorname{Sol},\operatorname{Hole},\\
 D=(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D),\\
-z:B_D,
+W_D^\alpha(s),
 \qquad
-\Xi_D(z)=(S_X,O_X,R_X;S_Y,O_Y,R_Y),\\
+\Depart_{D,W}^{\alpha}(s,e),\\
+u=(N_u,D,\alpha,W,\mathsf{coverage}_{sem},\mathsf{support}),\\
+\mathcal N_D^\alpha(s)=\sum_u\{u\}\times N_u[s],
+\qquad
+\RetField_u(e)=N_u^{-1}[e],\\
+\Recover_{\mathcal H}(r,F),
+\qquad
+\Xi_D(\omega)=(S_X,O_X,R_X;S_Y,O_Y,R_Y),\\
 \widetilde B_D=B_D\times\{+,-\},
 \qquad
 T_D:B_D\rightsquigarrow B_D,\\
@@ -4730,28 +5096,31 @@ Everything else in this document is a law over this basis, a derived constructio
 
 \section{Compact invariant}
 
-\[
-\boxed{
-\begin{minipage}{0.92\linewidth}
+\begin{quote}
+\small
 Every consequentially represented value, relation, distinction, question, operator, or program is a typed form and may enter further lawful relations without losing its type.  Any two represented forms share at least the coarsest relation of joint admission to the current field; inquiry seeks consequentially finer relations.  When a current representation identifies forms that a protected consequence distinguishes, the calculus preserves an obligation to invent or discover a separating context, representation, grain, probe/tool, language extension, or binding.  When an active distinction cannot affect any protected continuation, it is a candidate for licensed folding.
 
-A realized distinction is a recursively compositional boundary form.  A boundary point \(z\) regenerates reciprocal sides and, where protected, a sixfold reciprocal profile: each side determines itself, determines its other, and redetermines itself through the other.  The oriented double cover preserves the two reciprocal orientations; inquiry may alternate orientation while moving along the boundary.  The four-cell square is only a projection, and realized succession carries full distinction profiles rather than merely static labels.
+A live determination is represented by an explicit, supported relational presentation.  Its exterior is not presumed from a boundary projection and is not obtained by Boolean complement.  A candidate is positively established as outside the determination when a standing determination-relevant discriminator places source and candidate in incompatible typed cells.  An oriented relation whose admitted incidences have such departure witnesses may serve as a typed negation use, with semantic coverage stated independently of execution coverage.
+
+A determination may admit multiple negation uses.  They remain a tagged family: the relation use that licensed an exterior remains part of the reciprocal occurrence because different uses can return different source fields.  Inquiry partially binds one such relation to the source and positively determines an exterior filling.  Pure return is the reverse section of that same relation.  The return fiber recovers a protected source relation exactly when every source still possible through that fiber agrees on its protected signature.  Multiple negation uses accumulate reusable information through the product of their return signatures, not through an untagged semantic union.
+
+The exterior filling is then taken as a new center of determination through an explicit seed/reorientation relation, and the same operation is repeated in the reciprocal orientation.  The six dependent roles \((S_X,O_X,R_X;S_Y,O_Y,R_Y)\) are therefore a derived reciprocal trace, not six independent openings and not a separate history.  Exact reciprocal closure is fiber- and coverage-relative.  \(\Gamma_D\) checks joint compatibility only after the dependent roles have been generated.
+
+A generated exterior does not revise standing semantics.  If warranted actuality invalidates the standing source web, reconciliation/revision produces a successor web; compatible monotone constraint addition alone cannot transform an already determined source into a protectedly different source.  Every surviving return ambiguity, recovery failure, seed mismatch, reciprocal mismatch, or compatibility failure becomes an ordinary protected residual and feeds the generic separator engine.  When a required separator is absent only from current materialization, generation continues within the admitted language.  When no admitted question, probe, or representation can express a witnessed protected distinction, the result is a representation or binding gap.
 
 A question is a partially bound typed relation.  Binding what is known while preserving the relation leaves a residual section/fiber: a structured hole whose lawful fillers are the answer field.  A web of such residual relations determines a form to the extent that the intersection of its solution fibers collapses to one protected equivalence class.  Abstraction is therefore regenerative when it removes a filling but preserves enough relational constraint to regenerate the protected form and the discriminators needed to reopen it.  A source inquiry program composes these open relations through answer-dependent continuations and lowers by typed discharge authority to pure computation, generation, actual probing, checking, and warrant.
 
 The runtime preserves realized state--operator--return history before interpretation.  Raw return, decoded completion, interpretation, checking, warrant, and standing remain distinct.  Learned distinctions, representations, probes, and operator paths are compact regenerative structures over authoritative history; they never replace the evidence that warranted them and never confer warrant on future outputs merely by being useful.  Every quotient or fold is protected-behavior relative, continuation-compatible where reusable state is claimed, regeneratively sufficient or explicitly approximate, and equipped with residual, recovery/reacquisition, and unlock conditions.
 
 The same forms, distinctions, questions, programs, probes, compiler rules, folds, bindings, and protection declarations may be reified and subjected to the same inquiry.  A successor remains subject to independently grounded, predecessor-preserving judgment and cannot license itself.
-\end{minipage}
-}
-\]
+\end{quote}
 
 \section{Fixed-point target}
 
 The project approaches a regenerative fixed point when:
 \begin{center}
 \fbox{\parbox{0.90\linewidth}{\centering\bfseries
-THE CALCULUS IS CLOSED UNDER REIFICATION, RELATION REFINEMENT, DISTINCTION FORMATION, RECIPROCAL OPENING, HOLE FORMATION, QUESTION-PROGRAM COMPOSITION, COMPILATION, ACTUALIZATION, REPRESENTATION/PROBE INVENTION, TRAVERSAL, FOLDING, REOPENING, AND RE-ENTRY OF ITS OWN TYPED FORMS WITHOUT SELF-WARRANT.
+THE CALCULUS IS CLOSED UNDER REIFICATION, RELATION REFINEMENT, DISTINCTION FORMATION, POSITIVE TYPED NEGATION, SAME-USE RETURN, DEPENDENT RECIPROCAL OPENING, HOLE FORMATION, QUESTION-PROGRAM COMPOSITION, COMPILATION, ACTUALIZATION, REPRESENTATION/PROBE INVENTION, TRAVERSAL, FOLDING, REOPENING, AND RE-ENTRY OF ITS OWN TYPED FORMS WITHOUT SELF-WARRANT.
 }}
 \end{center}
 No claim is made that global convergence, absolute minimality, or a universally coarsest sufficient representation is decidable.
@@ -4773,7 +5142,14 @@ Symbol & Meaning\\
 \(\operatorname{Sol}^{X}_{\rho}(y)\) & lawful filler fiber for the remaining \(X\)-port\\
 \(\operatorname{Hole}_x(W)\) & relational web with protected occurrences of \(x\) exposed as holes\\
 \(Determines_{\mathcal H}(W,x)\) & residual web regenerates one protected class \([x]_{\mathcal H}\)\\
-\(\Xi_D(z)\) & sixfold reciprocal determination profile at boundary point \(z\)\\
+\(W_D^\alpha(s)\) & supported, versioned determination presentation for source \(s\) in orientation \(\alpha\)\\
+\(\Depart_{D,W}^{\alpha}(s,e)\) & positive determination-relative departure with a standing witness\\
+\(N_u\) & ordinary oriented typed relation under immutable negation-use identity \(u\)\\
+\(\NegField_u(s)=N_u[s]\) & source-bound positive-negation candidate field for use \(u\)\\
+\(\mathcal N_D^\alpha(s)\) & tagged dependent family of admitted negation-use frontiers\\
+\(\RetField_u(e)=N_u^{-1}[e]\) & same-use reverse return fiber\\
+\(\Recover_{\mathcal H}(r,F)\) & protected signature of relation \(r\) is constant over return fiber \(F\)\\
+\(\Xi_D(\omega)\) & dependent sixfold role view reconstructed for reciprocal occurrence \(\omega\)\\
 \(\widetilde B_D\) & oriented double cover \(B_D\times\{+,-\}\)\\
 \(\iota\) & reciprocal orientation involution on the double cover\\
 \(Regen_{\mathcal H}(m,z)\) & representation \(m\) regenerates protected structure of \(z\)\\
@@ -4791,9 +5167,9 @@ Symbol & Meaning\\
 \(q\preceq_{\mathrm{prec}}r\) & \(r\) refines/discriminates at least as much as \(q\)\\
 \(\eta_{q,g}\) & question-conditioned active view at grain \(g\)\\
 \(FD_{\mathcal H}(q)\) & protected distinctions hidden by the local question frame\\
-\(D^+\leftarrow B_D\rightarrow D^-\) & reciprocal boundary factorization\\
+\(D^+\leftarrow B_D\rightarrow D^-\) & candidate boundary factorization; not itself a negation\\
 \(T_D\) & along-boundary traversal relation\\
-\(\Ext_D\) & reciprocal exterior induced by boundary\\
+\(\mathsf{coverage}_{sem}/\mathsf{coverage}_{exec}\) & independent semantic-negation and occurrence-execution coverage\\
 \(\Prof_D\) & exact boundary-position profile\\
 \(o:Z\rightsquigarrow R_o\times Z\) & probe interaction semantics\\
 \(z_t\xrightarrow[o]{r}z_{t+1}\) & realized probe occurrence\\
@@ -4832,8 +5208,10 @@ Symbol & Meaning\\
 \mathsf{IProg}\\
 \downarrow\ \text{normalize}\\
 \OpenIR\\
-\downarrow\ \text{construct/select recursive distinction}\\
-\BoundaryIR\ +\ \Xi_D\ +\ \widetilde B_D\\
+\downarrow\ \text{materialize determination presentation and candidate chart}\\
+W_D^\alpha(s)\ +\ \BoundaryIR\ +\ \widetilde B_D\\
+\downarrow\ \text{derive warranted uses and tagged negation frontier}\\
+\mathcal U_D^\alpha(s)\ +\ \mathcal N_D^\alpha(s)\\
 \downarrow\ \text{project active state; retain unknown reserve and unlocks}\\
 \text{Question-Conditioned View}\\
 \downarrow\ \text{route each port by discharge authority}\\
@@ -4844,10 +5222,14 @@ Symbol & Meaning\\
 \Raw\text{ Return}\\
 \downarrow\ \text{preserve event before interpretation}\\
 \text{Authoritative History}\\
-\downarrow\ \text{decode / resolve to supported completion set}\\
-\text{Residual Solution Field / Updated Distinction}\\
-\downarrow\ \text{warrant + separator/representation search}\\
-\text{Standing Patch / Next Boundary / Next Question}\\
+\downarrow\ \text{decode / resolve with use and path provenance}\\
+\text{Supported Exterior Filling(s)}\\
+\downarrow\ \text{same-use reverse section / protected recovery}\\
+\text{Return Fiber / Recovery / Seed}\\
+\downarrow\ \text{reciprocal repeat; derive dependent view; Gamma post-check}\\
+\Xi_D(\omega)\ +\ \text{Protected Residuals}\\
+\downarrow\ \text{separator / representation search / independent warrant}\\
+\text{Standing Patch or Reconciliation / Next Question}\\
 \downarrow\ \text{fold if regeneratively sufficient; reopen on unlock}\\
 \text{Reusable Regenerative Form / Operator Graph}
 \end{array}
@@ -4879,9 +5261,15 @@ A future implementation must contain executable witnesses for at least:
 \item typed reification of an operator as an operand and rejection of an untyped operational interpretation;
 \item a pair of represented forms related only by \(\top_{\B}\) and a discovered proper relation refinement;
 \item recursive distinction composition in which a distinction point becomes a side of another distinction;
-\item sixfold reciprocal profile retaining \(R_X\neq O_Y\) and \(R_Y\neq O_X\) when a breaker distinguishes them;
-\item oriented double-cover traversal alternating \(\iota\) and \(\tau_D\) without conflating either with a domain crossing;
-\item a four-cell square projection demonstrably losing information contained in the full sixfold profile;
+\item positive departure established by a relevant standing discriminator while unknown, failed search, projection, and non-equivalence are rejected as substitutes;
+\item same exterior through different use identities yielding different return fibers without provenance collapse;
+\item a selected stable return rejected as closure while a second protected class survives in the return fiber;
+\item departure coexisting with protected equivalence under the current horizon;
+\item family product recovery succeeding where each individual return signature fails;
+\item compatible monotone return preserving an already determined class while warranted reconciliation remains separately capable of revision;
+\item a dependent sixfold occurrence retaining \(R_X\neq O_Y\), \(R_Y\neq O_X\), one-sided stability, and a downstream-only \(\Gamma_D\);
+\item oriented double-cover traversal alternating \(\iota\) and \(\tau_D\) without synthesizing reverse negation or conflating either with domain crossing;
+\item a four-cell square projection demonstrably losing protected use, fiber, recovery, or provenance information from the full dependent occurrence;
 \item a residual hole whose web solution set has several fillers but one forced protected property;
 \item indexed-meet refinement in which adding one relation strictly narrows the filler field;
 \item a protectedly unique filler class reconstructed after ablating the original form;
@@ -4894,7 +5282,7 @@ A future implementation must contain executable witnesses for at least:
 \item question refinement with kernel intersection;
 \item a nonempty local question-frame defect safely preserved by surrounding history;
 \item partial response retaining multiple answer cells;
-\item along-boundary traversal with both reciprocal projections retained;
+\item along-boundary traversal with both candidate projections retained;
 \item one unified probe whose world projection is observation-like and another action-like;
 \item raw-return preservation before decoding;
 \item ledger order demonstrably distinct from domain succession;
@@ -4914,6 +5302,8 @@ A future implementation must contain executable witnesses for at least:
 \item learned probe-basis extension demonstrating a protected distinction unavailable to the old basis;
 \item state history remaining independently accessible after operator compression.
 \end{enumerate}
+
+In addition, every one of the seventy numbered obligations in \cref{sec:successor-fixtures} requires an executable discriminator before reciprocal-boundary conformance may be claimed.
 
 \section{Normative reading rule}
 

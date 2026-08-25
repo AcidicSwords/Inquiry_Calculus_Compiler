@@ -1,12 +1,17 @@
 # Implementation Frontier
 
+**Accepted semantic authority:** Inquiry Calculus v1.1, Successor
+Reciprocal-Boundary / Positive-Negation Edition.
+
 **Accepted implementation state:** Phase 0 local gates complete on 2026-08-24.
 
-The repository now has a pinned Rust workspace, an exact versioned canonical artifact
-envelope, stable SHA-256 content references, one artifact-only SQLite migration, and
-verified immutable insert/fetch behavior. `ic-runtime` and `ic-cli` contain no semantic
-machinery. No current artifact payload type contains references to another artifact, so
-the standing prohibition on dangling committed references is not yet exercised.
+Adopting the successor changes the standing reciprocal-boundary contract, not the
+implemented phase. The repository still has a pinned Rust workspace, an exact
+versioned canonical artifact envelope, stable SHA-256 content references, one
+artifact-only SQLite migration, and verified immutable insert/fetch behavior.
+`ic-runtime` and `ic-cli` contain no semantic machinery. No current artifact payload
+type contains references to another artifact, so the prohibition on dangling committed
+references is not yet exercised.
 
 ## Strongest live obligation
 
@@ -33,6 +38,15 @@ These are recorded now but do not outrank the Phase 1 obligation:
 
 - **Phase 2:** reconcile the canonical negation/implication basis with the planned
   `FormulaIR` sketch before freezing formula serialization.
+- **Phase 4 determination admission:** test whether the claim-local support/dependency
+  web of the standing source determination, with exact scope, applicability, grain,
+  horizon, version, and provenance, is the smallest lawful
+  `DeterminationPresentation`; keep later minimization reversible.
+- **Phase 4 reciprocal core:** implement positive departure, oriented and tagged
+  `NegationUse`, distinct semantic/execution coverage, same-use return fibers,
+  protected recovery, seed/reorientation, dependent sixfold occurrence views,
+  residuals, and downstream `Gamma` checking. Boundary projection, failed search,
+  unknown results, and protected non-equivalence alone must not manufacture exteriority.
 - **Phase 6:** reconcile the canonical required boundary reference with the planned
   optional distinction reference, and represent request, attempt, raw return, and
   interpretation without collapsing them.
@@ -41,7 +55,8 @@ These are recorded now but do not outrank the Phase 1 obligation:
   payload bytes.
 
 The global cross-binding standing-lift research question remains deferred to Phase 17
-and does not block the next implementation phase.
+and does not block the next implementation phase. None of these queued questions
+authorizes Phase 1 work during the authority migration.
 
 ## Phase 0 evidence
 
