@@ -111,6 +111,13 @@ fn vector() -> KnownVector {
     .expect("known vector fixture must be valid JSON")
 }
 
+fn open_query_vector() -> KnownVector {
+    serde_json::from_str(include_str!(
+        "../../../fixtures/queries/open-query-v1-single-open.json"
+    ))
+    .expect("known open-query vector fixture must be valid JSON")
+}
+
 #[test]
 fn native_relation_round_trips_and_declares_all_explicit_dependencies() {
     let binding = binding(0x11);
@@ -160,6 +167,51 @@ fn native_relation_round_trips_and_declares_all_explicit_dependencies() {
     assert_ne!(
         schema.relation_ref().expect("schema fixture must hash"),
         RelationRef::from_artifact_ref(artifact(0x33))
+    );
+}
+
+#[test]
+fn open_query_matches_independent_canonical_vector() {
+    let query = OpenQuery::new(
+        RelationRef::from_artifact_ref(artifact(0x11)),
+        Vec::new(),
+        vec![OpenPort::new(
+            TypeSymbol::new("answer").expect("port name must be valid"),
+            DischargeMode::Probe,
+        )],
+        RelationUseContext::new(
+            ScopeRef::from_artifact_ref(artifact(0x22)),
+            ApplicabilityRef::from_artifact_ref(artifact(0x33)),
+            GrainRef::from_artifact_ref(artifact(0x44)),
+            HorizonRef::from_artifact_ref(artifact(0x55)),
+            DischargeMode::Pure,
+            SupportRef::from_artifact_ref(artifact(0x66)),
+            None,
+        ),
+    );
+    let envelope = query.envelope().expect("query fixture must encode");
+    let vector = open_query_vector();
+
+    assert_eq!(envelope.kind().as_str(), vector.kind);
+    assert_eq!(envelope.schema_version(), vector.schema_version);
+    assert_eq!(
+        hex::encode(envelope.canonical_payload()),
+        vector.payload_hex
+    );
+    assert_eq!(
+        hex::encode(envelope.encode().expect("query fixture must encode")),
+        vector.encoded_hex
+    );
+    assert_eq!(
+        envelope
+            .artifact_ref()
+            .expect("query fixture must hash")
+            .to_string(),
+        vector.sha256
+    );
+    assert_eq!(
+        OpenQuery::from_envelope(&envelope).expect("query fixture must decode"),
+        query
     );
 }
 

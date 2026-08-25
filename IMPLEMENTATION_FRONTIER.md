@@ -122,3 +122,4 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
 - Direct open queries retain only a typed complete port partition with a nonempty open section;
   they do not execute relations or claim completion fibers. Checked `Bind` and `Expose` move
   one port only while preserving that invariant.
+- A fixed independently calculated direct OpenQuery payload/envelope/SHA-256 fixture passes.

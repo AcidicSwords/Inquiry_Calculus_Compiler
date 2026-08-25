@@ -53,6 +53,7 @@ or passing.
 | P2-QUERY-001 direct OpenQuery round trip and typed complete port partition | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 | P2-QUERY-002 empty or overlapping open-port partitions reject | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 | P2-QUERY-003 checked `Bind` and `Expose` preserve a nonempty typed open section | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
+| P2-QUERY-004 stable OpenQuery byte/hash vector | PASS | `fixtures/queries/open-query-v1-single-open.json` |
 
 ## Pending specification and plan categories
 
