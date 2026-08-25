@@ -256,6 +256,13 @@ fn canonical_relation_expression_grammar_round_trips_without_evaluation() {
     let artifact = RelationExprArtifact::new(expression);
     let envelope = artifact.envelope().expect("expression must encode");
     assert_eq!(
+        artifact
+            .relation_expr_ref()
+            .expect("expression must hash")
+            .as_artifact_ref(),
+        envelope.artifact_ref().expect("expression must hash")
+    );
+    assert_eq!(
         RelationExprArtifact::from_envelope(&envelope).expect("expression must decode"),
         artifact
     );

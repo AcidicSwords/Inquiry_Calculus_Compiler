@@ -1,3 +1,5 @@
+use std::{fmt, str::FromStr};
+
 use thiserror::Error;
 
 use crate::{
@@ -9,6 +11,34 @@ use crate::{
 pub const RELATION_EXPR_ARTIFACT_KIND: &str = "ic.relation-expr";
 /// Payload schema version for the data-only relational expression grammar.
 pub const RELATION_EXPR_SCHEMA_VERSION: u32 = 1;
+
+/// A reference known to identify a canonical relation-expression artifact.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct RelationExprRef(ArtifactRef);
+
+impl RelationExprRef {
+    #[must_use]
+    pub const fn from_artifact_ref(reference: ArtifactRef) -> Self {
+        Self(reference)
+    }
+    #[must_use]
+    pub const fn as_artifact_ref(self) -> ArtifactRef {
+        self.0
+    }
+}
+
+impl fmt::Display for RelationExprRef {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
+impl FromStr for RelationExprRef {
+    type Err = ArtifactError;
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        ArtifactRef::from_str(value).map(Self)
+    }
+}
 
 /// A source and destination port name in an alpha-renaming expression.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -99,6 +129,11 @@ impl RelationExprArtifact {
             ArtifactKind::new(RELATION_EXPR_ARTIFACT_KIND)?,
             RELATION_EXPR_SCHEMA_VERSION,
             self.canonical_payload()?,
+        ))
+    }
+    pub fn relation_expr_ref(&self) -> Result<RelationExprRef, RelationExprError> {
+        Ok(RelationExprRef::from_artifact_ref(
+            self.envelope()?.artifact_ref()?,
         ))
     }
     pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, RelationExprError> {

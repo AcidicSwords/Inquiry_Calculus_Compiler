@@ -34,7 +34,7 @@ pub use relation::{
 };
 pub use relation_expr::{
     PortRename, RELATION_EXPR_ARTIFACT_KIND, RELATION_EXPR_SCHEMA_VERSION, RelationExprArtifact,
-    RelationExprError, RelationExprIR,
+    RelationExprError, RelationExprIR, RelationExprRef,
 };
 pub use relation_use::{
     PortBinding, RELATION_USE_ARTIFACT_KIND, RELATION_USE_SCHEMA_VERSION, RelationCatalog,
