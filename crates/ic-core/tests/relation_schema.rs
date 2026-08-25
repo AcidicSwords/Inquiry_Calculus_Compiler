@@ -307,9 +307,14 @@ fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
     let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
     let boolean = catalog.insert_type(TypeArtifact::new(binding, TyIR::Bool));
     let unit_form = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x22)));
+    let boolean_form = catalog.insert_form(TypedForm::new(binding, boolean, artifact(0x23)));
     let schema_ref = catalog.insert_schema(RelationSchema::new(
         binding,
-        vec![port("known", unit), port("answer", boolean)],
+        vec![
+            port("known", unit),
+            port("answer", boolean),
+            port("next", boolean),
+        ],
         RelationBodyIR::BindingNative {
             contract: artifact(0x33),
         },
@@ -331,10 +336,16 @@ fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
             TypeSymbol::new("known").expect("port name must be valid"),
             unit_form,
         )],
-        vec![OpenPort::new(
-            TypeSymbol::new("answer").expect("port name must be valid"),
-            DischargeMode::Probe,
-        )],
+        vec![
+            OpenPort::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                DischargeMode::Probe,
+            ),
+            OpenPort::new(
+                TypeSymbol::new("next").expect("port name must be valid"),
+                DischargeMode::Check,
+            ),
+        ],
         context,
     );
 
@@ -345,12 +356,41 @@ fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
     );
     assert!(query.check(&catalog).is_ok());
 
+    let bound = query
+        .bind(
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                boolean_form,
+            ),
+            &catalog,
+        )
+        .expect("binding one of two open ports must remain a query");
+    assert_eq!(bound.open_ports().len(), 1);
+    let reopened = bound
+        .expose(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            DischargeMode::Generate,
+            &catalog,
+        )
+        .expect("bound port must be exposable");
+    assert_eq!(reopened.open_ports().len(), 2);
+
     let empty_open = OpenQuery::new(
         schema_ref,
-        vec![PortBinding::new(
-            TypeSymbol::new("known").expect("port name must be valid"),
-            unit_form,
-        )],
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port name must be valid"),
+                unit_form,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                boolean_form,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("next").expect("port name must be valid"),
+                boolean_form,
+            ),
+        ],
         Vec::new(),
         context,
     );

@@ -21,9 +21,9 @@ inferring them from opaque payload bytes.
 
 Before completing Phase 2, resolve:
 
-> What is the smallest canonical data-only query-transform representation for binding,
-> exposure, plugging, normalization, composition, dependent binding, and completion-fiber
-> views without treating any transform as relation evaluation or a runtime opcode?
+> What is the smallest canonical data-only representation of plugging, normalization,
+> composition, dependent binding, and completion-fiber views now that `Bind` and `Expose`
+> preserve the checked direct partial-binding form?
 
 The protected difference is visible in the accepted sources:
 
@@ -31,7 +31,7 @@ The protected difference is visible in the accepted sources:
   hiding, renaming, and guarded restriction; the implementation plan names the more
   operational transform list.
 - Direct `OpenQuery` now enforces the canonical partial-binding partition and nonempty open
-  section, but does not yet retain a transform expression or derive its resulting signature.
+  section; checked `Bind` and `Expose` preserve that form without running a relation.
 - The next representation must distinguish syntactic data transforms from semantic relation
   evaluation and defer any actual completion fiber to a later executable route.
 
@@ -120,4 +120,5 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
   formula-context checks pass.
 - A relation use is a separately content-addressed occurrence and rejects unknown bound ports.
 - Direct open queries retain only a typed complete port partition with a nonempty open section;
-  they do not execute relations or claim completion fibers.
+  they do not execute relations or claim completion fibers. Checked `Bind` and `Expose` move
+  one port only while preserving that invariant.

@@ -66,7 +66,8 @@ no host callback is admitted as unrecorded relation meaning.
 An immutable `RelationUse` records one scoped occurrence, its typed bindings, required
 evidence mode, support, and optional warrant separately from the reusable schema.
 An `OpenQuery` partitions every relation port into an explicitly typed binding or a nonempty
-open section; it does not evaluate the relation or manufacture a completion fiber.
+open section. Checked `Bind` and `Expose` move exactly one port across that boundary while
+leaving a nonempty question; they do not evaluate the relation or manufacture a completion fiber.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

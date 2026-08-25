@@ -24,7 +24,7 @@ pub use formula::{
 };
 pub use query::{
     OPEN_QUERY_ARTIFACT_KIND, OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCheckError,
-    OpenQueryError, QueryRef,
+    OpenQueryError, OpenQueryTransformError, QueryRef,
 };
 pub use relation::{
     RELATION_SCHEMA_ARTIFACT_KIND, RELATION_SCHEMA_VERSION, RelationBodyIR, RelationCheckError,

@@ -251,6 +251,58 @@ impl OpenQuery {
         }
         Ok(())
     }
+
+    /// Binds one currently open port while preserving the question's remaining open section.
+    ///
+    /// The result remains a query only if another port survives. Supplying every answer
+    /// coordinate is `Plug`, which remains a distinct later operation.
+    pub fn bind<C: RelationCatalog>(
+        &self,
+        binding: PortBinding,
+        catalog: &C,
+    ) -> Result<Self, OpenQueryTransformError> {
+        self.check(catalog)?;
+        let Some(index) = self
+            .open_ports
+            .iter()
+            .position(|open| open.port() == binding.port())
+        else {
+            return Err(OpenQueryTransformError::PortIsNotOpen(
+                binding.port().clone(),
+            ));
+        };
+        let mut bound_ports = self.bound_ports.clone();
+        bound_ports.push(binding);
+        let mut open_ports = self.open_ports.clone();
+        open_ports.remove(index);
+        let transformed = Self::new(self.relation, bound_ports, open_ports, self.context);
+        transformed.check(catalog)?;
+        Ok(transformed)
+    }
+
+    /// Reopens one currently bound port under a declared evidence mode.
+    pub fn expose<C: RelationCatalog>(
+        &self,
+        port: TypeSymbol,
+        mode: DischargeMode,
+        catalog: &C,
+    ) -> Result<Self, OpenQueryTransformError> {
+        self.check(catalog)?;
+        let Some(index) = self
+            .bound_ports
+            .iter()
+            .position(|binding| binding.port() == &port)
+        else {
+            return Err(OpenQueryTransformError::PortIsNotBound(port));
+        };
+        let mut bound_ports = self.bound_ports.clone();
+        bound_ports.remove(index);
+        let mut open_ports = self.open_ports.clone();
+        open_ports.push(OpenPort::new(port, mode));
+        let transformed = Self::new(self.relation, bound_ports, open_ports, self.context);
+        transformed.check(catalog)?;
+        Ok(transformed)
+    }
 }
 
 fn reference(encoded: &mut Vec<u8>, value: ArtifactRef) {
@@ -428,4 +480,17 @@ pub enum OpenQueryCheckError {
         expected: crate::TypeRef,
         actual: crate::TypeRef,
     },
+}
+
+/// Errors from typed data-only binding and exposure transformations.
+#[derive(Debug, Error)]
+pub enum OpenQueryTransformError {
+    #[error(transparent)]
+    Check(#[from] OpenQueryCheckError),
+
+    #[error("cannot bind {0}: that port is not currently open")]
+    PortIsNotOpen(TypeSymbol),
+
+    #[error("cannot expose {0}: that port is not currently bound")]
+    PortIsNotBound(TypeSymbol),
 }

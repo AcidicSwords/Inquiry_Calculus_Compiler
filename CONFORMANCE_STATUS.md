@@ -52,13 +52,14 @@ or passing.
 | P2-REL-005 relation-use occurrence identity, typed bindings, and scope context | PASS | `relation_use_is_a_distinct_typed_and_scoped_occurrence` |
 | P2-QUERY-001 direct OpenQuery round trip and typed complete port partition | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 | P2-QUERY-002 empty or overlapping open-port partitions reject | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
+| P2-QUERY-003 checked `Bind` and `Expose` preserve a nonempty typed open section | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 
 ## Pending specification and plan categories
 
 | Category | Status | First planned phase |
 |---|---|---|
 | Typed forms, typed reification, and type verification | PARTIAL | Phase 1: canonical type artifacts, typed-form declarations, and structural checks pass; binding-native term/reification semantics remain pending |
-| Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: direct `OpenQuery` partial bindings, formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; query transforms, composition, and completion-fiber views remain pending |
+| Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: direct `OpenQuery` partial bindings, checked `Bind`/`Expose`, formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; plugging, normalization, composition, dependent binding, and completion-fiber views remain pending |
 | First-order programs and proposal/actuality/authority separation | PENDING | Phase 3 |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4 |
 | Typed negation and coverage separation, fixtures 14-24 | PENDING | Phase 4 |
