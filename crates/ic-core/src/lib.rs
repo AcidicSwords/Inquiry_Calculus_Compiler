@@ -14,6 +14,7 @@ mod formula;
 mod iprog;
 mod negation;
 mod probe;
+mod probe_contract;
 mod query;
 mod raw_return;
 mod recovery;
@@ -69,6 +70,10 @@ pub use negation::{
 pub use probe::{
     PROBE_OPERATOR_ARTIFACT_KIND, PROBE_OPERATOR_SCHEMA_VERSION, ProbeOperator, ProbeOperatorError,
     ProbeOperatorRef,
+};
+pub use probe_contract::{
+    PROBE_CONTRACT_ARTIFACT_KIND, PROBE_CONTRACT_SCHEMA_VERSION, ProbeContract, ProbeContractError,
+    ProbeContractRef,
 };
 pub use query::{
     CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,

@@ -6,8 +6,8 @@ use std::{
 use ic_core::{
     ActualEvent, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef,
     DeterminationPresentationRef, EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef,
-    ProbeOperator, ProvenanceRef, QueryRef, RawReturn, RawReturnError, RawReturnRef, RelationRef,
-    RelationUseRef, RouteRef, StateRef, TyIR, TypeArtifact, TypeRef,
+    ProbeContractRef, ProbeOperator, ProvenanceRef, QueryRef, RawReturn, RawReturnError,
+    RawReturnRef, RelationRef, RelationUseRef, RouteRef, StateRef, TyIR, TypeArtifact, TypeRef,
 };
 
 use super::*;
@@ -81,7 +81,7 @@ async fn event_fixture(
                     chart_field,
                     TypeRef::from_artifact_ref(chart_field),
                     chart_field,
-                    chart_field,
+                    ProbeContractRef::from_artifact_ref(chart_field),
                     chart_field,
                 )
                 .envelope()

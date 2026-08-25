@@ -8,7 +8,8 @@ use std::{fmt, str::FromStr};
 use thiserror::Error;
 
 use crate::{
-    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BoundaryRef, QueryRef, TypeRef,
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BoundaryRef, ProbeContractRef,
+    QueryRef, TypeRef,
 };
 
 /// Canonical artifact kind for one compiled probe operator.
@@ -54,7 +55,7 @@ pub struct ProbeOperator {
     executable_code: ArtifactRef,
     return_type: TypeRef,
     decoder_contract: ArtifactRef,
-    probe_contract: ArtifactRef,
+    probe_contract: ProbeContractRef,
     compiler_version: ArtifactRef,
 }
 
@@ -69,7 +70,7 @@ impl ProbeOperator {
         executable_code: ArtifactRef,
         return_type: TypeRef,
         decoder_contract: ArtifactRef,
-        probe_contract: ArtifactRef,
+        probe_contract: ProbeContractRef,
         compiler_version: ArtifactRef,
     ) -> Self {
         Self {
@@ -114,7 +115,7 @@ impl ProbeOperator {
         self.decoder_contract
     }
     #[must_use]
-    pub const fn probe_contract(&self) -> ArtifactRef {
+    pub const fn probe_contract(&self) -> ProbeContractRef {
         self.probe_contract
     }
     #[must_use]
@@ -149,7 +150,7 @@ impl ProbeOperator {
             reference(4),
             TypeRef::from_artifact_ref(reference(5)),
             reference(6),
-            reference(7),
+            ProbeContractRef::from_artifact_ref(reference(7)),
             reference(8),
         ))
     }
@@ -193,7 +194,7 @@ impl ProbeOperator {
             self.executable_code,
             self.return_type.as_artifact_ref(),
             self.decoder_contract,
-            self.probe_contract,
+            self.probe_contract.as_artifact_ref(),
             self.compiler_version,
         ]
     }

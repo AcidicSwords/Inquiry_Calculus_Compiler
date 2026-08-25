@@ -87,6 +87,11 @@ The protected difference is visible in the accepted sources:
   type, decoder contract, probe contract, and compiler-version identities. It is deliberately
   distinct from a backend request and raw return, and does not validate, render, dispatch, decode,
   or actualize any field.
+- `ProbeContract` now canonically identifies the recurrent probe fields: relational role, binding
+  version, grain, applicability, comparator, protected horizon, decoder version, and bridge
+  policy. `ProbeOperator` carries its typed reference. The artifact has no `SameContract` or
+  `Bridge` evaluator, makes no occurrences comparable, and does not turn a bridge policy into a
+  standing bridge relation.
 - `ResolutionPath` now records typed identity, decoder, relation, composition, and program route
   syntax with exact source/target type composition. Its checker validates only types and composed
   interfaces; it does not run or admit the referenced route, derive a decoder result, or create a

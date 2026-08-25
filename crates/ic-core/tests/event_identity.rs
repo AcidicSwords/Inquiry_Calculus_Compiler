@@ -3,9 +3,9 @@ use std::collections::BTreeMap;
 use ic_core::{
     ActualEvent, ActualEventCatalog, ActualEventCheckError, ActualEventError, ArtifactRef,
     BindingVersionRef, BoundaryChart, BoundaryRef, DeterminationPresentationRef, DistinctionRef,
-    EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef, ProbeOperator, ProbeOperatorRef,
-    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationRef,
-    RelationUseRef, RouteRef, StateRef, TypeRef, check_actual_event, check_raw_return,
+    EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef, ProbeContractRef, ProbeOperator,
+    ProbeOperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
+    RelationRef, RelationUseRef, RouteRef, StateRef, TypeRef, check_actual_event, check_raw_return,
 };
 
 fn artifact(byte: u8) -> ArtifactRef {
@@ -126,7 +126,7 @@ fn probe_operator(boundary: BoundaryRef) -> ProbeOperator {
         artifact(45),
         TypeRef::from_artifact_ref(artifact(46)),
         artifact(47),
-        artifact(48),
+        ProbeContractRef::from_artifact_ref(artifact(48)),
         artifact(49),
     )
 }

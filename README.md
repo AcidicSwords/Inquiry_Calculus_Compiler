@@ -2,12 +2,10 @@
 
 This repository contains the Rust reference implementation of Inquiry Calculus v1.1,
 including the adopted **Successor Reciprocal-Boundary / Positive-Negation Edition**.
-The semantic authority has advanced, but the executable implementation remains at
-**Phase 2**: repository authority, canonical artifact identity, immutable-artifact
-persistence, binding-scoped type artifacts, typed-form declarations, canonical formula
-artifacts, checked relation schemas, immutable relation uses, and direct data-only
-`OpenQuery` partial bindings. Query composition, reification, program, event, and standing
-semantics are not implemented yet.
+The semantic authority has advanced. The executable implementation has verified structural
+increments through Phases 3--7 and a limited Phase 10 compiled-operator boundary; it is not a
+completed semantic runtime. The accepted and demonstrated boundary is recorded precisely in
+`CONFORMANCE_STATUS.md` and `IMPLEMENTATION_FRONTIER.md`.
 
 ## Authority by question
 
@@ -98,6 +96,12 @@ terminator. Its explicit fields are query, boundary chart, active view, backend,
 return type, decoder contract, probe contract, and compiler version. The artifact remains distinct
 from surface plans, backend requests, and raw returns; creating or naming it does not render a
 request, dispatch a backend, decode a result, or create an actual event.
+
+`ProbeContract` now gives the recurrent probe-contract fields their own canonical identity:
+relational role, binding version, grain, applicability, comparator, protected horizon, decoder
+version, and bridge policy. `ProbeOperator` references that typed identity. This is structural
+identity only: neither `SameContract`/`Bridge` comparability nor bridge-policy evaluation,
+request construction, rendering, dispatch, decoding, or actuality is implemented.
 
 Phase 4 has begun with canonical `DeterminationPresentation` artifacts. A presentation records
 one distinction orientation, typed source, claim-local relational-web reference, binding, scope,

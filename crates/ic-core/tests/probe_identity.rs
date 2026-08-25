@@ -1,7 +1,25 @@
-use ic_core::{ArtifactRef, BoundaryRef, ProbeOperator, ProbeOperatorError, QueryRef, TypeRef};
+use ic_core::{
+    ApplicabilityRef, ArtifactRef, BindingVersionRef, BoundaryRef, GrainRef, HorizonRef,
+    ProbeContract, ProbeOperator, ProbeOperatorError, QueryRef, TypeRef,
+};
 
 fn artifact(byte: u8) -> ArtifactRef {
     ArtifactRef::from_bytes([byte; 32])
+}
+
+fn contract_ref() -> ic_core::ProbeContractRef {
+    ProbeContract::new(
+        artifact(7),
+        BindingVersionRef::from_artifact_ref(artifact(8)),
+        GrainRef::from_artifact_ref(artifact(9)),
+        ApplicabilityRef::from_artifact_ref(artifact(10)),
+        artifact(11),
+        HorizonRef::from_artifact_ref(artifact(12)),
+        artifact(13),
+        artifact(14),
+    )
+    .probe_contract_ref()
+    .expect("contract must encode")
 }
 
 fn operator(code: u8) -> ProbeOperator {
@@ -13,7 +31,7 @@ fn operator(code: u8) -> ProbeOperator {
         artifact(code),
         TypeRef::from_artifact_ref(artifact(5)),
         artifact(6),
-        artifact(7),
+        contract_ref(),
         artifact(8),
     )
 }

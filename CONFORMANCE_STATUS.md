@@ -76,6 +76,8 @@ or passing.
 | P5-RUNTIME-002 empty, dangling, and unguarded branch control-flow rejection | PASS | `ic-runtime::program::runtime_verifier_rejects_empty_dangling_and_unguarded_branch_control_flow` |
 | P10-PROBE-IR-001 compiled probe-operator canonical identity and compiled-code separation | PASS | `probe_identity::probe_operator_identity_separates_compiled_code_from_request_and_return_data` |
 | P10-PROBE-IR-002 malformed compiled probe-operator payload rejection | PASS | `probe_identity::probe_operator_rejects_noncanonical_payload_lengths` |
+| P10-CONTRACT-IR-001 recurrent probe-contract canonical identity and field separation | PASS | `probe_contract_identity::probe_contract_identity_covers_each_contract_field` |
+| P10-CONTRACT-IR-002 malformed recurrent probe-contract payload rejection | PASS | `probe_contract_identity::probe_contract_rejects_noncanonical_payload_lengths` |
 | P6-RAW-001 raw-return opaque byte preservation and content identity | PASS | `raw_return_identity::raw_return_preserves_exact_opaque_bytes_and_domain_separates_identity` |
 | P6-RAW-002 raw-return envelope-domain rejection | PASS | `raw_return_identity::raw_return_rejects_the_wrong_envelope_domain` |
 | P6-RAW-003 raw-return opaque artifact-store round trip | PASS | `ic-store::tests::raw_returns_persist_as_opaque_immutable_artifacts_without_decoding` |
@@ -115,7 +117,7 @@ or passing.
 | Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return, canonical event identity, append-only parent-linked ledger checks, and file-backed restart/revalidation pass. Phase 7: typed resolution-route identity and composition checking pass; request/attempt, dispatch, opaque-contract validation, state-transition replay, route execution, answer sets, and full resolution remain pending |
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |
 | Retained/access/active separation and recurrent memory crawl | PENDING | Phase 9 |
-| Surface/backend/raw-return compilation boundaries | PARTIAL | Phase 10: canonical compiled probe-operator identity is distinct from runtime control flow and raw return; surface plans, backend requests, contracts, rendering, dispatch, and provider execution remain pending |
+| Surface/backend/raw-return compilation boundaries | PARTIAL | Phase 10: canonical compiled probe-operator and recurrent probe-contract identities are distinct from runtime control flow and raw return; contract comparability/bridges, surface plans, backend requests, rendering, dispatch, and provider execution remain pending |
 | Positive standing, support environments, and rootless cycles | PENDING | Phase 11 |
 | Separator generation, cue planning, and bounded unknown results | PENDING | Phases 12-13 |
 | Materialization, expressibility, and representation gaps | PENDING | Phase 14 |
