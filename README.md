@@ -148,10 +148,10 @@ grain, route, binding, backend-version, and provenance references. The SQLite ev
 the event artifact and head-linked ledger row atomically; it rejects forks/stale parents and
 non-raw return, non-query, non-chart boundary, or non-operator artifacts. It also requires the
 event's rehashed query to equal both the chart and compiled operator query, the operator boundary
-to equal the event boundary, and the chart grain to equal the event grain; these are occurrence
-identity links, not semantic evaluation. It does not dispatch a probe, validate opaque
-state/boundary/operator contracts, decode the result, resolve an answer, or prove a semantic
-interpretation.
+to equal the event boundary, the query/chart/event grains to agree, and the query/chart horizons
+to agree; these are occurrence identity links, not semantic evaluation. It does not dispatch a
+probe, validate opaque state/boundary/operator contracts, decode the result, resolve an answer,
+or prove a semantic interpretation.
 
 The event ledger has a file-backed restart witness: closing its single connection and reopening the
 database preserves canonical event identity and parent-linked order after embedded migrations are

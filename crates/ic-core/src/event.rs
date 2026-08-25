@@ -485,6 +485,18 @@ pub fn check_event_context(
             boundary: chart.grain(),
         });
     }
+    if question.context().grain() != event.grain {
+        return Err(ActualEventCheckError::QuestionGrainMismatch {
+            event: event.grain,
+            question: question.context().grain(),
+        });
+    }
+    if question.context().horizon() != chart.horizon() {
+        return Err(ActualEventCheckError::QuestionHorizonMismatch {
+            question: question.context().horizon(),
+            boundary: chart.horizon(),
+        });
+    }
     Ok(())
 }
 
@@ -552,4 +564,11 @@ pub enum ActualEventCheckError {
     },
     #[error("event grain {event} does not match boundary-chart grain {boundary}")]
     BoundaryGrainMismatch { event: GrainRef, boundary: GrainRef },
+    #[error("event grain {event} does not match question grain {question}")]
+    QuestionGrainMismatch { event: GrainRef, question: GrainRef },
+    #[error("question horizon {question} does not match boundary-chart horizon {boundary}")]
+    QuestionHorizonMismatch {
+        question: crate::HorizonRef,
+        boundary: crate::HorizonRef,
+    },
 }

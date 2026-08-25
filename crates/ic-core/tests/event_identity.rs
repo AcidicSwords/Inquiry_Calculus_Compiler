@@ -104,7 +104,7 @@ impl ActualEventCatalog for EventCatalog {
     }
 }
 
-fn open_query(byte: u8) -> OpenQuery {
+fn open_query(byte: u8, grain: GrainRef, horizon: HorizonRef) -> OpenQuery {
     OpenQuery::new(
         RelationRef::from_artifact_ref(artifact(byte)),
         Vec::new(),
@@ -112,8 +112,8 @@ fn open_query(byte: u8) -> OpenQuery {
         RelationUseContext::new(
             ScopeRef::from_artifact_ref(artifact(byte.wrapping_add(1))),
             ApplicabilityRef::from_artifact_ref(artifact(byte.wrapping_add(2))),
-            GrainRef::from_artifact_ref(artifact(byte.wrapping_add(3))),
-            HorizonRef::from_artifact_ref(artifact(byte.wrapping_add(4))),
+            grain,
+            horizon,
             DischargeMode::Probe,
             SupportRef::from_artifact_ref(artifact(byte.wrapping_add(5))),
             None,
@@ -175,9 +175,10 @@ fn actual_event_rechecks_the_opaque_raw_return_without_decoding_or_interpreting_
 fn actual_event_requires_a_rehashed_boundary_chart_without_checking_its_open_roles() {
     let raw = RawReturn::new(vec![0, 0xff]);
     let raw_ref = raw.raw_return_ref().expect("raw return must encode");
-    let question = open_query(30);
-    let question_ref = question.query_ref().expect("question must encode");
     let grain = GrainRef::from_artifact_ref(artifact(39));
+    let horizon = HorizonRef::from_artifact_ref(artifact(40));
+    let question = open_query(30, grain, horizon);
+    let question_ref = question.query_ref().expect("question must encode");
     let chart = boundary_chart(question_ref, grain);
     let boundary_ref = chart.boundary_ref().expect("chart must encode");
     let operator = probe_operator(question_ref, boundary_ref);
@@ -205,7 +206,7 @@ fn actual_event_requires_a_rehashed_boundary_chart_without_checking_its_open_rol
     );
     assert!(check_actual_event(&checked_event, &catalog).is_ok());
 
-    let other_question = open_query(50);
+    let other_question = open_query(50, grain, horizon);
     let other_question_ref = other_question.query_ref().expect("question must encode");
     let mut mismatched_catalog = catalog.clone();
     mismatched_catalog
@@ -313,6 +314,99 @@ fn actual_event_requires_a_rehashed_boundary_chart_without_checking_its_open_rol
         check_actual_event(&mismatched_grain, &catalog),
         Err(ActualEventCheckError::BoundaryGrainMismatch { event, boundary })
             if event == GrainRef::from_artifact_ref(artifact(52)) && boundary == grain
+    ));
+
+    let question_with_other_grain =
+        open_query(53, GrainRef::from_artifact_ref(artifact(54)), horizon);
+    let question_with_other_grain_ref = question_with_other_grain
+        .query_ref()
+        .expect("question must encode");
+    let chart_with_other_grain = boundary_chart(question_with_other_grain_ref, grain);
+    let chart_with_other_grain_ref = chart_with_other_grain
+        .boundary_ref()
+        .expect("chart must encode");
+    let operator_with_other_grain =
+        probe_operator(question_with_other_grain_ref, chart_with_other_grain_ref);
+    let operator_with_other_grain_ref = operator_with_other_grain
+        .probe_operator_ref()
+        .expect("operator must encode");
+    let mut question_grain_catalog = catalog.clone();
+    question_grain_catalog
+        .open_queries
+        .insert(question_with_other_grain_ref, question_with_other_grain);
+    question_grain_catalog
+        .boundary_charts
+        .insert(chart_with_other_grain_ref, chart_with_other_grain);
+    question_grain_catalog
+        .probe_operators
+        .insert(operator_with_other_grain_ref, operator_with_other_grain);
+    let mismatched_question_grain = ActualEvent::new(
+        checked_event.ledger_parent(),
+        checked_event.state_before(),
+        question_with_other_grain_ref,
+        chart_with_other_grain_ref,
+        checked_event.distinction(),
+        operator_with_other_grain_ref,
+        checked_event.raw_return(),
+        checked_event.state_after(),
+        grain,
+        checked_event.route(),
+        checked_event.binding(),
+        checked_event.backend_version(),
+        checked_event.provenance(),
+    );
+    assert!(matches!(
+        check_actual_event(&mismatched_question_grain, &question_grain_catalog),
+        Err(ActualEventCheckError::QuestionGrainMismatch { event, question })
+            if event == grain
+                && question == GrainRef::from_artifact_ref(artifact(54))
+    ));
+
+    let question_with_other_horizon =
+        open_query(55, grain, HorizonRef::from_artifact_ref(artifact(56)));
+    let question_with_other_horizon_ref = question_with_other_horizon
+        .query_ref()
+        .expect("question must encode");
+    let chart_with_other_horizon = boundary_chart(question_with_other_horizon_ref, grain);
+    let chart_with_other_horizon_ref = chart_with_other_horizon
+        .boundary_ref()
+        .expect("chart must encode");
+    let operator_with_other_horizon = probe_operator(
+        question_with_other_horizon_ref,
+        chart_with_other_horizon_ref,
+    );
+    let operator_with_other_horizon_ref = operator_with_other_horizon
+        .probe_operator_ref()
+        .expect("operator must encode");
+    let mut question_horizon_catalog = catalog.clone();
+    question_horizon_catalog
+        .open_queries
+        .insert(question_with_other_horizon_ref, question_with_other_horizon);
+    question_horizon_catalog
+        .boundary_charts
+        .insert(chart_with_other_horizon_ref, chart_with_other_horizon);
+    question_horizon_catalog
+        .probe_operators
+        .insert(operator_with_other_horizon_ref, operator_with_other_horizon);
+    let mismatched_question_horizon = ActualEvent::new(
+        checked_event.ledger_parent(),
+        checked_event.state_before(),
+        question_with_other_horizon_ref,
+        chart_with_other_horizon_ref,
+        checked_event.distinction(),
+        operator_with_other_horizon_ref,
+        checked_event.raw_return(),
+        checked_event.state_after(),
+        grain,
+        checked_event.route(),
+        checked_event.binding(),
+        checked_event.backend_version(),
+        checked_event.provenance(),
+    );
+    assert!(matches!(
+        check_actual_event(&mismatched_question_horizon, &question_horizon_catalog),
+        Err(ActualEventCheckError::QuestionHorizonMismatch { question, boundary })
+            if question == HorizonRef::from_artifact_ref(artifact(56)) && boundary == horizon
     ));
 
     let missing = BoundaryRef::from_artifact_ref(artifact(41));
