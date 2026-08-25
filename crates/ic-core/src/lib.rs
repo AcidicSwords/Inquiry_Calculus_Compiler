@@ -44,8 +44,10 @@ pub use event::{
     RouteRef, StateRef, check_raw_return,
 };
 pub use factorization::{
-    ExactDeterminationError, ExactDeterminationResult, ExactFactorization, ExactFiniteSignature,
-    KernelSeparator, SignatureContext, determine_through_exact,
+    ExactDeterminationError, ExactDeterminationResult, ExactFactorization,
+    ExactFamilyDeterminationResult, ExactFamilyFactorization, ExactFamilySignature,
+    ExactFiniteSignature, FamilyKernelSeparator, KernelSeparator, SignatureContext,
+    determine_through_exact, determine_through_exact_family,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,

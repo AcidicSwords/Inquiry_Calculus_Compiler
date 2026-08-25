@@ -80,6 +80,11 @@ The protected difference is visible in the accepted sources:
   coverage before applying kernel inclusion. It returns an explicit factor map or a concrete
   separator pair; it does not accept incomplete, working, or nondeterministic data as exact and
   does not itself create recovery, standing, or actuality.
+- The exact finite family factorization checker preserves an ordered tagged product of separately
+  exact signatures. It rejects empty families and mismatched indexed domains, reports a product
+  factor map only under kernel inclusion, and otherwise gives a pair with identical family values
+  and different targets. The product is accumulated information, not co-applicability,
+  joint-realizability, a composite raw return, or a composite actual event.
 - A derived `RecoveryStatusIR` keeps `Recovered`, positively witnessed `NotRecovered`, and
   `Unknown` distinct. Its finite checker accepts only a separately certified complete finite
   same-use fiber table: constant protected signatures produce a finite recovery result, differing

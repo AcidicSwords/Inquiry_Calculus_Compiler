@@ -146,6 +146,13 @@ signatures or supplies two differing candidates. It rejects an empty table and d
 return fiber, validate its certificate, turn incomplete coverage into loss, or establish an
 actual occurrence.
 
+For exact finite signatures, a tagged `ExactFamilySignature` can preserve the product of several
+separately covered component observations. Its factorization checker demonstrates joint
+information gain when the product distinguishes a protected target that no member does alone, or
+emits a concrete joint kernel separator. This is a derived information calculation only: it does
+not claim that component observations were co-applicable, jointly realized, or one composite
+actual event.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

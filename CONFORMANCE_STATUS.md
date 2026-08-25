@@ -87,6 +87,8 @@ or passing.
 | P4-DETERMINE-THROUGH-002 kernel separator and context/coverage mismatch rejection | PASS | `factorization::exact_factorization_returns_a_kernel_separator_and_rejects_incomplete_contexts` |
 | P4-RECOVERY-IR-001 exact finite protected-signature constancy | PASS | `recovery::exact_fiber_recovery_requires_signature_constancy_and_emits_a_positive_separator` |
 | P4-RECOVERY-IR-002 empty fiber rejection and unknown/loss separation | PASS | `recovery::empty_or_incomplete_evidence_is_not_conflated_with_non_recovery` |
+| P4-FAMILY-IR-001 joint exact-family factorization without composite actuality | PASS | `family_factorization::exact_family_product_recovers_a_target_that_no_member_recovers` |
+| P4-FAMILY-IR-002 empty/mismatched family rejection and joint separator | PASS | `family_factorization::exact_family_product_rejects_bad_coverage_and_exposes_joint_kernel_separators` |
 
 ## Pending specification and plan categories
 
@@ -97,12 +99,12 @@ or passing.
 | First-order programs and proposal/actuality/authority separation | PARTIAL | Phase 3: canonical `Return`/`Ask` identity, explicit environment, malformed-input rejection, and recursive structural validation pass; supported-answer representation, substitution, normalization, pure operations, and runtime separation remain pending |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4: claim-local determination-presentation identity and malformed-input rejection pass; admission, departure, and all successor fixtures remain pending |
 | Typed negation and coverage separation, fixtures 14-24 | PARTIAL | Phase 4: oriented declaration identity, coverage-state separation, malformed-input rejection, and structural linkage pass; soundness, admission, execution coverage, and all successor fixtures remain pending |
-| Tagged multiple negation uses, fixtures 25-33 | PENDING | Phase 4 |
+| Tagged multiple negation uses, fixtures 25-33 | PARTIAL | Phase 4: exact finite tagged family product and joint-information factorization pass; admitted frontiers, coverage certificates, jointness evidence, and successor fixtures remain pending |
 | Same-use return and protected recovery, fixtures 34-47 | PARTIAL | Phase 4: derived three-valued recovery status and exact finite signature-constancy checking pass; same-use fiber derivation/certification, occurrence context, and successor fixtures remain pending |
 | Pure return versus warranted reconciliation, fixtures 48-52 | PENDING | Phase 4 |
 | Dependent sixfold and downstream `Gamma`, fixtures 53-64 | PENDING | Phase 4 |
 | Reciprocal representation and learning, fixtures 65-70 | PENDING | Phases 4, 12-16 |
-| Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PARTIAL | Phase 4: exact finite determination-through factorization/kernel separators and exact finite recovery constancy/separator checking pass; all other derived breakers and non-exact contracts remain pending |
+| Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PARTIAL | Phase 4: exact finite determination-through factorization/kernel separators, exact finite recovery constancy/separators, and informational tagged-family factorization pass; all other derived breakers and non-exact contracts remain pending |
 | Return/Branch/Probe runtime and continuation descent | PARTIAL | Phase 5: typed Return/Branch/Probe control flow, structural verification, and non-actual suspension/resume pass; operator contracts, actual dispatch, raw-dependent continuation selection, and runtime persistence remain pending |
 | Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return plus canonical event identity and append-only parent-linked ledger checks pass. Phase 7: typed resolution-route identity and composition checking pass; request/attempt, dispatch, opaque-contract validation, crash/restart replay, route execution, answer sets, and full resolution remain pending |
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |
