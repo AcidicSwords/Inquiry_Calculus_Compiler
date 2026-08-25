@@ -108,6 +108,12 @@ relation-use and candidate-field schemas, and first-order soundness-program iden
 executes that program nor admits soundness, coverage, a frontier member, or a positive-negation
 incidence.
 
+Phase 6 has begun with `RawReturn`: exact opaque probe-return bytes have their own immutable,
+domain-separated artifact identity and are preserved without decoding. A `RawReturn` artifact is
+not an actuality assertion, attempt, event, completion, interpretation, check, or warrant. The
+canonical boundary/event reference versus implementation-plan optional distinction discrepancy
+remains open, so no `ActualEvent` record or journal schema has been chosen prematurely.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

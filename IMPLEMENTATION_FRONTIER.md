@@ -14,8 +14,9 @@ canonical artifact envelopes, stable SHA-256 content references, one artifact-on
 SQLite migration, verified immutable insert/fetch behavior, binding-scoped canonical
 type artifacts, typed-form declarations, canonical formula artifacts with capture-safe typed
 terms, formula-defined or binding-native relation schemas with checked named atom
-signatures, and immutable scoped relation uses. `ic-runtime` and `ic-cli` contain no
-semantic machinery.
+signatures, immutable scoped relation uses, and opaque raw-return identity. `ic-runtime` and
+`ic-cli` contain no semantic machinery. A `RawReturn` preserves exact external bytes before
+decode but is not an actual event, attempt, or semantic completion.
 Referencing artifacts now declare their dependencies explicitly;
 the one-writer store checks those dependencies in the insertion transaction rather than
 inferring them from opaque payload bytes.
@@ -53,6 +54,10 @@ The protected difference is visible in the accepted sources:
   declaration, indexed context, and provenance. Its checker rejects a different presentation
   orientation/context, forged or incompatible schemas/use, and forged program identity. It does
   not execute the program, establish soundness/coverage, or admit a negation incidence.
+- `RawReturn` domain-separates and content-addresses exact opaque return bytes. It is admissible
+  to the existing artifact store as ordinary immutable content but carries no ledger or
+  actualization assertion by itself; the unresolved event-record boundary/distinction shape
+  remains deferred.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

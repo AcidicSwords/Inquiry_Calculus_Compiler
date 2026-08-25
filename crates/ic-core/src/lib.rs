@@ -11,6 +11,7 @@ mod formula;
 mod iprog;
 mod negation;
 mod query;
+mod raw_return;
 mod relation;
 mod relation_expr;
 mod relation_use;
@@ -49,6 +50,9 @@ pub use query::{
     CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,
     OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError,
     OpenQueryError, OpenQueryFiberError, OpenQueryPlugError, OpenQueryTransformError, QueryRef,
+};
+pub use raw_return::{
+    RAW_RETURN_ARTIFACT_KIND, RAW_RETURN_SCHEMA_VERSION, RawReturn, RawReturnError, RawReturnRef,
 };
 pub use relation::{
     RELATION_SCHEMA_ARTIFACT_KIND, RELATION_SCHEMA_VERSION, RelationBodyIR, RelationCheckError,
