@@ -69,6 +69,28 @@ pub struct OpenQuery {
     context: RelationUseContext,
 }
 
+/// A complete typed filling for an OpenQuery.
+///
+/// This is a candidate completion only. It records no relation evaluation, support, actuality,
+/// warrant, or membership in a completion fiber.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CompletionCandidate {
+    source: QueryRef,
+    bindings: Vec<PortBinding>,
+}
+
+impl CompletionCandidate {
+    #[must_use]
+    pub const fn source(&self) -> QueryRef {
+        self.source
+    }
+
+    #[must_use]
+    pub fn bindings(&self) -> &[PortBinding] {
+        &self.bindings
+    }
+}
+
 impl OpenQuery {
     #[must_use]
     pub const fn new(
@@ -192,7 +214,15 @@ impl OpenQuery {
         references
     }
     pub fn check<C: RelationCatalog>(&self, catalog: &C) -> Result<(), OpenQueryCheckError> {
-        if self.open_ports.is_empty() {
+        self.check_partition(catalog, true)
+    }
+
+    fn check_partition<C: RelationCatalog>(
+        &self,
+        catalog: &C,
+        require_open_port: bool,
+    ) -> Result<(), OpenQueryCheckError> {
+        if require_open_port && self.open_ports.is_empty() {
             return Err(OpenQueryCheckError::EmptyOpenPorts);
         }
         let schema = catalog
@@ -302,6 +332,44 @@ impl OpenQuery {
         let transformed = Self::new(self.relation, bound_ports, open_ports, self.context);
         transformed.check(catalog)?;
         Ok(transformed)
+    }
+
+    /// Supplies all currently open ports as a typed full assignment without evaluating the relation.
+    pub fn plug<C: RelationCatalog>(
+        &self,
+        answers: Vec<PortBinding>,
+        catalog: &C,
+    ) -> Result<CompletionCandidate, OpenQueryPlugError> {
+        self.check(catalog)?;
+        let mut supplied = BTreeSet::new();
+        for answer in &answers {
+            if !supplied.insert(answer.port().clone()) {
+                return Err(OpenQueryPlugError::DuplicateAnswerPort(
+                    answer.port().clone(),
+                ));
+            }
+            if !self
+                .open_ports
+                .iter()
+                .any(|open| open.port() == answer.port())
+            {
+                return Err(OpenQueryPlugError::PortIsNotOpen(answer.port().clone()));
+            }
+        }
+        for open in &self.open_ports {
+            if !supplied.contains(open.port()) {
+                return Err(OpenQueryPlugError::MissingAnswerPort(open.port().clone()));
+            }
+        }
+
+        let mut bindings = self.bound_ports.clone();
+        bindings.extend(answers);
+        let completed = Self::new(self.relation, bindings.clone(), Vec::new(), self.context);
+        completed.check_partition(catalog, false)?;
+        Ok(CompletionCandidate {
+            source: self.query_ref()?,
+            bindings,
+        })
     }
 }
 
@@ -493,4 +561,23 @@ pub enum OpenQueryTransformError {
 
     #[error("cannot expose {0}: that port is not currently bound")]
     PortIsNotBound(TypeSymbol),
+}
+
+/// Errors from complete typed filling of an OpenQuery.
+#[derive(Debug, Error)]
+pub enum OpenQueryPlugError {
+    #[error(transparent)]
+    Check(#[from] OpenQueryCheckError),
+
+    #[error(transparent)]
+    Query(#[from] OpenQueryError),
+
+    #[error("plugging supplies port {0} more than once")]
+    DuplicateAnswerPort(TypeSymbol),
+
+    #[error("plugging supplies {0}, which is not currently open")]
+    PortIsNotOpen(TypeSymbol),
+
+    #[error("plugging omits open port {0}")]
+    MissingAnswerPort(TypeSymbol),
 }

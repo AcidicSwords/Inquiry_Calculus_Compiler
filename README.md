@@ -67,7 +67,8 @@ An immutable `RelationUse` records one scoped occurrence, its typed bindings, re
 evidence mode, support, and optional warrant separately from the reusable schema.
 An `OpenQuery` partitions every relation port into an explicitly typed binding or a nonempty
 open section. Checked `Bind` and `Expose` move exactly one port across that boundary while
-leaving a nonempty question; they do not evaluate the relation or manufacture a completion fiber.
+leaving a nonempty question. `Plug` can construct a complete typed candidate assignment, but it
+does not evaluate the relation, establish fiber membership, or manufacture actuality.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

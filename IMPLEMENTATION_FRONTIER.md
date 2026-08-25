@@ -21,9 +21,9 @@ inferring them from opaque payload bytes.
 
 Before completing Phase 2, resolve:
 
-> What is the smallest canonical data-only representation of plugging, normalization,
-> composition, dependent binding, and completion-fiber views now that `Bind` and `Expose`
-> preserve the checked direct partial-binding form?
+> What is the smallest canonical data-only representation of normalization, composition,
+> dependent binding, and completion-fiber views now that `Bind`, `Expose`, and candidate-only
+> `Plug` preserve the checked direct partial-binding form?
 
 The protected difference is visible in the accepted sources:
 
@@ -31,7 +31,8 @@ The protected difference is visible in the accepted sources:
   hiding, renaming, and guarded restriction; the implementation plan names the more
   operational transform list.
 - Direct `OpenQuery` now enforces the canonical partial-binding partition and nonempty open
-  section; checked `Bind` and `Expose` preserve that form without running a relation.
+  section; checked `Bind` and `Expose` preserve that form without running a relation. `Plug`
+  supplies a complete typed candidate assignment but cannot assert that the relation holds.
 - The next representation must distinguish syntactic data transforms from semantic relation
   evaluation and defer any actual completion fiber to a later executable route.
 
@@ -122,4 +123,6 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
 - Direct open queries retain only a typed complete port partition with a nonempty open section;
   they do not execute relations or claim completion fibers. Checked `Bind` and `Expose` move
   one port only while preserving that invariant.
+- Plugged candidate assignments preserve query provenance and complete typed bindings, but have
+  no semantic membership, actuality, support, or warrant status.
 - A fixed independently calculated direct OpenQuery payload/envelope/SHA-256 fixture passes.

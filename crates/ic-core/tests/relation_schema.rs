@@ -408,6 +408,27 @@ fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
     );
     assert!(query.check(&catalog).is_ok());
 
+    let completion = query
+        .plug(
+            vec![
+                PortBinding::new(
+                    TypeSymbol::new("answer").expect("port name must be valid"),
+                    boolean_form,
+                ),
+                PortBinding::new(
+                    TypeSymbol::new("next").expect("port name must be valid"),
+                    boolean_form,
+                ),
+            ],
+            &catalog,
+        )
+        .expect("complete typed filling must remain a candidate, not evaluate the relation");
+    assert_eq!(
+        completion.source(),
+        query.query_ref().expect("query must hash")
+    );
+    assert_eq!(completion.bindings().len(), 3);
+
     let bound = query
         .bind(
             PortBinding::new(
