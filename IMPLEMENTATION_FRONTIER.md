@@ -6,8 +6,9 @@ Reciprocal-Boundary / Positive-Negation Edition.
 **Accepted implementation state:** Phase 3 first-order source-program syntax/checking, Phase 4
 determination-presentation/departure/negation-declaration identity checking, and Phase 5
 structural runtime control-flow checking pass on 2026-08-25. Phase 7 typed resolution-path
-identity and interface composition checking also pass. Supported answer materialization remains
-reserved for the Phase 6/7 actuality-and-resolution boundary.
+identity and interface composition checking also pass. Phase 6 now has canonical ordinary-event
+identity and append-only journal linkage; supported answer materialization remains reserved for
+the Phase 6/7 actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -57,8 +58,15 @@ The protected difference is visible in the accepted sources:
   not execute the program, establish soundness/coverage, or admit a negation incidence.
 - `RawReturn` domain-separates and content-addresses exact opaque return bytes. It is admissible
   to the existing artifact store as ordinary immutable content but carries no ledger or
-  actualization assertion by itself; the unresolved event-record boundary/distinction shape
-  remains deferred.
+  actualization assertion by itself.
+- `ActualEvent` resolves the previously live canonical/plan record mismatch conservatively: it
+  has the canonical required `BoundaryRef` and the plan's separate optional `DistinctionRef`.
+  It also preserves parent, state, question, operator, raw return, grain, route, binding,
+  backend-version, and provenance identities. `ArtifactStore` appends that event envelope and its
+  ledger edge transactionally, requires the supplied parent to equal the current head, rechecks
+  the raw-return artifact kind and hash, and detects event/ledger corruption on reads. It does
+  not dispatch an operator, independently prove that a tool call occurred, validate opaque state
+  or boundary semantics, decode a raw return, resolve an answer, or establish a claim.
 - `ProgramIR` has only the canonical runtime terminators: typed `Return`, nonempty `Branch`, and
   `Probe` with an explicit resume target. Its verifier rechecks returns and target closure and
   rejects presently unguarded branch-only recurrence. A probe step suspends and a resumption
@@ -105,9 +113,9 @@ These are recorded now but do not outrank the Phase 4 determination boundary:
   exteriority. Recovery checks remain three-valued; a coverage-indexed constitutive
   characterization is a derived view, not an authoritative object or self-warranting
   horizon.
-- **Phase 6:** reconcile the canonical required boundary reference with the planned
-  optional distinction reference, and represent request, attempt, raw return, and
-  interpretation without collapsing them.
+- **Phase 6:** represent request-before-dispatch and a typed attempt boundary without collapsing
+  the completed event record into a proposed request. Then validate boundary, operator, state,
+  route, backend, and provenance contracts and add crash/restart replay over the ordinary ledger.
 - **Phase 10/12 method boundary:** register typed, law-carrying method contracts;
   preserve raw actual returns; separate certified semantic non-discharge from backend
   failure; and route typed residual handlers/reentry through first-order `IProg` without

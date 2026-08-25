@@ -7,6 +7,7 @@ mod artifact;
 mod context;
 mod departure;
 mod determination;
+mod event;
 mod factorization;
 mod formula;
 mod iprog;
@@ -36,6 +37,11 @@ pub use determination::{
     DeterminationCatalog, DeterminationPresentation, DeterminationPresentationCheckError,
     DeterminationPresentationError, DeterminationPresentationRef, DistinctionRef, Orientation,
     RelationalWebRef,
+};
+pub use event::{
+    ACTUAL_EVENT_ARTIFACT_KIND, ACTUAL_EVENT_SCHEMA_VERSION, ActualEvent, ActualEventCheckError,
+    ActualEventError, BoundaryRef, EventRef, OperatorRef, ProvenanceRef, RawReturnCatalog,
+    RouteRef, StateRef, check_raw_return,
 };
 pub use factorization::{
     ExactDeterminationError, ExactDeterminationResult, ExactFactorization, ExactFiniteSignature,

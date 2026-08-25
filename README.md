@@ -39,8 +39,8 @@ evidence; they are not coequal forward authority.
 - `ic-core`: canonical artifact envelopes, binding-scoped `TyIR`, typed-form
   declarations, canonical formula artifacts, capture-safe typed terms, formula-defined or
 binding-native relation schemas, canonical identity, and structural checking.
-- `ic-store`: SQLite migrations, verified immutable artifact storage, and transactional
-  insertion of explicitly declared artifact dependencies.
+- `ic-store`: SQLite migrations, verified immutable artifact storage, transactional insertion of
+  explicitly declared artifact dependencies, and an append-only ordinary event ledger.
 - `ic-runtime`: reserved package boundary; no runtime semantics yet.
 - `ic-cli`: reserved binary boundary; no command surface yet.
 
@@ -115,11 +115,16 @@ relation-use and candidate-field schemas, and first-order soundness-program iden
 executes that program nor admits soundness, coverage, a frontier member, or a positive-negation
 incidence.
 
-Phase 6 has begun with `RawReturn`: exact opaque probe-return bytes have their own immutable,
-domain-separated artifact identity and are preserved without decoding. A `RawReturn` artifact is
-not an actuality assertion, attempt, event, completion, interpretation, check, or warrant. The
-canonical boundary/event reference versus implementation-plan optional distinction discrepancy
-remains open, so no `ActualEvent` record or journal schema has been chosen prematurely.
+Phase 6 preserves exact opaque probe-return bytes as immutable, domain-separated `RawReturn`
+artifacts before decoding. A raw return alone is not an actuality assertion, attempt, completion,
+interpretation, check, or warrant. The ordinary `ActualEvent` record resolves the former source
+shape discrepancy conservatively: it requires the canonical `BoundaryRef` and separately retains
+the plan's optional `DistinctionRef`, alongside parent, state, question, operator, raw return,
+grain, route, binding, backend-version, and provenance references. The SQLite event ledger writes
+the event artifact and head-linked ledger row atomically; it rejects forks/stale parents and
+non-raw return artifacts, and revalidates event/raw-return identity on read. It does not dispatch
+a probe, validate opaque state/boundary/operator contracts, decode the result, resolve an answer,
+or prove a semantic interpretation.
 
 Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and
 program routes each preserve their input/output types and referenced route identity. Checking

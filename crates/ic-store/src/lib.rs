@@ -1,11 +1,15 @@
 //! Immutable SQLite persistence for canonical artifacts.
 //!
-//! The store has no event journal or later-phase semantic state. Referencing artifacts
-//! are admitted only through an explicit dependency list; opaque payloads are not parsed.
+//! The store preserves immutable artifacts and one append-only ordinary event ledger. Referencing
+//! artifacts are admitted only through an explicit dependency list; opaque payloads are not
+//! parsed for dependency discovery.
 
 use std::{collections::BTreeSet, str::FromStr};
 
-use ic_core::{ArtifactEnvelope, ArtifactError, ArtifactRef};
+use ic_core::{
+    ActualEvent, ActualEventError, ArtifactEnvelope, ArtifactError, ArtifactRef, EventRef,
+    RawReturn, RawReturnError, RawReturnRef,
+};
 use sqlx::{
     SqlitePool,
     migrate::{MigrateError, Migrator},
@@ -163,6 +167,169 @@ impl ArtifactStore {
 
         Ok(Some(envelope))
     }
+
+    /// Appends one already-realized event to the ordinary authoritative event ledger.
+    ///
+    /// This method records rather than dispatches: callers must preserve the raw return before
+    /// invoking it.  The event envelope and ledger row are inserted in one transaction.  The
+    /// declared parent must equal the current head, so a stale writer cannot fork the ledger.
+    #[tracing::instrument(skip(self, event))]
+    pub async fn append_actual_event(&self, event: &ActualEvent) -> Result<EventRef, StoreError> {
+        let event_ref = event.event_ref()?;
+        let envelope = event.envelope()?;
+        let encoded = envelope.encode()?;
+        self.verify_raw_return(event.raw_return()).await?;
+        let mut transaction = self.pool.begin().await?;
+
+        let unique_references: BTreeSet<_> = event.referenced_artifacts().into_iter().collect();
+        for reference in unique_references {
+            let exists: Option<i64> =
+                sqlx::query_scalar("SELECT 1 FROM artifacts WHERE artifact_ref = ?")
+                    .bind(reference.as_bytes().as_slice())
+                    .fetch_optional(&mut *transaction)
+                    .await?;
+            if exists.is_none() {
+                return Err(StoreError::MissingReferencedArtifact(reference));
+            }
+        }
+
+        sqlx::query(
+            "INSERT OR IGNORE INTO artifacts (artifact_ref, canonical_envelope) VALUES (?, ?)",
+        )
+        .bind(event_ref.as_artifact_ref().as_bytes().as_slice())
+        .bind(&encoded)
+        .execute(&mut *transaction)
+        .await?;
+        let stored: Vec<u8> =
+            sqlx::query_scalar("SELECT canonical_envelope FROM artifacts WHERE artifact_ref = ?")
+                .bind(event_ref.as_artifact_ref().as_bytes().as_slice())
+                .fetch_one(&mut *transaction)
+                .await?;
+        if stored != encoded {
+            return Err(StoreError::ReferenceConflict(event_ref.as_artifact_ref()));
+        }
+
+        let existing_parent: Option<Option<Vec<u8>>> =
+            sqlx::query_scalar("SELECT ledger_parent FROM event_ledger WHERE event_ref = ?")
+                .bind(event_ref.as_artifact_ref().as_bytes().as_slice())
+                .fetch_optional(&mut *transaction)
+                .await?;
+        if let Some(existing_parent) = existing_parent {
+            let existing_parent = parse_optional_event_ref(existing_parent)?;
+            if existing_parent != event.ledger_parent() {
+                return Err(StoreError::EventLedgerCorrupt(event_ref));
+            }
+            transaction.commit().await?;
+            return Ok(event_ref);
+        }
+
+        let current_head: Option<Vec<u8>> = sqlx::query_scalar(
+            "SELECT event_ref FROM event_ledger ORDER BY ledger_sequence DESC LIMIT 1",
+        )
+        .fetch_optional(&mut *transaction)
+        .await?;
+        let current_head = parse_optional_event_ref(current_head)?;
+        if event.ledger_parent() != current_head {
+            return Err(StoreError::LedgerParentMismatch {
+                expected: current_head,
+                actual: event.ledger_parent(),
+            });
+        }
+
+        sqlx::query("INSERT INTO event_ledger (event_ref, ledger_parent) VALUES (?, ?)")
+            .bind(event_ref.as_artifact_ref().as_bytes().as_slice())
+            .bind(
+                event
+                    .ledger_parent()
+                    .map(|parent| parent.as_artifact_ref().as_bytes().to_vec()),
+            )
+            .execute(&mut *transaction)
+            .await?;
+        transaction.commit().await?;
+        Ok(event_ref)
+    }
+
+    /// Fetches an event only when the ledger row, parent linkage, and content identity agree.
+    #[tracing::instrument(skip(self), fields(event_ref = %event_ref))]
+    pub async fn get_actual_event(
+        &self,
+        event_ref: EventRef,
+    ) -> Result<Option<ActualEvent>, StoreError> {
+        let parent: Option<Option<Vec<u8>>> =
+            sqlx::query_scalar("SELECT ledger_parent FROM event_ledger WHERE event_ref = ?")
+                .bind(event_ref.as_artifact_ref().as_bytes().as_slice())
+                .fetch_optional(&self.pool)
+                .await?;
+        let Some(parent) = parent else {
+            return Ok(None);
+        };
+        let parent = parse_optional_event_ref(parent)?;
+        let envelope = self
+            .get(event_ref.as_artifact_ref())
+            .await?
+            .ok_or(StoreError::EventLedgerCorrupt(event_ref))?;
+        let event = ActualEvent::from_envelope(&envelope)?;
+        if event.event_ref()? != event_ref || event.ledger_parent() != parent {
+            return Err(StoreError::EventLedgerCorrupt(event_ref));
+        }
+        self.verify_raw_return(event.raw_return()).await?;
+        Ok(Some(event))
+    }
+
+    /// Rechecks every ordered ledger edge and its stored canonical event envelope.
+    #[tracing::instrument(skip(self))]
+    pub async fn verify_event_ledger(&self) -> Result<(), StoreError> {
+        let rows: Vec<(Vec<u8>, Option<Vec<u8>>)> = sqlx::query_as(
+            "SELECT event_ref, ledger_parent FROM event_ledger ORDER BY ledger_sequence",
+        )
+        .fetch_all(&self.pool)
+        .await?;
+        let mut previous = None;
+        for (event_ref, parent) in rows {
+            let event_ref = EventRef::from_artifact_ref(parse_artifact_ref(event_ref)?);
+            let parent = parse_optional_event_ref(parent)?;
+            if parent != previous {
+                return Err(StoreError::EventLedgerCorrupt(event_ref));
+            }
+            let Some(event) = self.get_actual_event(event_ref).await? else {
+                return Err(StoreError::EventLedgerCorrupt(event_ref));
+            };
+            if event.ledger_parent() != previous {
+                return Err(StoreError::EventLedgerCorrupt(event_ref));
+            }
+            previous = Some(event_ref);
+        }
+        Ok(())
+    }
+
+    async fn verify_raw_return(&self, raw_return: RawReturnRef) -> Result<(), StoreError> {
+        let envelope = self.get(raw_return.as_artifact_ref()).await?.ok_or(
+            StoreError::MissingReferencedArtifact(raw_return.as_artifact_ref()),
+        )?;
+        let raw_return_value = RawReturn::from_envelope(&envelope)?;
+        let calculated = raw_return_value.raw_return_ref()?;
+        if calculated != raw_return {
+            return Err(StoreError::CorruptReference {
+                stored: raw_return.as_artifact_ref(),
+                calculated: calculated.as_artifact_ref(),
+            });
+        }
+        Ok(())
+    }
+}
+
+fn parse_artifact_ref(bytes: Vec<u8>) -> Result<ArtifactRef, StoreError> {
+    let bytes: [u8; 32] = bytes
+        .try_into()
+        .map_err(|_| StoreError::InvalidLedgerReference)?;
+    Ok(ArtifactRef::from_bytes(bytes))
+}
+
+fn parse_optional_event_ref(bytes: Option<Vec<u8>>) -> Result<Option<EventRef>, StoreError> {
+    bytes
+        .map(parse_artifact_ref)
+        .map(|reference| reference.map(EventRef::from_artifact_ref))
+        .transpose()
 }
 
 /// Persistence errors that preserve content-identity failures.
@@ -176,6 +343,12 @@ pub enum StoreError {
 
     #[error("artifact envelope failed validation")]
     Artifact(#[from] ArtifactError),
+
+    #[error("actual-event encoding failed")]
+    ActualEvent(#[from] ActualEventError),
+
+    #[error("raw-return encoding failed")]
+    RawReturn(#[from] RawReturnError),
 
     #[error("expected artifact reference {expected}, but envelope calculated {calculated}")]
     ReferenceMismatch {
@@ -201,4 +374,16 @@ pub enum StoreError {
         stored: ArtifactRef,
         calculated: ArtifactRef,
     },
+
+    #[error("event ledger parent mismatch: expected {expected:?}, got {actual:?}")]
+    LedgerParentMismatch {
+        expected: Option<EventRef>,
+        actual: Option<EventRef>,
+    },
+
+    #[error("event ledger record for {0} is corrupt")]
+    EventLedgerCorrupt(EventRef),
+
+    #[error("event ledger contains a reference that is not 32 bytes")]
+    InvalidLedgerReference,
 }

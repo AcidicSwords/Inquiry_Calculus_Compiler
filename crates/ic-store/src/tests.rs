@@ -1,4 +1,8 @@
-use ic_core::{ArtifactKind, ArtifactRef, BindingVersionRef, RawReturn, TyIR, TypeArtifact};
+use ic_core::{
+    ActualEvent, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryRef, EventRef, GrainRef,
+    OperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnError, RawReturnRef, RouteRef,
+    StateRef, TyIR, TypeArtifact,
+};
 
 use super::*;
 
@@ -18,6 +22,41 @@ fn envelope(payload: &[u8]) -> ArtifactEnvelope {
     )
 }
 
+async fn stored_ref(store: &ArtifactStore, payload: &[u8]) -> ArtifactRef {
+    store
+        .insert(&envelope(payload))
+        .await
+        .expect("fixture dependency must insert")
+}
+
+async fn event_fixture(
+    store: &ArtifactStore,
+    ledger_parent: Option<EventRef>,
+    backend_version: &[u8],
+) -> ActualEvent {
+    let raw = RawReturn::new(vec![0, 0xff, b'{', 0]);
+    let raw_envelope = raw.envelope().expect("raw return must encode");
+    let raw_return = store
+        .insert(&raw_envelope)
+        .await
+        .expect("raw return must insert");
+    ActualEvent::new(
+        ledger_parent,
+        StateRef::from_artifact_ref(stored_ref(store, b"state-before").await),
+        QueryRef::from_artifact_ref(stored_ref(store, b"question").await),
+        BoundaryRef::from_artifact_ref(stored_ref(store, b"boundary").await),
+        None,
+        OperatorRef::from_artifact_ref(stored_ref(store, b"operator").await),
+        ic_core::RawReturnRef::from_artifact_ref(raw_return),
+        StateRef::from_artifact_ref(stored_ref(store, b"state-after").await),
+        GrainRef::from_artifact_ref(stored_ref(store, b"grain").await),
+        RouteRef::from_artifact_ref(stored_ref(store, b"route").await),
+        BindingVersionRef::from_artifact_ref(stored_ref(store, b"binding").await),
+        stored_ref(store, backend_version).await,
+        ProvenanceRef::from_artifact_ref(stored_ref(store, b"provenance").await),
+    )
+}
+
 #[tokio::test]
 async fn migrations_apply_and_repeat_without_schema_changes() {
     let store = migrated_store().await;
@@ -33,6 +72,104 @@ async fn migrations_apply_and_repeat_without_schema_changes() {
     .await
     .expect("schema must be queryable");
     assert_eq!(table_count, 1);
+
+    let journal_count: i64 = sqlx::query_scalar(
+        "SELECT COUNT(*) FROM sqlite_schema WHERE type = 'table' AND name = 'event_ledger'",
+    )
+    .fetch_one(&store.pool)
+    .await
+    .expect("journal schema must be queryable");
+    assert_eq!(journal_count, 1);
+}
+
+#[tokio::test]
+async fn actual_events_append_in_order_and_recheck_stored_identity() {
+    let store = migrated_store().await;
+    let first = event_fixture(&store, None, b"backend-first").await;
+    let first_ref = store
+        .append_actual_event(&first)
+        .await
+        .expect("first event must append");
+    assert_eq!(
+        store
+            .get_actual_event(first_ref)
+            .await
+            .expect("event fetch must pass"),
+        Some(first)
+    );
+
+    let second = event_fixture(&store, Some(first_ref), b"backend-second").await;
+    let second_ref = store
+        .append_actual_event(&second)
+        .await
+        .expect("next event must append at the current head");
+    assert_eq!(
+        store
+            .append_actual_event(&second)
+            .await
+            .expect("identical event append must be idempotent"),
+        second_ref
+    );
+    store
+        .verify_event_ledger()
+        .await
+        .expect("ledger chain must verify");
+}
+
+#[tokio::test]
+async fn actual_event_append_rejects_stale_parent_and_detects_ledger_corruption() {
+    let store = migrated_store().await;
+    let first = event_fixture(&store, None, b"backend-first").await;
+    let wrong_raw_return = RawReturnRef::from_artifact_ref(stored_ref(&store, b"not-raw").await);
+    let wrong_raw_event = ActualEvent::new(
+        first.ledger_parent(),
+        first.state_before(),
+        first.question(),
+        first.boundary(),
+        first.distinction(),
+        first.operator(),
+        wrong_raw_return,
+        first.state_after(),
+        first.grain(),
+        first.route(),
+        first.binding(),
+        first.backend_version(),
+        first.provenance(),
+    );
+    assert!(matches!(
+        store.append_actual_event(&wrong_raw_event).await,
+        Err(StoreError::RawReturn(
+            RawReturnError::UnexpectedArtifactKind { .. }
+        ))
+    ));
+    let first_ref = store
+        .append_actual_event(&first)
+        .await
+        .expect("first event must append");
+
+    let stale = event_fixture(&store, None, b"backend-stale").await;
+    assert!(matches!(
+        store.append_actual_event(&stale).await,
+        Err(StoreError::LedgerParentMismatch {
+            expected: Some(reference),
+            actual: None,
+        }) if reference == first_ref
+    ));
+
+    let second = event_fixture(&store, Some(first_ref), b"backend-second").await;
+    let second_ref = store
+        .append_actual_event(&second)
+        .await
+        .expect("second event must append");
+    sqlx::query("UPDATE event_ledger SET ledger_parent = NULL WHERE event_ref = ?")
+        .bind(second_ref.as_artifact_ref().as_bytes().as_slice())
+        .execute(&store.pool)
+        .await
+        .expect("corrupt fixture update must pass");
+    assert!(matches!(
+        store.get_actual_event(second_ref).await,
+        Err(StoreError::EventLedgerCorrupt(reference)) if reference == second_ref
+    ));
 }
 
 #[tokio::test]
