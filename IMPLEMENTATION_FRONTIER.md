@@ -88,6 +88,11 @@ The protected difference is visible in the accepted sources:
 - `ActualEvent` now uses the shared `ProbeOperatorRef` type and checks the named artifact as a
   genuine `ProbeOperator` alongside boundary and raw return. This verifies only operator identity,
   not backend, executable code, contracts, rendering, dispatch, or effect actuality.
+- Actual-event checking and ledger append/read now also rehash a genuine `OpenQuery` and require
+  one coherent occurrence context: event question equals both the chart and operator questions,
+  operator boundary equals event boundary, and chart grain equals event grain. These equalities
+  do not validate query semantics, chart fields, operator contracts, route, dispatch, decoding,
+  raw-return causality, or interpretation.
 - The file-backed SQLite journal has a restart witness: after the authoritative connection closes,
   reopening and reapplying embedded migrations preserves the immutable event identity and ordered
   ledger chain. This is persistence/revalidation only, not replay of state transition semantics,

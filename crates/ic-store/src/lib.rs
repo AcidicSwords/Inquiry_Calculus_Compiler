@@ -7,9 +7,10 @@
 use std::{collections::BTreeSet, str::FromStr};
 
 use ic_core::{
-    ActualEvent, ActualEventError, ArtifactEnvelope, ArtifactError, ArtifactRef, BoundaryChart,
-    BoundaryChartError, BoundaryRef, EventRef, ProbeOperator, ProbeOperatorError, ProbeOperatorRef,
-    RawReturn, RawReturnError, RawReturnRef,
+    ActualEvent, ActualEventCheckError, ActualEventError, ArtifactEnvelope, ArtifactError,
+    ArtifactRef, BoundaryChart, BoundaryChartError, BoundaryRef, EventRef, OpenQuery,
+    OpenQueryError, ProbeOperator, ProbeOperatorError, ProbeOperatorRef, QueryRef, RawReturn,
+    RawReturnError, RawReturnRef, check_event_context,
 };
 use sqlx::{
     SqlitePool,
@@ -185,8 +186,10 @@ impl ArtifactStore {
         let envelope = event.envelope()?;
         let encoded = envelope.encode()?;
         self.verify_raw_return(event.raw_return()).await?;
-        self.verify_boundary_chart(event.boundary()).await?;
-        self.verify_probe_operator(event.operator()).await?;
+        let question = self.verify_open_query(event.question()).await?;
+        let chart = self.verify_boundary_chart(event.boundary()).await?;
+        let operator = self.verify_probe_operator(event.operator()).await?;
+        check_event_context(event, &question, &chart, &operator)?;
         let mut transaction = self.pool.begin().await?;
 
         let unique_references: BTreeSet<_> = event.referenced_artifacts().into_iter().collect();
@@ -281,8 +284,10 @@ impl ArtifactStore {
             return Err(StoreError::EventLedgerCorrupt(event_ref));
         }
         self.verify_raw_return(event.raw_return()).await?;
-        self.verify_boundary_chart(event.boundary()).await?;
-        self.verify_probe_operator(event.operator()).await?;
+        let question = self.verify_open_query(event.question()).await?;
+        let chart = self.verify_boundary_chart(event.boundary()).await?;
+        let operator = self.verify_probe_operator(event.operator()).await?;
+        check_event_context(&event, &question, &chart, &operator)?;
         Ok(Some(event))
     }
 
@@ -327,7 +332,25 @@ impl ArtifactStore {
         Ok(())
     }
 
-    async fn verify_boundary_chart(&self, boundary: BoundaryRef) -> Result<(), StoreError> {
+    async fn verify_open_query(&self, question: QueryRef) -> Result<OpenQuery, StoreError> {
+        let envelope = self.get(question.as_artifact_ref()).await?.ok_or(
+            StoreError::MissingReferencedArtifact(question.as_artifact_ref()),
+        )?;
+        let query = OpenQuery::from_envelope(&envelope)?;
+        let calculated = query.query_ref()?;
+        if calculated != question {
+            return Err(StoreError::CorruptReference {
+                stored: question.as_artifact_ref(),
+                calculated: calculated.as_artifact_ref(),
+            });
+        }
+        Ok(query)
+    }
+
+    async fn verify_boundary_chart(
+        &self,
+        boundary: BoundaryRef,
+    ) -> Result<BoundaryChart, StoreError> {
         let envelope = self.get(boundary.as_artifact_ref()).await?.ok_or(
             StoreError::MissingReferencedArtifact(boundary.as_artifact_ref()),
         )?;
@@ -339,10 +362,13 @@ impl ArtifactStore {
                 calculated: calculated.as_artifact_ref(),
             });
         }
-        Ok(())
+        Ok(chart)
     }
 
-    async fn verify_probe_operator(&self, operator: ProbeOperatorRef) -> Result<(), StoreError> {
+    async fn verify_probe_operator(
+        &self,
+        operator: ProbeOperatorRef,
+    ) -> Result<ProbeOperator, StoreError> {
         let envelope = self.get(operator.as_artifact_ref()).await?.ok_or(
             StoreError::MissingReferencedArtifact(operator.as_artifact_ref()),
         )?;
@@ -354,7 +380,7 @@ impl ArtifactStore {
                 calculated: calculated.as_artifact_ref(),
             });
         }
-        Ok(())
+        Ok(operator_value)
     }
 }
 
@@ -387,6 +413,9 @@ pub enum StoreError {
     #[error("actual-event encoding failed")]
     ActualEvent(#[from] ActualEventError),
 
+    #[error("actual-event identity context failed")]
+    ActualEventCheck(#[from] ActualEventCheckError),
+
     #[error("raw-return encoding failed")]
     RawReturn(#[from] RawReturnError),
 
@@ -395,6 +424,9 @@ pub enum StoreError {
 
     #[error("probe-operator encoding failed")]
     ProbeOperator(#[from] ProbeOperatorError),
+
+    #[error("open-query encoding failed")]
+    OpenQuery(#[from] OpenQueryError),
 
     #[error("expected artifact reference {expected}, but envelope calculated {calculated}")]
     ReferenceMismatch {

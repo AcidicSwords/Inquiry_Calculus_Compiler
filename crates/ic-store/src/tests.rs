@@ -4,10 +4,11 @@ use std::{
 };
 
 use ic_core::{
-    ActualEvent, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef,
-    DeterminationPresentationRef, EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef,
-    ProbeContractRef, ProbeOperator, ProvenanceRef, QueryRef, RawReturn, RawReturnError,
-    RawReturnRef, RelationRef, RelationUseRef, RouteRef, StateRef, TyIR, TypeArtifact, TypeRef,
+    ActualEvent, ApplicabilityRef, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart,
+    BoundaryRef, DeterminationPresentationRef, DischargeMode, EventRef, FormulaRef, GrainRef,
+    HorizonRef, OpenQuery, OperatorRef, ProbeContractRef, ProbeOperator, ProvenanceRef, QueryRef,
+    RawReturn, RawReturnError, RawReturnRef, RelationRef, RelationUseContext, RelationUseRef,
+    RouteRef, ScopeRef, StateRef, SupportRef, TyIR, TypeArtifact, TypeRef,
 };
 
 use super::*;
@@ -47,8 +48,29 @@ async fn event_fixture(
         .await
         .expect("raw return must insert");
     let chart_field = stored_ref(store, b"boundary-chart-field").await;
+    let grain = GrainRef::from_artifact_ref(stored_ref(store, b"grain").await);
+    let question = OpenQuery::new(
+        RelationRef::from_artifact_ref(chart_field),
+        Vec::new(),
+        Vec::new(),
+        RelationUseContext::new(
+            ScopeRef::from_artifact_ref(chart_field),
+            ApplicabilityRef::from_artifact_ref(chart_field),
+            grain,
+            HorizonRef::from_artifact_ref(chart_field),
+            DischargeMode::Probe,
+            SupportRef::from_artifact_ref(chart_field),
+            None,
+        ),
+    );
+    let question = QueryRef::from_artifact_ref(
+        store
+            .insert(&question.envelope().expect("question must encode"))
+            .await
+            .expect("question must insert"),
+    );
     let chart = BoundaryChart::new(
-        QueryRef::from_artifact_ref(chart_field),
+        question,
         TypeRef::from_artifact_ref(chart_field),
         TypeRef::from_artifact_ref(chart_field),
         TypeRef::from_artifact_ref(chart_field),
@@ -61,7 +83,7 @@ async fn event_fixture(
         RelationUseRef::from_artifact_ref(chart_field),
         FormulaRef::from_artifact_ref(chart_field),
         None,
-        GrainRef::from_artifact_ref(chart_field),
+        grain,
         HorizonRef::from_artifact_ref(chart_field),
     );
     let boundary = BoundaryRef::from_artifact_ref(
@@ -74,7 +96,7 @@ async fn event_fixture(
         store
             .insert(
                 &ProbeOperator::new(
-                    QueryRef::from_artifact_ref(chart_field),
+                    question,
                     boundary,
                     chart_field,
                     chart_field,
@@ -93,13 +115,13 @@ async fn event_fixture(
     ActualEvent::new(
         ledger_parent,
         StateRef::from_artifact_ref(stored_ref(store, b"state-before").await),
-        QueryRef::from_artifact_ref(stored_ref(store, b"question").await),
+        question,
         boundary,
         None,
         operator,
         ic_core::RawReturnRef::from_artifact_ref(raw_return),
         StateRef::from_artifact_ref(stored_ref(store, b"state-after").await),
-        GrainRef::from_artifact_ref(stored_ref(store, b"grain").await),
+        grain,
         RouteRef::from_artifact_ref(stored_ref(store, b"route").await),
         BindingVersionRef::from_artifact_ref(stored_ref(store, b"binding").await),
         stored_ref(store, backend_version).await,
@@ -235,6 +257,48 @@ async fn actual_event_append_rejects_stale_parent_and_detects_ledger_corruption(
         Err(StoreError::ProbeOperator(
             ic_core::ProbeOperatorError::UnexpectedArtifactKind { .. }
         ))
+    ));
+    let other_field = stored_ref(&store, b"other-question-field").await;
+    let other_question = OpenQuery::new(
+        RelationRef::from_artifact_ref(other_field),
+        Vec::new(),
+        Vec::new(),
+        RelationUseContext::new(
+            ScopeRef::from_artifact_ref(other_field),
+            ApplicabilityRef::from_artifact_ref(other_field),
+            first.grain(),
+            HorizonRef::from_artifact_ref(other_field),
+            DischargeMode::Probe,
+            SupportRef::from_artifact_ref(other_field),
+            None,
+        ),
+    );
+    let other_question = QueryRef::from_artifact_ref(
+        store
+            .insert(&other_question.envelope().expect("question must encode"))
+            .await
+            .expect("question must insert"),
+    );
+    let wrong_question_event = ActualEvent::new(
+        first.ledger_parent(),
+        first.state_before(),
+        other_question,
+        first.boundary(),
+        first.distinction(),
+        first.operator(),
+        first.raw_return(),
+        first.state_after(),
+        first.grain(),
+        first.route(),
+        first.binding(),
+        first.backend_version(),
+        first.provenance(),
+    );
+    assert!(matches!(
+        store.append_actual_event(&wrong_question_event).await,
+        Err(StoreError::ActualEventCheck(
+            ic_core::ActualEventCheckError::BoundaryQuestionMismatch { event, boundary }
+        )) if event == other_question && boundary == first.question()
     ));
     let first_ref = store
         .append_actual_event(&first)

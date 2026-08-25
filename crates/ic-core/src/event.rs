@@ -12,8 +12,8 @@ use thiserror::Error;
 
 use crate::{
     ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart,
-    BoundaryChartError, DistinctionRef, GrainRef, ProbeOperator, ProbeOperatorError,
-    ProbeOperatorRef, QueryRef, RawReturn, RawReturnError, RawReturnRef,
+    BoundaryChartError, DistinctionRef, GrainRef, OpenQuery, OpenQueryError, ProbeOperator,
+    ProbeOperatorError, ProbeOperatorRef, QueryRef, RawReturn, RawReturnError, RawReturnRef,
 };
 
 /// Canonical artifact kind for one ordinary, realized actuality occurrence.
@@ -402,10 +402,12 @@ pub fn check_raw_return<C: RawReturnCatalog>(
     Ok(())
 }
 
-/// Verifies the typed raw-return and boundary-chart identities retained by an actual event.
+/// Verifies the typed raw-return, query, boundary-chart, and probe-operator identities retained
+/// by an actual event.
 ///
-/// This does not validate an actual dispatch or the opaque state, question, operator, route,
-/// backend, provenance, or chart-field semantics. Those contracts remain distinct later work.
+/// This does not validate an actual dispatch or the opaque state, query semantics, operator
+/// contracts, route, backend, provenance, or chart-field semantics. Those contracts remain
+/// distinct later work.
 pub fn check_actual_event<C: ActualEventCatalog>(
     event: &ActualEvent,
     catalog: &C,
@@ -424,11 +426,63 @@ pub fn check_actual_event<C: ActualEventCatalog>(
     let operator = catalog.resolve_probe_operator(event.operator).ok_or(
         ActualEventCheckError::UnresolvedProbeOperator(event.operator),
     )?;
-    let calculated = operator.probe_operator_ref()?;
-    if calculated != event.operator {
+    let question = catalog
+        .resolve_open_query(event.question)
+        .ok_or(ActualEventCheckError::UnresolvedQuestion(event.question))?;
+    check_event_context(event, &question, &chart, &operator)
+}
+
+/// Checks that an event's named query, chart, and compiled operator are the same occurrence
+/// context, after callers have resolved those artifacts. This establishes identity linkage only.
+pub fn check_event_context(
+    event: &ActualEvent,
+    question: &OpenQuery,
+    chart: &BoundaryChart,
+    operator: &ProbeOperator,
+) -> Result<(), ActualEventCheckError> {
+    let calculated_question = question.query_ref()?;
+    if calculated_question != event.question {
+        return Err(ActualEventCheckError::QuestionIdentityMismatch {
+            reference: event.question,
+            calculated: calculated_question,
+        });
+    }
+    let calculated_boundary = chart.boundary_ref()?;
+    if calculated_boundary != event.boundary {
+        return Err(ActualEventCheckError::BoundaryIdentityMismatch {
+            reference: event.boundary,
+            calculated: calculated_boundary,
+        });
+    }
+    let calculated_operator = operator.probe_operator_ref()?;
+    if calculated_operator != event.operator {
         return Err(ActualEventCheckError::ProbeOperatorIdentityMismatch {
             reference: event.operator,
-            calculated,
+            calculated: calculated_operator,
+        });
+    }
+    if chart.query() != event.question {
+        return Err(ActualEventCheckError::BoundaryQuestionMismatch {
+            event: event.question,
+            boundary: chart.query(),
+        });
+    }
+    if operator.query() != event.question {
+        return Err(ActualEventCheckError::OperatorQuestionMismatch {
+            event: event.question,
+            operator: operator.query(),
+        });
+    }
+    if operator.boundary() != event.boundary {
+        return Err(ActualEventCheckError::OperatorBoundaryMismatch {
+            event: event.boundary,
+            operator: operator.boundary(),
+        });
+    }
+    if chart.grain() != event.grain {
+        return Err(ActualEventCheckError::BoundaryGrainMismatch {
+            event: event.grain,
+            boundary: chart.grain(),
         });
     }
     Ok(())
@@ -443,6 +497,7 @@ pub trait RawReturnCatalog {
 pub trait ActualEventCatalog: RawReturnCatalog {
     fn resolve_boundary_chart(&self, reference: BoundaryRef) -> Option<BoundaryChart>;
     fn resolve_probe_operator(&self, reference: ProbeOperatorRef) -> Option<ProbeOperator>;
+    fn resolve_open_query(&self, reference: QueryRef) -> Option<OpenQuery>;
 }
 
 /// Errors from the currently available actual-event validation boundary.
@@ -456,6 +511,8 @@ pub enum ActualEventCheckError {
     BoundaryChart(#[from] BoundaryChartError),
     #[error(transparent)]
     ProbeOperator(#[from] ProbeOperatorError),
+    #[error(transparent)]
+    OpenQuery(#[from] OpenQueryError),
     #[error("raw return {0} is unavailable from the declared catalog")]
     UnresolvedRawReturn(RawReturnRef),
     #[error("catalog raw return {reference} hashes to {calculated}, not its claimed identity")]
@@ -477,4 +534,22 @@ pub enum ActualEventCheckError {
         reference: ProbeOperatorRef,
         calculated: ProbeOperatorRef,
     },
+    #[error("question {0} is unavailable from the declared catalog")]
+    UnresolvedQuestion(QueryRef),
+    #[error("catalog question {reference} hashes to {calculated}, not its claimed identity")]
+    QuestionIdentityMismatch {
+        reference: QueryRef,
+        calculated: QueryRef,
+    },
+    #[error("event question {event} does not match boundary-chart question {boundary}")]
+    BoundaryQuestionMismatch { event: QueryRef, boundary: QueryRef },
+    #[error("event question {event} does not match probe-operator question {operator}")]
+    OperatorQuestionMismatch { event: QueryRef, operator: QueryRef },
+    #[error("event boundary {event} does not match probe-operator boundary {operator}")]
+    OperatorBoundaryMismatch {
+        event: BoundaryRef,
+        operator: BoundaryRef,
+    },
+    #[error("event grain {event} does not match boundary-chart grain {boundary}")]
+    BoundaryGrainMismatch { event: GrainRef, boundary: GrainRef },
 }
