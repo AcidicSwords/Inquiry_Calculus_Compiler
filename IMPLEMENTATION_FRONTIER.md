@@ -35,8 +35,8 @@ inferring them from opaque payload bytes.
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
 > Given a canonical candidate support environment and an oriented typed finite incompatibility
-> pair, what is the smallest checked `SupportRef`/claim-admission linkage that can establish
-> standing, determination relevance, and non-circularity without turning failed search,
+> pair, what is the smallest claim-targeted admission boundary that can establish standing,
+> determination relevance, and non-circularity without turning failed search,
 > projection, incomplete coverage, or caller-declared data into exteriority or silently collapsing
 > semantic and execution coverage?
 
@@ -333,9 +333,10 @@ declarations it is given: it does not verify that an ingress fact is grounded or
 check ran. `SupportEnvironmentArtifact` now preserves a tagged claim-or-relation target, premises,
 actual returns, checker/assumption/dependency identities, applicability, and scope under one
 content address; it rechecks claim/raw-return identities, relation schemas, and claim-target
-context but does not evaluate opaque roles or close a route. The `SupportRef` fields carried by
-relation uses and departure witnesses are still
-opaque and unconnected to a resolved support environment or `ClaimRef`.
+context but does not evaluate opaque roles or close a route. A relation use now resolves a
+matching relation-targeted environment through its exact `SupportRef`, relation, scope, and
+applicability; a claim-targeted environment and every closure/admission condition remain
+unresolved.
 
 ## Known later questions
 
