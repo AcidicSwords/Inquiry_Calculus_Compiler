@@ -5,7 +5,9 @@ including the adopted **Successor Reciprocal-Boundary / Positive-Negation Editio
 The semantic authority has advanced, but the executable implementation remains at
 **Phase 1**: repository authority, canonical artifact identity, immutable-artifact
 persistence, binding-scoped type artifacts, and typed-form declarations. Relation,
-term, reification, program, event, and standing semantics are not implemented yet.
+reification, program, event, and standing semantics are not implemented yet. Phase 2 has
+begun with canonical formula artifacts and capture-safe typed terms; relation schemas,
+relation uses, and OpenQuery remain pending.
 
 ## Authority by question
 
@@ -35,7 +37,8 @@ evidence; they are not coequal forward authority.
 ## Workspace
 
 - `ic-core`: canonical artifact envelopes, binding-scoped `TyIR`, typed-form
-  declarations, canonical identity, and structural type checking.
+  declarations, canonical formula artifacts, capture-safe typed terms, canonical identity,
+  and structural type checking.
 - `ic-store`: SQLite migrations, verified immutable artifact storage, and transactional
   insertion of explicitly declared artifact dependencies.
 - `ic-runtime`: reserved package boundary; no runtime semantics yet.
@@ -50,6 +53,12 @@ and version identity. `Int`, `Text`, `Bytes`, n-ary product/sum, and input/outpu
 `Code` remain unadopted plan candidates rather than silently assigned semantic identity.
 Dependent `Sigma`/`Pi` types preserve an explicit checked family reference; the
 binding-native family language and form reification remain later work.
+
+Formula artifacts preserve the entire canonical surface grammar: `top`, `bottom`,
+relation atoms, equality, conjunction, disjunction, implication, classical logical
+negation, and existential/universal quantification. The classical minimal basis is an
+explicit future derivation route, never a normalization that erases source structure.
+Logical `Not` is not contextual typed negation and cannot create a `NegationUse`.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

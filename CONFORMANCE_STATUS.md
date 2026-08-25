@@ -36,12 +36,22 @@ or passing.
 | P1-FORM-001 typed-form declaration canonical identity and binding scope | PASS | `checks_binding_scope_children_and_dependent_family_domain` |
 | P1-STORE-001 explicit reference dependency transaction | PASS | `referencing_insert_requires_declared_dependencies_before_commit` |
 
+## Demonstrated Phase 2 formula fixtures
+
+| Fixture | Status | Witness |
+|---|---|---|
+| P2-FORM-001 complete canonical formula surface round trip | PASS | `formula_identity::complete_canonical_formula_surface_round_trips_without_normalization` |
+| P2-FORM-002 stable top-formula byte/hash vector | PASS | `fixtures/formulas/formula-v1-top.json` |
+| P2-FORM-003 malformed formula encoding rejection | PASS | `rejects_malformed_formula_encodings` |
+| P2-FORM-004 typed terms, quantifier capture safety, and formula contexts | PASS | `checks_typed_terms_capture_safe_quantification_and_contexts` |
+| P2-FORM-005 logical negation remains a distinct formula constructor | PASS | `complete_canonical_formula_surface_round_trips_without_normalization` |
+
 ## Pending specification and plan categories
 
 | Category | Status | First planned phase |
 |---|---|---|
 | Typed forms, typed reification, and type verification | PARTIAL | Phase 1: canonical type artifacts, typed-form declarations, and structural checks pass; binding-native term/reification semantics remain pending |
-| Relations, open ports, partial binding, and question kernels | PENDING | Phase 2 |
+| Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: formula artifacts and typed terms pass; relation schemas, relation uses, atom-signature checks, and OpenQuery remain pending |
 | First-order programs and proposal/actuality/authority separation | PENDING | Phase 3 |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4 |
 | Typed negation and coverage separation, fixtures 14-24 | PENDING | Phase 4 |

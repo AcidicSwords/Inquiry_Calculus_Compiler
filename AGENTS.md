@@ -109,7 +109,7 @@ The following are cached answers. Apply them without reopening unless the stated
 | Does pure return revise standing meaning? | No. Semantic reconciliation, retraction, or revision is separate and requires its own actualization, check, and warrant. Compatible monotone constraint addition cannot change an already determined protected class. | A warranted successor changes the standing/revision contract. |
 | Is the sixfold occurrence authoritative storage? | No. It is a derived, use-tagged history view. Partial attempts remain ordinary events; reproducible frontiers, fibers, recovery profiles, and charts remain derived. | Replay or performance evidence establishes a protected need for authoritative materialization. |
 
-Do not resolve currently queued specification/plan differences merely because nearby work touches them. In particular, preserve the open Phase 1 `Prog(A)` and unary `Code(A)` question, the Phase 2 formula-basis question, and the Phase 6 event/attempt-record question until their frontier is live.
+Do not resolve currently queued specification/plan differences merely because nearby work touches them. In particular, preserve the Phase 2 relation-schema definition question and the Phase 6 event/attempt-record question until their frontier is live.
 
 ## 3. The principal development program
 
