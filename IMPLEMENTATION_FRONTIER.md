@@ -3,8 +3,9 @@
 **Accepted semantic authority:** Inquiry Calculus v1.1, Successor
 Reciprocal-Boundary / Positive-Negation Edition.
 
-**Accepted implementation state:** Phase 3 first-order program structural checking passes on
-2026-08-25.
+**Accepted implementation state:** Phase 3 first-order program syntax and structural checking
+pass on 2026-08-25; supported-answer materialization remains reserved for the Phase 6/7
+actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -20,37 +21,41 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before admitting a source-program transformation or execution, resolve:
+Before constructing any reciprocal exterior or negation use, resolve:
 
-> What is the smallest capture-safe substitution and normalization contract for first-order
-> `IProg`, including an explicitly represented supported-answer binding, without treating a
-> selected answer as actual, checked, or warranted?
+> What is the smallest claim-local, versioned `DeterminationPresentation` artifact that retains
+> only the supported dependency web of a standing source determination with its scope,
+> applicability, grain, horizon, and provenance?
 
 The protected difference is visible in the accepted sources:
 
-- `IProg::Ask` preserves a `QueryRef`, a unique ordered explicit environment of named typed-form
-  references, a named answer slot, and a continuation reference as canonical data. It neither
-  invokes a host closure nor reads captured state.
-- Structural checking now rehashes and checks the result type, return value, query, environment
-  values, and recursively referenced continuation. It rejects forged identities and divergent
-  continuation result types without evaluating relations or programs.
-- The remaining representation does not yet name `SuppAns(q)`, so it cannot perform actual
-  answer substitution. That absence is a live representation obligation, not permission to
-  treat a candidate, generated proposal, or selected completion as an answer.
+- A `CompletionCandidate` is explicitly only a full typed query filling. It does not establish
+  relation membership, support, actuality, a resolution path, or a selected answer.
+- `SuppAns(q)` requires a declared decoder/resolution route and preserves nonempty partial sets.
+  The stable plan places resolution paths, decoder contracts, partial/ambiguous results, holes,
+  and fibers in Phase 7 after Phase 6 raw actuality. The Phase 3 answer slot remains inspectable
+  syntax; it may not be substituted or executed as if that later evidence existed.
+- The successor Phase 4 contract can begin without that runtime boundary: a determination
+  presentation is a supported claim-local web, not an answer result, an exterior, a negation
+  use, or a standing revision.
 
-Different answers change whether answer-dependent source behavior is capture-safe and
-normalizable or silently delegated to runtime policy. The next discriminator must show that a
-substitution changes only the named answer binder, leaves same-named explicit environment values
-unambiguous, preserves result type and dependencies, and never manufactures semantic actuality.
+Different answers determine whether stored source information remains claim-local and reversible
+or is silently inflated into a global fact store or a boundary role. The first discriminator must
+reject an unrelated retained fact as constitutive, a forged dependency reference, and a
+presentation whose contextual/provenance fields do not match its declared source determination.
 
 ## Known later questions
 
-These are recorded now but do not outrank the remaining Phase 2 obligation:
+These are recorded now but do not outrank the Phase 4 determination boundary:
 
 - **Phase 4 determination admission:** test whether the claim-local support/dependency
   web of the standing source determination, with exact scope, applicability, grain,
   horizon, version, and provenance, is the smallest lawful
   `DeterminationPresentation`; keep later minimization reversible.
+- **Phase 3/7 answer materialization:** retain the `Ask` answer binder as first-order syntax
+  until the Phase 6 actuality and Phase 7 resolution/fiber contracts supply a supported answer
+  representation. Do not coerce a `CompletionCandidate` into an answer, perform substitution,
+  select a branch, or claim normalization based on it.
 - **Phase 4 reciprocal core:** implement positive departure, oriented and tagged
   `NegationUse`, distinct semantic/execution coverage, same-use return fibers,
   protected recovery, exact `DetermineThrough` factorization, seed/reorientation,

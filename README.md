@@ -81,8 +81,10 @@ Rust closure or executable runtime program. The environment is part of the progr
 declared dependency list, so a continuation has no hidden host-state capture.
 Structural checking revalidates every named type, typed form, open query, environment value, and
 continuation identity; `Return` values and continuations must share the enclosing result type.
-The supported-answer type, substitution, normalization, registered pure operations, and execution
-remain later Phase 3 work.
+The answer slot remains syntax until Phase 6/7 actuality and resolution provide an explicit
+supported-answer representation. A `CompletionCandidate` is not such an answer. Substitution,
+normalization, registered pure operations, and execution remain deferred rather than being
+simulated with an unsupported candidate.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
