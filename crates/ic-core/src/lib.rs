@@ -25,8 +25,8 @@ pub use formula::{
     FormulaCheckError, FormulaError, FormulaIR, FormulaRef, RelationRef, RelationSignature, TermIR,
 };
 pub use iprog::{
-    IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgError, IProgIR, IProgRef,
-    ProgramBinding,
+    IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgError, IProgIR, IProgRef, ProgramBinding,
 };
 pub use query::{
     CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,

@@ -79,6 +79,10 @@ The Phase 3 source-program kernel has begun: `IProg` is canonical inspectable da
 named typed-form references, a named answer slot, and a continuation reference. It is not a
 Rust closure or executable runtime program. The environment is part of the program identity and
 declared dependency list, so a continuation has no hidden host-state capture.
+Structural checking revalidates every named type, typed form, open query, environment value, and
+continuation identity; `Return` values and continuations must share the enclosing result type.
+The supported-answer type, substitution, normalization, registered pure operations, and execution
+remain later Phase 3 work.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

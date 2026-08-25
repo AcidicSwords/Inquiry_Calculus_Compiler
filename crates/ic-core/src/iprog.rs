@@ -1,9 +1,10 @@
-use std::{fmt, str::FromStr};
+use std::{collections::BTreeSet, fmt, str::FromStr};
 
 use thiserror::Error;
 
 use crate::{
-    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, QueryRef, TypeRef, TypeSymbol,
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, OpenQueryCatalog,
+    OpenQueryCheckError, OpenQueryError, QueryRef, TypeCheckError, TypeError, TypeRef, TypeSymbol,
     TypedFormRef,
 };
 
@@ -84,6 +85,12 @@ pub enum IProgIR {
 pub struct IProgArtifact {
     result: TypeRef,
     program: IProgIR,
+}
+
+/// The checked source for first-order inquiry-program references.
+pub trait IProgCatalog: OpenQueryCatalog {
+    /// Resolves a first-order program by its claimed stable identity.
+    fn resolve_iprog(&self, reference: IProgRef) -> Option<IProgArtifact>;
 }
 
 impl IProgArtifact {
@@ -174,6 +181,92 @@ impl IProgArtifact {
         }
         Self::decode_payload(envelope.canonical_payload())
     }
+
+    /// Checks the structurally represented references of this first-order program.
+    ///
+    /// This does not interpret a supported answer or execute a program.  In particular,
+    /// the answer-set type of an open query is not yet a Phase 3 artifact.  It verifies
+    /// every type, typed form, query, explicit environment value, and continuation that
+    /// the current representation can name.
+    pub fn check<C: IProgCatalog>(&self, catalog: &C) -> Result<(), IProgCheckError> {
+        let reference = self.iprog_ref()?;
+        let mut visiting = BTreeSet::new();
+        let mut completed = BTreeSet::new();
+        self.check_inner(reference, catalog, &mut visiting, &mut completed)
+    }
+
+    fn check_inner<C: IProgCatalog>(
+        &self,
+        reference: IProgRef,
+        catalog: &C,
+        visiting: &mut BTreeSet<IProgRef>,
+        completed: &mut BTreeSet<IProgRef>,
+    ) -> Result<(), IProgCheckError> {
+        if completed.contains(&reference) {
+            return Ok(());
+        }
+        if !visiting.insert(reference) {
+            return Err(IProgCheckError::CyclicContinuation(reference));
+        }
+        check_type_reference(self.result, catalog)?;
+        let checked = match &self.program {
+            IProgIR::Return { value } => {
+                let actual = check_typed_form_reference(*value, catalog)?;
+                if actual != self.result {
+                    Err(IProgCheckError::ReturnTypeMismatch {
+                        expected: self.result,
+                        actual,
+                    })
+                } else {
+                    Ok(())
+                }
+            }
+            IProgIR::Ask {
+                question,
+                environment,
+                continuation,
+                ..
+            } => {
+                let query = catalog
+                    .resolve_open_query(*question)
+                    .ok_or(IProgCheckError::UnresolvedQuery(*question))?;
+                let calculated = query.query_ref()?;
+                if calculated != *question {
+                    return Err(IProgCheckError::QueryReferenceIdentityMismatch {
+                        reference: *question,
+                        calculated,
+                    });
+                }
+                query.check(catalog)?;
+                for binding in environment {
+                    check_typed_form_reference(binding.value, catalog)?;
+                }
+                let next = catalog
+                    .resolve_iprog(*continuation)
+                    .ok_or(IProgCheckError::UnresolvedContinuation(*continuation))?;
+                let calculated = next.iprog_ref()?;
+                if calculated != *continuation {
+                    return Err(IProgCheckError::ContinuationReferenceIdentityMismatch {
+                        reference: *continuation,
+                        calculated,
+                    });
+                }
+                if next.result != self.result {
+                    return Err(IProgCheckError::ContinuationResultTypeMismatch {
+                        expected: self.result,
+                        actual: next.result,
+                    });
+                }
+                next.check_inner(*continuation, catalog, visiting, completed)
+            }
+        };
+        visiting.remove(&reference);
+        if checked.is_ok() {
+            completed.insert(reference);
+        }
+        checked
+    }
+
     #[must_use]
     pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
         let mut refs = vec![self.result.as_artifact_ref()];
@@ -196,6 +289,42 @@ impl IProgArtifact {
         }
         refs
     }
+}
+
+fn check_type_reference<C: IProgCatalog>(
+    reference: TypeRef,
+    catalog: &C,
+) -> Result<(), IProgCheckError> {
+    let ty = catalog
+        .resolve_type(reference)
+        .ok_or(IProgCheckError::UnresolvedResultType(reference))?;
+    let calculated = ty.type_ref()?;
+    if calculated != reference {
+        return Err(IProgCheckError::ResultTypeReferenceIdentityMismatch {
+            reference,
+            calculated,
+        });
+    }
+    ty.check(catalog)?;
+    Ok(())
+}
+
+fn check_typed_form_reference<C: IProgCatalog>(
+    reference: TypedFormRef,
+    catalog: &C,
+) -> Result<TypeRef, IProgCheckError> {
+    let form = catalog
+        .resolve_typed_form(reference)
+        .ok_or(IProgCheckError::UnresolvedTypedForm(reference))?;
+    let calculated = form.typed_form_ref()?;
+    if calculated != reference {
+        return Err(IProgCheckError::TypedFormReferenceIdentityMismatch {
+            reference,
+            calculated,
+        });
+    }
+    form.check(catalog)?;
+    Ok(form.ty())
 }
 fn reference(encoded: &mut Vec<u8>, reference: ArtifactRef) {
     encoded.extend_from_slice(reference.as_bytes());
@@ -328,4 +457,53 @@ pub enum IProgError {
     },
     #[error("unsupported inquiry-program schema version {0}")]
     UnsupportedSchemaVersion(u32),
+}
+
+/// Errors from structural first-order inquiry-program checking.
+#[derive(Debug, Error)]
+pub enum IProgCheckError {
+    #[error(transparent)]
+    IProg(#[from] IProgError),
+    #[error(transparent)]
+    Type(#[from] TypeError),
+    #[error(transparent)]
+    TypeCheck(#[from] TypeCheckError),
+    #[error(transparent)]
+    OpenQuery(#[from] OpenQueryCheckError),
+    #[error(transparent)]
+    OpenQueryEncoding(#[from] OpenQueryError),
+    #[error("result type {0} is not available from the declared catalog")]
+    UnresolvedResultType(TypeRef),
+    #[error("catalog result type {reference} hashes to {calculated}, not its claimed identity")]
+    ResultTypeReferenceIdentityMismatch {
+        reference: TypeRef,
+        calculated: TypeRef,
+    },
+    #[error("typed form {0} is not available from the declared catalog")]
+    UnresolvedTypedForm(TypedFormRef),
+    #[error("catalog typed form {reference} hashes to {calculated}, not its claimed identity")]
+    TypedFormReferenceIdentityMismatch {
+        reference: TypedFormRef,
+        calculated: TypedFormRef,
+    },
+    #[error("return value has type {actual}, expected program result {expected}")]
+    ReturnTypeMismatch { expected: TypeRef, actual: TypeRef },
+    #[error("open query {0} is not available from the declared catalog")]
+    UnresolvedQuery(QueryRef),
+    #[error("catalog query {reference} hashes to {calculated}, not its claimed identity")]
+    QueryReferenceIdentityMismatch {
+        reference: QueryRef,
+        calculated: QueryRef,
+    },
+    #[error("continuation program {0} is not available from the declared catalog")]
+    UnresolvedContinuation(IProgRef),
+    #[error("catalog continuation {reference} hashes to {calculated}, not its claimed identity")]
+    ContinuationReferenceIdentityMismatch {
+        reference: IProgRef,
+        calculated: IProgRef,
+    },
+    #[error("continuation result type {actual} does not match enclosing result {expected}")]
+    ContinuationResultTypeMismatch { expected: TypeRef, actual: TypeRef },
+    #[error("first-order program continuation graph contains cycle at {0}")]
+    CyclicContinuation(IProgRef),
 }

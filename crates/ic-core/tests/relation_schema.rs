@@ -3,7 +3,8 @@ use std::collections::BTreeMap;
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
     DischargeMode, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef,
-    OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError, PortBinding, RelationBodyIR,
+    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, OpenPort, OpenQuery,
+    OpenQueryCatalog, OpenQueryCheckError, PortBinding, ProgramBinding, RelationBodyIR,
     RelationCatalog, RelationCheckError, RelationError, RelationExprArtifact, RelationExprIR,
     RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
     RelationUseCheckError, RelationUseContext, ScopeRef, SupportRef, TyIR, TypeArtifact,
@@ -28,6 +29,7 @@ struct Catalog {
     schemas: BTreeMap<RelationRef, RelationSchema>,
     forms: BTreeMap<TypedFormRef, TypedForm>,
     queries: BTreeMap<ic_core::QueryRef, OpenQuery>,
+    programs: BTreeMap<IProgRef, IProgArtifact>,
 }
 
 impl Catalog {
@@ -62,6 +64,12 @@ impl Catalog {
     fn insert_query(&mut self, query: OpenQuery) -> ic_core::QueryRef {
         let reference = query.query_ref().expect("query fixture must encode");
         self.queries.insert(reference, query);
+        reference
+    }
+
+    fn insert_program(&mut self, program: IProgArtifact) -> IProgRef {
+        let reference = program.iprog_ref().expect("program fixture must encode");
+        self.programs.insert(reference, program);
         reference
     }
 }
@@ -102,6 +110,12 @@ impl RelationCatalog for Catalog {
 impl OpenQueryCatalog for Catalog {
     fn resolve_open_query(&self, reference: ic_core::QueryRef) -> Option<OpenQuery> {
         self.queries.get(&reference).cloned()
+    }
+}
+
+impl IProgCatalog for Catalog {
+    fn resolve_iprog(&self, reference: IProgRef) -> Option<IProgArtifact> {
+        self.programs.get(&reference).cloned()
     }
 }
 
@@ -411,6 +425,104 @@ fn relation_use_is_a_distinct_typed_and_scoped_occurrence() {
     assert!(matches!(
         invalid_port.check(&catalog),
         Err(RelationUseCheckError::UnknownPort(_))
+    ));
+}
+
+#[test]
+fn first_order_program_check_rejects_forged_or_result_mismatched_continuations() {
+    let binding = binding(0x11);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let boolean = catalog.insert_type(TypeArtifact::new(binding, TyIR::Bool));
+    let unit_form = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x22)));
+    let boolean_form = catalog.insert_form(TypedForm::new(binding, boolean, artifact(0x23)));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("subject", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x33),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let query = catalog.insert_query(OpenQuery::new(
+        relation,
+        Vec::new(),
+        vec![OpenPort::new(
+            TypeSymbol::new("subject").expect("port name must be valid"),
+            DischargeMode::Probe,
+        )],
+        RelationUseContext::new(
+            ScopeRef::from_artifact_ref(artifact(0x44)),
+            ApplicabilityRef::from_artifact_ref(artifact(0x55)),
+            GrainRef::from_artifact_ref(artifact(0x66)),
+            HorizonRef::from_artifact_ref(artifact(0x77)),
+            DischargeMode::Pure,
+            SupportRef::from_artifact_ref(artifact(0x88)),
+            None,
+        ),
+    ));
+    let continuation = catalog.insert_program(IProgArtifact::new(
+        unit,
+        IProgIR::Return { value: unit_form },
+    ));
+    let checked = IProgArtifact::new(
+        unit,
+        IProgIR::Ask {
+            question: query,
+            environment: vec![ProgramBinding::new(
+                TypeSymbol::new("standing").expect("environment name must be valid"),
+                unit_form,
+            )],
+            answer_slot: TypeSymbol::new("answer").expect("answer slot must be valid"),
+            continuation,
+        },
+    );
+    assert!(checked.check(&catalog).is_ok());
+
+    let wrong_result_continuation = catalog.insert_program(IProgArtifact::new(
+        boolean,
+        IProgIR::Return {
+            value: boolean_form,
+        },
+    ));
+    let mismatched = IProgArtifact::new(
+        unit,
+        IProgIR::Ask {
+            question: query,
+            environment: vec![ProgramBinding::new(
+                TypeSymbol::new("standing").expect("environment name must be valid"),
+                unit_form,
+            )],
+            answer_slot: TypeSymbol::new("answer").expect("answer slot must be valid"),
+            continuation: wrong_result_continuation,
+        },
+    );
+    assert!(matches!(
+        mismatched.check(&catalog),
+        Err(IProgCheckError::ContinuationResultTypeMismatch { .. })
+    ));
+
+    let forged_reference = IProgRef::from_artifact_ref(artifact(0x99));
+    catalog.programs.insert(
+        forged_reference,
+        IProgArtifact::new(unit, IProgIR::Return { value: unit_form }),
+    );
+    let forged = IProgArtifact::new(
+        unit,
+        IProgIR::Ask {
+            question: query,
+            environment: vec![ProgramBinding::new(
+                TypeSymbol::new("standing").expect("environment name must be valid"),
+                unit_form,
+            )],
+            answer_slot: TypeSymbol::new("answer").expect("answer slot must be valid"),
+            continuation: forged_reference,
+        },
+    );
+    assert!(matches!(
+        forged.check(&catalog),
+        Err(IProgCheckError::ContinuationReferenceIdentityMismatch { .. })
     ));
 }
 

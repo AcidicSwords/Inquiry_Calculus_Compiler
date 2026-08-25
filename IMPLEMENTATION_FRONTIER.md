@@ -3,8 +3,8 @@
 **Accepted semantic authority:** Inquiry Calculus v1.1, Successor
 Reciprocal-Boundary / Positive-Negation Edition.
 
-**Accepted implementation state:** Phase 3 first-order program identity has an explicit
-environment on 2026-08-25.
+**Accepted implementation state:** Phase 3 first-order program structural checking passes on
+2026-08-25.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -20,27 +20,28 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before admitting program validation or execution, resolve:
+Before admitting a source-program transformation or execution, resolve:
 
-> What is the smallest recursively checked typed boundary for first-order `IProg::Ask`
-> continuations, including the answer binding and explicit environment, without interpreting
-> a query answer or executing a program?
+> What is the smallest capture-safe substitution and normalization contract for first-order
+> `IProg`, including an explicitly represented supported-answer binding, without treating a
+> selected answer as actual, checked, or warranted?
 
 The protected difference is visible in the accepted sources:
 
-- `IProg::Ask` now preserves a `QueryRef`, a unique ordered explicit environment of named
-  typed-form references, a named answer slot, and a continuation reference as canonical data.
-  It neither invokes a host closure nor reads captured state.
-- The remaining check must establish the result type of `Return`, the declared types of the
-  environment, the answer-slot binding derived from a checked query, and result-type agreement
-  across a referenced continuation without evaluating either relation or program.
-- Relation-expression validation and dependent binding remain a separate Phase 2 residual:
-  program checking must consume only the direct checked-query boundary it can establish.
+- `IProg::Ask` preserves a `QueryRef`, a unique ordered explicit environment of named typed-form
+  references, a named answer slot, and a continuation reference as canonical data. It neither
+  invokes a host closure nor reads captured state.
+- Structural checking now rehashes and checks the result type, return value, query, environment
+  values, and recursively referenced continuation. It rejects forged identities and divergent
+  continuation result types without evaluating relations or programs.
+- The remaining representation does not yet name `SuppAns(q)`, so it cannot perform actual
+  answer substitution. That absence is a live representation obligation, not permission to
+  treat a candidate, generated proposal, or selected completion as an answer.
 
-Different answers change whether first-order continuation input is statically inspectable or
-silently delegated to runtime policy. The next discriminator must reject a forged typed-form
-identity, an undeclared environment value, an answer-slot type incompatible with a checked query,
-and a continuation whose declared result type differs from the enclosing program.
+Different answers change whether answer-dependent source behavior is capture-safe and
+normalizable or silently delegated to runtime policy. The next discriminator must show that a
+substitution changes only the named answer binder, leaves same-named explicit environment values
+unambiguous, preserves result type and dependencies, and never manufactures semantic actuality.
 
 ## Known later questions
 
