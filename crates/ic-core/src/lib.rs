@@ -8,6 +8,7 @@ mod context;
 mod formula;
 mod query;
 mod relation;
+mod relation_expr;
 mod relation_use;
 mod ty;
 
@@ -30,6 +31,10 @@ pub use query::{
 pub use relation::{
     RELATION_SCHEMA_ARTIFACT_KIND, RELATION_SCHEMA_VERSION, RelationBodyIR, RelationCheckError,
     RelationError, RelationPort, RelationSchema,
+};
+pub use relation_expr::{
+    PortRename, RELATION_EXPR_ARTIFACT_KIND, RELATION_EXPR_SCHEMA_VERSION, RelationExprArtifact,
+    RelationExprError, RelationExprIR,
 };
 pub use relation_use::{
     PortBinding, RELATION_USE_ARTIFACT_KIND, RELATION_USE_SCHEMA_VERSION, RelationCatalog,

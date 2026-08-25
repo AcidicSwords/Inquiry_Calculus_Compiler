@@ -4,10 +4,10 @@ use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
     DischargeMode, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef,
     OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError, PortBinding, RelationBodyIR,
-    RelationCatalog, RelationCheckError, RelationError, RelationPort, RelationRef, RelationSchema,
-    RelationSignature, RelationUse, RelationUseCheckError, RelationUseContext, ScopeRef,
-    SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm,
-    TypedFormRef,
+    RelationCatalog, RelationCheckError, RelationError, RelationExprArtifact, RelationExprIR,
+    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
+    RelationUseCheckError, RelationUseContext, ScopeRef, SupportRef, TyIR, TypeArtifact,
+    TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
 };
 use serde::Deserialize;
 
@@ -225,6 +225,48 @@ fn open_query_matches_independent_canonical_vector() {
     assert_eq!(
         OpenQuery::from_envelope(&envelope).expect("query fixture must decode"),
         query
+    );
+}
+
+#[test]
+fn canonical_relation_expression_grammar_round_trips_without_evaluation() {
+    let relation = RelationRef::from_artifact_ref(artifact(0x11));
+    let form = TypedFormRef::from_artifact_ref(artifact(0x22));
+    let guard = FormulaRef::from_artifact_ref(artifact(0x33));
+    let name = |value| TypeSymbol::new(value).expect("port name must be valid");
+    let expression = RelationExprIR::Guard {
+        source: Box::new(RelationExprIR::Rename {
+            source: Box::new(RelationExprIR::Hide {
+                source: Box::new(RelationExprIR::Expose {
+                    source: Box::new(RelationExprIR::Join {
+                        left: Box::new(RelationExprIR::Bind {
+                            source: Box::new(RelationExprIR::Relation(relation)),
+                            bindings: vec![PortBinding::new(name("left"), form)],
+                        }),
+                        right: Box::new(RelationExprIR::Relation(relation)),
+                    }),
+                    ports: vec![name("left")],
+                }),
+                ports: vec![name("hidden")],
+            }),
+            renames: vec![ic_core::PortRename::new(name("left"), name("renamed"))],
+        }),
+        guard,
+    };
+    let artifact = RelationExprArtifact::new(expression);
+    let envelope = artifact.envelope().expect("expression must encode");
+    assert_eq!(
+        RelationExprArtifact::from_envelope(&envelope).expect("expression must decode"),
+        artifact
+    );
+    assert_eq!(
+        artifact.referenced_artifacts(),
+        vec![
+            relation.as_artifact_ref(),
+            form.as_artifact_ref(),
+            relation.as_artifact_ref(),
+            guard.as_artifact_ref(),
+        ]
     );
 }
 

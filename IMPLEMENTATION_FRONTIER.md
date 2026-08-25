@@ -21,9 +21,8 @@ inferring them from opaque payload bytes.
 
 Before completing Phase 2, resolve:
 
-> What is the smallest canonical data-only representation of composition and dependent binding
-> now that schema-order normalization, `Bind`, `Expose`, candidate-only `Plug`, and
-> source-revalidated completion-fiber views preserve the checked direct partial-binding form?
+> What is the smallest typed validation boundary for canonical relation expressions and dependent
+> binding now that the data-only source grammar preserves composition syntax without evaluation?
 
 The protected difference is visible in the accepted sources:
 
@@ -129,4 +128,6 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
   the fiber nor identifies any candidate as a member.
 - Direct normalization reorders bound and open ports by the checked schema signature and is
   idempotent; it changes no bindings, modes, relation body, or completion claim.
+- RelationExprArtifact canonically stores `Relation`, `Bind`, `Join`, `Expose`, `Hide`, `Rename`,
+  and `Guard` as data-only syntax with explicit dependencies; it does not evaluate them.
 - A fixed independently calculated direct OpenQuery payload/envelope/SHA-256 fixture passes.

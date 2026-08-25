@@ -57,13 +57,14 @@ or passing.
 | P2-QUERY-005 complete typed `Plug` produces a candidate assignment, not a relation result | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 | P2-QUERY-006 completion-fiber view revalidates its source query without selecting a completion | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 | P2-QUERY-007 direct normalization sorts to schema port order and is idempotent | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
+| P2-REL-006 canonical data-only relation-expression grammar round trip | PASS | `canonical_relation_expression_grammar_round_trips_without_evaluation` |
 
 ## Pending specification and plan categories
 
 | Category | Status | First planned phase |
 |---|---|---|
 | Typed forms, typed reification, and type verification | PARTIAL | Phase 1: canonical type artifacts, typed-form declarations, and structural checks pass; binding-native term/reification semantics remain pending |
-| Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: direct `OpenQuery` partial bindings, checked `Bind`/`Expose`, candidate-only `Plug`, direct schema-order normalization, a derived completion-fiber view, formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; composition and dependent binding remain pending |
+| Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: direct `OpenQuery` partial bindings, data-only relation expressions, checked `Bind`/`Expose`, candidate-only `Plug`, direct schema-order normalization, a derived completion-fiber view, formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; typed expression validation and dependent binding remain pending |
 | First-order programs and proposal/actuality/authority separation | PENDING | Phase 3 |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4 |
 | Typed negation and coverage separation, fixtures 14-24 | PENDING | Phase 4 |
