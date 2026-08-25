@@ -3,11 +3,15 @@ use std::collections::BTreeMap;
 use ic_core::{
     ArtifactRef, BindingVersionRef, FiniteCellComparison, FiniteCellError,
     FiniteIncompatibilityError, FiniteIncompatibilityResult, FiniteIncompatibilityTable,
-    FiniteObservation, FormulaArtifact, FormulaCatalog, FormulaRef, RelationRef, RelationSignature,
-    TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypedFiniteIncompatibilityError,
-    TypedFiniteIncompatibilityResult, TypedFiniteIncompatibilityTable, TypedFiniteObservation,
-    TypedForm, TypedFormRef, check_finite_incompatibility, check_typed_finite_incompatibility,
-    compare_finite_observation_cells,
+    FiniteObservation, FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog,
+    FormulaRef, GrainRef, HorizonRef, PortBinding, RelationBodyIR, RelationCatalog, RelationPort,
+    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef,
+    TypeSymbol, TypedFiniteIncompatibilityError, TypedFiniteIncompatibilityResult,
+    TypedFiniteIncompatibilityTable, TypedFiniteIncompatibilityUseError,
+    TypedFiniteIncompatibilityUseResult, TypedFiniteObservation, TypedForm, TypedFormRef,
+    check_finite_incompatibility, check_typed_finite_incompatibility,
+    check_typed_finite_incompatibility_use, compare_finite_observation_cells,
 };
 
 fn artifact(value: u8) -> ArtifactRef {
@@ -18,6 +22,9 @@ fn artifact(value: u8) -> ArtifactRef {
 struct TypedCatalog {
     types: BTreeMap<TypeRef, TypeArtifact>,
     forms: BTreeMap<TypedFormRef, TypedForm>,
+    schemas: BTreeMap<RelationRef, RelationSchema>,
+    signatures: BTreeMap<RelationRef, RelationSignature>,
+    relation_uses: BTreeMap<RelationUseRef, RelationUse>,
 }
 
 impl TypedCatalog {
@@ -35,6 +42,67 @@ impl TypedCatalog {
             .typed_form_ref()
             .expect("typed-form fixture must encode");
         self.forms.insert(reference, typed_form);
+        reference
+    }
+
+    fn incompatibility_use(
+        &mut self,
+        source: TypedFormRef,
+        candidate: TypedFormRef,
+        mode: ic_core::DischargeMode,
+    ) -> RelationUseRef {
+        let source_form = self
+            .forms
+            .get(&source)
+            .expect("source form must be available");
+        let candidate_form = self
+            .forms
+            .get(&candidate)
+            .expect("candidate form must be available");
+        let binding = source_form.binding();
+        assert_eq!(candidate_form.binding(), binding);
+        let schema = RelationSchema::new(
+            binding,
+            vec![
+                RelationPort::new(
+                    TypeSymbol::new("source").expect("valid port"),
+                    source_form.ty(),
+                ),
+                RelationPort::new(
+                    TypeSymbol::new("candidate").expect("valid port"),
+                    candidate_form.ty(),
+                ),
+            ],
+            RelationBodyIR::BindingNative {
+                contract: artifact(0x70),
+            },
+            Vec::new(),
+            Vec::new(),
+        );
+        let relation = schema.relation_ref().expect("schema must encode");
+        self.signatures
+            .insert(relation, schema.signature().expect("signature must encode"));
+        self.schemas.insert(relation, schema);
+        let relation_use = RelationUse::new(
+            relation,
+            vec![
+                PortBinding::new(TypeSymbol::new("source").expect("valid port"), source),
+                PortBinding::new(TypeSymbol::new("candidate").expect("valid port"), candidate),
+            ],
+            RelationUseContext::new(
+                ScopeRef::from_artifact_ref(artifact(0x71)),
+                ic_core::ApplicabilityRef::from_artifact_ref(artifact(0x72)),
+                GrainRef::from_artifact_ref(artifact(0x73)),
+                HorizonRef::from_artifact_ref(artifact(0x74)),
+                mode,
+                SupportRef::from_artifact_ref(artifact(0x75)),
+                None,
+            ),
+        );
+        let reference = relation_use
+            .relation_use_ref()
+            .expect("relation use must encode");
+        self.relation_uses.insert(reference, relation_use);
         reference
     }
 }
@@ -62,7 +130,19 @@ impl FormulaCatalog for TypedCatalog {
     }
 
     fn resolve_relation_signature(&self, _reference: RelationRef) -> Option<RelationSignature> {
-        None
+        self.signatures.get(&_reference).cloned()
+    }
+}
+
+impl RelationCatalog for TypedCatalog {
+    fn resolve_relation_schema(&self, reference: RelationRef) -> Option<RelationSchema> {
+        self.schemas.get(&reference).cloned()
+    }
+}
+
+impl FiniteTypedIncompatibilityUseCatalog for TypedCatalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
+        self.relation_uses.get(&reference).cloned()
     }
 }
 
@@ -237,6 +317,71 @@ fn typed_finite_incompatibility_rehashes_checked_cross_typed_pairs() {
             TypedFiniteObservation::Observed(candidate),
         ),
         Ok(TypedFiniteIncompatibilityResult::Unknown)
+    ));
+}
+
+#[test]
+fn typed_finite_incompatibility_requires_its_declared_use_to_bind_the_positive_pair() {
+    let mut catalog = TypedCatalog::default();
+    let binding = BindingVersionRef::from_artifact_ref(artifact(60));
+    let source = catalog.typed_form(binding, TyIR::Bool, artifact(61));
+    let candidate = catalog.typed_form(binding, TyIR::Nat, artifact(62));
+    let unlisted = catalog.typed_form(binding, TyIR::Unit, artifact(63));
+    let table = TypedFiniteIncompatibilityTable::new(vec![(source, candidate)])
+        .expect("one typed pair must be valid");
+    let matching_use =
+        catalog.incompatibility_use(source, candidate, ic_core::DischargeMode::Check);
+    assert!(matches!(
+        check_typed_finite_incompatibility_use(
+            &table,
+            &catalog,
+            matching_use,
+            TypedFiniteObservation::Observed(source),
+            TypedFiniteObservation::Observed(candidate),
+        ),
+        Ok(TypedFiniteIncompatibilityUseResult::Incompatible(witness))
+            if witness.pair().source_value() == source
+                && witness.pair().candidate_value() == candidate
+                && witness.incompatibility_use() == matching_use
+    ));
+
+    let mismatched_use =
+        catalog.incompatibility_use(source, unlisted, ic_core::DischargeMode::Check);
+    assert!(matches!(
+        check_typed_finite_incompatibility_use(
+            &table,
+            &catalog,
+            mismatched_use,
+            TypedFiniteObservation::Observed(source),
+            TypedFiniteObservation::Observed(candidate),
+        ),
+        Err(TypedFiniteIncompatibilityUseError::ClaimedPairNotBound(reference))
+            if reference == mismatched_use
+    ));
+
+    assert!(matches!(
+        check_typed_finite_incompatibility_use(
+            &table,
+            &catalog,
+            mismatched_use,
+            TypedFiniteObservation::Observed(source),
+            TypedFiniteObservation::Observed(unlisted),
+        ),
+        Ok(TypedFiniteIncompatibilityUseResult::NoWitness)
+    ));
+
+    let generated_use =
+        catalog.incompatibility_use(source, candidate, ic_core::DischargeMode::Generate);
+    assert!(matches!(
+        check_typed_finite_incompatibility_use(
+            &table,
+            &catalog,
+            generated_use,
+            TypedFiniteObservation::Observed(source),
+            TypedFiniteObservation::Observed(candidate),
+        ),
+        Err(TypedFiniteIncompatibilityUseError::GeneratedIncompatibilityUse(reference))
+            if reference == generated_use
     ));
 }
 

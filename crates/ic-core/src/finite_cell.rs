@@ -10,7 +10,9 @@ use std::collections::BTreeSet;
 use thiserror::Error;
 
 use crate::{
-    ArtifactRef, FormulaCatalog, TypeCatalog, TypeCheckError, TypeError, TypedForm, TypedFormRef,
+    ArtifactRef, FormulaCatalog, RelationCatalog, RelationUse, RelationUseCheckError,
+    RelationUseError, RelationUseRef, TypeCatalog, TypeCheckError, TypeError, TypedForm,
+    TypedFormRef,
 };
 
 /// One coordinate of a finite represented observation.
@@ -332,6 +334,45 @@ pub enum TypedFiniteIncompatibilityResult {
     Unknown,
 }
 
+/// A positive typed finite pair tied to the declared incompatibility relation use that binds it.
+///
+/// This is still only caller-declared finite evidence. The relation use is structurally checked
+/// and cannot be a generated route, but this witness does not admit the relation as standing,
+/// establish its support, relevance, coverage, non-circularity, or departure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct TypedFiniteIncompatibilityUseWitness {
+    pair: TypedFiniteIncompatibilityWitness,
+    incompatibility_use: RelationUseRef,
+}
+
+impl TypedFiniteIncompatibilityUseWitness {
+    #[must_use]
+    pub const fn pair(self) -> TypedFiniteIncompatibilityWitness {
+        self.pair
+    }
+
+    #[must_use]
+    pub const fn incompatibility_use(self) -> RelationUseRef {
+        self.incompatibility_use
+    }
+}
+
+/// The outcome of checking a typed finite pair against a declared incompatibility use.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum TypedFiniteIncompatibilityUseResult {
+    /// A listed typed pair is bound by the named non-generated incompatibility use.
+    Incompatible(TypedFiniteIncompatibilityUseWitness),
+    /// Both values are established, but the finite table gives no positive pair witness.
+    NoWitness,
+    /// At least one value remains unknown through the caller's declared route.
+    Unknown,
+}
+
+/// The catalog needed to tie a finite incompatibility pair to one declared relation occurrence.
+pub trait FiniteTypedIncompatibilityUseCatalog: RelationCatalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse>;
+}
+
 /// Checks a typed finite pair without inferring standing incompatibility or departure.
 ///
 /// The table and both observed declarations are resolved, rehashed, and type-checked. A listed
@@ -361,6 +402,63 @@ pub fn check_typed_finite_incompatibility<C: FiniteTypedObservationCatalog>(
         })
     } else {
         TypedFiniteIncompatibilityResult::NoWitness
+    })
+}
+
+/// Checks a positive typed finite pair against its named incompatibility use.
+///
+/// This adds exact use identity and pair membership to [`check_typed_finite_incompatibility`].
+/// Generic relation uses do not yet expose typed left/right incompatibility roles, so this cannot
+/// check port orientation. It never turns finite-table membership into standing/admitted
+/// incompatibility, a completed observation route, or a departure witness.
+pub fn check_typed_finite_incompatibility_use<C: FiniteTypedIncompatibilityUseCatalog>(
+    table: &TypedFiniteIncompatibilityTable,
+    catalog: &C,
+    incompatibility_use: RelationUseRef,
+    source: TypedFiniteObservation,
+    candidate: TypedFiniteObservation,
+) -> Result<TypedFiniteIncompatibilityUseResult, TypedFiniteIncompatibilityUseError> {
+    let relation_use = catalog.resolve_relation_use(incompatibility_use).ok_or(
+        TypedFiniteIncompatibilityUseError::UnresolvedRelationUse(incompatibility_use),
+    )?;
+    let calculated = relation_use.relation_use_ref()?;
+    if calculated != incompatibility_use {
+        return Err(
+            TypedFiniteIncompatibilityUseError::RelationUseReferenceIdentityMismatch {
+                reference: incompatibility_use,
+                calculated,
+            },
+        );
+    }
+    relation_use.check(catalog)?;
+    if relation_use.mode() == crate::DischargeMode::Generate {
+        return Err(
+            TypedFiniteIncompatibilityUseError::GeneratedIncompatibilityUse(incompatibility_use),
+        );
+    }
+    let result = check_typed_finite_incompatibility(table, catalog, source, candidate)?;
+    Ok(match result {
+        TypedFiniteIncompatibilityResult::Incompatible(pair) => {
+            if !crate::departure::relation_use_binds_pair(
+                &relation_use,
+                pair.source_value(),
+                pair.candidate_value(),
+            ) {
+                return Err(TypedFiniteIncompatibilityUseError::ClaimedPairNotBound(
+                    incompatibility_use,
+                ));
+            }
+            TypedFiniteIncompatibilityUseResult::Incompatible(
+                TypedFiniteIncompatibilityUseWitness {
+                    pair,
+                    incompatibility_use,
+                },
+            )
+        }
+        TypedFiniteIncompatibilityResult::NoWitness => {
+            TypedFiniteIncompatibilityUseResult::NoWitness
+        }
+        TypedFiniteIncompatibilityResult::Unknown => TypedFiniteIncompatibilityUseResult::Unknown,
     })
 }
 
@@ -427,4 +525,26 @@ pub enum TypedFiniteIncompatibilityError {
         #[source]
         source: TypeCheckError,
     },
+}
+
+/// Errors while associating typed finite incompatibility evidence with a declared use.
+#[derive(Debug, Error)]
+pub enum TypedFiniteIncompatibilityUseError {
+    #[error(transparent)]
+    Finite(#[from] TypedFiniteIncompatibilityError),
+    #[error(transparent)]
+    RelationUse(#[from] RelationUseError),
+    #[error(transparent)]
+    RelationUseCheck(#[from] RelationUseCheckError),
+    #[error("incompatibility use {0} is unavailable")]
+    UnresolvedRelationUse(RelationUseRef),
+    #[error("relation use {reference} hashes to {calculated}, not its claimed identity")]
+    RelationUseReferenceIdentityMismatch {
+        reference: RelationUseRef,
+        calculated: RelationUseRef,
+    },
+    #[error("generated relation use {0} cannot supply positive incompatibility evidence")]
+    GeneratedIncompatibilityUse(RelationUseRef),
+    #[error("incompatibility use {0} does not bind the positively witnessed ordered pair")]
+    ClaimedPairNotBound(RelationUseRef),
 }

@@ -90,10 +90,13 @@ pub use fiber::{
 pub use finite_cell::{
     FiniteCellComparison, FiniteCellError, FiniteCellSeparator, FiniteIncompatibilityError,
     FiniteIncompatibilityResult, FiniteIncompatibilityTable, FiniteIncompatibilityWitness,
-    FiniteObservation, FiniteTypedObservationCatalog, TypedFiniteIncompatibilityError,
-    TypedFiniteIncompatibilityResult, TypedFiniteIncompatibilityTable,
+    FiniteObservation, FiniteTypedIncompatibilityUseCatalog, FiniteTypedObservationCatalog,
+    TypedFiniteIncompatibilityError, TypedFiniteIncompatibilityResult,
+    TypedFiniteIncompatibilityTable, TypedFiniteIncompatibilityUseError,
+    TypedFiniteIncompatibilityUseResult, TypedFiniteIncompatibilityUseWitness,
     TypedFiniteIncompatibilityWitness, TypedFiniteObservation, check_finite_incompatibility,
-    check_typed_finite_incompatibility, compare_finite_observation_cells,
+    check_typed_finite_incompatibility, check_typed_finite_incompatibility_use,
+    compare_finite_observation_cells,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,

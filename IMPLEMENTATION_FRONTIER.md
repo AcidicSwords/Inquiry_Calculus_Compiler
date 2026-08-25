@@ -31,10 +31,11 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> Given an event-record-linked decoded candidate structurally matched to its declared observation
-> use, what is the smallest typed incompatibility-certificate and admission boundary that can
-> connect the two observations without turning failed search, projection, incomplete coverage, or
-> a caller-declared table into exteriority or silently collapsing semantic and execution coverage?
+> Given a typed finite incompatibility pair tied to a named non-generated relation use, what is the
+> smallest typed role, provenance, and admission boundary that can establish its standing,
+> determination relevance, non-circularity, and oriented use without turning failed search,
+> projection, incomplete coverage, or caller-declared data into exteriority or silently collapsing
+> semantic and execution coverage?
 
 The protected difference is visible in the accepted sources:
 
@@ -104,6 +105,13 @@ The protected difference is visible in the accepted sources:
   retains `Unknown` for a missing value, and rejects forged or invalid declarations explicitly.
   It does not actualize observations, make the table standing, prove incompatibility relevance,
   coverage, support, or non-circularity, link to a relation use, or establish departure/exteriority.
+- `check_typed_finite_incompatibility_use` now preserves the next structural distinction: it
+  rehashes and checks a named incompatibility `RelationUse`, rejects a generated route, and only
+  returns its positive finite-pair witness when that use binds both observed typed forms. An
+  unlisted pair remains `NoWitness`; an unknown input remains `Unknown`. Generic `RelationUse`
+  data has no typed left/right incompatibility-port roles, so this proves pair membership, not
+  orientation. It neither admits the table or use, connects `SupportRef` to the standing engine,
+  establishes relevance/non-circularity/coverage, evaluates a relation, or establishes departure.
 - `TaggedExteriorClaim` now preserves the next dependent role as a derived view: immutable
   negation-use tag, source, candidate, departure-witness, and separately typed execution-coverage
   identity. Its checker rehashes and structurally checks the named use and witness, then requires
@@ -287,9 +295,10 @@ The protected difference is visible in the accepted sources:
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The decoded
-candidate/observation-use equality is now checked structurally. The next discriminator must still
-reject a purported departure whose incompatibility pair lacks a separately admitted positive
-witness or whose result only has caller-declared finite-table support.
+candidate/observation-use equality and finite-pair/use membership are now checked structurally.
+The next discriminator must reject a purported departure whose incompatibility use lacks typed
+role orientation, separately admitted standing/relevance/non-circularity evidence, or more than
+caller-declared finite-table support.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
 `T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty
