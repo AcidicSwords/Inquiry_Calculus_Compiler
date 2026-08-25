@@ -15,7 +15,8 @@ use crate::{
     ArtifactError, ArtifactKind, ArtifactRef, CompletionCandidateCatalog,
     CompletionCandidateCheckError, CompletionCandidateError, CompletionCandidateRef, DecoderRef,
     EventRef, OpenQueryCheckError, OpenQueryError, ProbeOperatorError, QueryRef, RawReturnCatalog,
-    RawReturnError, RawReturnRef, ResolutionCatalog, ResolutionPathCheckError, ResolutionPathError,
+    RawReturnError, RawReturnRef, RelationUse, RelationUseCheckError, RelationUseError,
+    RelationUseRef, ResolutionCatalog, ResolutionPathCheckError, ResolutionPathError,
     ResolutionPathIR, ResolutionPathRef, TypeCatalog, TypeCheckError, TypeError, TypeRef,
     check_actual_event,
 };
@@ -111,6 +112,19 @@ pub struct DecodedCandidateSet {
     candidates: Vec<CompletionCandidateRef>,
 }
 
+/// A derived structural link from one decoded completion candidate to one declared observation use.
+///
+/// This view establishes only that the complete candidate named by a checked finite decoder result
+/// spells the same relation occurrence and context as the declared use. It does not execute or
+/// evaluate that relation, establish actual dispatch, admit its support, or establish standing,
+/// incompatibility, or departure.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DecodedObservationUse {
+    decoded: DecodedCandidateSet,
+    candidate: CompletionCandidateRef,
+    observation: RelationUseRef,
+}
+
 impl DecodedCandidateSet {
     #[must_use]
     pub const fn event(&self) -> EventRef {
@@ -131,6 +145,23 @@ impl DecodedCandidateSet {
     #[must_use]
     pub fn candidates(&self) -> &[CompletionCandidateRef] {
         &self.candidates
+    }
+}
+
+impl DecodedObservationUse {
+    #[must_use]
+    pub const fn decoded(&self) -> &DecodedCandidateSet {
+        &self.decoded
+    }
+
+    #[must_use]
+    pub const fn candidate(&self) -> CompletionCandidateRef {
+        self.candidate
+    }
+
+    #[must_use]
+    pub const fn observation(&self) -> RelationUseRef {
+        self.observation
     }
 }
 
@@ -166,6 +197,104 @@ pub trait ActualDecodeCatalog:
 impl<T> ActualDecodeCatalog for T where
     T: ActualEventCatalog + FiniteDecoderCatalog + ResolutionCatalog
 {
+}
+
+/// The catalog needed to connect a decoder result with one declared relation occurrence.
+pub trait ObservationResultCatalog: ActualDecodeCatalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse>;
+}
+
+/// Checks the exact structural correspondence between one decoded candidate and one relation use.
+///
+/// The candidate must be among `decoded`'s preserved alternatives. Its complete binding assignment
+/// and the use's binding assignment must agree exactly, as must the source query's relation and
+/// contextual support record. The result is a checked derived view, never a new artifact or a
+/// claim that the relation was observed, true, accepted, or a departure witness.
+pub fn match_decoded_observation_use<C: ObservationResultCatalog>(
+    decoded: &DecodedCandidateSet,
+    candidate_ref: CompletionCandidateRef,
+    observation_ref: RelationUseRef,
+    catalog: &C,
+) -> Result<DecodedObservationUse, DecodedObservationError> {
+    if !decoded.candidates.contains(&candidate_ref) {
+        return Err(DecodedObservationError::CandidateNotDecoded {
+            candidate: candidate_ref,
+            event: decoded.event,
+        });
+    }
+    let candidate = catalog
+        .resolve_completion_candidate(candidate_ref)
+        .ok_or(DecodedObservationError::UnresolvedCandidate(candidate_ref))?;
+    let calculated_candidate = candidate.completion_candidate_ref()?;
+    if calculated_candidate != candidate_ref {
+        return Err(DecodedObservationError::CandidateIdentityMismatch {
+            reference: candidate_ref,
+            calculated: calculated_candidate,
+        });
+    }
+    candidate.check(catalog)?;
+    if candidate.source() != decoded.query {
+        return Err(DecodedObservationError::CandidateQueryMismatch {
+            decoded: decoded.query,
+            candidate: candidate.source(),
+        });
+    }
+
+    let query = crate::OpenQueryCatalog::resolve_open_query(catalog, decoded.query)
+        .ok_or(DecodedObservationError::UnresolvedQuery(decoded.query))?;
+    let calculated_query = query.query_ref()?;
+    if calculated_query != decoded.query {
+        return Err(DecodedObservationError::QueryIdentityMismatch {
+            reference: decoded.query,
+            calculated: calculated_query,
+        });
+    }
+    query.check(catalog)?;
+
+    let observation = catalog.resolve_relation_use(observation_ref).ok_or(
+        DecodedObservationError::UnresolvedObservation(observation_ref),
+    )?;
+    let calculated_observation = observation.relation_use_ref()?;
+    if calculated_observation != observation_ref {
+        return Err(DecodedObservationError::ObservationIdentityMismatch {
+            reference: observation_ref,
+            calculated: calculated_observation,
+        });
+    }
+    observation.check(catalog)?;
+    if observation.relation() != query.relation() {
+        return Err(DecodedObservationError::RelationMismatch {
+            query: query.relation(),
+            observation: observation.relation(),
+        });
+    }
+    if !same_bindings(candidate.bindings(), observation.bindings()) {
+        return Err(DecodedObservationError::BindingMismatch);
+    }
+    if observation.scope() != query.context().scope()
+        || observation.applicability() != query.context().applicability()
+        || observation.grain() != query.context().grain()
+        || observation.horizon() != query.context().horizon()
+        || observation.mode() != query.context().mode()
+        || observation.support() != query.context().support()
+        || observation.warrant() != query.context().warrant()
+    {
+        return Err(DecodedObservationError::ContextMismatch);
+    }
+    Ok(DecodedObservationUse {
+        decoded: decoded.clone(),
+        candidate: candidate_ref,
+        observation: observation_ref,
+    })
+}
+
+fn same_bindings(candidate: &[crate::PortBinding], observation: &[crate::PortBinding]) -> bool {
+    candidate.len() == observation.len()
+        && candidate.iter().all(|expected| {
+            observation.iter().any(|actual| {
+                actual.port() == expected.port() && actual.value() == expected.value()
+            })
+        })
 }
 
 impl FiniteDecoder {
@@ -688,6 +817,63 @@ pub enum FiniteDecoderCheckError {
         decoder: QueryRef,
         candidate: QueryRef,
     },
+}
+
+/// Failures while connecting an event-record-linked decoded candidate to an observation use.
+#[derive(Debug, Error)]
+pub enum DecodedObservationError {
+    #[error(transparent)]
+    Candidate(#[from] CompletionCandidateError),
+    #[error(transparent)]
+    CandidateCheck(#[from] CompletionCandidateCheckError),
+    #[error(transparent)]
+    Query(#[from] OpenQueryError),
+    #[error(transparent)]
+    QueryCheck(#[from] OpenQueryCheckError),
+    #[error(transparent)]
+    Observation(#[from] RelationUseError),
+    #[error(transparent)]
+    ObservationCheck(#[from] RelationUseCheckError),
+    #[error("decoded event {event} does not preserve candidate {candidate}")]
+    CandidateNotDecoded {
+        candidate: CompletionCandidateRef,
+        event: EventRef,
+    },
+    #[error("completion candidate {0} is unavailable")]
+    UnresolvedCandidate(CompletionCandidateRef),
+    #[error("completion candidate {reference} hashes to {calculated}, not its claimed identity")]
+    CandidateIdentityMismatch {
+        reference: CompletionCandidateRef,
+        calculated: CompletionCandidateRef,
+    },
+    #[error("decoded query {decoded} does not match candidate source {candidate}")]
+    CandidateQueryMismatch {
+        decoded: QueryRef,
+        candidate: QueryRef,
+    },
+    #[error("decoded query {0} is unavailable")]
+    UnresolvedQuery(QueryRef),
+    #[error("query {reference} hashes to {calculated}, not its claimed identity")]
+    QueryIdentityMismatch {
+        reference: QueryRef,
+        calculated: QueryRef,
+    },
+    #[error("declared observation use {0} is unavailable")]
+    UnresolvedObservation(RelationUseRef),
+    #[error("observation use {reference} hashes to {calculated}, not its claimed identity")]
+    ObservationIdentityMismatch {
+        reference: RelationUseRef,
+        calculated: RelationUseRef,
+    },
+    #[error("observation relation {observation} does not match decoded query relation {query}")]
+    RelationMismatch {
+        query: crate::RelationRef,
+        observation: crate::RelationRef,
+    },
+    #[error("observation bindings do not exactly match the decoded candidate")]
+    BindingMismatch,
+    #[error("observation context does not exactly match the decoded query")]
+    ContextMismatch,
 }
 
 #[derive(Debug, Error)]

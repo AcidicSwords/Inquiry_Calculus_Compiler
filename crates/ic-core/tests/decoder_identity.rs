@@ -3,16 +3,18 @@ use std::collections::BTreeMap;
 use ic_core::{
     ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef,
     ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, CompletionCandidate,
-    CompletionCandidateCatalog, CompletionCandidateRef, DecoderRef, DeterminationPresentationRef,
-    DischargeMode, FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
-    FormulaArtifact, FormulaCatalog, FormulaRef, GrainRef, HorizonRef, OpenPort, OpenQuery,
-    OpenQueryCatalog, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
-    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
-    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
-    RelationUseContext, ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef,
+    CompletionCandidateCatalog, CompletionCandidateRef, DecodedObservationError, DecoderRef,
+    DeterminationPresentationRef, DischargeMode, FINITE_DECODER_ARTIFACT_KIND,
+    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
+    FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProvenanceRef, QueryRef,
+    RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort,
+    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef,
     RouteRef, ScopeRef, StateRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
     TypeRef, TypeSymbol, TypedForm, TypedFormRef, decode_actual_event,
+    match_decoded_observation_use,
 };
 
 #[derive(Clone, Default)]
@@ -21,6 +23,7 @@ struct Catalog {
     forms: BTreeMap<TypedFormRef, TypedForm>,
     schemas: BTreeMap<RelationRef, RelationSchema>,
     signatures: BTreeMap<RelationRef, RelationSignature>,
+    relation_uses: BTreeMap<RelationUseRef, RelationUse>,
     queries: BTreeMap<QueryRef, OpenQuery>,
     candidates: BTreeMap<CompletionCandidateRef, CompletionCandidate>,
     raw_returns: BTreeMap<RawReturnRef, RawReturn>,
@@ -56,6 +59,14 @@ impl Catalog {
     fn insert_query(&mut self, query: OpenQuery) -> QueryRef {
         let reference = query.query_ref().expect("query must encode");
         self.queries.insert(reference, query);
+        reference
+    }
+
+    fn insert_relation_use(&mut self, relation_use: RelationUse) -> RelationUseRef {
+        let reference = relation_use
+            .relation_use_ref()
+            .expect("relation use must encode");
+        self.relation_uses.insert(reference, relation_use);
         reference
     }
 
@@ -169,6 +180,12 @@ impl ActualEventCatalog for Catalog {
     }
 }
 
+impl ObservationResultCatalog for Catalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
+        self.relation_uses.get(&reference).cloned()
+    }
+}
+
 fn artifact(byte: u8) -> ArtifactRef {
     ArtifactRef::from_bytes([byte; 32])
 }
@@ -184,6 +201,8 @@ struct Fixture {
     other_type: TypeRef,
     raw_type: TypeRef,
     candidate: CompletionCandidateRef,
+    alternate_answer: TypedFormRef,
+    observation: RelationUseRef,
     decoded_raw: RawReturnRef,
     undefined_raw: RawReturnRef,
     unknown_raw: RawReturnRef,
@@ -198,6 +217,7 @@ fn fixture() -> Fixture {
     let raw_type = catalog.insert_type(TypeArtifact::new(binding, TyIR::Raw(unit)));
     let known = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x11)));
     let answer = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x12)));
+    let alternate_answer = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x27)));
     let relation = catalog.insert_schema(RelationSchema::new(
         binding,
         vec![port("known", unit), port("answer", unit)],
@@ -209,6 +229,15 @@ fn fixture() -> Fixture {
     ));
     let grain = GrainRef::from_artifact_ref(artifact(0x14));
     let horizon = HorizonRef::from_artifact_ref(artifact(0x15));
+    let context = RelationUseContext::new(
+        ScopeRef::from_artifact_ref(artifact(0x16)),
+        ApplicabilityRef::from_artifact_ref(artifact(0x17)),
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        SupportRef::from_artifact_ref(artifact(0x18)),
+        None,
+    );
     let open_query = OpenQuery::new(
         relation,
         vec![PortBinding::new(
@@ -219,15 +248,7 @@ fn fixture() -> Fixture {
             TypeSymbol::new("answer").expect("port name must be valid"),
             DischargeMode::Probe,
         )],
-        RelationUseContext::new(
-            ScopeRef::from_artifact_ref(artifact(0x16)),
-            ApplicabilityRef::from_artifact_ref(artifact(0x17)),
-            grain,
-            horizon,
-            DischargeMode::Probe,
-            SupportRef::from_artifact_ref(artifact(0x18)),
-            None,
-        ),
+        context,
     );
     let candidate = open_query
         .plug(
@@ -240,6 +261,20 @@ fn fixture() -> Fixture {
         .expect("candidate must be constructible");
     let query = catalog.insert_query(open_query);
     let candidate = catalog.insert_candidate(candidate);
+    let observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port name must be valid"),
+                known,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                answer,
+            ),
+        ],
+        context,
+    ));
     let decoded_raw = catalog.insert_raw_return(RawReturn::new(vec![1]));
     let undefined_raw = catalog.insert_raw_return(RawReturn::new(vec![2]));
     let unknown_raw = catalog.insert_raw_return(RawReturn::new(vec![3]));
@@ -298,6 +333,8 @@ fn fixture() -> Fixture {
         other_type,
         raw_type,
         candidate,
+        alternate_answer,
+        observation,
         decoded_raw,
         undefined_raw,
         unknown_raw,
@@ -409,10 +446,67 @@ fn finite_decode_links_an_event_record_to_its_direct_decoder_route() {
 
     let decoded = decode_actual_event(&fixture.event, &decoder, path_ref, &fixture.catalog)
         .expect("the realized raw return must decode through its named route");
+    let set = match decoded {
+        ActualDecodeResult::Decoded(set) => set,
+        other => panic!("expected a decoded candidate set, got {other:?}"),
+    };
+    assert_eq!(set.query(), fixture.query);
+    assert_eq!(set.candidates(), [fixture.candidate]);
+    let observation = match_decoded_observation_use(
+        &set,
+        fixture.candidate,
+        fixture.observation,
+        &fixture.catalog,
+    )
+    .expect("the complete decoded candidate must spell its declared observation use");
+    assert_eq!(observation.decoded(), &set);
+    assert_eq!(observation.candidate(), fixture.candidate);
+    assert_eq!(observation.observation(), fixture.observation);
+
+    let query = OpenQueryCatalog::resolve_open_query(&fixture.catalog, fixture.query)
+        .expect("query must remain available");
+    let alternate_candidate = query
+        .plug(
+            vec![PortBinding::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                fixture.alternate_answer,
+            )],
+            &fixture.catalog,
+        )
+        .expect("alternate complete filling must be constructible");
+    let alternate_candidate = fixture.catalog.insert_candidate(alternate_candidate);
     assert!(matches!(
-        decoded,
-        ActualDecodeResult::Decoded(ref set)
-            if set.query() == fixture.query && set.candidates() == [fixture.candidate]
+        match_decoded_observation_use(
+            &set,
+            alternate_candidate,
+            fixture.observation,
+            &fixture.catalog,
+        ),
+        Err(DecodedObservationError::CandidateNotDecoded { candidate, .. })
+            if candidate == alternate_candidate
+    ));
+    let mismatched_observation = fixture.catalog.insert_relation_use(RelationUse::new(
+        query.relation(),
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port name must be valid"),
+                query.bound_ports()[0].value(),
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                fixture.alternate_answer,
+            ),
+        ],
+        *query.context(),
+    ));
+    assert!(matches!(
+        match_decoded_observation_use(
+            &set,
+            fixture.candidate,
+            mismatched_observation,
+            &fixture.catalog,
+        ),
+        Err(DecodedObservationError::BindingMismatch)
     ));
 
     let undefined_event = ActualEvent::new(

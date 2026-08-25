@@ -53,9 +53,10 @@ pub use cue::{
 };
 pub use decoder::{
     ActualDecodeCatalog, ActualDecodeError, ActualDecodeResult, DecodedCandidateSet,
-    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderCheckError, FiniteDecoderEntry, FiniteDecoderError,
-    FiniteDecoderOutcome, FiniteDecoderRef, decode_actual_event,
+    DecodedObservationError, DecodedObservationUse, FINITE_DECODER_ARTIFACT_KIND,
+    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderCheckError,
+    FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome, FiniteDecoderRef,
+    ObservationResultCatalog, decode_actual_event, match_decoded_observation_use,
 };
 pub use departure::{
     DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureCatalog,

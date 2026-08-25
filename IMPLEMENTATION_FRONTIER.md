@@ -10,8 +10,9 @@ identity and interface composition checking also pass. A complete typed query fi
 canonical checked identity, but not support status. A finite decoder table now preserves
 decoded/undefined/unknown results and can tie a single-open-port direct decoder route to an
 ordinary event record. Phase 6 now has canonical ordinary-event identity and append-only journal
-linkage; general supported-answer materialization remains reserved for the Phase 6/7
-actuality-and-resolution boundary.
+linkage. A derived structural view can now connect one preserved decoded candidate to its exact
+declared observation use; general supported-answer materialization remains reserved for the
+Phase 6/7 actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -30,10 +31,10 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> Given an event-record-linked decoded candidate set, what is the smallest typed observation-result
-> and incompatibility-certificate boundary that connects it to the declared observation and
-> incompatibility uses without turning failed search, projection, incomplete coverage, or a
-> caller-declared table into exteriority or silently collapsing semantic and execution coverage?
+> Given an event-record-linked decoded candidate structurally matched to its declared observation
+> use, what is the smallest typed incompatibility-certificate and admission boundary that can
+> connect the two observations without turning failed search, projection, incomplete coverage, or
+> a caller-declared table into exteriority or silently collapsing semantic and execution coverage?
 
 The protected difference is visible in the accepted sources:
 
@@ -62,6 +63,12 @@ The protected difference is visible in the accepted sources:
   external decoder or actual dispatch, validate a multi-port answer carrier, establish relation membership,
   incompatibility, relevance, non-circularity, support-environment standing, warrant, departure,
   or exteriority.
+- `match_decoded_observation_use` supplies the next derived structural boundary. It requires a
+  preserved candidate from that decoded result and a declared relation use to rehash and agree
+  exactly on query relation, complete named bindings, and the query's scope, applicability,
+  grain, horizon, discharge mode, support, and warrant. It rejects an unlisted candidate or any
+  binding/context mismatch. It does not evaluate the use, establish that a probe dispatched,
+  admit support, prove incompatibility/relevance/non-circularity, or establish departure.
 - Determination checking rehashes and checks the typed source, requires its binding to match the
   presentation, and recursively checks an optional predecessor. An ancestry edge may change the
   web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
@@ -279,10 +286,10 @@ The protected difference is visible in the accepted sources:
   contracts that give them evaluators.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
-departure from merely coexisting identifiers, failed work, and incomplete evidence. The next
-discriminator must reject a purported departure whose decoded candidate does not match its named
-observation use, whose incompatibility pair lacks a separately admitted positive witness, or
-whose result only has caller-declared finite-table support.
+departure from merely coexisting identifiers, failed work, and incomplete evidence. The decoded
+candidate/observation-use equality is now checked structurally. The next discriminator must still
+reject a purported departure whose incompatibility pair lacks a separately admitted positive
+witness or whose result only has caller-declared finite-table support.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
 `T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty

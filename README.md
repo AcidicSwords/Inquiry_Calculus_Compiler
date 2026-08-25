@@ -205,8 +205,13 @@ or is explicitly outside the decoder; an unlisted raw return remains `Unknown`. 
 single-open-port decoder route can be checked against an ordinary `ActualEvent` record, its
 operator's return type, the decoder's identity, and the query answer-port type. This preserves
 route identity without making the result a relation fact, standing claim, check, warrant, actual
-dispatch, or departure witness. Multi-port answer-carrier construction and general decoder
-execution remain pending.
+dispatch, or departure witness. A derived `DecodedObservationUse` can then require one preserved
+candidate and one declared `RelationUse` to rehash and spell exactly the same relation, complete
+named bindings, and scope/applicability/grain/horizon/mode/support/warrant context as the source
+query. It is a structural association only: it neither evaluates the relation nor proves dispatch,
+admission, standing, incompatibility, non-circular evidence, or departure. Multi-port
+answer-carrier construction, general decoder execution, and an admitted incompatibility
+certificate remain pending.
 
 The reusable exact finite `DetermineThrough` facility implements the canonical kernel-inclusion
 test for deterministic, fully covered signatures sharing binding, scope, applicability, grain,
