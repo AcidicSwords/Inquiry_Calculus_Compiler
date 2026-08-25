@@ -199,6 +199,15 @@ Checking revalidates types and exact composition interfaces, including cycle rej
 not run a decoder, relation, or program; name a supported answer set; resolve a raw return; or
 turn a partial result into an exact answer.
 
+The first concrete resolution boundary is a canonical finite decoder table for one query and raw
+input type. Each listed raw return either decodes to a nonempty set of checked complete candidates
+or is explicitly outside the decoder; an unlisted raw return remains `Unknown`. A direct
+single-open-port decoder route can be checked against an ordinary `ActualEvent` record, its
+operator's return type, the decoder's identity, and the query answer-port type. This preserves
+route identity without making the result a relation fact, standing claim, check, warrant, actual
+dispatch, or departure witness. Multi-port answer-carrier construction and general decoder
+execution remain pending.
+
 The reusable exact finite `DetermineThrough` facility implements the canonical kernel-inclusion
 test for deterministic, fully covered signatures sharing binding, scope, applicability, grain,
 horizon, and domain. It returns either the explicit factor map or a pair witnessing equal

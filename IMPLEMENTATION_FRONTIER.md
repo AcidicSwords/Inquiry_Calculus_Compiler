@@ -7,9 +7,11 @@ Reciprocal-Boundary / Positive-Negation Edition.
 determination-presentation/departure/negation-declaration identity checking, and Phase 5
 structural runtime control-flow checking pass on 2026-08-25. Phase 7 typed resolution-path
 identity and interface composition checking also pass. A complete typed query filling now has a
-canonical checked identity, but not support status. Phase 6 now has canonical ordinary-event
-identity and append-only journal linkage; supported answer materialization remains reserved for
-the Phase 6/7 actuality-and-resolution boundary.
+canonical checked identity, but not support status. A finite decoder table now preserves
+decoded/undefined/unknown results and can tie a single-open-port direct decoder route to an
+ordinary event record. Phase 6 now has canonical ordinary-event identity and append-only journal
+linkage; general supported-answer materialization remains reserved for the Phase 6/7
+actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -28,9 +30,10 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> What is the smallest typed observation-result and incompatibility-certificate boundary that
-> can positively establish departure without turning failed search, projection, or incomplete
-> coverage into exteriority or silently collapsing semantic and execution coverage?
+> Given an event-record-linked decoded candidate set, what is the smallest typed observation-result
+> and incompatibility-certificate boundary that connects it to the declared observation and
+> incompatibility uses without turning failed search, projection, incomplete coverage, or a
+> caller-declared table into exteriority or silently collapsing semantic and execution coverage?
 
 The protected difference is visible in the accepted sources:
 
@@ -45,6 +48,20 @@ The protected difference is visible in the accepted sources:
   already-bound values, so the same forms under a different question retain a different identity.
   It does not establish relation membership, support, actuality, a resolution path, or a selected
   answer.
+- `FiniteDecoder` is a canonical, caller-declared finite realization of the partial decoder
+  relation for one query and input type. A listed raw return has either a nonempty, checked set of
+  candidate identities or an explicit `Undefined` decoder outcome; an unlisted raw return is
+  `Unknown`, not failure or absence. Checking rehashes the query/input/raw/candidate identities
+  and verifies every candidate belongs to that query. A table neither runs a decoder nor proves
+  it complete, admitted, standing, or warranted.
+- `decode_actual_event` supplies the first event-record-linked result boundary. It rechecks
+  ordinary event context, raw return, direct `ResolutionPath::Decode` identity, finite-decoder identity,
+  operator return type, event query, and the answer type of exactly one open query port. Its
+  result retains event, query, decoder, path, and every candidate identity; it distinguishes a
+  decoded set, explicit undefined decode, and missing-table `Unknown`. It does not execute an
+  external decoder or actual dispatch, validate a multi-port answer carrier, establish relation membership,
+  incompatibility, relevance, non-circularity, support-environment standing, warrant, departure,
+  or exteriority.
 - Determination checking rehashes and checks the typed source, requires its binding to match the
   presentation, and recursively checks an optional predecessor. An ancestry edge may change the
   web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
@@ -263,8 +280,9 @@ The protected difference is visible in the accepted sources:
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next
-discriminator must reject a purported departure whose observation result, incompatible answers,
-or derivation route is not independently represented and checked.
+discriminator must reject a purported departure whose decoded candidate does not match its named
+observation use, whose incompatibility pair lacks a separately admitted positive witness, or
+whose result only has caller-declared finite-table support.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
 `T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty
@@ -290,10 +308,11 @@ These are recorded now but do not outrank the Phase 4 determination boundary:
   horizon, version, and provenance, is the smallest lawful
   `DeterminationPresentation`; keep later minimization reversible.
 - **Phase 3/7 answer materialization:** canonical complete candidates now represent individual
-  elements of an answer carrier, but retain the `Ask` answer binder as first-order syntax until
-  the Phase 6 actuality and Phase 7 resolution/fiber contracts supply a supported answer-*set*
-  representation. Do not coerce a `CompletionCandidate` into support, perform substitution,
-  select a branch, or claim normalization based on it.
+  elements of an answer carrier, and exact finite single-port decoder tables can retain one or
+  more such candidates beside their actual event and direct route. Retain the `Ask` answer binder
+  as first-order syntax until general Phase 6 actuality and Phase 7 resolution/fiber contracts
+  supply multi-port supported-answer-set representation. Do not coerce a `CompletionCandidate`
+  or finite decoder table into relation support, substitution, branch selection, or normalization.
 - **Phase 4 reciprocal core:** implement positive departure, oriented and tagged
   `NegationUse`, distinct semantic/execution coverage, same-use return fibers,
   protected recovery, exact `DetermineThrough` factorization, seed/reorientation,

@@ -7,6 +7,7 @@ mod artifact;
 mod boundary;
 mod context;
 mod cue;
+mod decoder;
 mod departure;
 mod determination;
 mod event;
@@ -49,6 +50,12 @@ pub use cue::{
     ExactFiniteCueFrontier, ExactFiniteCueFrontierError, FiniteCueSeparator,
     FiniteResourcePreorder, InsufficientExactFiniteCueBasis, check_exact_finite_cue_basis,
     select_nondominated_exact_finite_cue_bases,
+};
+pub use decoder::{
+    ActualDecodeCatalog, ActualDecodeError, ActualDecodeResult, DecodedCandidateSet,
+    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
+    FiniteDecoderCatalog, FiniteDecoderCheckError, FiniteDecoderEntry, FiniteDecoderError,
+    FiniteDecoderOutcome, FiniteDecoderRef, decode_actual_event,
 };
 pub use departure::{
     DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureCatalog,
@@ -116,10 +123,11 @@ pub use probe_contract::{
 };
 pub use query::{
     COMPLETION_CANDIDATE_ARTIFACT_KIND, COMPLETION_CANDIDATE_SCHEMA_VERSION, CompletionCandidate,
-    CompletionCandidateCheckError, CompletionCandidateError, CompletionCandidateRef,
-    CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,
-    OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError,
-    OpenQueryError, OpenQueryFiberError, OpenQueryPlugError, OpenQueryTransformError, QueryRef,
+    CompletionCandidateCatalog, CompletionCandidateCheckError, CompletionCandidateError,
+    CompletionCandidateRef, CompletionFiberView, CompletionFiberViewError,
+    OPEN_QUERY_ARTIFACT_KIND, OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCatalog,
+    OpenQueryCheckError, OpenQueryError, OpenQueryFiberError, OpenQueryPlugError,
+    OpenQueryTransformError, QueryRef,
 };
 pub use raw_return::{
     RAW_RETURN_ARTIFACT_KIND, RAW_RETURN_SCHEMA_VERSION, RawReturn, RawReturnError, RawReturnRef,

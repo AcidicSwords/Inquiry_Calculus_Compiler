@@ -677,6 +677,17 @@ pub trait OpenQueryCatalog: RelationCatalog {
     fn resolve_open_query(&self, reference: QueryRef) -> Option<OpenQuery>;
 }
 
+/// A catalog that can resolve canonically identified complete query fillings.
+///
+/// Resolution of this artifact remains distinct from checking it against its source query and
+/// from resolving an actual raw return through a decoder.
+pub trait CompletionCandidateCatalog: OpenQueryCatalog {
+    fn resolve_completion_candidate(
+        &self,
+        reference: CompletionCandidateRef,
+    ) -> Option<CompletionCandidate>;
+}
+
 fn reference(encoded: &mut Vec<u8>, value: ArtifactRef) {
     encoded.extend_from_slice(value.as_bytes());
 }
