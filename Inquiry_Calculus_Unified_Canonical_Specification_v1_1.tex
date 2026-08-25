@@ -1,0 +1,4932 @@
+
+\documentclass[11pt,oneside]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{array,booktabs,longtable,tabularx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!45!black,
+  urlcolor=blue!45!black,
+  citecolor=blue!45!black,
+  pdftitle={Inquiry Calculus --- Unified Canonical Specification},
+  pdfauthor={},
+  pdfsubject={Typed relational programming language for inquiry}
+}
+
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Inquiry Calculus}
+\fancyhead[R]{Unified Canonical Specification v1.1}
+\fancyfoot[C]{\thepage}
+
+\setlist[itemize]{leftmargin=1.5em}
+\setlist[enumerate]{leftmargin=1.7em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{law}[definition]{Law}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{obligation}[definition]{Obligation}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{example}[definition]{Example}
+
+\newcommand{\B}{\mathbb B}
+\newcommand{\Rel}{\mathsf{Rel}}
+\newcommand{\Prop}{\mathsf{Prop}}
+\newcommand{\Prog}{\mathsf{Prog}}
+\newcommand{\Raw}{\mathsf{Raw}}
+\newcommand{\Result}{\mathsf{Result}}
+\newcommand{\OpenIR}{\mathsf{OpenIR}}
+\newcommand{\RelIR}{\mathsf{RelIR}}
+\newcommand{\ProbeIR}{\mathsf{ProbeIR}}
+\newcommand{\BoundaryIR}{\mathsf{BoundaryIR}}
+\newcommand{\TraversalIR}{\mathsf{TraversalIR}}
+\newcommand{\PromptIR}{\mathsf{PromptIR}}
+\newcommand{\PatchIR}{\mathsf{PatchIR}}
+\newcommand{\StateRef}{\mathsf{StateRef}}
+\newcommand{\ReturnRef}{\mathsf{ReturnRef}}
+\newcommand{\OpRef}{\mathsf{OpRef}}
+\newcommand{\BoundaryRef}{\mathsf{BoundaryRef}}
+\newcommand{\EventRef}{\mathsf{EventRef}}
+\newcommand{\Fib}{\operatorname{Fib}}
+\newcommand{\Comp}{\operatorname{Comp}}
+\newcommand{\Dom}{\operatorname{Dom}}
+\newcommand{\Img}{\operatorname{Im}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Obs}{\operatorname{Obs}}
+\newcommand{\Con}{\operatorname{Con}}
+\newcommand{\Sep}{\operatorname{Sep}}
+\newcommand{\Prof}{\operatorname{Prof}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Occ}{\operatorname{Occ}}
+\newcommand{\Trav}{\operatorname{Trav}}
+\newcommand{\Stand}{\operatorname{Stand}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\Closed}{\operatorname{Closed}}
+\newcommand{\Unlock}{\operatorname{Unlock}}
+\newcommand{\Applicable}{\operatorname{Applicable}}
+\newcommand{\Preserve}{\operatorname{Preserve}}
+\newcommand{\Gain}{\operatorname{Gain}}
+\newcommand{\Recover}{\operatorname{Recover}}
+\newcommand{\Reopen}{\operatorname{Reopen}}
+\newcommand{\Compile}{\operatorname{Compile}}
+\newcommand{\Render}{\operatorname{Render}}
+\newcommand{\Elab}{\operatorname{Elab}}
+\newcommand{\Normalize}{\operatorname{Normalize}}
+\newcommand{\Decode}{\operatorname{Decode}}
+\newcommand{\Interpret}{\operatorname{Interpret}}
+\newcommand{\Chk}{\operatorname{Check}}
+\newcommand{\Actualize}{\operatorname{Actualize}}
+\newcommand{\den}[1]{[\![#1]\!]}
+\newcommand{\eqH}{\equiv_{\mathcal H}}
+\newcommand{\bind}{\mathbin{\mathsf{bind}}}
+\newcommand{\numeq}[1]{\tag{#1}}
+
+\title{\textbf{Inquiry Calculus}\\
+\large A Unified, Well-Typed Relational Programming Language for Recursive Distinction, Regenerative Abstraction, Question Programs, Boundary Traversal, Representation Invention, Realized Perception, Warranted Revision, and LLM-Native Inquiry}
+\author{}
+\date{Version 1.1 --- Unified Canonical Specification\\24 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document specifies Inquiry Calculus v1.1 as the single forward semantic, programming-language, compiler, and runtime authority for the project.  Version 1.1 preserves the typed relation, question, probe, actuality, history, warrant, compression, and self-revision machinery of v1.0, but corrects the level at which the calculus begins.  The primary represented unit is now a typed \emph{form}: any consequentially represented value, relation, distinction, question, operator, program, or reified construction that may lawfully enter further typed relations.  Object-role and operator-role are therefore not primitive ontological species; they are roles a represented form may occupy under a typed interface.
+
+Every pair of represented forms shares at least the coarsest relation of joint admission to the current represented field.  Inquiry seeks consequentially finer relations.  A realized distinction is not exhausted by a binary label or by a four-cell display.  It is a recursively compositional boundary form
+\[
+D=(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D)
+\]
+with a boundary point \(z:B_D\) that regenerates reciprocal sides \(x_z=\pi_X(z)\) and \(y_z=\pi_Y(z)\).  Full reciprocal determination at \(z\) consists of two oriented triads: each side determines itself, determines its other, and redetermines itself through the other.  The resulting sixfold profile
+\[
+\Xi_D(z)=(S_x,O_x,R_x;S_y,O_y,R_y)
+\]
+is carried by the oriented double cover \(\widetilde B_D=B_D\times\{+,-\}\).  The familiar four-cell square is only a projection of this profile.  Inquiry alternates reciprocal orientation while moving along the boundary; realized succession carries full reciprocal profiles rather than merely static labels.
+
+A question remains a partially bound typed relation.  Version 1.1 makes explicit that partial binding is a regenerative abstraction: bind the known ports, preserve the relation, and the remaining open section/fiber is the question.  Removing a filling while preserving all relations through which it mattered leaves a structured hole.  The intersection of the solution fibers of a relational web is the field of lawful replacements.  A representation understands or determines a form, relative to a protected horizon, when this residual web regenerates a unique protected equivalence class and the discriminators needed to reopen the abstraction remain available.
+
+This yields a direct account of generative inquiry and scientific representation invention.  If a current representation identifies two cases whose protected consequences differ, the representation is insufficient.  The calculus then opens higher-order questions for a separating context, a finer representation, a more appropriate grain, a new probe or instrument, or a binding extension.  Tool construction is therefore probe-basis extension: implementing a discriminator that makes a consequentially hidden difference observable.  The dual operation is abstraction: when an active difference never changes protected consequence, it becomes a candidate for folding.
+
+The source inquiry language is an answer-dependent question-program calculus
+\[
+K::=\mathsf{Return}(a)\mid\mathsf{Ask}(q,\kappa),
+\]
+which may execute directly in an ordinary LLM chat when its open ports are generative, and lowers through typed discharge authority to the runtime effect language
+\[
+P::=\mathsf{Return}\mid\mathsf{Branch}\mid\mathsf{Probe}.
+\]
+A semantic question compiles to deterministic computation, LLM generation, an actual probe, an independent checker, a warrant operation, or a mixed program according to the modes of its open ports.  Raw return, decoded completion, interpretation, checking, warrant, and standing remain distinct.  Realized history remains authoritative evidence; learned distinctions, representations, question paths, and operator folds are compact regenerative structures over that history rather than replacements for it.
+
+The result is a recursively closed, well-typed calculus for forming distinctions, opening holes, generating and executing questions, inventing representations and probes, traversing reciprocal boundaries, preserving actuality, learning regenerative forms and operator paths, folding and reopening structure, and applying the same operations to its own presentation without self-warrant.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\part{Standing, Authority, and Constitutional Laws}
+
+\section{Standing of this document}
+
+\subsection{Forward authority}
+
+This specification is designed to be the one cohesive document from which the active Inquiry Calculus is reconstructed.  Earlier project documents remain regression ancestry, derivation evidence, and sources of counterexamples.  They do not silently override this document merely because they contain older notation or a larger architecture.
+
+A later successor may replace this document only by a predecessor-judged revision that:
+\begin{enumerate}
+\item preserves every still-valid protected capability;
+\item gives an explicit disposition for any predecessor obligation it removes;
+\item establishes at least one typed strict gain or a necessary correction;
+\item preserves authoritative ancestry and reopening routes;
+\item receives standing independently of the candidate's own assertion that it is better.
+\end{enumerate}
+
+\subsection{Four statuses}
+
+Every construct in this document is explicitly one of:
+\begin{enumerate}
+\item \textbf{constitutional}: a law of the calculus;
+\item \textbf{derived}: regenerable from constitutional structure;
+\item \textbf{binding-supplied}: additional structure supplied by a domain or runtime binding;
+\item \textbf{implementation-only}: an encoding needed by a compiler/runtime but not an ontological primitive.
+\end{enumerate}
+
+A convenient implementation sort never becomes constitutional merely because code requires a record for it.
+
+\section{Constitutional laws}
+
+\begin{law}[Relational substrate]
+\[
+\boxed{\textbf{RELATIONS ARE THE SEMANTIC SUBSTRATE.}}
+\]
+``Object'', ``state'', ``question'', ``answer'', ``boundary'', ``memory'', ``operator'', ``method'', ``perception'', ``environment'', ``cause'', ``problem'', ``program'', and ``successor'' name roles occupied by typed relational arrangements.  They do not, merely by being nouns, introduce independent semantic species.
+\end{law}
+
+
+\begin{law}[Recursive form closure]
+Let
+\[
+\mathsf{Form}_{\B}
+=
+\sum_{A:\mathsf{Ty}_{\B}}\den{A}_{\B}
+\]
+be the binding-local universe of typed represented forms.  Any consequentially represented relation, distinction, question, operator, program, method, type witness, or binding witness may be reified as a form and may enter further well-typed relations.  A form may play an operator role only through an admitted typed operational interpretation.  Hence:
+\[
+\boxed{
+\begin{gathered}
+\textbf{OBJECT-ROLE AND OPERATOR-ROLE ARE RELATIONAL ROLES,}\\
+\textbf{NOT DISJOINT PRIMITIVE SPECIES.}
+\end{gathered}}
+\]
+Typing is never erased by reification.
+\end{law}
+
+\begin{law}[Coarsest common relation]
+For every represented pair \(x,y\in\mathsf{Form}_{\B}\),
+\[
+\boxed{\top_{\B}(x,y)}
+\qquad\text{where}\qquad
+\top_{\B}=\mathsf{Form}_{\B}\times\mathsf{Form}_{\B}.
+\]
+Thus ``unrelated'' never means that no relation exists.  It means that no consequentially useful proper refinement of the coarsest admitted relation has yet been established for the inquiry at hand.
+\end{law}
+
+\begin{law}[Refine where consequences split; fold where they do not]
+If a current representation \(\eta\) identifies two forms whose protected consequences differ,
+\[
+\eta(x)=\eta(y)
+\quad\land\quad
+x\not\equiv_{\mathcal H}y,
+\]
+then the representation is insufficient and inquiry must preserve the obligation to seek a separating context, representation, grain, probe, or binding.  Conversely, an active distinction that no protected continuation can inspect is a candidate for licensed folding.  Hence:
+\[
+\boxed{\textbf{REFINE WHERE CONSEQUENCES SPLIT; FOLD WHERE THEY DO NOT.}}
+\]
+\end{law}
+
+\begin{law}[Regenerative distinction]
+A realized distinction point is not merely a label placed between two pre-existing objects.  It is a typed regenerative form from which its reciprocal sides and the protected relation by which they differ are recoverable at the admitted grain.  Distinctions may themselves be reified as sides of further distinctions, opened at finer grain, or interpreted as operators under typed interfaces.
+\end{law}
+
+\begin{law}[Relational exclusion]
+An instruction or renderer may suppress a form without establishing any semantic incompatibility.  A question establishes relational exclusion only when its answer cells are disjoint under the same relation, binding, scope, applicability, and grain.  Therefore:
+\[
+\boxed{\textbf{SURFACE EXCLUSION IS NOT RELATIONAL EXCLUSION.}}
+\]
+An apparent violation of a relational exclusion generates inquiry into the side claims, decoder, scope, grain, question frame, or missing distinction rather than merely stronger suppression.
+\end{law}
+
+\begin{law}[Protected discrimination]
+For an admitted protected future \(\mathcal H\),
+\[
+\boxed{
+\begin{gathered}
+\textbf{DO NOT IDENTIFY WHAT A PROTECTED}\\
+\textbf{CONTINUATION CAN DISTINGUISH.}
+\end{gathered}
+}
+\]
+Conversely, a distinction may be hidden from active use when no protected continuation can inspect it, provided required ancestry, residual information, recovery, and reopening remain available.
+\end{law}
+
+\begin{law}[Arrangement and succession]
+\[
+\boxed{\textbf{ARRANGEMENT}\;\perp\;\textbf{SUCCESSION}.}
+\]
+Relations that coexist in a represented slice and relations that say how slices succeed are independent axes.  Storage order, realized/domain succession, and inquiry traversal order are also distinct unless a binding proves them coincident.
+\end{law}
+
+\begin{law}[Function is relation]
+\[
+\boxed{\textbf{FUNCTION}\subset\textbf{RELATION}.}
+\]
+Pure deterministic computation is executed before open inquiry whenever its result is exactly available.
+\end{law}
+
+\begin{law}[Question law]
+A semantic question is an open typed relation.  Its inquiry role is:
+\[
+\boxed{
+\textbf{QUESTION}
+=
+\textbf{DIFFERENTIATION}
++
+\textbf{CONSEQUENTIAL OCCLUSION}.
+}
+\]
+It allocates representational resolution to an unresolved distinction and permits certified consequence-null surrounding structure to be omitted from the active view.
+\end{law}
+
+\begin{law}[Boundary law]
+A consequential local distinction is represented by a factorization
+\[
+\boxed{
+D^+ \xleftarrow{\pi_+} B_D \xrightarrow{\pi_-} D^- .
+}
+\]
+The boundary carrier is neither side by role.  A boundary position holds both reciprocal projections.
+\end{law}
+
+\begin{law}[Traversal law]
+Inquiry primarily traverses the opened boundary:
+\[
+\boxed{T_D:B_D\rightsquigarrow B_D.}
+\]
+Crossing from one side to the other is an optional test, not the definition of traversal.
+\end{law}
+
+\begin{law}[Actuality separation]
+\[
+\boxed{
+\begin{gathered}
+\text{represented possibility}\neq\text{probe code}\neq\text{attempt}\neq\text{raw return}\\
+{}\neq\text{decoded completion}\neq\text{interpretation}\neq\text{checked claim}\\
+{}\neq\text{standing relation}.
+\end{gathered}
+}
+\]
+No transition may erase these distinctions.
+\end{law}
+
+\begin{law}[Unified probe]
+There is one actualizable interaction form.  A probe is interpreted as
+\[
+o:Z\rightsquigarrow R_o\times Z .
+\]
+Observation-like and action-like behavior are derived projections of a probe occurrence, not disjoint primitives.
+\end{law}
+
+\begin{law}[Linked history without semantic fusion]
+Historical co-occurrence and succession must be preserved at the chosen grain, but relations that occurred together remain available for independent future recomposition.  Historical linkage is not permanent semantic fusion.
+\end{law}
+
+\begin{law}[Operator-first learning]
+Retained state need not be destructively compressed.  Recurrent typed probe/traversal paths may be compiled into smaller reusable operators when protected behavior is preserved.  Every promoted operator retains provenance and an unlock/reopening contract.
+\end{law}
+
+\begin{law}[No self-warrant]
+Questioning, generation, recursion, and support may be cyclic.  Positive standing cannot arise from a rootless support cycle.  Standing is the least fixed point generated from grounded ingress and independently discharged support.
+\end{law}
+
+\begin{law}[Successor judged by predecessor]
+A candidate successor may not revise the acceptance conditions by which its own promotion is judged.  Protection changes are themselves explicit, typed, independently judged revisions.
+\end{law}
+
+\part{Typed Relational Substrate}
+
+\section{Bindings}
+
+\begin{definition}[Binding]
+A binding is represented by
+\[
+\boxed{
+\B=
+(\mathsf{Ty},\mathsf{Int},\mathsf G,\mathsf{Rel},\circ,
+\mathsf{ProbeSem},\mathsf{Check},\mathsf{Warrant},
+\mathcal H,\mathcal R).
+}
+\]
+Its components are:
+\begin{itemize}
+\item \(\mathsf{Ty}\): admitted base and constructed types;
+\item \(\mathsf{Int}\): compositional interfaces;
+\item \(\mathsf G\): primitive typed operator generators;
+\item \(\mathsf{Rel}\): admitted relation schemas;
+\item \(\circ\): lawful partial serial composition;
+\item \(\mathsf{ProbeSem}\): semantics of actualizable probe code;
+\item \(\mathsf{Check}\): independently admitted checking relations;
+\item \(\mathsf{Warrant}\): standing/support policy;
+\item \(\mathcal H\): protected future continuations, observations, or consequences;
+\item \(\mathcal R\): explicit resource/effectivity horizon.
+\end{itemize}
+\end{definition}
+
+Order, metric, probability, topology, Boolean algebra, linear structure, causality, control, concurrency, game semantics, or a particular notion of cost are not constitutional.  A binding may supply them.
+
+\begin{definition}[Binding role]
+A represented arrangement \(B\) plays the binding role for domain fragment \(D\) and horizon \(\mathcal H\) when
+\[
+\operatorname{Binds}(B,D,\mathcal H)
+\]
+and the relations required to type, compose, actualize, decode, check, and compare the protected forms are available.
+\end{definition}
+
+\begin{definition}[Rebinding]
+When a protected residual cannot be expressed in the incumbent binding,
+\[
+\operatorname{Expressible}(\B,d)=\bot,
+\]
+rebinding is the ordinary higher-order question
+\[
+?\B'[
+\operatorname{ExtendsOrBridges}(\B,\B')
+\land
+\operatorname{Expressible}(\B',d)
+].
+\]
+A rebind must state which old terms, consequences, histories, and operator contracts remain transportable.
+\end{definition}
+
+\section{Types and judgments}
+
+\subsection{Reference type grammar}
+
+The reference implementation admits:
+\[
+\begin{aligned}
+A,B ::= {}&
+\alpha
+\mid \mathbf 1
+\mid \mathbf{Bool}
+\mid \mathbf{Nat}
+\mid A\times B
+\mid A+B\\
+&\mid \Sigma x:A.B(x)
+\mid \Pi x:A.B(x)
+\mid \mathsf{Fin}(A)
+\mid \mathsf{List}(A)\\
+&\mid \Raw(A)
+\mid \Result(A)
+\mid \Prog(A)
+\mid \mathsf{Code}(A).
+\end{aligned}
+\]
+This is a programming-language representation.  A native binding need not claim that the represented domain intrinsically carries every one of these structures.
+
+\subsection{Implementation code sorts}
+
+The reference compiler uses, as implementation-only sorts,
+\[
+\begin{aligned}
+&\RelIR[A,B],\quad
+\OpenIR[\Gamma;\Delta],\quad
+\ProbeIR[R],\\
+&\BoundaryIR,\quad
+\TraversalIR,\quad
+\PromptIR,\quad
+\PatchIR[k],\\
+&\StateRef,\quad
+\ReturnRef,\quad
+\OpRef,\quad
+\BoundaryRef,\quad
+\EventRef.
+\end{aligned}
+\]
+
+Patch roles include
+\[
+k\in
+\{
+\mathsf{Semantic},
+\mathsf{Traversal},
+\mathsf{Compiler},
+\mathsf{Binding},
+\mathsf{Protection},
+\mathsf{Implementation}
+\}.
+\]
+
+
+\section{Recursive represented forms}
+
+\begin{definition}[Typed represented form]
+The binding-local universe of represented forms is the dependent sum
+\[
+\boxed{
+\mathsf{Form}_{\B}
+=
+\sum_{A:\mathsf{Ty}_{\B}}\den{A}_{\B}.
+}
+\]
+An element is written \(\langle A,x\rangle\), or simply \(x:A\) when the type is inferable.  The dependent sum allows differently typed values to participate in a common higher relation without identifying their types.
+\end{definition}
+
+\begin{definition}[Reification]
+Every admitted typed operator term may be reified:
+\[
+\boxed{
+\operatorname{Reify}_{A,B}:
+\mathsf{Tm}_{\B}(A,B)
+\to
+\mathsf{Form}_{\B}.
+}
+\]
+Write \(\ulcorner f\urcorner\) for \(\operatorname{Reify}(f)\).  Relation schemas, questions, distinction points, programs, methods, and presentation fragments may likewise be reified through their admitted code or semantic carrier.
+\end{definition}
+
+\begin{definition}[Operational interpretation]
+A represented form may play an operator role only where the binding supplies a partial typed interpretation
+\[
+\boxed{
+\operatorname{Act}_{A,B}:
+\mathsf{Form}_{\B}
+\rightharpoonup
+\mathsf{Tm}_{\B}(A,B).
+}
+\]
+Reification and operational interpretation need not be mutual inverses.  A form may admit several operational interpretations under different interfaces, scopes, or bindings.
+\end{definition}
+
+\begin{law}[Role closure without type collapse]
+If \(f:A\rightsquigarrow B\), then \(\ulcorner f\urcorner\) may be used as an operand of another relation.  If a form \(z\) admits \(\operatorname{Act}_{C,D}(z)\), then the same represented form may play an operator role from \(C\) to \(D\).  This closure does not imply that every form is executable or that all forms share one type.
+\end{law}
+
+\begin{law}[Construction ancestry does not restrict recomposition]
+If \(z\) was constructed from \(x,y\), authoritative ancestry may preserve that fact, but it does not prevent \(x\), \(y\), or \(z\) from later participating independently in other lawful relations and distinctions.  Construction ancestry is history, not permanent semantic containment.
+\end{law}
+
+\begin{definition}[Grain-relative opening]
+For grains \(g\preceq g'\), a form may be opaque at \(g\) and open into a finer relational presentation at \(g'\):
+\[
+\boxed{
+\operatorname{Open}_{g\to g'}:
+\mathsf{Form}_{\B}
+\rightsquigarrow
+\mathsf{Presentation}_{\B}.
+}
+\]
+No absolute atomicity is assumed.  A point is simply a form whose internal distinctions are not active at the current grain.
+\end{definition}
+
+\begin{law}[Atomicity is grain-relative]
+\[
+\boxed{\textbf{ATOMICITY IS RELATIVE TO THE CURRENT GRAIN OF INQUIRY.}}
+\]
+A later discriminator may lawfully reopen a previously opaque form into consequential internal structure.
+\end{law}
+
+\subsection{Judgments}
+
+The principal judgments are:
+\[
+\B;\Gamma\vdash t:A,
+\]
+\[
+\B;\Gamma\vdash\phi:\Prop,
+\]
+\[
+\B;\Gamma\vdash R:A\rightsquigarrow B,
+\]
+\[
+\B;\Gamma\vdash ?\Delta[\phi]\;\mathsf{question},
+\]
+\[
+\B;\Gamma\vdash o:\ProbeIR[R],
+\]
+\[
+\B;\Gamma\vdash K:\mathsf{IProg}(A),
+\]
+\[
+\B;\Gamma\vdash P:\Prog(A),
+\]
+\[
+\B;\Gamma\vdash \rho:A\leadsto B,
+\]
+and
+\[
+X_t\vdash \Stand(\lambda).
+\]
+
+\section{Relations}
+
+\begin{definition}[Typed relation]
+A binary relation from \(A\) to \(B\) is
+\[
+R:A\rightsquigarrow B
+\quad\text{with}\quad
+\den{R}_{\B}\subseteq \den A_{\B}\times\den B_{\B}.
+\]
+An \(n\)-ary relation schema is
+\[
+R\hookrightarrow A_1\times\cdots\times A_n.
+\]
+\end{definition}
+
+\begin{definition}[Function]
+A function is a total single-valued relation:
+\[
+f:A\to B
+\iff
+R_f:A\rightsquigarrow B
+\land
+\forall a\,\exists!b\,R_f(a,b).
+\]
+\end{definition}
+
+\begin{definition}[Identity]
+\[
+\mathsf{id}_A:A\rightsquigarrow A,
+\qquad
+\mathsf{id}_A(a,a').
+\iff a=a'.
+\]
+\end{definition}
+
+\begin{definition}[Serial composition]
+For
+\[
+R:A\rightsquigarrow B,\qquad S:B\rightsquigarrow C,
+\]
+\[
+\boxed{
+(S\circ R)(a,c)
+\iff
+\exists b:B.\ R(a,b)\land S(b,c).
+}
+\]
+Thus relational composition is join plus hiding of the mediator.
+\end{definition}
+
+\begin{definition}[Converse]
+Where admitted by the representation,
+\[
+R^\dagger:B\rightsquigarrow A,
+\qquad
+R^\dagger(b,a)\iff R(a,b).
+\]
+Converse is not an inverse and makes no uniqueness claim.
+\end{definition}
+
+\begin{definition}[Image and inverse image]
+For \(X\subseteq A\) and \(Y\subseteq B\),
+\[
+R[X]=\{b:\exists a\in X.\ R(a,b)\},
+\]
+\[
+R^{-1}[Y]=\{a:\exists b\in Y.\ R(a,b)\}.
+\]
+\end{definition}
+
+\begin{definition}[Parallel terms]
+Two operators are parallel when they have the same input and output interfaces.  Direct protected contextual equivalence is defined only for parallel terms or for terms connected by an explicit comparison bridge.
+\end{definition}
+
+\subsection{Free typed operator language}
+
+Given primitive generators \(\mathsf G_{\B}\), define typed terms:
+\[
+\mathsf{Tm}_{\B}(A,B)
+\]
+as the least family containing identities and primitive generators and closed under lawful composition.  Syntactically:
+\[
+p ::= \mathsf{id}_A \mid g \mid p_2\circ p_1,
+\]
+subject to interface matching.
+
+Parenthesization is quotientable by associativity only after the binding establishes the corresponding compositional law.  Path provenance may remain protected even when denotational composites coincide.
+
+
+\section{Coarsest relation and relational refinement}
+
+\begin{definition}[Coarsest represented relation]
+On \(\mathsf{Form}_{\B}\), define
+\[
+\boxed{
+\top_{\B}
+=
+\mathsf{Form}_{\B}\times\mathsf{Form}_{\B}.
+}
+\]
+For represented forms \(x,y\), \(\top_{\B}(x,y)\) says only that they are jointly admitted to the current represented field.  It does not assert physical coexistence, causality, similarity, or any stronger domain relation.
+\end{definition}
+
+\begin{definition}[Binding-level coexistence]
+If the binding supplies an actuality/existence predicate \(Exists_{\B}\), one may define the stronger relation
+\[
+Coexists_{\B}(x,y)
+\iff
+Exists_{\B}(x)\land Exists_{\B}(y).
+\]
+This construction is binding-supplied rather than constitutional.
+\end{definition}
+
+\begin{definition}[Relation-refinement preorder]
+For relations \(R,S\) on a common carrier, define
+\[
+\boxed{
+R\preceq_{\mathrm{rel}}S
+\iff
+\den S\subseteq\den R.
+}
+\]
+Thus \(S\) is at least as discriminating/informative as \(R\).  The coarsest relation is least informative:
+\[
+\top_{\B}\preceq_{\mathrm{rel}}R
+\]
+for every relation \(R\) on the same represented carrier.
+\end{definition}
+
+\begin{definition}[Nontrivial relation discovery]
+Given \(R(x,y)\), the higher-order question for a proper refinement is
+\[
+\boxed{
+?R'[
+R'(x,y)
+\land
+R\preceq_{\mathrm{rel}}R'
+\land
+\den{R'}\subsetneq\den R
+].
+}
+\]
+A discovered refinement is useful only if it changes a protected consequence, supports a protected discriminator, or supplies a regenerative factor needed by later inquiry.
+\end{definition}
+
+\begin{law}[No vacuity from universal relatedness]
+The fact that \(\top_{\B}(x,y)\) always holds contributes almost no discrimination.  Meaningful inquiry concerns the refinement structure of relations and which refinements survive variation, probing, and protected consequence tests.
+\end{law}
+
+\section{Logical and relational expression language}
+
+\subsection{Formula grammar}
+
+The reference relation language uses:
+\[
+\begin{aligned}
+\phi,\psi ::= {}&
+\top
+\mid \bot
+\mid R(t_1,\ldots,t_n)
+\mid t=u\\
+&\mid \phi\land\psi
+\mid \phi\lor\psi
+\mid \phi\Rightarrow\psi
+\mid \neg\phi\\
+&\mid \exists x:A.\phi
+\mid \forall x:A.\phi.
+\end{aligned}
+\]
+
+The metalanguage is classical set-theoretic unless a binding explicitly chooses another logic.  Expressibility and decidability of complement or quantification inside a binding remain separate questions.
+
+Logical negation is not identified with reciprocal exterior:
+\[
+\boxed{\neg\phi\neq \text{reciprocal exterior in general}.}
+\]
+
+\subsection{Minimal generating basis}
+
+In the classical reference dialect one may take
+\[
+\top,\quad =,\quad \land,\quad \exists,\quad \neg
+\]
+as a sufficient logical generating basis and derive:
+\[
+\phi\lor\psi
+:=
+\neg(\neg\phi\land\neg\psi),
+\]
+\[
+\forall x.\phi
+:=
+\neg\exists x.\neg\phi,
+\]
+\[
+\phi\Rightarrow\psi
+:=
+\neg\phi\lor\psi.
+\]
+
+These derivations are logical conveniences, not claims that every binding natively represents Boolean complement.
+
+\subsection{Data-only relational query IR}
+
+A small relation-expression IR is:
+\[
+\boxed{
+E ::=
+R
+\mid \mathsf{Bind}(E,\beta)
+\mid \mathsf{Join}(E,E)
+\mid \mathsf{Expose}_I(E)
+\mid \mathsf{Hide}_I(E)
+\mid \mathsf{Rename}_{\sigma}(E)
+\mid \mathsf{Guard}_G(E).
+}
+\]
+
+Its denotation is inherited from ordinary relational join, substitution, existential hiding, variable renaming, and guarded restriction.  A concrete semantic question is an expression with a nonempty exposed port set.
+
+\part{Relation Schemas, Questions, and Refinement}
+
+\section{Relation schemas and named ports}
+
+\begin{definition}[Relation schema]
+A typed relation schema is
+\[
+R\hookrightarrow X_1\times\cdots\times X_n
+\]
+with named signature
+\[
+\operatorname{sig}(R)
+=
+(x_1:X_1,\ldots,x_n:X_n).
+\]
+Port names carry semantic and typing roles; they are not presentation decoration.
+\end{definition}
+
+\begin{definition}[Partial binding]
+Let \(I\subseteq\{1,\ldots,n\}\) be the nonempty set of open ports.  A partial binding
+\[
+\beta
+\]
+assigns a well-typed value to every port outside \(I\).
+\end{definition}
+
+\begin{definition}[Completion fiber]
+\[
+\boxed{
+\Fib_I(R\mid\beta)
+=
+\left\{
+a_I\in\prod_{i\in I}X_i:
+R[\beta\oplus a_I]
+\right\}.
+}
+\]
+\end{definition}
+
+\begin{definition}[Question]
+The canonical question generated by opening \(I\) is
+\[
+\boxed{
+q=?_I R[\beta].
+}
+\]
+Its complete semantic answer carrier is
+\[
+A(q)=\prod_{i\in I}X_i.
+\]
+Its valid completion relation is
+\[
+\Comp_q(a_I)\iff a_I\in\Fib_I(R\mid\beta).
+\]
+\end{definition}
+
+A fully bound relation instance is a proposition, not a warranted fact:
+\[
+\boxed{
+\text{relation schema}
+\to
+\text{partial binding}
+\to
+\text{question}
+\to
+\text{complete binding}
+\to
+\text{proposition}.
+}
+\]
+
+\subsection{One relation generates many questions}
+
+For
+\[
+\operatorname{CompRel}(f,g,h)\iff h=g\circ f,
+\]
+the same schema generates:
+\[
+?h[\operatorname{CompRel}(f,g,h)]
+\]
+for a composite,
+\[
+?f[\operatorname{CompRel}(f,g,h)]
+\]
+for a predecessor/factor, and
+\[
+?g[\operatorname{CompRel}(f,g,h)]
+\]
+for a continuation/factor.
+
+No independent ``factor question'' primitive is required.
+
+\section{Discharge authority}
+
+\begin{definition}[Discharge mode]
+Every executable open port is assigned a compiler-enforced discharge mode:
+\[
+\boxed{
+\operatorname{mode}(q,i)
+\in
+\{
+\mathsf{Pure},
+\mathsf{Generate},
+\mathsf{Probe},
+\mathsf{Check},
+\mathsf{Warrant}
+\}.
+}
+\]
+
+\begin{itemize}
+\item \(\mathsf{Pure}\): determined by already standing data and registered deterministic computation;
+\item \(\mathsf{Generate}\): a semantic generator may propose a provisional filling;
+\item \(\mathsf{Probe}\): only an actualized interaction return may fill the port;
+\item \(\mathsf{Check}\): an independently admitted checker must discharge the port;
+\item \(\mathsf{Warrant}\): only the standing/support policy may discharge the port.
+\end{itemize}
+\end{definition}
+
+The same query grammar therefore supports different lawful routes without allowing syntax or an LLM to confer authority on itself.
+
+\begin{law}[Authority preservation]
+If a port has mode \(\mathsf{Probe}\), \(\mathsf{Check}\), or \(\mathsf{Warrant}\), compilation to a merely generative LLM completion is ill-typed as a discharge of that port.
+\end{law}
+
+\section{Question composition}
+
+\subsection{Dependent composition}
+
+For
+\[
+q_1=?x:A[\phi(x)]
+\]
+and
+\[
+q_2(x)=?y:B(x)[\psi(x,y)],
+\]
+define
+\[
+\boxed{
+q_1\bind_{\!Q} q_2
+=
+?(x:A,y:B(x))[
+\phi(x)\land\psi(x,y)
+].
+}
+\]
+
+\subsection{Independent combination}
+
+For independent ports,
+\[
+\boxed{
+q_1\otimes_Q q_2
+=
+?(x:A,y:B)[
+\phi(x)\land\psi(y)
+].
+}
+\]
+
+\subsection{Refinement by guard}
+
+\[
+\boxed{
+q\upharpoonright\psi
+=
+?x:A[
+\phi(x)\land\psi(x)
+].
+}
+\]
+
+\subsection{Answer substitution}
+
+\[
+\boxed{
+\operatorname{Plug}(?x:A[\phi],a)
+=
+\phi[a/x].
+}
+\]
+
+For multi-port questions, substitution is simultaneous over the returned assignment.
+
+\section{Question-conditioned discrimination}
+
+A question does not need to induce a globally binary ontology.  It induces a local answer profile over a live carrier.
+
+\begin{definition}[Question support profile]
+Let \(X_q\) be a live carrier to which \(q\) applies.  Define
+\[
+C_q\subseteq X_q\times A(q)
+\]
+where \(C_q(x,a)\) means that complete answer \(a\) is semantically compatible with \(x\) under the declared binding, scope, and grain.
+
+Define
+\[
+\sigma_q(x)
+=
+\{a\in A(q):C_q(x,a)\}.
+\]
+\end{definition}
+
+\begin{definition}[Local question equivalence]
+\[
+\boxed{
+x\sim_q y
+\iff
+\sigma_q(x)=\sigma_q(y).
+}
+\]
+This equivalence records what the question itself cannot distinguish.  It is local and must not be identified with protected global behavioral equivalence.
+\end{definition}
+
+When \(C_q\) is functional, write
+\[
+\pi_q:X_q\to A(q)
+\]
+and recover
+\[
+x\sim_q y\iff\pi_q(x)=\pi_q(y).
+\]
+
+\section{Question refinement algebra}
+
+\begin{definition}[Precision preorder]
+For questions \(q,r\) on a common live carrier,
+\[
+\boxed{
+q\preceq_{\mathrm{prec}}r
+}
+\]
+when \(r\)'s answer profile determines \(q\)'s answer profile.  In the functional specialization this means:
+\[
+\boxed{
+\exists c:A(r)\to A(q)
+\quad
+\pi_q=c\circ\pi_r.
+}
+\]
+Equivalently,
+\[
+\Ker(\pi_r)\subseteq\Ker(\pi_q).
+\]
+Thus \(r\) is at least as discriminating as \(q\).
+\end{definition}
+
+\begin{definition}[Joint refinement]
+For functional question coordinates,
+\[
+\pi_{q\otimes r}(x)
+=
+(\pi_q(x),\pi_r(x)),
+\]
+hence
+\[
+\boxed{
+\Ker(\pi_{q\otimes r})
+=
+\Ker(\pi_q)\cap\Ker(\pi_r).
+}
+\]
+\end{definition}
+
+\begin{definition}[Active representation refinement]
+Let
+\[
+\eta_t:X\to S_t
+\]
+be the current active question-conditioned representation.  Adding a nonredundant question coordinate gives:
+\[
+\boxed{
+\eta_{t+1}
+=
+\langle\eta_t,\pi_q\rangle.
+}
+\]
+Therefore:
+\[
+\boxed{
+\Ker(\eta_{t+1})
+=
+\Ker(\eta_t)\cap\Ker(\pi_q).
+}
+\]
+\end{definition}
+
+This equation is the exact form of the statement that a question expands semantic resolution along a selected distinction.
+
+\begin{proposition}[Question redundancy]
+A functional question \(q\) adds no active discriminatory coordinate exactly when there exists
+\[
+\bar\pi_q:S_t\to A(q)
+\]
+such that
+\[
+\boxed{
+\pi_q=\bar\pi_q\circ\eta_t.
+}
+\]
+Equivalently,
+\[
+\Ker(\eta_t)\subseteq\Ker(\pi_q).
+\]
+\end{proposition}
+
+\begin{law}[Precision is not improvement]
+Question refinement and representation improvement are different orders.  More precision is not automatically better.  A coarser representation may be a strict improvement when it preserves all protected behavior at lower cost or with better robustness.
+\end{law}
+
+
+\section{Sections, holes, fibers, and regenerative abstraction}
+
+\subsection{Partial application as a relational section}
+
+\begin{definition}[Section]
+Let
+\[
+\rho:X\times Y\rightsquigarrow C
+\]
+with semantics \(\rho(x,y,c)\).  For fixed \(y:Y\), define the residual \(X\)-section
+\[
+\boxed{
+\operatorname{Sec}^{X}_{\rho}(y):X\rightsquigarrow C
+}
+\]
+by
+\[
+\operatorname{Sec}^{X}_{\rho}(y)(x,c)
+\iff
+\rho(x,y,c).
+\]
+For fixed \(x:X\), define the distinct \(Y\)-section
+\[
+\boxed{
+\operatorname{Sec}^{Y}_{\rho}(x):Y\rightsquigarrow C
+}
+\]
+by
+\[
+\operatorname{Sec}^{Y}_{\rho}(x)(y,c)
+\iff
+\rho(x,y,c).
+\]
+These are left and right residual views of the same relation and are not generally symmetric.
+\end{definition}
+
+\begin{definition}[Solution fiber]
+For target output region \(T\subseteq C\), define
+\[
+\boxed{
+\operatorname{Sol}^{X}_{\rho}(y;T)
+=
+\{x:X:\exists c\in T.\,\rho(x,y,c)\}.
+}
+\]
+Equivalently,
+\[
+\operatorname{Sol}^{X}_{\rho}(y;T)
+=
+\left(\operatorname{Sec}^{X}_{\rho}(y)\right)^{-1}[T].
+\]
+For predicate-valued \(\rho:X\times Y\to\Prop\),
+\[
+\operatorname{Sol}^{X}_{\rho}(y)
+=
+\{x:X:\rho(x,y)\}.
+\]
+\end{definition}
+
+\begin{law}[Question as structured hole]
+For a relation whose \(Y\)-ports are bound and \(X\)-ports exposed,
+\[
+\boxed{
+?_x\rho[x,y]
+\quad\text{has completion fiber}\quad
+\operatorname{Sol}^{X}_{\rho}(y).
+}
+\]
+Thus a question is a structured hole in a preserved relation: remove a filling, retain the relation through which it mattered, and ask what can lawfully refill the open port.
+\end{law}
+
+\begin{definition}[Relational abstraction]
+Abstraction of \(x\) from a relation web does not mean deletion of every trace of \(x\).  It means replacing the filling by an open port while preserving the typed relations constraining that port.  Write
+\[
+\boxed{
+\operatorname{Hole}_x(W)
+}
+\]
+for the web obtained by exposing the occurrences of \(x\) that the abstraction licence requires to remain regeneratively available.
+\end{definition}
+
+\begin{law}[Abstraction by removal]
+\begin{center}
+\fbox{\parbox{0.86\linewidth}{\centering\bfseries
+A REGENERATIVE ABSTRACTION REMOVES A FILLING WHILE PRESERVING THE RELATIONS THAT CONSTRAIN WHAT MAY LAWFULLY REFILL IT.
+}}
+\end{center}
+A destructive deletion that erases consequential constraints is not the same operation.
+\end{law}
+
+\subsection{Relational webs and indexed meets}
+
+\begin{definition}[Solution field of a web]
+Let \(W=\{\rho_i\}_{i\in I}\) be a family of residual relations constraining an open port of type \(X\).  After all other relevant ports are bound, define
+\[
+\boxed{
+\operatorname{Sol}^{X}_{W}
+=
+\bigcap_{i\in I}\operatorname{Sol}^{X}_{\rho_i}.
+}
+\]
+\end{definition}
+
+\begin{theorem}[Indexed-meet refinement]
+If \(W\subseteq W'\), then
+\[
+\boxed{
+\operatorname{Sol}^{X}_{W'}
+\subseteq
+\operatorname{Sol}^{X}_{W}.
+}
+\]
+Adding constraints can only refine the lawful filler field; removing constraints can only enlarge it.
+\end{theorem}
+
+\begin{proof}
+The solution field is an intersection indexed by the relation family.  Every member of the larger intersection belongs to every set in the smaller family.
+\end{proof}
+
+\begin{remark}
+The same order-theoretic shape appears in protected horizon refinement:
+\[
+\equiv_{\mathcal H}
+=
+\bigcap_{K\in\mathcal H}\ker(\Con_K).
+\]
+Enlarging the discriminator family refines equivalence for the same reason: both constructions are indexed meets.
+\end{remark}
+
+\subsection{Forced properties and near-miss fields}
+
+\begin{definition}[Property image of a hole]
+For property map \(p:X\to P\),
+\[
+\boxed{
+\operatorname{Val}_{p,W}
+=
+p[\operatorname{Sol}^{X}_{W}].
+}
+\]
+A property value \(v\) is forced by the residual web when
+\[
+\boxed{
+\operatorname{Val}_{p,W}=\{v\}.
+}
+\]
+\end{definition}
+
+Literal uniqueness of the filler, protected uniqueness of the filler class, and uniqueness of a property are distinct:
+\[
+|\operatorname{Sol}_W|=1,
+\qquad
+|\operatorname{Sol}_W/{\equiv_{\mathcal H}}|=1,
+\qquad
+|p[\operatorname{Sol}_W]|=1.
+\]
+None is silently substituted for another.
+
+\begin{definition}[Protected determination]
+\[
+\boxed{
+Determines_{\mathcal H}(W,x)
+\iff
+\operatorname{Sol}^{X}_{W}/{\equiv_{\mathcal H}}
+=
+\{[x]_{\mathcal H}\}.
+}
+\]
+The residual web need not recover a unique literal representation if every surviving filler has the same protected consequences.
+\end{definition}
+
+\begin{definition}[Residual ambiguity]
+When more than one protected filler class survives,
+\[
+\left|\operatorname{Sol}^{X}_{W}/{\equiv_{\mathcal H}}\right|>1,
+\]
+the ambiguity is itself an inquiry obligation.  A canonical separator question is
+\[
+\boxed{
+?\rho[
+\rho\text{ separates at least two surviving protected filler classes}
+].
+}
+\]
+Adding a successful separator \(\rho\) gives \(W'=W\cup\{\rho\}\) and strictly refines the solution field.
+\end{definition}
+
+\subsection{Internal hom and representability as stronger bindings}
+
+If a binding provides a monoidal closed category and \(\rho:X\otimes Y\to C\), currying provides
+\[
+\Lambda_X\rho:Y\to[X,C],
+\qquad
+\Lambda_Y\rho:X\to[Y,C].
+\]
+For fixed \(y\), \(\Lambda_X\rho(y)\) is an internal-hom realization of the same residual information as the \(X\)-section.  Internal hom is therefore binding-supplied stronger structure; the relational section/fiber construction does not require it.
+
+A still stronger representability claim is available when a hole/context induces a functor \(F_H:\mathcal C^{op}\to\mathbf{Set}\) naturally isomorphic to \(\operatorname{Hom}(-,x)\):
+\[
+\boxed{
+F_H(-)\cong\operatorname{Hom}_{\mathcal C}(-,x).
+}
+\]
+This determines \(x\) up to the relevant categorical isomorphism by representability.  A singleton local solution fiber does not by itself establish this stronger claim.
+
+\section{Representation invention and discriminator generation}
+
+\begin{definition}[Representation defect]
+Let \(\eta:X\to S\) be the current representation and \(\kappa:X\rightsquigarrow K\) a protected consequence relation.  A witnessed representation defect is a pair \(x,y\) such that
+\[
+\boxed{
+\eta(x)=\eta(y)
+\quad\land\quad
+x\not\equiv_{\mathcal H}y.
+}
+\]
+In the functional consequence specialization, it suffices to witness \(\kappa(x)\neq\kappa(y)\).
+\end{definition}
+
+\begin{law}[Representation insufficiency]
+A consequence difference inside one current representation cell is an obligation to search for a context, representation, grain, probe, or binding that refines that cell.  Failure of the current repertoire to produce such a separator is \(\mathsf{Unknown}\), not proof that the underlying forms are equivalent.
+\end{law}
+
+\begin{definition}[Separating context question]
+For context family \(\mathcal C\),
+\[
+\boxed{
+?C[
+C\in\mathcal C
+\land
+\Con(C[x])\neq\Con(C[y])
+].
+}
+\]
+If no represented context succeeds, inquiry may open the higher-order context-extension question
+\[
+?C'[
+C'\notin\mathcal C
+\land
+\Con(C'[x])\neq\Con(C'[y])
+].
+\]
+\end{definition}
+
+\begin{definition}[Representation question]
+A separating representation question is
+\[
+\boxed{
+?\eta'[
+\eta'(x)\neq\eta'(y)
+\land
+\eta'\text{ is relevant to the protected consequence}
+].
+}
+\]
+A representation is sufficient for protected consequence \(\kappa\) over scope \(U\) when \(\kappa|_U\) factors through it:
+\[
+\boxed{
+\exists \bar\kappa.\quad
+\kappa|_U=\bar\kappa\circ\eta'|_U.
+}
+\]
+Where exact functional factorization is unavailable, use the protected sufficiency condition
+\[
+\eta'(x)=\eta'(y)\Longrightarrow x\equiv_{\mathcal H}y.
+\]
+\end{definition}
+
+\begin{definition}[Grain question]
+\[
+\boxed{
+?g[
+\eta_g(x)\neq\eta_g(y)
+\land
+\eta_g\text{ exposes a protected consequence difference}
+].
+}
+\]
+The desired grain is not maximally fine by default.  After a separating grain is found, inquiry may seek the coarsest representation that still preserves the protected distinction.
+\end{definition}
+
+\begin{definition}[Probe/tool invention question]
+For current probe basis \(\mathcal P\), a new probe candidate asks
+\[
+\boxed{
+?p'[
+\forall p\in\mathcal P.\ p(x)=p(y)
+\land
+p'(x)\neq p'(y)
+\land
+x\not\equiv_{\mathcal H}y
+].
+}
+\]
+A microscope, assay, sensor, transform, debugger, benchmark, experiment, or proof procedure may instantiate this role when its return provides the required typed discrimination.
+\end{definition}
+
+\begin{law}[Tool construction as probe-basis extension]
+\begin{center}
+\fbox{\parbox{0.86\linewidth}{\centering\bfseries
+INSTRUMENT INVENTION IS AN IMPLEMENTED EXTENSION OF THE PROBE/REPRESENTATION BASIS THAT EXPOSES A PREVIOUSLY HIDDEN CONSEQUENTIAL DISTINCTION.
+}}
+\end{center}
+A generated tool proposal receives no semantic authority until actual use and independent checking warrant the discrimination it claims to expose.
+\end{law}
+
+\begin{definition}[Representation-gap localization]
+A failure to expose a required distinction may be localized, without making the labels primitive, as:
+\[
+\begin{gathered}
+\mathsf{CONTEXT\_GAP},\quad
+\mathsf{REPRESENTATION\_GAP},\quad
+\mathsf{GRAIN\_GAP},\\
+\mathsf{PROBE\_GAP},\quad
+\mathsf{LANGUAGE\_GAP},\quad
+\mathsf{BINDING\_GAP}.
+\end{gathered}
+\]
+Each name records which factor in the chain
+\[
+\text{difference}\to\text{context}\to\text{representation}\to\text{probe}\to\text{return}\to\text{consequence}
+\]
+currently lacks a lawful realization.
+\end{definition}
+
+\part{Reciprocal Boundary, Sixfold Distinction, and Occlusion Calculus}
+
+\section{Distinction schemas and boundary points}
+
+\begin{definition}[Typed distinction schema]
+A local typed distinction schema is
+\[
+\boxed{
+D=(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D)
+}
+\]
+where \(X,Y\) are side carriers, \(B_D\) is the boundary-point carrier,
+\[
+\pi_X:B_D\to X,
+\qquad
+\pi_Y:B_D\to Y,
+\]
+and \(\Gamma_D\) is the binding-supplied compatibility/discrimination relation constraining the reciprocal determinations that may jointly occupy one boundary point.
+\end{definition}
+
+For \(z:B_D\), define the reciprocal side projections
+\[
+\boxed{
+x_z=\pi_X(z),
+\qquad
+y_z=\pi_Y(z).
+}
+\]
+The orientation labels \(+\) and \(-\) may be used for \(X\) and \(Y\), but they carry no truth value or privileged status.
+
+\begin{definition}[Boundary incidence]
+\[
+\boxed{
+\partial_D(x,y)
+\iff
+\exists z:B_D.\,\pi_X(z)=x\land\pi_Y(z)=y.
+}
+\]
+\end{definition}
+
+\begin{definition}[Reciprocal exterior]
+\[
+\boxed{
+\Ext_D(x)
+=
+\{y:Y:\exists z.\,\pi_X(z)=x\land\pi_Y(z)=y\}.
+}
+\]
+The reciprocal side is positive relational content induced by the shared distinction rather than mere logical negation.
+\end{definition}
+
+\begin{definition}[Boundary-point profile]
+\[
+\Prof_D(x)
+=
+\{z:B_D:\pi_X(z)=x\}.
+\]
+Exact boundary-profile equality is
+\[
+\boxed{
+x_1\equiv_D^{\mathrm{prof}}x_2
+\iff
+\Prof_D(x_1)=\Prof_D(x_2).
+}
+\]
+\end{definition}
+
+\begin{law}[Distinction points are regenerative forms]
+A boundary point \(z\) may be reified as a form.  At its declared grain it regenerates at least its two side projections and the distinction schema under which they meet:
+\[
+\boxed{
+z\rightsquigarrow(D,x_z,y_z).
+}
+\]
+When finer reciprocal information is protected, the sixfold profile defined below is part of what must remain recoverable.
+\end{law}
+
+\section{Sixfold reciprocal determination}
+
+The four oriented pairings \(x\mid x\), \(y\mid x\), \(x\mid y\), and \(y\mid y\) do not fully determine who performs a determination after the reciprocal side has been admitted.  Version 1.1 therefore distinguishes three determinations from each orientation.
+
+\begin{definition}[Oriented reciprocal triad]
+For \(z:B_D\), write
+\[
+\boxed{
+\Theta_X(z)
+=
+(S_X(z),O_X(z),R_X(z))
+}
+\]
+and
+\[
+\boxed{
+\Theta_Y(z)
+=
+(S_Y(z),O_Y(z),R_Y(z)).
+}
+\]
+Their roles are:
+\begin{itemize}
+\item \(S_X(z)\): the \(X\)-side determines itself from its own orientation;
+\item \(O_X(z)\): the \(X\)-side determines its reciprocal \(Y\)-side;
+\item \(R_X(z)\): after that reciprocal determination has been admitted, the \(X\)-side redetermines itself through its relation to the determined \(Y\)-side;
+\item \(S_Y,O_Y,R_Y\): the exact reciprocal roles from the \(Y\)-orientation.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Sixfold reciprocal profile]
+\[
+\boxed{
+\Xi_D(z)
+=
+(S_X,O_X,R_X;S_Y,O_Y,R_Y)_z.
+}
+\]
+A profile is lawful only when
+\[
+\boxed{
+\Gamma_D(z,S_X,O_X,R_X,S_Y,O_Y,R_Y)
+}
+\]
+holds in the binding.
+\end{definition}
+
+\begin{law}[Reciprocal redetermination is not opposite-side description]
+In general,
+\[
+\boxed{
+R_X(z)\neq O_Y(z),
+\qquad
+R_Y(z)\neq O_X(z).
+}
+\]
+\(O_Y\) is the \(Y\)-orientation's determination of \(X\).  \(R_X\) is the \(X\)-orientation's redetermination of itself after its own reciprocal determination of \(Y\) has constrained the field.  The four-cell projection must not silently identify these roles.
+\end{law}
+
+\begin{definition}[Relational exclusion at a distinction]
+Two candidate determinations \(a,b\) are jointly unlawful at \(z\) exactly when no admissible completion of the sixfold profile satisfies \(\Gamma_D\) with both determinations fixed.  Apparent contradiction therefore means failure of joint realizability under one declared distinction schema, scope, grain, and binding.  It may be resolved by rejecting a determination, changing scope, refining grain, adding a missing side/relation, or rebinding.
+\end{definition}
+
+\section{Oriented double cover}
+
+\begin{definition}[Double cover]
+\[
+\boxed{
+\widetilde B_D=B_D\times\{+,-\}.
+}
+\]
+The covering projection is
+\[
+p:\widetilde B_D\to B_D,
+\qquad
+p(z,\sigma)=z.
+\]
+The two lifts of one boundary point are
+\[
+\widetilde z_+=(z,+),
+\qquad
+\widetilde z_-=(z,-).
+\]
+Attach the oriented triads by
+\[
+\Theta(\widetilde z_+)=\Theta_X(z),
+\qquad
+\Theta(\widetilde z_-)=\Theta_Y(z).
+\]
+\end{definition}
+
+\begin{definition}[Orientation involution]
+\[
+\boxed{
+\iota(z,+)=(z,-),
+\qquad
+\iota(z,-)=(z,+).
+}
+\]
+Hence \(\iota^2=\mathsf{id}\).
+\end{definition}
+
+The double cover preserves the fact that reciprocal determination can be inspected from either orientation without identifying those orientations or requiring physical movement from one side to the other.
+
+\section{Distinction recursion and re-entry}
+
+\begin{definition}[Distinction reification]
+A realized distinction point may be reified:
+\[
+\boxed{
+\operatorname{QuoteDist}_D:B_D\to\mathsf{Form}_{\B}.
+}
+\]
+Thus if \(z\) distinguishes \(x,y\), then \(\ulcorner z\urcorner\) may itself occupy a side of another typed distinction \(D'\).
+\end{definition}
+
+A schematic derived distinction former may therefore be written
+\[
+\boxed{
+\Delta:
+\mathsf{Form}_{\B}\times\mathsf{Form}_{\B}
+\rightharpoonup
+\mathsf{Form}_{\B},
+}
+\]
+where the partiality records that a lawful typed distinction schema, scope, and compatibility relation must exist.
+
+For example,
+\[
+x=\Delta(a,b),
+\qquad
+y=\Delta(c,d),
+\qquad
+z=\Delta(x,y),
+\qquad
+w=\Delta(z,e)
+\]
+are ordinary recursive compositions when each typing obligation is discharged.  This construction ancestry is only one projection of the global relational graph; the constituents remain independently recomposable.
+
+\section{Distinction residuals and mutual determination}
+
+Given \(z:B_D\), its compatibility relation induces residual solution fields:
+\[
+\boxed{
+\operatorname{Sol}^{X}_{z}(y)
+=
+\{x:X:\partial_D(x,y)\text{ and the protected profile constraints at }z\text{ are satisfiable}\},
+}
+\]
+\[
+\boxed{
+\operatorname{Sol}^{Y}_{z}(x)
+=
+\{y:Y:\partial_D(x,y)\text{ and the protected profile constraints at }z\text{ are satisfiable}\}.
+}
+\]
+When a more explicit compatibility relation \(\Gamma_z\hookrightarrow X\times Y\) is available, these reduce to \(\{x:\Gamma_z(x,y)\}\) and \(\{y:\Gamma_z(x,y)\}\).
+
+\begin{definition}[Protected mutual determination]
+\[
+\boxed{
+MutuallyDetermines_{\mathcal H}(z;x,y)
+}
+\]
+holds when
+\[
+\operatorname{Sol}^{X}_{z}(y)/{\equiv_{\mathcal H}}=\{[x]_{\mathcal H}\}
+\]
+and
+\[
+\operatorname{Sol}^{Y}_{z}(x)/{\equiv_{\mathcal H}}=\{[y]_{\mathcal H}\}.
+\]
+Literal uniqueness is not required unless the protected horizon distinguishes the literal representatives.
+\end{definition}
+
+\section{Polarity as a derived construction}
+
+Given incidence \(\partial_D\), define
+\[
+A^{\perp_D}
+=
+\{y\in Y:\forall x\in A,\ \partial_D(x,y)\},
+\]
+\[
+E^{\perp_D}
+=
+\{x\in X:\forall y\in E,\ \partial_D(x,y)\}.
+\]
+Then
+\[
+\operatorname{cl}_D(A)=A^{\perp_D\perp_D}
+\]
+is a Galois-style closure.
+
+\begin{law}[Exact profile is not double closure]
+In general,
+\[
+\boxed{
+\operatorname{cl}_D(\{x\})
+\neq
+[x]_{\equiv_D^{\mathrm{prof}}}.
+}
+\]
+Polarity is a derived face-level tool.  It does not replace exact reciprocal-profile equality, the sixfold profile, or the whole inquiry calculus.
+\end{law}
+
+\section{Boundary traversal}
+
+\begin{definition}[Base traversal]
+\[
+\boxed{
+T_D:B_D\rightsquigarrow B_D.
+}
+\]
+A base path is \(z_0\to z_1\to\cdots\to z_n\) with \(T_D(z_i,z_{i+1})\).
+\end{definition}
+
+\begin{definition}[Lifted boundary advance]
+For orientation \(\sigma\in\{+,-\}\), define the lifted advance
+\[
+\boxed{
+\tau_D:(z,\sigma)\rightsquigarrow(z',\sigma)
+\iff
+T_D(z,z').
+}
+\]
+\end{definition}
+
+Reciprocal inquiry may alternate orientation and advance:
+\[
+(z_t,+)
+\xrightarrow{\iota}
+(z_t,-)
+\xrightarrow{\tau_D}
+(z_{t+1},-)
+\xrightarrow{\iota}
+(z_{t+1},+)
+\xrightarrow{\tau_D}\cdots.
+\]
+This is the exact form of looking across the reciprocal distinction while moving along its boundary.  A side-changing world/domain transition remains a separate binding-supplied experiment.
+
+\begin{law}[Crossing is derived]
+A transition from a realization classified on one side to a realization classified on the reciprocal side may be constructed as a test, intervention, or domain succession.  It is not the constitutive definition of boundary traversal.
+\end{law}
+
+\section{Question-conditioned occlusion}
+
+\begin{definition}[Active view]
+For question \(q\), state/configuration carrier \(S\), and grain \(g\), an active view is a relation or function
+\[
+\boxed{
+\eta_{q,g}:S\rightsquigarrow V_{q,g}.
+}
+\]
+It supplies the context made active for compiling and executing \(q\).
+\end{definition}
+
+Relative to \(q\) and protected horizon \(\mathcal H\), available retained structure is partitioned operationally into
+\[
+\boxed{
+\Sigma
+=
+A_{q,\mathcal H}
+\;\dot\cup\;
+U_{q,\mathcal H}
+\;\dot\cup\;
+I_{q,\mathcal H}.
+}
+\]
+Here \(A\) is established relevant, \(U\) is relevance-undetermined, and \(I\) is certified consequence-null under an explicit guard.  Only \(I\) may be aggressively occluded; \(U\) remains reachable exploration reserve.
+
+\begin{law}[Unknown relevance]
+\[
+\boxed{
+\text{not currently active}
+\neq
+\text{warranted irrelevant}.
+}
+\]
+\end{law}
+
+\begin{definition}[Occlusion licence]
+A local view \(\eta_{q,g}\) is exact for protected local future \(\mathcal H_q\) when
+\[
+\eta_{q,g}(s)=\eta_{q,g}(s')
+\Longrightarrow
+\forall K\in\mathcal H_q,\,
+\Con_K(s)=\Con_K(s').
+\]
+Every aggressively occluded item carries an unlock/reopening predicate.
+\end{definition}
+
+\section{Question-frame defect}
+
+\begin{definition}[Question-frame defect]
+Let \(\equiv_{\mathcal H}\) be protected equivalence on the applicable live carrier.  Define
+\[
+\boxed{
+FD_{\mathcal H}(q)
+=
+\{(x,y):x\sim_q y\land x\not\equiv_{\mathcal H}y\}.
+}
+\]
+\end{definition}
+
+A nonempty frame defect is lawful for a local question coordinate when surrounding retained history/state preserves the omitted protected distinction.  If the question view is proposed as a complete replacement representation, require
+\[
+\boxed{FD_{\mathcal H}(q)=\varnothing.}
+\]
+
+\section{Square and cube as projections of the sixfold profile}
+
+\begin{definition}[Four-cell square projection]
+The traditional reciprocal square is the projection
+\[
+\boxed{
+Sq_D(z)
+=
+\begin{pmatrix}
+S_X(z) & O_X(z)\\
+O_Y(z) & S_Y(z)
+\end{pmatrix}.
+}
+\]
+It intentionally omits \(R_X(z)\) and \(R_Y(z)\).  It is therefore a useful view, not a complete definition of the boundary point.
+\end{definition}
+
+\begin{definition}[Reciprocal succession prism]
+If realized succession carries \(z_t\) to \(z_{t+1}\), the full derived cube/prism is
+\[
+\boxed{
+\mathcal C_t(D)
+=
+(\Xi_D(z_t),\lambda_t,\Xi_D(z_{t+1})).
+}
+\]
+The square-cube display
+\[
+(Sq_D(z_t),\lambda_t,Sq_D(z_{t+1}))
+\]
+is a projection of this richer succession object.
+\end{definition}
+
+\begin{law}[Arrangement, reciprocal orientation, and succession remain distinct]
+The sixfold profile describes reciprocal arrangement at one boundary point; the double cover records orientation; \(T_D\) records inquiry traversal; \(\lambda_{\mathrm{real}}\) records binding-defined realized/domain succession.  None is identified with another without an explicit bridge.
+\end{law}
+
+\part{Probe, Perception, and Executable Inquiry}
+
+\section{The unified probe relation}
+
+\begin{definition}[Probe semantics]
+Let \(Z\) be a coupled agent/environment configuration carrier at a declared grain and let \(R_o\) be the raw return carrier for probe operator \(o\).  The denotation of \(o\) is:
+\[
+\boxed{
+\den{o}_{\B}
+\subseteq
+Z\times R_o\times Z.
+}
+\]
+Equivalently:
+\[
+o:Z\rightsquigarrow R_o\times Z.
+\]
+\end{definition}
+
+A realized occurrence is written:
+\[
+\boxed{
+z_t\xrightarrow[o_t]{r_t}z_{t+1}.
+}
+\]
+
+The event records both the return and the successor configuration.  No separate primitive ``observation transition'' or ``action transition'' is required.
+
+\subsection{Observation-like and action-like projections}
+
+Let
+\[
+\pi_W:Z\to W
+\]
+project the coupled configuration to an environment/world component relevant to a binding.  An occurrence is observation-like relative to horizon \(\mathcal H\) when:
+\[
+\pi_W(z_t)\equiv_{\mathcal H}\pi_W(z_{t+1}),
+\]
+and action-like when the protected world projection differs.  The same probe may be both observation-like in one projection and action-like in another.
+
+Therefore:
+\[
+\boxed{
+\textbf{OBSERVATION AND ACTION ARE DERIVED ROLES OF PROBING.}
+}
+\]
+
+\section{Perception}
+
+\begin{definition}[Live compatible region]
+Let \(L_t\subseteq Z\) be the currently live region of configurations compatible with retained standing information at the chosen grain.
+\end{definition}
+
+After occurrence of \(o\) with raw return \(r\), define:
+\[
+\boxed{
+L_{t+1}^{o,r}
+=
+\{
+z':
+\exists z\in L_t.\,
+\den{o}_{\B}(z,r,z')
+\}.
+}
+\]
+
+\begin{definition}[Perceptual discrimination]
+The raw return \(r\) produces a perceptual discrimination exactly to the extent that:
+\[
+L_{t+1}^{o,r}
+\subsetneq
+\bigcup_{r'\in R_o}L_{t+1}^{o,r'}.
+\]
+Perception is therefore return-constrained discrimination of the live field.
+\end{definition}
+
+\begin{law}[Perception is not warrant]
+A raw perceptual return is authoritative as the return that occurred through its actualization channel.  It does not thereby warrant any semantic interpretation of that return.
+\end{law}
+
+\section{Semantic question, executable probe, and occurrence}
+
+A semantic question, its compiled operator, and an actual occurrence must remain distinct:
+\[
+\boxed{
+q
+\neq
+\Compile(q)
+\neq
+\operatorname{Occur}(\Compile(q)).
+}
+\]
+
+They are nevertheless stages of one inquiry chain:
+\[
+\boxed{
+\text{open relation}
+\longrightarrow
+\text{probe/operator code}
+\longrightarrow
+\text{realized probe occurrence}.
+}
+\]
+
+A question is therefore a \emph{probe schema} semantically; a prompt or other executable artifact is its operational realization; the event is its historical occurrence.
+
+\section{Raw return, decoding, partial answers, and completion}
+
+\subsection{Raw return}
+
+For a compiled probe \(o\), the runtime receives:
+\[
+r:\Raw(R_o).
+\]
+The raw return is preserved before any decoder, interpreter, or semantic patch is allowed to operate on it.
+
+\subsection{Decoder}
+
+For semantic question \(q\), let \(Y_q\) be a decoder input carrier and define:
+\[
+\boxed{
+\delta_q:
+Y_q
+\rightharpoonup
+\mathcal P_+(A(q)).
+}
+\]
+
+For a returned \(y\):
+\begin{itemize}
+\item \(|\delta_q(y)|=1\): a complete semantic answer is supported;
+\item \(1<|\delta_q(y)|<|A(q)|\): the response partially resolves the question;
+\item \(\delta_q(y)=A(q)\): the decoded return is nondiscriminating for \(q\);
+\item \(\delta_q(y)\) undefined: the response is malformed, unsupported, or outside this decoder.
+\end{itemize}
+
+For infinite answer carriers, ``partial'' means a proper nonempty supported subset rather than cardinality comparison.
+
+\subsection{Remaining completion field}
+
+For supported answer set \(S\subseteq A(q)\),
+\[
+\boxed{
+F_q(S)
+=
+\{x\in X_q:\sigma_q(x)\cap S\neq\varnothing\}.
+}
+\]
+
+The excluded answer set is:
+\[
+A(q)\setminus S.
+\]
+
+Thus a response need not terminate inquiry.  It may merely contract the live boundary field and thereby generate the next question.
+
+\section{Explicit resolution paths}
+
+\begin{definition}[Resolution path]
+Resolution paths are typed:
+\[
+\boxed{
+\rho:A\leadsto B.
+}
+\]
+The reference grammar is:
+\[
+\rho::=
+\mathsf{Id}_A
+\mid
+\mathsf{Edge}(e)
+\mid
+\rho_2\circ\rho_1,
+\]
+where each edge is an admitted decoder, parser, checker-facing conversion, or binding-native interpretation step.
+\end{definition}
+
+For a raw return \(r:A\), a semantic completion \(a\in A(q)\) is supported through \(\rho\) when:
+\[
+\boxed{
+\operatorname{Run}(\rho,r)=a
+\land
+\Comp_q(a).
+}
+\]
+
+If a path yields a set of compatible completions, it is represented by the partial-answer semantics above.
+
+\begin{law}[Resolution provenance]
+The runtime must retain the path by which a raw return was decoded when protected future use may distinguish different resolution routes.
+\end{law}
+
+
+\section{Source inquiry programs}
+
+The runtime effect language below is intentionally lower-level than the source language used to express portable question programs.  The source language makes answer-dependent questioning explicit and is executable in an ordinary chat when its discharge modes require no unavailable external effect.
+
+\begin{definition}[Supported answer type]
+For semantic question \(q\), define
+\[
+\boxed{
+\mathsf{SuppAns}(q)
+=
+\{S\subseteq A(q):S\neq\varnothing\land S\text{ is supported by the declared decoder/resolution route}\}.
+}
+\]
+A complete answer is the singleton specialization.  A partial answer is a proper supported subset with more than one live completion.
+\end{definition}
+
+\begin{definition}[Inquiry source grammar]
+\[
+\boxed{
+K::=
+\mathsf{Return}_I(a)
+\mid
+\mathsf{Ask}(q,\kappa).
+}
+\]
+For \(\mathsf{Ask}(q,\kappa)\),
+\[
+\kappa:\mathsf{SuppAns}(q)\to\mathsf{IProg}(A)
+\]
+is an answer-dependent continuation.  The continuation may construct a new relation/question from the returned distinction rather than selecting only among a fixed textual checklist.
+\end{definition}
+
+\subsection{Source typing}
+
+\[
+\frac{\Gamma\vdash a:A}
+{\Gamma\vdash\mathsf{Return}_I(a):\mathsf{IProg}(A)}
+\quad(\textsc{IReturn})
+\]
+
+\[
+\frac{
+\Gamma\vdash q\;\mathsf{question}
+\qquad
+\Gamma,S:\mathsf{SuppAns}(q)\vdash\kappa(S):\mathsf{IProg}(A)
+}{
+\Gamma\vdash\mathsf{Ask}(q,\kappa):\mathsf{IProg}(A)
+}
+\quad(\textsc{Ask})
+\]
+
+\begin{definition}[Residual question generator]
+A higher-order continuation may be represented by
+\[
+\boxed{
+\mathsf{ResidualQuestion}:
+(\Sigma,q,S,\mathsf{Residual})
+\rightsquigarrow
+q'.
+}
+\]
+The residual includes surviving filler classes, open dependencies, broken exclusions, reopened folds, representation defects, or other consequential structure left unresolved by the answer.  The canonical next question is one whose possible supported returns can discriminate that residual.
+\end{definition}
+
+Hence an inquiry trace has the semantic shape
+\[
+\boxed{
+q_0\xrightarrow{r_0/S_0}q_1\xrightarrow{r_1/S_1}q_2\xrightarrow{}\cdots
+}
+\]
+rather than a static list of instructions.
+
+\subsection{Portable chat execution}
+
+If every open port of a source program is \(\mathsf{Pure}\) or \(\mathsf{Generate}\), and the required context is present in the chat, a backend may execute the source program directly by rendering each current question and using its supported answer to construct the continuation.  If any port is \(\mathsf{Probe}\), \(\mathsf{Check}\), or \(\mathsf{Warrant}\), the source program remains well formed but cannot lawfully discharge that port by generative text alone.
+
+\begin{law}[Question programs are not instruction schemas]
+A source inquiry program specifies open typed relations and answer-dependent continuations.  Natural-language instructions may be used by a compiler to establish runtime bindings or formatting, but they do not replace the semantic question relation.  In particular, merely suppressing an alternative in prompt text does not establish the relational exclusion required by a question.
+\end{law}
+
+\subsection{Canonical derived combinators}
+
+\begin{definition}[Reciprocal completion]
+For a distinction point \(z\), \(\mathsf{Recip}(z)\) is the derived inquiry program that opens the six reciprocal determination roles
+\[
+S_X,O_X,R_X,S_Y,O_Y,R_Y
+\]
+and then opens the compatibility question
+\[
+?\Gamma[\Gamma_D(z,S_X,O_X,R_X,S_Y,O_Y,R_Y)].
+\]
+It is a macro over ordinary open relations, not a new primitive effect.
+\end{definition}
+
+\begin{definition}[Hole solving]
+Given residual web \(W\) with open carrier \(X\), \(\mathsf{HoleSolve}(W)\) computes
+\[
+S=\operatorname{Sol}^{X}_{W}.
+\]
+If \(S/{\equiv_{\mathcal H}}\) is a singleton, it returns the protected filler class.  Otherwise it asks for a relation that separates two surviving protected classes, extends \(W\) by the returned relation, recomputes the meet, and recurs subject to the effectivity horizon.
+\end{definition}
+
+\begin{definition}[Representation search]
+Given a witnessed pair \(x,y\) with \(\eta(x)=\eta(y)\) but \(x\not\equiv_{\mathcal H}y\), \(\mathsf{RepresentDiff}(x,y)\) is the derived inquiry program that searches, in binding-appropriate order, for a separating context, representation, grain, probe, language extension, or rebind.  A successful candidate is tested for protected consequence relevance and then for unnecessary excess detail.
+\end{definition}
+
+\section{Program core}
+
+\subsection{Core grammar}
+
+The executable inquiry core is:
+\[
+\boxed{
+P::=
+\mathsf{Return}(a)
+\mid
+\mathsf{Branch}\{P_i\}_{i\in I}
+\mid
+\mathsf{Probe}(o,\kappa).
+}
+\]
+
+Interpretation:
+\begin{itemize}
+\item \(\mathsf{Return}(a)\): pure return with no external actuality event;
+\item \(\mathsf{Branch}\{P_i\}\): internal/generative alternatives, none of which is thereby actual;
+\item \(\mathsf{Probe}(o,\kappa)\): actualizable interaction whose realized raw return chooses a continuation.
+\end{itemize}
+
+\subsection{Typing rules}
+
+\[
+\frac{\Gamma\vdash a:A}
+{\Gamma\vdash\mathsf{Return}(a):\Prog(A)}
+\quad(\textsc{Return})
+\]
+
+\[
+\frac{
+I\neq\varnothing
+\qquad
+\forall i\in I.\ \Gamma\vdash P_i:\Prog(A)
+}{
+\Gamma\vdash\mathsf{Branch}\{P_i\}_{i\in I}:\Prog(A)
+}
+\quad(\textsc{Branch})
+\]
+
+If
+\[
+\Gamma\vdash o:\ProbeIR[R]
+\]
+and
+\[
+\Gamma,r:\Raw(R)\vdash\kappa(r):\mathsf{Fin}(\Prog(A)),
+\]
+then:
+\[
+\frac{
+\Gamma\vdash o:\ProbeIR[R]
+\qquad
+\Gamma,r:\Raw(R)\vdash\kappa(r):\mathsf{Fin}(\Prog(A))
+}{
+\Gamma\vdash\mathsf{Probe}(o,\kappa):\Prog(A)
+}
+\quad(\textsc{Probe})
+\]
+
+A deterministic continuation is the singleton specialization.
+
+\section{Sequencing and composition of programs}
+
+Define:
+\[
+P\bind k
+\]
+to run \(P\) and then continue every returned value \(a\) with \(k(a)\).
+
+\subsection{Equations}
+
+\[
+\boxed{
+\mathsf{Return}(a)\bind k
+=
+k(a).
+}
+\]
+
+\[
+\boxed{
+\mathsf{Branch}(S)\bind k
+=
+\mathsf{Branch}\{P\bind k:P\in S\}.
+}
+\]
+
+\[
+\boxed{
+\mathsf{Probe}(o,\kappa)\bind k
+=
+\mathsf{Probe}
+\left(
+o,
+r\mapsto
+\{P\bind k:P\in\kappa(r)\}
+\right).
+}
+\]
+
+On the fragment where the operations are defined, require monad-style identities modulo protected program equivalence:
+\[
+\mathsf{Return}(a)\bind k=k(a),
+\]
+\[
+P\bind\mathsf{Return}\equiv P,
+\]
+\[
+(P\bind k)\bind h
+\equiv
+P\bind(\lambda x.\,k(x)\bind h).
+\]
+
+\section{Operational semantics}
+
+A runtime configuration is:
+\[
+\boxed{
+\langle P,X_t\rangle
+}
+\]
+where \(X_t\) is the authoritative runtime state defined later.
+
+\subsection{Return}
+
+\[
+\langle\mathsf{Return}(a),X_t\rangle
+\Downarrow a.
+\]
+
+\subsection{Internal branch}
+
+\[
+\langle\mathsf{Branch}\{P_i\},X_t\rangle
+\longrightarrow
+\{\langle P_i,X_t\rangle:i\in I\}.
+\]
+This transition changes represented possibility; it creates no actuality event.
+
+\subsection{Probe request}
+
+For
+\[
+P=\mathsf{Probe}(o,\kappa),
+\]
+the runtime:
+\begin{enumerate}
+\item validates applicability and discharge authority;
+\item actualizes \(\den{o}_{\B}\);
+\item receives raw return \(r\) and successor coupled configuration \(z'\);
+\item appends the raw occurrence to authoritative event history before decoding;
+\item continues through \(\kappa(r)\).
+\end{enumerate}
+
+Schematically:
+\[
+\frac{
+\den{o}_{\B}(z,r,z')
+}{
+\langle\mathsf{Probe}(o,\kappa),X_t[z]\rangle
+\longrightarrow
+\{
+\langle P,X_{t+1}[z']\rangle:
+P\in\kappa(r)
+\}
+}.
+\]
+
+\begin{law}[Raw-return immutability]
+A decoder, semantic interpreter, or later patch may not mutate the authoritative record of the raw return that occurred.
+\end{law}
+
+\section{Guarded recurrence}
+
+Potentially unbounded inquiry is permitted only through guarded recurrence.  Every productive corecursive cycle must cross:
+\begin{itemize}
+\item an actual probe boundary;
+\item a finite internal branch whose state changes; or
+\item another binding-authorized progress boundary with explicit semantics.
+\end{itemize}
+
+Pure invisible recurrence such as
+\[
+\mathsf{rec}\ f=f
+\]
+is rejected as nonproductive in the inquiry runtime.
+
+\part{Compiler and LLM Binding}
+
+\section{Compiler architecture}
+
+Compilation is staged:
+\[
+\boxed{
+\begin{gathered}
+\text{typed forms/relation schema}\to\text{open relation/question}\to\mathsf{IProg}\\
+\to\OpenIR\to\text{sixfold-aware boundary chart}\to\text{active view}\\
+\to\ProbeIR\to\text{backend code}\to\Prog.
+\end{gathered}
+}
+\]
+
+No compiler stage may silently strengthen semantic authority.
+
+\subsection{Stage 1: normalize the open relation}
+
+\[
+\Normalize:
+\OpenIR\to\OpenIR.
+\]
+
+Normalization may alpha-rename ports, normalize joins/hiding, expand derived logical syntax, and canonicalize type references.  It must preserve the completion relation:
+\[
+\Comp_{\Normalize(q)}\cong\Comp_q.
+\]
+
+\subsection{Stage 2: construct the local distinction chart}
+
+The compiler constructs or selects:
+\[
+\boxed{
+\mathcal B_q=
+(
+D_q,
+B_q,
+\widetilde B_q,
+\pi_X,
+\pi_Y,
+\Gamma_q,
+\Xi_q,
+T_q,
+g_q,
+\mathcal H_q
+).
+}
+\]
+
+For a multi-answer question, this may be a family of overlapping local boundary charts.  The compiler must not invent a global binary partition when the semantic answer structure does not provide one.
+
+\subsection{Stage 3: compute the active view}
+
+\[
+v_q=\eta_{q,g}(s_t).
+\]
+
+The view builder:
+\begin{enumerate}
+\item includes structure known to affect the live question or protected future;
+\item preserves relevance-undetermined structure as reachable reserve;
+\item occludes only structure with an applicable exact or approximate licence;
+\item records all reopening predicates used by the occlusion.
+\end{enumerate}
+
+\subsection{Stage 4: select discharge route}
+
+For every open port \(i\), the compiler respects:
+\[
+\operatorname{mode}(q,i).
+\]
+
+Pure ports lower to deterministic computation.  Generate ports may lower to an LLM or another semantic generator.  Probe ports lower to actualizable interactions.  Check ports lower to admitted checkers.  Warrant ports lower to the standing engine.
+
+A mixed question may compile to a program that discharges different ports through different routes.
+
+\section{LLM possibility relation}
+
+For model parameters \(\Theta\), define the binding-level conditional possibility relation:
+\[
+\boxed{
+G_\Theta:
+\mathsf{ContextIR}
+\times
+\PromptIR
+\times
+\mathsf{Budget}
+\rightsquigarrow
+\mathsf{RawCompletion}.
+}
+\]
+
+The weights \(\Theta\) parameterize the latent possibility field.  The calculus neither duplicates nor claims direct symbolic access to that field.
+
+\begin{law}[Weights/trace separation]
+\[
+\boxed{
+\text{weights parameterize possibility;}
+\quad
+\text{prompt/response occurrences constitute realized history.}
+}
+\]
+\end{law}
+
+\section{Prompt as executable operator}
+
+For semantic question \(q\), boundary chart \(\mathcal B_q\), and active view \(v_q\), the LLM compiler emits:
+\[
+\boxed{
+u=
+\Render_{\Theta,\B}(q,\mathcal B_q,v_q,\mathsf{policy})
+:
+\PromptIR.
+}
+\]
+
+The prompt is the executable representation of the probe operator for the LLM backend.
+
+A runtime LLM occurrence is:
+\[
+\boxed{
+r
+\in
+G_\Theta(v_q,u,b).
+}
+\]
+
+The semantic question is not identified with the prompt text:
+\[
+q\neq u.
+\]
+Prompt wording may change while preserving the same typed operator contract.
+
+\section{Canonical rendering and elaboration}
+
+Define:
+\[
+\Render_{\B}:
+\OpenIR\to\PromptIR
+\]
+and partial elaboration:
+\[
+\Elab_{\B}:
+\PromptIR\rightharpoonup\mathcal P_f(\OpenIR).
+\]
+
+For controlled canonical renderings, target:
+\[
+\boxed{
+\Normalize(
+\Elab_{\B}(\Render_{\B}(q))
+)
+=
+\{\Normalize(q)\}.
+}
+\]
+Free prose receives no such guarantee.
+
+\subsection{Rendering obligations}
+
+A canonical renderer must preserve:
+\begin{itemize}
+\item relation schema identity;
+\item bound referents;
+\item open port names and types;
+\item scope and applicability;
+\item boundary orientation when protected;
+\item discharge route;
+\item resolution criterion;
+\item any comparator required for recurrent probing.
+\end{itemize}
+
+\section{Behavioral compiler correctness}
+
+Literal text equality is not the relevant criterion.  For protected continuation family \(\mathcal H\), define:
+\[
+u_1\equiv_{\mathcal H}^{LLM}u_2
+\]
+when no protected LLM-facing continuation distinguishes the operational inquiry behavior induced by the two prompts.
+
+For operator \(o\), compiler correctness is:
+\[
+\boxed{
+\operatorname{Behavior}(\Compile_\Theta(o))
+\equiv_{\mathcal H}
+\den{o}
+}
+\]
+or, where exact equality is impossible, an explicitly licensed approximation:
+\[
+\operatorname{Behavior}(\Compile_\Theta(o))
+\approx_{\mathcal H,\epsilon}
+\den{o}.
+\]
+
+The approximation relation must name its discriminator set, error relation, and reopening condition.
+
+\section{Question-conditioned LLM field}
+
+A practical LLM context may be constructed from:
+\[
+\boxed{
+\mathcal F_t(q)
+=
+A_t(q)
++
+H_t(q)
++
+Cross_t(q)
++
+Retrieve_t(q)
++
+Methods_t(q)
++
+Reopen_t(q).
+}
+\]
+
+These symbols denote derived projections:
+\begin{itemize}
+\item \(A_t(q)\): currently active relation-bearing structure;
+\item \(H_t(q)\): prior comparable occurrences of the same probe contract;
+\item \(Cross_t(q)\): other probe traces relevant to covariation or dissociation;
+\item \(Retrieve_t(q)\): distant retained/documentary structure adjacent under the open relation;
+\item \(Methods_t(q)\): native methods whose typed input/output relation may discharge a port;
+\item \(Reopen_t(q)\): unlock conditions that may reactivate currently occluded structure.
+\end{itemize}
+
+This is not a separate memory ontology.  It is a question-conditioned projection of retained structure.
+
+\part{History, State, and Recurrent Probing}
+
+\section{Three orders that must not collapse}
+
+The runtime distinguishes:
+\[
+\boxed{
+<_{\mathrm{ledger}},
+\qquad
+\lambda_{\mathrm{real}},
+\qquad
+T_D.
+}
+\]
+
+\begin{itemize}
+\item \(<_{\mathrm{ledger}}\): append/storage order of authoritative event records;
+\item \(\lambda_{\mathrm{real}}\): binding-defined realized/domain succession;
+\item \(T_D\): inquiry traversal along a distinction boundary.
+\end{itemize}
+
+No equation among these is constitutional.
+
+\section{Authoritative histories}
+
+\begin{definition}[Event history]
+\[
+\boxed{
+H_t^{evt}=E_0\cdot E_1\cdots E_{t-1}
+}
+\]
+is the append-only authoritative history of realized probe occurrences and other explicitly admitted external returns.
+\end{definition}
+
+\begin{definition}[Accepted revision history]
+\[
+\boxed{
+H_t^{acc}=P_0\cdot P_1\cdots P_{m-1}
+}
+\]
+is the authoritative history of accepted semantic/traversal/compiler/binding/protection patches.
+\end{definition}
+
+Event history and accepted revision history are independent ancestries.  A semantic interpretation may be revised without rewriting the external event from which it was derived.
+
+\section{Event record}
+
+A canonical actual event record is:
+\[
+\boxed{
+E_t=
+\left\langle
+\StateRef_t,
+q_t,
+\BoundaryRef_t,
+\OpRef_t,
+\ReturnRef_t,
+\StateRef_{t+1},
+g_t,
+\mathsf{route}_t,
+\mathsf{prov}_t
+\right\rangle.
+}
+\]
+
+The record preserves:
+\begin{itemize}
+\item the state/configuration reference before the occurrence;
+\item the semantic question/probe-schema reference;
+\item the active boundary chart reference;
+\item the exact compiled operator/prompt reference;
+\item the raw return reference;
+\item the successor state/configuration reference;
+\item the representation grain;
+\item the discharge/actualization route;
+\item provenance, backend version, binding version, and required replay metadata.
+\end{itemize}
+
+\section{State and working presentation}
+
+A state snapshot may be physically large.  The calculus imposes no requirement that it be globally compressed.
+
+Define the authoritative accepted presentation:
+\[
+\boxed{
+A_t=\operatorname{VersionedFold}(H_t^{acc}).
+}
+\]
+
+Define the current working presentation as:
+\[
+\boxed{
+\Pi_t=\operatorname{Presentation}(A_t,H_t^{evt},\epsilon_t).
+}
+\]
+
+Any question-conditioned active view is derived from retained state/history:
+\[
+v_t(q)=\eta_{q,g}(\Pi_t,H_t^{evt}).
+\]
+
+No hidden mutable ``memory state'' may become authoritative when the same information is supposed to be reconstructible from event ancestry and accepted patches.
+
+\section{Operator occurrence index}
+
+The compact operator layer is:
+\[
+\boxed{
+\mathsf{OpOcc}_t
+=
+(
+\StateRef_t,
+\OpRef_t,
+\ReturnRef_t,
+\StateRef_{t+1},
+\BoundaryRef_t
+).
+}
+\]
+
+For operator \(o\),
+\[
+\boxed{
+Occurrences(o)
+=
+\{
+\EventRef_t:
+\OpRef(E_t)=o
+\}.
+}
+\]
+
+The operator index is a lookup over history; it does not duplicate the state snapshots to which it points.
+
+\section{Recurrent probes}
+
+\begin{definition}[Probe contract]
+A recurrent probe contract is:
+\[
+\boxed{
+\mathcal C_o=
+(
+\mathsf{RelRole},
+\B,
+g,
+\mathsf{Applicability},
+\mathsf{Comparator},
+\mathcal H,
+\mathsf{DecoderVersion}
+).
+}
+\]
+\end{definition}
+
+Surface wording is neither necessary nor sufficient for probe identity.
+
+\begin{definition}[Occurrence comparability]
+Two occurrences \(E_i,E_j\) of an operator are comparable when:
+\[
+\boxed{
+Comparable(E_i,E_j)
+\iff
+SameContract(E_i,E_j)
+\lor
+Bridge(\mathcal C_i,\mathcal C_j).
+}
+\]
+A bridge is itself a standing typed relation establishing the protected correspondence between changed contracts.
+\end{definition}
+
+\begin{law}[Probe identity]
+\[
+\boxed{
+\text{same wording}
+\neq
+\text{same probe}
+}
+\]
+and:
+\[
+\boxed{
+\text{same operator identifier}
+\not\Rightarrow
+\text{comparable occurrence}
+}
+\]
+when binding, grain, comparator, applicability, or protected meaning changed without a bridge.
+\end{law}
+
+\section{Probe traces}
+
+For recurrent probe contract \(o\), define the ordered comparable trace:
+\[
+\boxed{
+H_o^t=
+\langle E_{t_1},\ldots,E_{t_n}\rangle
+}
+\]
+such that each pair admitted for comparison satisfies the probe contract or an explicit bridge.
+
+Probe traces are ordinary relational operands.  Questions over them can ask for:
+\begin{itemize}
+\item persistence;
+\item change;
+\item change point;
+\item recurrence;
+\item covariation with another trace;
+\item dissociation;
+\item path dependence;
+\item boundary movement;
+\item comparator failure.
+\end{itemize}
+
+No perceived pattern becomes warranted solely because it is salient in the trace.
+
+\section{Fresh probe before historical comparison}
+
+When the environment/model interface permits a current return to be obtained without injecting prior semantic interpretations, prefer:
+\[
+\boxed{
+\text{fresh probe}
+\longrightarrow
+\text{trace comparison}.
+}
+\]
+
+Formally, obtain:
+\[
+r_t^0=\operatorname{ProbeFresh}(o,z_t,v_t^0),
+\]
+then:
+\[
+p_t=
+\operatorname{Compare}(H_o^{t-1},E_t^0).
+\]
+
+This is a method-level control, not a constitutional primitive.  Its purpose is to prevent continuity in model wording from being mistaken for persistence in the independently probed environment.
+
+\section{Question-order diagnostics}
+
+Let \(U_q\) denote the state/update relation induced by executing and resolving \(q\).  For questions believed to be independent, test:
+\[
+U_r\circ U_q
+\quad\text{against}\quad
+U_q\circ U_r.
+\]
+
+If:
+\[
+\boxed{
+U_r\circ U_q
+\not\equiv_{\mathcal H}
+U_q\circ U_r,
+}
+\]
+inquire whether the difference reflects:
+\begin{enumerate}
+\item a genuine relational interaction/path dependence; or
+\item an irrelevant order effect of the LLM/compiler/runtime.
+\end{enumerate}
+
+Question-pattern learning must not silently quotient away protected order dependence.
+
+
+\part{Protected Behavior, Folding, Learning, and Recovery}
+
+\section{Protected behavioral equivalence}
+
+Let \(\mathcal H\) be the protected family of future contexts/continuations applicable to parallel terms.
+
+\begin{definition}[Protected equivalence]
+For \(f,g:A\to B\) or parallel relational terms,
+\[
+\boxed{
+f\equiv_{\mathcal H}g
+\iff
+\forall K\in\mathcal H,\,
+\Con_K(f)=\Con_K(g).
+}
+\]
+\end{definition}
+
+\begin{definition}[Separator family]
+\[
+\boxed{
+\Sep_{\mathcal H}(f,g)
+=
+\{
+K\in\mathcal H:
+\Con_K(f)\neq\Con_K(g)
+\}.
+}
+\]
+Hence:
+\[
+f\not\equiv_{\mathcal H}g
+\iff
+\Sep_{\mathcal H}(f,g)\neq\varnothing.
+\]
+\end{definition}
+
+\begin{law}[Horizon monotonicity]
+If
+\[
+\mathcal H\subseteq\mathcal H',
+\]
+then:
+\[
+\boxed{
+\equiv_{\mathcal H'}
+\subseteq
+\equiv_{\mathcal H}.
+}
+\]
+Adding protected future use may split old classes but cannot merge classes already distinguished by the retained horizon.
+\end{law}
+
+\begin{definition}[Working nondistinction]
+For finite tested discriminator set \(\mathcal D\subseteq\mathcal H\),
+\[
+x\approx_{\mathcal H,\mathcal D}y
+\]
+means no discriminator in \(\mathcal D\) has separated \(x,y\).  It is weaker than exact protected equivalence unless the binding licenses completeness of \(\mathcal D\).
+\end{definition}
+
+\section{Hom-wise operator quotient}
+
+Because direct equivalence compares parallel terms, quotient typed operator spaces hom-wise:
+\[
+\boxed{
+\mathsf Q_{\mathcal H}(A,B)
+=
+\mathsf{Tm}_{\B}(A,B)/
+{\equiv_{\mathcal H}}.
+}
+\]
+
+Let:
+\[
+\eta_{\mathcal H}^{A,B}:
+\mathsf{Tm}_{\B}(A,B)
+\to
+\mathsf Q_{\mathcal H}(A,B)
+\]
+be the quotient map.
+
+\begin{definition}[Congruence]
+Protected equivalence is compositional over an admitted regime when:
+\[
+f\equiv_{\mathcal H}f',
+\qquad
+g\equiv_{\mathcal H}g'
+\]
+imply:
+\[
+\boxed{
+g\circ f
+\equiv_{\mathcal H}
+g'\circ f'.
+}
+\]
+\end{definition}
+
+When congruence holds, composition descends:
+\[
+\boxed{
+[g]_{\mathcal H}\circ[f]_{\mathcal H}
+=
+[g\circ f]_{\mathcal H}.
+}
+\]
+
+\section{Operator descent}
+
+A present-output quotient is not automatically executable recurrent state.
+
+Let:
+\[
+q:X\to S
+\]
+be a representation quotient and let:
+\[
+a:X\rightsquigarrow X'
+\]
+be a protected continuation.
+
+\begin{definition}[Continuation descent]
+Continuation \(a\) descends through \(q\) when there exist:
+\[
+q':X'\to S'
+\]
+and:
+\[
+\bar a:S\rightsquigarrow S'
+\]
+such that the square commutes relationally:
+\[
+\boxed{
+q'\circ a
+=
+\bar a\circ q.
+}
+\]
+\end{definition}
+
+For every protected continuation in scope, executable retained state requires such a descent.
+
+\begin{law}[Current-output sufficiency is not recursive-state sufficiency]
+\[
+\boxed{
+\text{present consequence sufficiency}
+\not\Rightarrow
+\text{continuation sufficiency}.
+}
+\]
+\end{law}
+
+
+\section{Regenerative sufficiency, understanding, and learning}
+
+\begin{definition}[Regenerative sufficiency]
+Let \(m:M\) be a retained representation of a protected form or distinction \(z\).  Write
+\[
+\boxed{
+Regen_{\mathcal H}(m,z)
+}
+\]
+when there exist typed reconstruction relations that recover every protected component required by the current horizon from \(m\), and the reconstructions are protected-equivalent to the corresponding components of \(z\).  For a distinction point, this includes at least its reciprocal side classes and, when protected, its sixfold reciprocal profile:
+\[
+\rho_X(m)\equiv_{\mathcal H}x_z,
+\qquad
+\rho_Y(m)\equiv_{\mathcal H}y_z,
+\qquad
+\rho_{\Xi}(m)\equiv_{\mathcal H}\Xi_D(z).
+\]
+\end{definition}
+
+\begin{definition}[Inquiry-regenerative sufficiency]
+\[
+\boxed{
+Regen^{inq}_{\mathcal H}(m,z)
+}
+\]
+holds when \(Regen_{\mathcal H}(m,z)\) holds and \(m\) also retains or can regenerate the protected discriminators, residuals, support dependencies, or reopening routes needed to test and revise \(z\).
+\end{definition}
+
+\begin{definition}[Understanding]
+Understanding is a derived role, not a new semantic species:
+\[
+\boxed{
+Understand_{\mathcal H}(m,z)
+\iff
+Regen^{inq}_{\mathcal H}(m,z).
+}
+\]
+This definition does not claim that biological or computational memory is unnecessary.  It distinguishes stored historical content from the regenerative competence by which a protected relational structure can be reconstructed and revised.
+\end{definition}
+
+\begin{definition}[Ablative regeneration test]
+For retained relational presentation \(M\) and form \(x\), define \(\operatorname{Ablate}_x(M)\) by replacing protected occurrences of \(x\) with open ports while retaining their governing relations.  Define
+\[
+\boxed{
+\operatorname{Regen}_x(M)
+=
+\operatorname{Sol}_{\operatorname{Ablate}_x(M)}.
+}
+\]
+A direct protected regeneration witness is
+\[
+\operatorname{Regen}_x(M)/{\equiv_{\mathcal H}}
+=
+\{[x]_{\mathcal H}\}.
+\]
+This is an executable test of whether the retained web determines \(x\) at the protected grain.
+\end{definition}
+
+\begin{law}[Learning as regenerative gain]
+\[
+\boxed{\textbf{LEARNING IS A STANDING CHANGE IN REGENERATIVE CAPACITY.}}
+\]
+A learned change may add or refine a distinction, improve protected reconstruction, invent a nonredundant representation/probe, compile a recurrent question/operator path, or reduce the active cost of regenerating protected structure.  Historical events provide evidence for the change but are not identical to the learned competence.
+\end{law}
+
+\begin{definition}[Learning gain]
+A candidate learned form \(m\) has a regenerative/traversal gain when, under a declared applicability region and resource preorder, it strictly improves at least one of:
+\[
+\mathsf{Discriminate},\quad
+\mathsf{Regenerate},\quad
+\mathsf{Traverse},\quad
+\mathsf{Reacquire},\quad
+\mathsf{Cost},\quad
+\mathsf{Robustness}
+\]
+while preserving protected behavior and warrant boundaries.  Promotion still requires independent standing.
+\end{definition}
+
+\section{Method and operator-path folding}
+
+Suppose a recurrent typed path:
+\[
+P=o_n\circ\cdots\circ o_1
+\]
+is repeatedly instantiated.
+
+\begin{definition}[Method promotion]
+A method \(m:A\to B\) may be promoted with:
+\[
+m\doteq_{\mathcal H}P
+\]
+only when:
+\begin{enumerate}
+\item \(m\) and \(P\) are parallel or explicitly bridged;
+\item \(m\equiv_{\mathcal H}P\) over the declared applicability region;
+\item required continuations descend;
+\item the promotion has a typed operational gain or necessary implementation purpose;
+\item defining path/provenance remains recoverable as required;
+\item an unlock/reopening contract is stored;
+\item method utility does not confer semantic warrant on future outputs.
+\end{enumerate}
+\end{definition}
+
+The promotion record contains:
+\[
+\boxed{
+\mathsf{MethodFold}
+=
+(
+m,P,\mathcal H,\mathsf{Applicability},
+\mathsf{EvidenceRefs},\mathsf{Gain},
+\mathsf{Recovery},\mathsf{Unlock}
+).
+}
+\]
+
+\section{Two forms of traversal learning}
+
+\subsection{Path folding}
+
+A recurring question/probe sequence:
+\[
+o_1;o_2;\cdots;o_n
+\]
+is compressed to a reusable operator/method under the fold law above.
+
+\subsection{Probe-basis extension}
+
+A new probe \(p'\) may be admitted when the old probe repertoire cannot expose a protected distinction that \(p'\) can expose.
+
+A canonical nonredundancy witness is:
+\[
+\boxed{
+\exists x,y:
+\left[
+\forall p\in\mathcal P_{\mathrm{old}},\,
+p(x)=p(y)
+\right]
+\land
+p'(x)\neq p'(y)
+\land
+\Con_{\mathcal H}(x)\neq\Con_{\mathcal H}(y).
+}
+\]
+
+A generated probe remains inert until subsequent independent use demonstrates the claimed nonredundant protected discrimination, retrieval, reasoning, or control benefit.
+
+Thus:
+\[
+\boxed{
+\text{learning what relation stands}
+\neq
+\text{learning how to expose that relation}.
+}
+\]
+
+\section{Question-pattern learning}
+
+A realized question-pattern occurrence can be represented:
+\[
+\boxed{
+\mathcal T_t
+\subseteq
+\OpenIR
+\times
+\OpRef
+\times
+\ReturnRef
+\times
+\OpenIR.
+}
+\]
+
+With state and boundary linkage:
+\[
+\mathcal T_t^+
+\subseteq
+\StateRef
+\times
+\OpenIR
+\times
+\BoundaryRef
+\times
+\OpRef
+\times
+\ReturnRef
+\times
+\StateRef
+\times
+\OpenIR.
+\]
+
+A learned policy/method describes:
+\[
+(q_t,r_t,s_t)\rightsquigarrow q_{t+1}
+\]
+only under an explicit applicability relation.  It is not a universal scheduler or a semantic truth relation.
+
+\section{Memory and recovery}
+
+Memory is not introduced as an independent semantic state kind.  Retained realized history and accepted operator/semantic folds are authoritative.  Future use may nevertheless require several distinct recovery relations.
+
+For retained material \(m\), context \(c\), and competence \(k\), distinguish:
+\[
+Use_{\mathcal H}(m,c,k),
+\]
+\[
+Reconstruct_{\mathcal H}(m,c,k),
+\]
+\[
+Evaluate_{\mathcal H}(m,c,k),
+\]
+\[
+Reacquire_{\mathcal H}(m,c,k).
+\]
+
+No universal implication among these relations is assumed.
+
+\subsection{Use}
+
+The competence can presently be exercised using retained material.
+
+\subsection{Reconstruction}
+
+The protected competence/representation can be regenerated from retained material without substantial new external evidence.
+
+\subsection{Evaluation without reconstruction}
+
+A protected consequence can be evaluated even when the full historical representation is not reconstructed.
+
+\subsection{Reacquisition}
+
+Retained structure lowers the future cost/frontier for regaining competence, even if direct use and reconstruction fail.
+
+Let:
+\[
+\mathfrak C_{\mathcal H}(m,c,k)
+\]
+be a binding-relative nondominated reacquisition frontier and:
+\[
+\mathfrak C^0_{\mathcal H}(c,k)
+\]
+a pinned baseline without \(m\).  A reacquisition advantage exists when:
+\[
+\boxed{
+\mathfrak C_{\mathcal H}(m,c,k)
+\prec
+\mathfrak C^0_{\mathcal H}(c,k).
+}
+\]
+
+\begin{law}[Keep experiences; compile routes]
+The default architecture preserves realized history as fully as the storage contract permits and learns smaller routing/operator structure over it.  State compression is an independent licence, not a precondition of learning.
+\end{law}
+
+\section{Historical fact versus generated reconstruction}
+
+A reconstruction candidate must distinguish:
+\[
+\boxed{
+\mathsf{HistoricalFactRefs}
+\quad\text{from}\quad
+\mathsf{GeneratedReconstruction}.
+}
+\]
+
+Generated continuity may fill a working context, but it does not rewrite historical event ancestry.
+
+When reconstruction leaves several protected-distinct candidates:
+\[
+\widehat x_1\not\equiv_{\mathcal H}\widehat x_2,
+\]
+the ambiguity becomes an inquiry obligation rather than being silently collapsed.
+
+\part{Claims, Support, Warrant, and Standing}
+
+\section{Claim lifecycle}
+
+A semantic generator may produce:
+\[
+\boxed{
+\mathsf{Claim}[\phi]
+}
+\]
+without establishing \(\phi\).
+
+A reifier may partially map:
+\[
+\mathsf{Reify}:
+\mathsf{Claim}[\tau]
+\rightharpoonup
+\mathsf{Candidate}[\tau].
+\]
+
+Failure to reify is lawful and may open decomposition, clarification, re-expression, binding, or unknown-status inquiry.
+
+A candidate relation becomes standing only through the warrant system.
+
+\begin{law}[Claim/fact separation]
+\[
+\boxed{
+\mathsf{Claim}[\phi]
+\not\Rightarrow
+\Stand(\phi).
+}
+\]
+Question syntax, answer type, or model confidence cannot promote a claim.
+\end{law}
+
+\section{Support environments}
+
+\begin{definition}[Support environment]
+For candidate or retained relation \(\lambda\), a support environment \(E\) is a finite or finitely represented set of typed premises, actual returns, checker results, assumptions, and applicable standing relations claimed to support \(\lambda\).
+\end{definition}
+
+\begin{definition}[Minimal support family]
+\[
+\boxed{
+\Supp(\lambda)
+=
+\operatorname{Min}_{\subseteq}
+\{
+E:
+E\text{ is a candidate support environment for }\lambda
+\}.
+}
+\]
+Multiple incomparable support environments may exist.
+\end{definition}
+
+\section{Open dependency boundary}
+
+\begin{definition}[Open dependency]
+For support environment \(E\),
+\[
+\boxed{
+\partial^-_E\lambda
+=
+\{
+d:
+d\text{ is required for }\lambda
+\text{ but is neither supplied by }E
+\text{ nor independently discharged}
+\}.
+}
+\]
+\end{definition}
+
+Every open dependency is itself a lawful question target:
+\[
+\boxed{
+?d[
+d\in\partial^-_E\lambda
+].
+}
+\]
+
+\section{Closed support}
+
+Relative to standing set \(X\), define:
+\[
+\Closed_X(E,\lambda)
+\]
+when:
+\begin{enumerate}
+\item all premises of \(E\) requiring standing belong to \(X\);
+\item applicability/scope conditions hold;
+\item \(\partial^-_E\lambda=\varnothing\);
+\item admitted independent checks required by the route succeed;
+\item no explicit inconsistency policy invalidates \(E\).
+\end{enumerate}
+
+\section{Least-fixed-point standing}
+
+Let \(\mathsf{Ingress}_t\) contain grounded standing facts available independently of inference cycles: preserved actual-return facts, trusted configuration facts, accepted predecessor relations, checker axioms, or other binding-authorized roots.
+
+Define the monotone operator:
+\[
+\boxed{
+T_t(X)
+=
+\mathsf{Ingress}_t
+\cup
+\{
+\lambda:
+\exists E\in\Supp(\lambda),\
+\Closed_X(E,\lambda)
+\}.
+}
+\]
+
+Then:
+\[
+\boxed{
+\Stand_t
+=
+\mu T_t.
+}
+\]
+
+\begin{theorem}[No rootless positive support cycle]
+A finite set of relations whose only support routes depend positively on one another and which contains no grounded ingress element does not enter \(\mu T_t\).
+\end{theorem}
+
+\begin{proof}
+Starting from the least element \(\varnothing\), no member of the cycle can be added until its dependencies are already present.  By induction on fixed-point iteration, none appears without an external ingress/discharge route.
+\end{proof}
+
+\section{Applicability is not evidential support}
+
+An applicability condition \(g\) says when a relation may be used.  It is not a substitute for support.
+
+A retained relation therefore keeps at least:
+\[
+\boxed{
+(
+\lambda,
+\mathsf{scope},
+\mathsf{applicability},
+\Supp(\lambda),
+\partial^-,
+\mathsf{warrantClass},
+\mathsf{certificateRefs}
+).
+}
+\]
+
+A change in applicability may deactivate a relation without erasing its historical warrant record.
+
+\part{Compression, Residue, and Reopening}
+
+\section{Exact representation quotient}
+
+Let:
+\[
+c:X\to Y
+\]
+be a proposed exact representation quotient.
+
+\subsection{Consequence sufficiency}
+
+Require:
+\[
+\boxed{
+c(x)=c(y)
+\Longrightarrow
+x\equiv_{\mathcal H}y.
+}
+\]
+
+If an exact coarsest quotient exists:
+\[
+c(x)=c(y)
+\iff
+x\equiv_{\mathcal H}y.
+\]
+
+\subsection{Continuation sufficiency}
+
+For every protected continuation \(a\), require a descended continuation \(\bar a\) as specified earlier.
+
+
+\subsection{Regenerative preservation}
+
+When a quotient or fold replaces an actively represented form \(z\) by \(m\), and protected future use may require reopening \(z\), require
+\[
+\boxed{
+Regen_{\mathcal H}(m,z)
+}
+\]
+or an explicit reacquisition contract whose loss is already admitted by an approximate licence.  Present-output sufficiency alone is not enough to call the retained form regeneratively sufficient.
+
+\subsection{Recovery/reopening contract}
+
+The quotient must retain enough:
+\begin{itemize}
+\item provenance;
+\item residual distinctions;
+\item factorization route;
+\item recovery or reacquisition route;
+\item unlock triggers
+\end{itemize}
+for every protected future requirement of the licence.
+
+\section{Compression license}
+
+A canonical exact compression licence is:
+\[
+\boxed{
+\Lambda_c
+=
+(
+c,\mathcal H,\mathcal A,
+\mathsf{Scope},
+\mathsf{Recovery},
+\mathsf{Residual},
+\Unlock(c),
+\mathsf{Evidence}
+).
+}
+\]
+
+Here \(\mathcal A\) is the protected continuation/operator family.
+
+No quotient is called exact merely because current tests failed to distinguish its classes.
+
+\section{Approximate compression}
+
+When exact quotienting does not satisfy the resource contract, a binding may define:
+\[
+\widetilde c:X\to\widehat X
+\]
+and consequence distortion:
+\[
+\boxed{
+\Delta_{\mathcal H}(x,\widetilde c(x)).
+}
+\]
+
+An approximate licence must state:
+\begin{enumerate}
+\item the protected consequence family;
+\item the distortion relation or preorder;
+\item admissible error;
+\item resource gain;
+\item residual/error structure retained;
+\item reopening triggers;
+\item whether continuation behavior is also approximated.
+\end{enumerate}
+
+Approximate compression may never be reported as exact protected equivalence.
+
+\section{Unlock field}
+
+\begin{definition}[Unlock]
+\[
+\boxed{
+\Unlock(c)
+=
+\Unlock_{\mathrm{obs}}(c)
+\cup
+\Unlock_{\mathrm{dyn}}(c)
+\cup
+\Unlock_{\mathrm{ctx}}(c).
+}
+\]
+
+\[
+\Unlock_{\mathrm{obs}}(c)
+=
+\{
+K:
+\Con_K
+\text{ no longer factors through }c
+\}.
+\]
+
+\[
+\Unlock_{\mathrm{dyn}}(c)
+=
+\{
+a:
+a
+\text{ no longer descends through }c
+\}.
+\]
+
+\(\Unlock_{\mathrm{ctx}}\) contains binding, scope, applicability, assumptions, authority, protection, or recovery-contract changes that invalidate the original licence.
+\end{definition}
+
+Thus:
+\[
+\boxed{
+\text{separator-triggered reopening}
+\subseteq
+\text{unlock-triggered reopening}.
+}
+\]
+
+\section{Reopening}
+
+If a trigger \(u\in\Unlock(c)\) becomes active:
+\[
+\boxed{
+\Reopen(c,u).
+}
+\]
+
+Reopening:
+\begin{enumerate}
+\item preserves the old quotient as historical ancestry;
+\item locates the smallest implicated identification;
+\item restores residue/provenance/recovery information;
+\item refines the active representation;
+\item records the new protection or continuation that broke the old licence.
+\end{enumerate}
+
+Reopening is not epistemic amnesia and does not require deleting a once-lawful compression from history.
+
+\section{Pattern separation and completion}
+
+If retained events are similar under a working representation but have protected-different consequences:
+\[
+Similar(e_i,e_j)
+\land
+\Con_{\mathcal H}(e_i)\neq\Con_{\mathcal H}(e_j),
+\]
+then the representation must separate them.
+
+Conversely, pattern completion across compressed histories is licensed only when all completions still live under the reconstruction are protected-equivalent or when an explicit approximate licence permits the ambiguity.
+
+\part{Question Frontiers, Productivity, and Search}
+
+\section{Semantic question universe}
+
+Let:
+\[
+Q^\infty(\Sigma)
+\]
+denote the mathematical set of all well-typed questions constructible from the current relation/operator presentation, open-port grammar, admitted bindings, and unbounded semantic composition.
+
+It need not be computably enumerable.
+
+\section{Executable question universe}
+
+An effectivity profile is:
+\[
+\boxed{
+\epsilon=
+(
+b_G,b_D,b_T,
+\mathsf{Deciders},
+\mathsf{SemiDeciders},
+\mathsf{Policy}
+).
+}
+\]
+
+A finite/resource-bounded generator produces:
+\[
+Q^\epsilon(\Sigma)\subseteq Q^\infty(\Sigma).
+\]
+
+Failure to generate a question under \(\epsilon\) is not proof that no such semantic question exists.
+
+\section{Question productivity}
+
+Let \(Step^\ast(\Sigma,q,r)\) be the finite or binding-native successor behavior after a supported return class \(r\).
+
+A question is productive relative to \(\mathcal H\) when there exist lawful supported returns \(r_1,r_2\) such that:
+\[
+\boxed{
+Step^\ast(\Sigma,q,r_1)
+\not\equiv_{\mathcal H}^{\mathcal P}
+Step^\ast(\Sigma,q,r_2).
+}
+\]
+
+The lifting \(\equiv_{\mathcal H}^{\mathcal P}\) for plural/nondeterministic successors is binding-supplied.  The reference finite symmetric lifting is:
+\[
+\widehat{\Con}(K,U)
+=
+\{\Con_K(u):u\in U\},
+\]
+and:
+\[
+U\equiv_{\mathcal H}^{\mathcal P}V
+\iff
+\forall K\in\mathcal H,\,
+\widehat{\Con}(K,U)=\widehat{\Con}(K,V).
+\]
+
+Bindings may instead supply Hoare, Smyth, Plotkin, probabilistic, trace, game, or concurrent liftings.
+
+\section{Semantic and executable frontiers}
+
+Define:
+\[
+\boxed{
+Frontier^\infty_{\mathcal H}(\Sigma)
+=
+ND\{
+q\in Q^\infty(\Sigma):
+Applicable(q,\Sigma)
+\land
+Productive_{\mathcal H}(q,\Sigma)
+\land
+\neg Resolved(q,\Sigma)
+\}.
+}
+\]
+
+Define the executable classification:
+\[
+Class^\epsilon(q)
+\in
+\{
+\mathsf{productive},
+\mathsf{idle},
+\mathsf{unknown}
+\}.
+\]
+
+Then:
+\[
+\boxed{
+Frontier^\epsilon_{\mathcal H}(\Sigma)
+=
+ND\{
+q\in Q^\epsilon(\Sigma):
+Applicable^\epsilon(q,\Sigma)
+\land
+\neg Resolved^\epsilon(q,\Sigma)
+\land
+Class^\epsilon(q)\neq\mathsf{idle}
+\}.
+}
+\]
+
+\begin{law}[Unknown legality]
+Failure to find a separator, path, counterexample, proof, or useful question under current resources does not establish equivalence, impossibility, necessity, or irrelevance.
+\end{law}
+
+\section{Relative completeness of the question grammar}
+
+\begin{theorem}[Bounded separator completeness]
+Assume:
+\begin{enumerate}
+\item the current bounded representational repertoire contains every available protected distinguishing context;
+\item context application is expressible;
+\item every nonempty typed open port set may be exposed as a question;
+\item well-typed question enumeration is fair.
+\end{enumerate}
+If two live completions \(x,y\) are distinguishable by the bounded repertoire, then the generated question language contains a question that separates them.
+\end{theorem}
+
+\begin{proof}
+By assumption, there exists an expressible protected context \(K\) with distinct consequences on \(x,y\).  Reify the relation schema for \(K\)'s relevant output and expose the corresponding output/discriminator port.  Fair enumeration eventually generates that well-typed open relation, whose support profile differs on \(x,y\).
+\end{proof}
+
+This theorem is relative to the binding, represented repertoire, protection horizon, and resource assumptions.  Acquisition of a new relation/context can lawfully reopen an old quotient.
+
+\section{Question selection}
+
+The calculus does not impose a universal scalar objective.  When several executable questions are incomparable, retain a nondominated frontier over binding-supplied dimensions such as:
+\begin{itemize}
+\item expected discrimination;
+\item probe cost;
+\item latency;
+\item risk;
+\item reversibility;
+\item authority strength;
+\item information gain;
+\item reuse value;
+\item reopening value.
+\end{itemize}
+
+A scheduling policy is a binding/runtime policy, not part of the semantic kernel.
+
+
+\part{Prediction, Native Methods, and Control}
+
+\section{Prediction}
+
+Prediction is a represented forward consequence, not actuality.
+
+For:
+\[
+T:X\rightsquigarrow Y
+\]
+and target predicate \(Q\subseteq Y\):
+\[
+\boxed{
+Possible_T(Q,x)
+\iff
+\exists y.\,T(x,y)\land Q(y),
+}
+\]
+\[
+\boxed{
+Necessary_T(Q,x)
+\iff
+\forall y.\,T(x,y)\Rightarrow Q(y).
+}
+\]
+
+The universal precondition transformer is:
+\[
+\boxed{
+Pre_T(Q)
+=
+\{x:
+\forall y.\,T(x,y)\Rightarrow Q(y)
+\}.
+}
+\]
+
+\section{Prediction seal}
+
+When a consequential probe is being used to discriminate a prediction, seal the prediction before the return:
+\[
+\boxed{
+\mathsf{PredictionSeal}
+=
+(
+\mathsf{id},
+\mathsf{attemptRef},
+\widehat R,
+\widehat C,
+\epsilon,
+\mathsf{scope},
+\mathsf{basisRefs}
+).
+}
+\]
+
+The seal satisfies:
+\[
+\boxed{
+\mathsf{PredictionSeal}
+\prec_{\mathrm{ledger}}
+\mathsf{ExternalReturn}.
+}
+\]
+
+Once actualization begins producing a return, the prediction, its assumptions, and its acceptance relation may not be retrospectively rewritten for that test.
+
+\section{Mismatch}
+
+A mismatch is a typed relation between a sealed prospective prediction and an actual preserved return:
+\[
+\boxed{
+Mismatch(\pi,r).
+}
+\]
+
+Mismatch does not by itself identify which premise failed.  It generates localization questions over:
+\begin{itemize}
+\item scope;
+\item applicability;
+\item relation/factorization;
+\item transition;
+\item decoder;
+\item representation;
+\item hidden dependency;
+\item binding.
+\end{itemize}
+
+\section{Success attacks necessity}
+
+A confirming return does not end scrutiny.  Failure attacks sufficiency:
+\[
+?x[P(x)\land\neg Q(x)].
+\]
+Success still attacks necessity:
+\[
+?x[\neg P(x)\land Q(x)].
+\]
+
+Thus:
+\[
+\boxed{
+\textbf{FAILURE ATTACKS SUFFICIENCY;
+SUCCESS STILL ATTACKS NECESSITY.}
+}
+\]
+
+\section{Description and control}
+
+A relation that predicts or describes a consequence is not automatically a control relation.
+
+If:
+\[
+D(x,y)
+\]
+describes a relation and:
+\[
+C(u,x,y)
+\]
+claims an intervention/control guarantee, then:
+\[
+\boxed{
+D\not\Rightarrow C
+}
+\]
+without an independently warranted transition/control bridge.
+
+When a controller is synthesized over an abstraction, the abstraction-to-concrete refinement relation must preserve the protected guarantee.  This is binding-specific and may use native feedback-refinement, simulation, refinement, or other established machinery.
+
+\section{Native method contract}
+
+A native method is registered by a compact typed contract:
+\[
+\boxed{
+\mathcal M=
+(
+\mathsf{id},
+X,
+Y,
+R_{\mathrm{in}},
+R_{\mathrm{out}},
+\mathsf{Applicability},
+\mathsf{Authority},
+\mathsf{Backend},
+\mathsf{Checker},
+\mathsf{Cost},
+\mathsf{Provenance}
+).
+}
+\]
+
+The generic inquiry compiler should use a mature native method when its input/output relation lawfully discharges the open relation.  The calculus does not reproduce domain algorithms merely because inquiry can describe them.
+
+A method result re-enters the ordinary return/decode/warrant lifecycle.
+
+\part{Learning, Patches, and Self-Revision}
+
+\section{Reasoning presentation}
+
+At version \(t\), define the reifiable presentation:
+\[
+\boxed{
+\begin{aligned}
+\mathsf{Pres}_t
+=(&\mathsf G_t,\mathsf E_t,\mathsf{RelSchemas}_t,\mathsf{TypeRules}_t,\\
+ &\mathsf{QuestionRules}_t,\mathsf{ProbeContracts}_t,\mathsf{Compiler}_t,\\
+ &\mathsf{Bindings}_t,\mathsf{Protection}_t).
+\end{aligned}
+}
+\]
+
+Here:
+\begin{itemize}
+\item \(\mathsf G_t\) is the admitted typed generator/operator repertoire;
+\item \(\mathsf E_t\) is the admitted family of equations, inequations, applicability constraints, and composition laws.
+\end{itemize}
+
+\section{Patch roles}
+
+A candidate change is:
+\[
+\boxed{
+\pi:\PatchIR[k].
+}
+\]
+
+Roles include:
+\[
+k\in
+\{
+\mathsf{Semantic},
+\mathsf{Traversal},
+\mathsf{Compiler},
+\mathsf{Binding},
+\mathsf{Protection},
+\mathsf{Implementation}
+\}.
+\]
+
+\subsection{Semantic patch}
+
+Changes standing semantic relations or their support/warrant status.
+
+\subsection{Traversal patch}
+
+Changes question/probe repertoire, operator paths, routing policy, learned methods, or active-view construction without asserting a new fact about the external domain.
+
+\subsection{Compiler patch}
+
+Changes lowering/rendering/decoding implementation while preserving semantic operator contracts or explicitly changing them through a governed successor.
+
+\subsection{Binding patch}
+
+Adds or changes native types, relations, actualization channels, comparison bridges, or composition laws.
+
+\subsection{Protection patch}
+
+Changes the protected horizon.  It is particularly sensitive because it may invalidate earlier folds.  It may not be silently changed by an optimization.
+
+\section{Primitive presentation changes}
+
+A warranted successor may:
+\begin{itemize}
+\item add a generator/operator;
+\item add a standing equation/merge;
+\item split an old equation after a new separator;
+\item add a question/open-port operation;
+\item refine an answer frame;
+\item add a probe contract;
+\item promote a composite method;
+\item import a native method;
+\item rebind;
+\item change a compiler;
+\item change the protected horizon under independent governance.
+\end{itemize}
+
+All are represented as ordinary typed patches.
+
+\section{Predecessor-judged successor}
+
+For presentations \(R,R'\), define:
+\[
+\boxed{
+R'\succ_{\mathcal H}R
+}
+\]
+when:
+\begin{enumerate}
+\item \(\Preserve_{\mathcal H}(R',R)\);
+\item every removed predecessor relation/obligation has an explicit warranted disposition;
+\item \(\Gain(R',R)\) holds under a declared preorder or \(R'\) repairs a demonstrated defect;
+\item regression tests for protected capabilities pass;
+\item the support for accepting \(R'\) does not depend solely on claims first introduced by \(R'\).
+\end{enumerate}
+
+Improvement is generally a partial order/frontier.  Incomparable successors remain incomparable.
+
+\section{Self-inquiry}
+
+Reify:
+\[
+\ulcorner\mathsf{Pres}_t\urcorner.
+\]
+
+Then ordinary questions may target its relations:
+\[
+?g[
+Extension(\mathsf{Pres}_t,g)
+\land
+Expresses(\mathsf{Pres}_t+g,\rho)
+].
+\]
+
+Or:
+\[
+?K[
+Protected(K)
+\land
+\Con_K(\mathsf{Pres}_t+g)
+\neq
+Required(K)
+].
+\]
+
+The same question, probe, return, support, warrant, and successor rules apply.  No privileged meta-language is introduced.
+
+\begin{law}[Anti-oracle]
+A candidate revision may propose its own discriminator, proof strategy, probe, or successor.  It may not count its own generated proposal as the independent return required to warrant its own promotion.
+\end{law}
+
+\part{Runtime Infrastructure}
+
+\section{Canonical runtime state}
+
+A reference runtime may expose:
+\[
+\boxed{
+X_t=
+(
+H_t^{evt},
+H_t^{acc},
+A_t,
+\Pi_t,
+\Stand_t,
+Prot_t,
+\Gamma_t,
+\Omega_t,
+\epsilon_t,
+sched_t
+).
+}
+\]
+
+Where:
+\begin{itemize}
+\item \(H_t^{evt}\): authoritative actual event history;
+\item \(H_t^{acc}\): accepted patch history;
+\item \(A_t\): versioned accepted presentation;
+\item \(\Pi_t\): derived working presentation/context;
+\item \(\Stand_t\): least-fixed-point standing relations;
+\item \(Prot_t\): protected future declaration;
+\item \(\Gamma_t\): live typed environment/referents;
+\item \(\Omega_t\): open inquiry obligations;
+\item \(\epsilon_t\): effectivity/resource profile;
+\item \(sched_t\): non-authoritative scheduling policy/state.
+\end{itemize}
+
+The tuple is an implementation seam, not an ontology.
+
+\section{Canonical records}
+
+\subsection{Relation schema record}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+RelSchema {
+    id
+    binding_version
+    named_ports[]       // (name, TypeId)
+    body_ir
+    laws[]
+    provenance[]
+}
+\end{lstlisting}
+
+\subsection{Open query record}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+OpenQuery {
+    id
+    relation_schema_id
+    bound_ports{}       // port -> typed reference/value
+    open_ports[]        // nonempty
+    discharge_modes{}   // open port -> mode
+    scope
+    applicability
+    grain
+    protected_horizon_ref
+}
+\end{lstlisting}
+
+\subsection{Boundary chart}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+BoundaryChart {
+    id
+    query_id
+    plus_carrier
+    boundary_carrier
+    minus_carrier
+    plus_projection
+    minus_projection
+    orientation
+    traversal_relation
+    grain
+    protected_horizon_ref
+}
+\end{lstlisting}
+
+\subsection{Probe operator}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+ProbeOperator {
+    id
+    query_id
+    boundary_chart_id
+    active_view_ref
+    backend
+    executable_code_ref   // prompt, tool call, method invocation, etc.
+    return_type
+    decoder_contract_ref
+    probe_contract_ref
+    compiler_version
+}
+\end{lstlisting}
+
+\subsection{Probe contract}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+ProbeContract {
+    id
+    relational_role
+    binding_version
+    grain
+    applicability
+    comparator
+    protected_horizon_ref
+    decoder_version
+    bridge_policy
+}
+\end{lstlisting}
+
+\subsection{Actual event}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+ActualEvent {
+    id
+    ledger_parent
+    state_before_ref
+    question_ref
+    boundary_ref
+    operator_ref
+    raw_return_ref
+    state_after_ref
+    grain
+    actualization_route
+    backend_version
+    provenance
+}
+\end{lstlisting}
+
+\subsection{Operator occurrence}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+OperatorOccurrence {
+    event_ref
+    operator_ref
+    state_before_ref
+    raw_return_ref
+    state_after_ref
+    boundary_ref
+}
+\end{lstlisting}
+
+\subsection{Claim}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+Claim {
+    id
+    proposition_or_payload
+    source_question_ref
+    supporting_return_refs[]
+    resolution_path_refs[]
+    scope
+    applicability
+    status            // candidate, checked, standing, rejected, unknown
+}
+\end{lstlisting}
+
+\subsection{Support environment}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+SupportEnvironment {
+    id
+    claim_or_relation_ref
+    premise_refs[]
+    actual_return_refs[]
+    checker_refs[]
+    assumption_refs[]
+    open_dependency_refs[]
+    applicability
+    scope
+}
+\end{lstlisting}
+
+\subsection{Compression license}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+CompressionLicense {
+    id
+    quotient_or_fold_ref
+    exact_or_approximate
+    protected_horizon_ref
+    protected_continuations[]
+    scope
+    evidence_refs[]
+    residual_ref
+    recovery_contract_ref
+    unlock_conditions[]
+    distortion_contract_ref
+}
+\end{lstlisting}
+
+\subsection{Patch}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+Patch {
+    id
+    role
+    predecessor_version
+    changes[]
+    preserved_obligations[]
+    dispositions[]
+    strict_gain_or_defect_ref
+    evidence_refs[]
+    regression_refs[]
+    reopening_effects[]
+}
+\end{lstlisting}
+
+\section{State storage and references}
+
+The recommended architecture separates:
+\[
+\boxed{
+\text{large retained state/history}
+\quad+\quad
+\text{small typed operator graph/index}.
+}
+\]
+
+State snapshots and raw returns may be content-addressed or otherwise immutable.  Operators, prompts, relation schemas, and methods are stored once and occurrences point to them by reference.
+
+This implements:
+\[
+\boxed{
+\begin{gathered}
+\textbf{THE STATE HISTORY IS THE MASS;}\\
+\textbf{THE OPERATOR HISTORY IS THE INDEX.}
+\end{gathered}
+}
+\]
+
+The phrase is architectural, not semantic: the important law is that operator occurrences retain exact links to the states and returns in which they occurred.
+
+\section{Checkpoint and replay}
+
+A checkpoint is a performance optimization.  It is authoritative only relative to a replay/version contract.
+
+A replayable checkpoint records:
+\begin{itemize}
+\item event-history prefix reference;
+\item accepted-patch prefix reference;
+\item compiler/binding versions;
+\item deterministic fold version;
+\item external returns by immutable reference;
+\item any nondeterministic choices that must be replayed.
+\end{itemize}
+
+If replay semantics changes, the checkpoint requires an explicit migration/bridge.  Old raw events remain untouched.
+
+\section{Concurrency}
+
+The kernel does not impose total domain order.  Concurrent bindings may use partial orders, event structures, vector clocks, traces, or another native model.
+
+Ledger append serialization, if used for persistence, must not be interpreted as causal succession unless the binding establishes that relation.
+
+\part{Canonical Inquiry Process}
+
+\section{One inquiry step}
+
+For state \(s_t\) and open consequential residual:
+\begin{enumerate}
+\item \textbf{Open}: form or select a well-typed question \(q_t=?_I R[\beta]\).
+\item \textbf{Differentiate}: construct/update the question coordinate, reciprocal distinction, sixfold boundary profile obligations, and boundary chart.
+\item \textbf{Occlude}: compute an active view, hiding only licensed consequence-null structure.
+\item \textbf{Route}: dispatch each open port according to its discharge mode.
+\item \textbf{Compile}: produce pure computation, LLM prompt, checker call, native method, or actual probe program.
+\item \textbf{Probe}: if actualization is required, execute the probe and preserve the raw return first.
+\item \textbf{Resolve}: decode the return into zero, one, or several supported semantic completions with explicit path provenance.
+\item \textbf{Retain}: append authoritative event occurrence and operator links.
+\item \textbf{Reconcile}: construct candidate semantic/traversal patches without rewriting history.
+\item \textbf{Warrant}: update standing through support environments and the least fixed point.
+\item \textbf{Traverse}: alternate reciprocal orientation as useful while advancing/refining the current boundary, or open the next distinction exposed by the return.
+\item \textbf{Represent}: when a protected consequence splits inside a current representation cell, open separator questions for context, representation, grain, probe/tool, language, or binding.
+\item \textbf{Learn}: test regenerative sufficiency, detect recurrent question/probe paths and representation gaps, and propose distinction/representation refinements, operator folds, or probe-basis extensions.
+\item \textbf{Reopen}: fire any unlock conditions invalidated by the new protected future.
+\item \textbf{Recur}: continue on unresolved consequential residue.
+\end{enumerate}
+
+\section{Compact recurrence}
+
+\[
+\boxed{
+\begin{aligned}
+s_t
+&\xrightarrow{\operatorname{Open}(q_t)}
+(D_t,\eta_{q_t})\\
+&\xrightarrow{\Compile}
+o_t\\
+&\xrightarrow{\Actualize}
+r_t\\
+&\xrightarrow{\operatorname{Append}}
+H_{t+1}^{evt}\\
+&\xrightarrow{\Decode/\operatorname{Resolve}}
+S_t\subseteq A(q_t)\\
+&\xrightarrow{\operatorname{BoundaryUpdate}}
+b_{t+1}\\
+&\xrightarrow{\operatorname{ResidualOpen}}
+q_{t+1}.
+\end{aligned}
+}
+\]
+
+In parallel:
+\[
+\boxed{
+\begin{gathered}
+\text{realized operator occurrences}\to\text{pattern detection}\to\text{method/probe candidates}\\
+\to\text{independent admission}\to\text{reusable operator graph}.
+\end{gathered}
+}
+\]
+
+And separately:
+\[
+\boxed{
+\text{candidate semantic relations}\to\text{support environments}\to\mu T
+\to\text{standing semantic patches}.
+}
+\]
+
+\section{Stopping states}
+
+Inquiry may relatively stop as:
+\begin{itemize}
+\item \(\mathsf{Satisfied}\): the current obligation is standing-satisfied under its declared scope;
+\item \(\mathsf{Impossible}\): impossibility is independently warranted under the declared binding/scope;
+\item \(\mathsf{Equivalent}\): remaining alternatives are exactly protected-equivalent under the admitted horizon;
+\item \(\mathsf{Blocked}\): a required external return/capability is unavailable;
+\item \(\mathsf{Unknown}\): executable inquiry cannot currently discriminate the live alternatives.
+\end{itemize}
+
+\(\mathsf{Unknown}\) is not failure of the calculus.  It is the lawful result when the semantic frontier is not executable or no warranted separator is currently available.
+
+\part{Derived Structures}
+
+\section{Problems}
+
+A problem is not primitive.  Given desired consequence region \(G\subseteq X\), define problem region:
+\[
+P_G=X\setminus G
+\]
+when complement is meaningful in the chosen field, or more generally:
+\[
+Problem(x;G)\iff \neg G(x)
+\]
+inside a declared applicability field.
+
+A solution is not ``the negative'' as an ontology.  It is any admissible succession/operator path that reaches a target satisfying the required consequence.
+
+\section{Prerequisites}
+
+For target relation \(T\), missing predecessor/dependency \(d\) is simply an open port:
+\[
+?d[
+Required(d,T)
+\land
+\neg Discharged(d)
+].
+\]
+
+Recursive prerequisite descent is therefore ordinary inquiry over dependency relations.
+
+\section{Factorization}
+
+For composition:
+\[
+h=g\circ f,
+\]
+factor discovery opens \(f\), \(g\), or a mediator.  Factorization is not a primitive question species.
+
+\section{Necessity and sufficiency}
+
+For candidate implication \(P\Rightarrow Q\):
+\[
+\boxed{
+?x[P(x)\land\neg Q(x)]
+}
+\]
+is the sufficiency breaker, and:
+\[
+\boxed{
+?x[\neg P(x)\land Q(x)]
+}
+\]
+is the necessity/converse breaker.
+
+These are ordinary open relations generated by logical composition.
+
+\section{Variation}
+
+Let:
+\[
+V_\nu:X\rightsquigarrow X
+\]
+be a binding-supplied admissible variation relation and \(C\) a protected consequence.
+
+Stretch:
+\[
+?y[
+V_\nu(x,y)
+\land
+C(y)=C(x)
+]
+\]
+seeks variation preserving consequence.
+
+Squeeze/crossing:
+\[
+?y[
+V_\nu(x,y)
+\land
+C(y)\neq C(x)
+]
+\]
+seeks variation changing consequence.
+
+Neither requires a universal metric or minimum.  If a cost/order is supplied, a nondominated or minimal frontier may be selected.
+
+
+\section{Abstraction and hole reconstruction}
+
+Abstraction is derived from ordinary partial binding.  Given a relational web \(W\), replacing a protected filling \(x\) by an open port yields \(\operatorname{Hole}_x(W)\).  Its lawful filler field is the indexed meet of the residual solution fibers.  If that field is one protected equivalence class, the web determines \(x\) at the protected grain; otherwise the surviving ambiguity generates a separator question.
+
+\section{Representation and explanation}
+
+Let \(\kappa:X\to K\) be a protected consequence and \(\eta:X\to S\) a candidate representation.  An exact explanation-by-representation over scope \(U\subseteq X\) is a factorization
+\[
+\boxed{
+\kappa|_U=h\circ\eta|_U
+}
+\]
+for some \(h:S\to K\).  The representation is insufficient when a pair in one \(\eta\)-cell has protected-different consequences.  It contains potentially unnecessary detail when a coarser representation still supports the same protected factorization.  Thus explanatory inquiry alternates refinement until consequence separates with coarsening until nonconsequential detail disappears.
+
+\section{Cause}
+
+Cause is not a primitive of the kernel.  A causal binding must supply stronger relations than correlation or succession: intervention semantics, counterfactual semantics, structural equations, potential outcomes, process mechanisms, or another native theory.  The Inquiry Calculus opens and tests those relations but does not infer causality from co-occurrence alone.
+
+\section{Memory}
+
+``Memory'' is a derived role of retained history, accepted folds, recovery relations, and question-conditioned projections.  It does not require a separate mutable semantic store.
+
+\section{Method}
+
+A method is a promoted/reified operator path with:
+\[
+(\mathsf{typed\ expansion},\mathsf{applicability},\mathsf{behavioral\ contract},
+\mathsf{provenance},\mathsf{reopening}).
+\]
+
+\section{Attention}
+
+Attention is not a primitive.  Question-conditioned activation/occlusion is:
+\[
+\eta_{q,g}:S\rightsquigarrow V_{q,g}.
+\]
+Calling the resulting active view ``attention'' is a binding/interpretive choice.
+
+\section{Perceptual square and cube}
+
+The square/cube constructions defined earlier may be used as explanatory or visualization devices.  They add no new semantic power beyond reciprocal boundary arrangement plus realized succession.
+
+\part{Metatheory and Reference Mathematical Homes}
+
+\section{Algebraic effects and interaction trees}
+
+The core:
+\[
+\mathsf{Return}
+\mid
+\mathsf{Branch}
+\mid
+\mathsf{Probe}
+\]
+admits a free-effect interpretation in which probe requests are algebraic operations with return-indexed continuations.  Potentially unbounded inquiry can be modeled by interaction trees or related coinductive structures.
+
+This correspondence is a reference model, not a new primitive requirement.
+
+\section{Containers and dependent question signatures}
+
+A question repertoire with answer family \(A(q)\) has container/polynomial form:
+\[
+\boxed{
+P_{\mathcal Q}(X)
+=
+\sum_{q\in Q}X^{A(q)}.
+}
+\]
+
+Question identity is the shape; complete answers are positions; answer-dependent continuations occupy those positions.
+
+The open-relation account is more general because a raw return may support multiple semantic completions and because discharge authority is typed separately.
+
+\section{Coalgebra and behavioral equivalence}
+
+State-based recurring behavior can be represented:
+\[
+\gamma:X\to FX.
+\]
+
+Coalgebraic behavioral equivalence and partition refinement provide mature reference structures for exact retained state under repeated future interaction.
+
+\section{Syntax/behavior compatibility}
+
+Let \(T\) encode generated typed operator syntax and \(F\) encode observable behavior.  A distributive law:
+\[
+\boxed{
+\lambda:TF\Rightarrow FT
+}
+\]
+together with:
+\[
+\alpha:TX\to X,
+\qquad
+\gamma:X\to FX
+\]
+satisfying:
+\[
+\boxed{
+\gamma\circ\alpha
+=
+F\alpha\circ\lambda_X\circ T\gamma
+}
+\]
+is a strong metatheoretic target for proving that generated syntax composes compatibly with behavior.
+
+It is not constitutionally required of every implementation.
+
+\section{Abstract interpretation and refinement}
+
+Exact/approximate representation, abstraction, refinement, factorization, consequence preservation, and reopening have native analogues in abstract interpretation, CEGAR, partition refinement, behavioral automata learning, simulation/refinement, and related methods.  These are method bindings and proof precedents, not parallel semantics.
+
+\part{Conformance Laws}
+
+\section{Static conformance}
+
+A conforming implementation must:
+\begin{enumerate}
+\item type every relation schema and named port;
+\item reject ill-typed joins/compositions;
+\item record nonempty open-port sets for questions;
+\item enforce per-port discharge authority;
+\item distinguish raw returns from decoded completions;
+\item preserve question/relational identity independently of surface wording.
+\end{enumerate}
+
+\section{Dynamic conformance}
+
+A conforming runtime must:
+\begin{enumerate}
+\item preserve raw actual returns before interpretation;
+\item record exact state/operator/return linkage at the declared grain;
+\item keep ledger order separate from binding-defined domain succession;
+\item retain resolution-path provenance when protected;
+\item preserve \(\mathsf{Unknown}\) when the executable frontier cannot decide;
+\item prevent generative branches from masquerading as actual events.
+\end{enumerate}
+
+\section{Question conformance}
+
+Every active question must satisfy:
+\begin{enumerate}
+\item exact relation-schema and bound/open port identity;
+\item scope/applicability;
+\item answer carrier;
+\item discharge mode;
+\item local question equivalence;
+\item boundary chart or an explicit statement that no two-sided local chart is presently formed;
+\item active-view/occlusion contract;
+\item residual/reopening route for any consequential occlusion.
+\end{enumerate}
+
+
+\section{Distinction and regenerative conformance}
+
+A conforming implementation of a protected distinction must:
+\begin{enumerate}
+\item preserve the typed distinction schema and boundary-point identity;
+\item retain both reciprocal side projections;
+\item distinguish the six oriented determination roles when protected;
+\item represent the four-cell square only as a projection unless a proof shows the omitted redeterminations are redundant;
+\item keep orientation reversal distinct from along-boundary advance and from domain/world crossing;
+\item preserve enough residual structure to regenerate protected sides and reopen finer grain when required.
+\end{enumerate}
+
+\section{Source question-program conformance}
+
+A conforming source inquiry runtime/compiler must:
+\begin{enumerate}
+\item represent \(\mathsf{Ask}(q,\kappa)\) as a typed open relation plus answer-dependent continuation rather than as an untyped text checklist;
+\item permit partial supported answers to generate continuations without forcing premature singleton completion;
+\item preserve per-port discharge authority when lowering to the runtime effect language;
+\item distinguish relational exclusion established by question semantics from surface suppression performed by prompt rendering;
+\item allow unresolved residuals and representation defects to generate new questions.
+\end{enumerate}
+
+\section{Probe conformance}
+
+Every recurrent probe occurrence must record enough to establish or reject comparability across occurrences.  Same wording is insufficient.  Changed binding or grain requires a standing bridge before direct comparison.
+
+\section{Compression conformance}
+
+No exact fold/quotient may be admitted without:
+\begin{enumerate}
+\item protected consequence sufficiency;
+\item protected continuation descent where executable state/reuse is claimed;
+\item hom-wise typing for operator folds;
+\item provenance/residual/recovery contract;
+\item unlock conditions.
+\end{enumerate}
+
+Approximate folds must state distortion.
+
+\section{Warrant conformance}
+
+Every standing hard relation must expose:
+\begin{enumerate}
+\item at least one closed support route;
+\item scope and applicability;
+\item open-dependency status;
+\item warrant/checker provenance;
+\item independent ingress sufficient to prevent rootless positive self-support.
+\end{enumerate}
+
+\section{Learning conformance}
+
+A learned method/probe/operator must not confer warrant on semantic outputs merely because the traversal method is useful.  Semantic and traversal patches remain distinct.  A learned regenerative form must expose the protected sides/profile/reopening behavior it claims to regenerate, or explicitly declare an approximate/reacquisition-only contract.  A new probe/tool is not admitted as a semantic discriminator merely because it was generated; the nonredundant distinction must be demonstrated through independently grounded occurrences.
+
+\section{Self-revision conformance}
+
+A successor presentation must be judged under predecessor-established or independently changed acceptance rules.  Candidate self-description is never sufficient evidence of strict gain.
+
+\part{Primitive Elimination and Regenerative Basis}
+
+\section{What is not primitive}
+
+The following are not universal semantic primitives:
+\begin{itemize}
+\item absolute atomic object independent of grain;
+\item Object and operator as disjoint ontological species;
+\item Question as a noun/type separate from open relation;
+\item Ask as a semantic oracle;
+\item observation and action as disjoint interaction kinds;
+\item cue;
+\item memory state;
+\item problem;
+\item cause;
+\item factor;
+\item necessity;
+\item sufficiency;
+\item four-cell square as the complete definition of a distinction;
+\item cube;
+\item method;
+\item controller;
+\item scheduler;
+\item attention;
+\item learning;
+\item update.
+\end{itemize}
+
+Implementation IR sorts may use these names.  Their semantics must be regenerated from the relational basis.
+
+\section{Regenerative basis}
+
+The smallest currently accepted basis is:
+\[
+\boxed{
+\begin{gathered}
+\mathsf{Ty}_{\B},
+\qquad
+\mathsf{Form}_{\B}=\sum_{A:\mathsf{Ty}_{\B}}\den A_{\B},\\
+\top_{\B}=\mathsf{Form}_{\B}\times\mathsf{Form}_{\B},\\
+R:A\rightsquigarrow B,
+\qquad
+R\preceq_{\mathrm{rel}}S,\\
+\text{named typed relation schemas, partial binding, exposure, hiding, and composition},\\
+?_IR[\beta],
+\qquad
+\operatorname{Sec},\operatorname{Sol},\operatorname{Hole},\\
+D=(X,Y,B_D,\pi_X,\pi_Y,\Gamma_D),\\
+z:B_D,
+\qquad
+\Xi_D(z)=(S_X,O_X,R_X;S_Y,O_Y,R_Y),\\
+\widetilde B_D=B_D\times\{+,-\},
+\qquad
+T_D:B_D\rightsquigarrow B_D,\\
+o:Z\rightsquigarrow R_o\times Z,\\
+K::=\mathsf{Return}_I\mid\mathsf{Ask},\\
+P::=\mathsf{Return}\mid\mathsf{Branch}\mid\mathsf{Probe},\\
+\text{reification and typed operational interpretation},\\
+\text{authoritative linked occurrence history},\\
+Regen_{\mathcal H},\\
+\text{support environments and }\Stand=\mu T,\\
+\text{typed folds with residual/recovery/unlock},\\
+\text{reification and predecessor-judged revision}.
+\end{gathered}
+}
+\]
+
+Everything else in this document is a law over this basis, a derived construction, a binding-supplied specialization, a metatheoretic correspondence, or implementation infrastructure.
+
+\section{Compact invariant}
+
+\[
+\boxed{
+\begin{minipage}{0.92\linewidth}
+Every consequentially represented value, relation, distinction, question, operator, or program is a typed form and may enter further lawful relations without losing its type.  Any two represented forms share at least the coarsest relation of joint admission to the current field; inquiry seeks consequentially finer relations.  When a current representation identifies forms that a protected consequence distinguishes, the calculus preserves an obligation to invent or discover a separating context, representation, grain, probe/tool, language extension, or binding.  When an active distinction cannot affect any protected continuation, it is a candidate for licensed folding.
+
+A realized distinction is a recursively compositional boundary form.  A boundary point \(z\) regenerates reciprocal sides and, where protected, a sixfold reciprocal profile: each side determines itself, determines its other, and redetermines itself through the other.  The oriented double cover preserves the two reciprocal orientations; inquiry may alternate orientation while moving along the boundary.  The four-cell square is only a projection, and realized succession carries full distinction profiles rather than merely static labels.
+
+A question is a partially bound typed relation.  Binding what is known while preserving the relation leaves a residual section/fiber: a structured hole whose lawful fillers are the answer field.  A web of such residual relations determines a form to the extent that the intersection of its solution fibers collapses to one protected equivalence class.  Abstraction is therefore regenerative when it removes a filling but preserves enough relational constraint to regenerate the protected form and the discriminators needed to reopen it.  A source inquiry program composes these open relations through answer-dependent continuations and lowers by typed discharge authority to pure computation, generation, actual probing, checking, and warrant.
+
+The runtime preserves realized state--operator--return history before interpretation.  Raw return, decoded completion, interpretation, checking, warrant, and standing remain distinct.  Learned distinctions, representations, probes, and operator paths are compact regenerative structures over authoritative history; they never replace the evidence that warranted them and never confer warrant on future outputs merely by being useful.  Every quotient or fold is protected-behavior relative, continuation-compatible where reusable state is claimed, regeneratively sufficient or explicitly approximate, and equipped with residual, recovery/reacquisition, and unlock conditions.
+
+The same forms, distinctions, questions, programs, probes, compiler rules, folds, bindings, and protection declarations may be reified and subjected to the same inquiry.  A successor remains subject to independently grounded, predecessor-preserving judgment and cannot license itself.
+\end{minipage}
+}
+\]
+
+\section{Fixed-point target}
+
+The project approaches a regenerative fixed point when:
+\begin{center}
+\fbox{\parbox{0.90\linewidth}{\centering\bfseries
+THE CALCULUS IS CLOSED UNDER REIFICATION, RELATION REFINEMENT, DISTINCTION FORMATION, RECIPROCAL OPENING, HOLE FORMATION, QUESTION-PROGRAM COMPOSITION, COMPILATION, ACTUALIZATION, REPRESENTATION/PROBE INVENTION, TRAVERSAL, FOLDING, REOPENING, AND RE-ENTRY OF ITS OWN TYPED FORMS WITHOUT SELF-WARRANT.
+}}
+\end{center}
+No claim is made that global convergence, absolute minimality, or a universally coarsest sufficient representation is decidable.
+
+\appendix
+
+\section{Canonical notation table}
+
+\begin{longtable}{p{0.25\textwidth}p{0.68\textwidth}}
+\toprule
+Symbol & Meaning\\
+\midrule
+\endhead
+\(\B\) & current binding\\
+\(\mathsf{Form}_{\B}\) & dependent universe of typed represented forms\\
+\(\top_{\B}\) & coarsest relation of joint admission to the represented field\\
+\(R\preceq_{\mathrm{rel}}S\) & \(S\) is a refinement/more discriminating relation than \(R\)\\
+\(\operatorname{Sec}^{X}_{\rho}(y)\) & residual section after binding the \(Y\)-port\\
+\(\operatorname{Sol}^{X}_{\rho}(y)\) & lawful filler fiber for the remaining \(X\)-port\\
+\(\operatorname{Hole}_x(W)\) & relational web with protected occurrences of \(x\) exposed as holes\\
+\(Determines_{\mathcal H}(W,x)\) & residual web regenerates one protected class \([x]_{\mathcal H}\)\\
+\(\Xi_D(z)\) & sixfold reciprocal determination profile at boundary point \(z\)\\
+\(\widetilde B_D\) & oriented double cover \(B_D\times\{+,-\}\)\\
+\(\iota\) & reciprocal orientation involution on the double cover\\
+\(Regen_{\mathcal H}(m,z)\) & representation \(m\) regenerates protected structure of \(z\)\\
+\(K::=\mathsf{Return}_I\mid\mathsf{Ask}\) & source inquiry question-program language\\
+
+\(A,B,X,Y,Z\) & typed carriers/interfaces\\
+\(R:A\rightsquigarrow B\) & typed relation\\
+\(R\hookrightarrow\prod_i X_i\) & named-port relation schema\\
+\(?_I R[\beta]\) & question obtained by binding closed ports and exposing \(I\)\\
+\(A(q)\) & complete semantic answer carrier\\
+\(\Fib_I(R\mid\beta)\) & completion fiber\\
+\(\operatorname{mode}(q,i)\) & lawful discharge authority for open port \(i\)\\
+\(\sigma_q(x)\) & set of complete answers compatible with \(x\)\\
+\(x\sim_q y\) & local equivalence induced by question \(q\)\\
+\(q\preceq_{\mathrm{prec}}r\) & \(r\) refines/discriminates at least as much as \(q\)\\
+\(\eta_{q,g}\) & question-conditioned active view at grain \(g\)\\
+\(FD_{\mathcal H}(q)\) & protected distinctions hidden by the local question frame\\
+\(D^+\leftarrow B_D\rightarrow D^-\) & reciprocal boundary factorization\\
+\(T_D\) & along-boundary traversal relation\\
+\(\Ext_D\) & reciprocal exterior induced by boundary\\
+\(\Prof_D\) & exact boundary-position profile\\
+\(o:Z\rightsquigarrow R_o\times Z\) & probe interaction semantics\\
+\(z_t\xrightarrow[o]{r}z_{t+1}\) & realized probe occurrence\\
+\(\delta_q\) & raw/decoded response to supported answer-set map\\
+\(\rho:A\leadsto B\) & explicit resolution path\\
+\(\mathsf{Return}\) & pure program return\\
+\(\mathsf{Branch}\) & internal/generative alternatives\\
+\(\mathsf{Probe}\) & actualizable program interaction\\
+\(H^{evt}\) & authoritative actual event history\\
+\(H^{acc}\) & accepted patch/revision history\\
+\(<_{\mathrm{ledger}}\) & persistence append order\\
+\(\lambda_{\mathrm{real}}\) & binding-defined realized/domain succession\\
+\(\equiv_{\mathcal H}\) & exact protected behavioral equivalence\\
+\(\approx_{\mathcal H,\mathcal D}\) & finite tested nondistinction\\
+\(\mathsf Q_{\mathcal H}(A,B)\) & hom-wise operator quotient\\
+\(\Supp(\lambda)\) & minimal support environments for relation \(\lambda\)\\
+\(\partial^-_E\lambda\) & open dependency boundary under support environment \(E\)\\
+\(\Stand=\mu T\) & least-fixed-point standing\\
+\(\Lambda_c\) & compression/fold licence\\
+\(\Unlock(c)\) & observation/dynamic/context changes invalidating a fold\\
+\(\PatchIR[k]\) & role-indexed candidate revision\\
+\(Q^\infty\) & semantic question universe\\
+\(Q^\epsilon\) & executable resource-bounded question universe\\
+\bottomrule
+\end{longtable}
+
+\section{Canonical compiler pipeline}
+
+\[
+\boxed{
+\begin{array}{c}
+\text{Typed Forms / Relation Schema}\\
+\downarrow\ \text{partial binding / residualize / expose ports}\\
+\text{Open Relation / Question}\\
+\downarrow\ \text{compose answer-dependent continuations}\\
+\mathsf{IProg}\\
+\downarrow\ \text{normalize}\\
+\OpenIR\\
+\downarrow\ \text{construct/select recursive distinction}\\
+\BoundaryIR\ +\ \Xi_D\ +\ \widetilde B_D\\
+\downarrow\ \text{project active state; retain unknown reserve and unlocks}\\
+\text{Question-Conditioned View}\\
+\downarrow\ \text{route each port by discharge authority}\\
+\ProbeIR\\
+\downarrow\ \text{backend compiler}\\
+\PromptIR\ /\ \text{Pure Code}\ /\ \text{Tool Call}\ /\ \text{Checker}\ /\ \text{Native Method}\\
+\downarrow\ \text{actualization where required}\\
+\Raw\text{ Return}\\
+\downarrow\ \text{preserve event before interpretation}\\
+\text{Authoritative History}\\
+\downarrow\ \text{decode / resolve to supported completion set}\\
+\text{Residual Solution Field / Updated Distinction}\\
+\downarrow\ \text{warrant + separator/representation search}\\
+\text{Standing Patch / Next Boundary / Next Question}\\
+\downarrow\ \text{fold if regeneratively sufficient; reopen on unlock}\\
+\text{Reusable Regenerative Form / Operator Graph}
+\end{array}
+}
+\]
+
+\section{Canonical infrastructure dependency direction}
+
+The dependency direction is:
+\[
+\boxed{
+\text{calculus semantics}
+\to
+\text{IR contracts}
+\to
+\text{compiler/runtime}
+\to
+\text{storage/indexes/backends}.
+}
+\]
+
+Storage layout, database schema, scheduler, provider SDK, prompt templating library, or agent framework must not redefine semantics in the opposite direction.
+
+\section{Minimum conformance suite}
+
+A future implementation must contain executable witnesses for at least:
+\begin{enumerate}
+\item typed relation composition and ill-typed rejection;
+\item typed reification of an operator as an operand and rejection of an untyped operational interpretation;
+\item a pair of represented forms related only by \(\top_{\B}\) and a discovered proper relation refinement;
+\item recursive distinction composition in which a distinction point becomes a side of another distinction;
+\item sixfold reciprocal profile retaining \(R_X\neq O_Y\) and \(R_Y\neq O_X\) when a breaker distinguishes them;
+\item oriented double-cover traversal alternating \(\iota\) and \(\tau_D\) without conflating either with a domain crossing;
+\item a four-cell square projection demonstrably losing information contained in the full sixfold profile;
+\item a residual hole whose web solution set has several fillers but one forced protected property;
+\item indexed-meet refinement in which adding one relation strictly narrows the filler field;
+\item a protectedly unique filler class reconstructed after ablating the original form;
+\item a source \(\mathsf{Ask}\) program whose partial answer constructs a new question rather than selecting a fixed branch;
+\item a representation defect \(\eta(x)=\eta(y)\) with protected-different consequence that generates a separating representation/probe inquiry;
+\item a new probe/tool basis element exposing a protected distinction unavailable to the old basis;
+
+\item one relation schema generating several questions by different open ports;
+\item discharge-authority rejection of generative filling for an actual/check/warrant port;
+\item question refinement with kernel intersection;
+\item a nonempty local question-frame defect safely preserved by surrounding history;
+\item partial response retaining multiple answer cells;
+\item along-boundary traversal with both reciprocal projections retained;
+\item one unified probe whose world projection is observation-like and another action-like;
+\item raw-return preservation before decoding;
+\item ledger order demonstrably distinct from domain succession;
+\item recurrent probe comparability failure after an unbridged binding/grain change;
+\item operator path folding with hom-wise typing and provenance;
+\item continuation-descent failure preventing an output-sufficient quotient from becoming executable state;
+\item multiple independent support environments for one relation;
+\item rootless support cycle failing to enter standing;
+\item exact compression reopening by a new observation;
+\item reopening by a new protected continuation even without a new current observation;
+\item approximate compression retaining a distortion/residual contract;
+\item semantic versus traversal patch separation;
+\item self-revision candidate failing self-promotion without independent evidence;
+\item semantic frontier containing an unavailable question while executable frontier lawfully returns \(\mathsf{Unknown}\);
+\item LLM prompt compilation preserving typed open ports across canonical render/elaborate round trip;
+\item fresh-probe versus history-conditioned-probe test for anchoring/order sensitivity;
+\item learned probe-basis extension demonstrating a protected distinction unavailable to the old basis;
+\item state history remaining independently accessible after operator compression.
+\end{enumerate}
+
+\section{Normative reading rule}
+
+When future work appears to conflict with this document, apply the following order:
+\begin{enumerate}
+\item identify the exact typed relation and protected consequence in conflict;
+\item distinguish semantic law from binding-specific or implementation-only structure;
+\item produce a breaker/counterexample or a preservation proof;
+\item if the document is wrong, create a typed successor patch rather than silently editing definitions in prose;
+\item preserve the old statement as ancestry with an explicit disposition;
+\item update this single canonical document only after the successor is independently accepted.
+\end{enumerate}
+
+This rule is part of the project's defense against information loss: discoveries do not survive merely as chat prose, and old concepts do not survive merely because a previous file named them.  Consequential structure survives as a typed law, derivation, regression, residual, or reopening path in the current canonical specification.
+
+\end{document}

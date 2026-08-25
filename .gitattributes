@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.jsonl text eol=lf
+*.sql text eol=lf
+*.tex text eol=lf
