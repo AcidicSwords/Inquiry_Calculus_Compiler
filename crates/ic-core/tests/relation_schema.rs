@@ -2,16 +2,17 @@ use std::collections::BTreeMap;
 
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
-    DepartureCatalog, DepartureWitness, DepartureWitnessCheckError, DeterminationCatalog,
-    DeterminationPresentation, DeterminationPresentationRef, DischargeMode, DistinctionRef,
-    FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef, IProgArtifact,
-    IProgCatalog, IProgCheckError, IProgIR, IProgRef, NegationCoverage, NegationUse,
-    NegationUseCheckError, OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError, PortBinding,
-    ProgramBinding, RelationBodyIR, RelationCatalog, RelationCheckError, RelationError,
-    RelationExprArtifact, RelationExprIR, RelationPort, RelationRef, RelationSchema,
-    RelationSignature, RelationUse, RelationUseCheckError, RelationUseContext, RelationalWebRef,
-    ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
-    TypedForm, TypedFormRef,
+    DepartureCatalog, DepartureWitness, DepartureWitnessCheckError, DepartureWitnessRef,
+    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef, DischargeMode,
+    DistinctionRef, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GeneratorCoverageRef,
+    GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef,
+    NegationCoverage, NegationUse, NegationUseCheckError, NegationUseRef, OpenPort, OpenQuery,
+    OpenQueryCatalog, OpenQueryCheckError, PortBinding, ProgramBinding, RelationBodyIR,
+    RelationCatalog, RelationCheckError, RelationError, RelationExprArtifact, RelationExprIR,
+    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
+    RelationUseCheckError, RelationUseContext, RelationalWebRef, ScopeRef, SupportRef,
+    TaggedExteriorCatalog, TaggedExteriorClaim, TaggedExteriorClaimError, TyIR, TypeArtifact,
+    TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
 };
 use serde::Deserialize;
 
@@ -32,7 +33,9 @@ struct Catalog {
     schemas: BTreeMap<RelationRef, RelationSchema>,
     forms: BTreeMap<TypedFormRef, TypedForm>,
     presentations: BTreeMap<DeterminationPresentationRef, DeterminationPresentation>,
+    departures: BTreeMap<DepartureWitnessRef, DepartureWitness>,
     relation_uses: BTreeMap<ic_core::RelationUseRef, RelationUse>,
+    negation_uses: BTreeMap<NegationUseRef, NegationUse>,
     queries: BTreeMap<ic_core::QueryRef, OpenQuery>,
     programs: BTreeMap<IProgRef, IProgArtifact>,
 }
@@ -82,6 +85,22 @@ impl Catalog {
             .relation_use_ref()
             .expect("relation-use fixture must encode");
         self.relation_uses.insert(reference, relation_use);
+        reference
+    }
+
+    fn insert_departure(&mut self, witness: DepartureWitness) -> DepartureWitnessRef {
+        let reference = witness
+            .departure_witness_ref()
+            .expect("departure fixture must encode");
+        self.departures.insert(reference, witness);
+        reference
+    }
+
+    fn insert_negation_use(&mut self, negation_use: NegationUse) -> NegationUseRef {
+        let reference = negation_use
+            .negation_use_ref()
+            .expect("negation-use fixture must encode");
+        self.negation_uses.insert(reference, negation_use);
         reference
     }
 
@@ -143,6 +162,19 @@ impl DeterminationCatalog for Catalog {
 impl DepartureCatalog for Catalog {
     fn resolve_relation_use(&self, reference: ic_core::RelationUseRef) -> Option<RelationUse> {
         self.relation_uses.get(&reference).cloned()
+    }
+}
+
+impl TaggedExteriorCatalog for Catalog {
+    fn resolve_negation_use(&self, reference: NegationUseRef) -> Option<NegationUse> {
+        self.negation_uses.get(&reference).cloned()
+    }
+
+    fn resolve_departure_witness(
+        &self,
+        reference: DepartureWitnessRef,
+    ) -> Option<DepartureWitness> {
+        self.departures.get(&reference).cloned()
     }
 }
 
@@ -695,6 +727,206 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
             claim: "incompatibility",
             relation_use,
         }) if relation_use == candidate_observation
+    ));
+}
+
+#[test]
+fn tagged_exterior_claim_preserves_use_tag_without_admitting_an_incidence() {
+    let binding = binding(0x91);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let source = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x92)));
+    let candidate = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x93)));
+    let source_answer = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x94)));
+    let candidate_answer = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x95)));
+    let distinction = DistinctionRef::from_artifact_ref(artifact(0x96));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x97));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0x98));
+    let grain = GrainRef::from_artifact_ref(artifact(0x99));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0x9a));
+    let support = SupportRef::from_artifact_ref(artifact(0x9b));
+    let presentation = catalog.insert_presentation(DeterminationPresentation::new(
+        distinction,
+        ic_core::Orientation::X,
+        source,
+        RelationalWebRef::from_artifact_ref(artifact(0x9c)),
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        support,
+        None,
+    ));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("left", unit), port("right", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x9d),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        support,
+        None,
+    );
+    let source_observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                source,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                source_answer,
+            ),
+        ],
+        context,
+    ));
+    let candidate_observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                candidate,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                candidate_answer,
+            ),
+        ],
+        context,
+    ));
+    let incompatibility = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                source_answer,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                candidate_answer,
+            ),
+        ],
+        context,
+    ));
+    let departure = catalog.insert_departure(DepartureWitness::new(
+        distinction,
+        source,
+        candidate,
+        presentation,
+        source_observation,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        support,
+        scope,
+        applicability,
+        grain,
+    ));
+    let soundness =
+        catalog.insert_program(IProgArtifact::new(unit, IProgIR::Return { value: source }));
+    let first_use = catalog.insert_negation_use(NegationUse::new(
+        source_observation,
+        distinction,
+        ic_core::Orientation::X,
+        presentation,
+        relation,
+        soundness,
+        NegationCoverage::CertifiedPartial,
+        applicability,
+        scope,
+        grain,
+        horizon,
+        vec![artifact(0x9e)],
+    ));
+    let second_use = catalog.insert_negation_use(NegationUse::new(
+        source_observation,
+        distinction,
+        ic_core::Orientation::X,
+        presentation,
+        relation,
+        soundness,
+        NegationCoverage::CertifiedPartial,
+        applicability,
+        scope,
+        grain,
+        horizon,
+        vec![artifact(0x9f)],
+    ));
+    let first = TaggedExteriorClaim::new(
+        first_use,
+        source,
+        candidate,
+        departure,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0xa0)),
+    );
+    let second = TaggedExteriorClaim::new(
+        second_use,
+        source,
+        candidate,
+        departure,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0xa1)),
+    );
+
+    assert!(first.check(&catalog).is_ok());
+    assert!(second.check(&catalog).is_ok());
+    assert_ne!(
+        first.negation_use(),
+        second.negation_use(),
+        "the same candidate through different uses remains a tagged pair of claims"
+    );
+    assert_ne!(
+        first.execution_coverage(),
+        second.execution_coverage(),
+        "occurrence-side execution coverage is not inferred from semantic coverage"
+    );
+
+    let wrong_candidate = TaggedExteriorClaim::new(
+        first_use,
+        source,
+        source,
+        departure,
+        first.execution_coverage(),
+    );
+    assert!(matches!(
+        wrong_candidate.check(&catalog),
+        Err(TaggedExteriorClaimError::DepartureWitnessMismatch(
+            "candidate"
+        ))
+    ));
+
+    let forged_use = NegationUseRef::from_artifact_ref(artifact(0xa2));
+    catalog.negation_uses.insert(
+        forged_use,
+        catalog
+            .negation_uses
+            .get(&first_use)
+            .expect("first negation use must be available")
+            .clone(),
+    );
+    let forged = TaggedExteriorClaim::new(
+        forged_use,
+        source,
+        candidate,
+        departure,
+        first.execution_coverage(),
+    );
+    assert!(matches!(
+        forged.check(&catalog),
+        Err(TaggedExteriorClaimError::NegationUseIdentityMismatch {
+            reference,
+            calculated,
+        }) if reference == forged_use && calculated == first_use
     ));
 }
 

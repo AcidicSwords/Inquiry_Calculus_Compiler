@@ -9,6 +9,7 @@ mod context;
 mod departure;
 mod determination;
 mod event;
+mod exterior;
 mod factorization;
 mod finite_cell;
 mod formula;
@@ -52,6 +53,7 @@ pub use event::{
     RawReturnCatalog, RouteRef, StateRef, check_actual_event, check_event_context,
     check_raw_return,
 };
+pub use exterior::{TaggedExteriorCatalog, TaggedExteriorClaim, TaggedExteriorClaimError};
 pub use factorization::{
     ExactDeterminationError, ExactDeterminationResult, ExactFactorization,
     ExactFamilyDeterminationResult, ExactFamilyFactorization, ExactFamilySignature,

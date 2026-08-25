@@ -70,6 +70,12 @@ The protected difference is visible in the accepted sources:
   retains `Unknown` for a missing value, and rejects forged or invalid declarations explicitly.
   It does not actualize observations, make the table standing, prove incompatibility relevance,
   coverage, support, or non-circularity, link to a relation use, or establish departure/exteriority.
+- `TaggedExteriorClaim` now preserves the next dependent role as a derived view: immutable
+  negation-use tag, source, candidate, departure-witness, and separately typed execution-coverage
+  identity. Its checker rehashes and structurally checks the named use and witness, then requires
+  their source/candidate and presentation/distinction/scope/applicability/grain context to agree.
+  The same candidate through different tags remains distinct. This does not evaluate an incidence,
+  make a use admitted, establish an exterior, actualize a result, or confer support/warrant.
 - `NegationUse` now records one distinct oriented relation-use declaration, its source
   determination, candidate field, structural soundness-program reference, semantic-coverage
   declaration, indexed context, and provenance. Its checker rejects a different presentation

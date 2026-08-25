@@ -139,6 +139,13 @@ This is still derived finite evidence only: it does not actualize an observation
 incompatibility relation, establish relevance, coverage, support, or non-circularity, connect a
 `RelationUse`, or establish departure/exteriority.
 
+`TaggedExteriorClaim` is a derived role view, not a new `PosNeg` carrier or stored history
+species. It retains one immutable negation-use tag, source, candidate, named departure-witness,
+and separately supplied execution-coverage identity; validation rehashes both declarations and
+requires their source/candidate and determination context to agree. Thus the same candidate can
+remain distinct under different uses. The view does not evaluate `N_u(source, candidate)`, admit
+the use, establish a positive exterior, actualize a result, or confer support or warrant.
+
 Phase 4 also represents an oriented `NegationUse` declaration as a distinct immutable relation
 use tied to one determination presentation. Its semantic coverage (`ExactExhaustive`,
 `ExactOnField`, `CertifiedPartial`, or `WorkingOpen`) is identity data and deliberately differs
