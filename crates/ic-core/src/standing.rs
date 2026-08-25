@@ -9,7 +9,8 @@ use thiserror::Error;
 use crate::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ClaimArtifact, ClaimCatalog, ClaimCheckError,
     ClaimError, RawReturnError, RawReturnRef, RelationCatalog, RelationCheckError, RelationError,
-    RelationRef, RelationSchema, ScopeRef, SupportRef,
+    RelationRef, RelationSchema, RelationUse, RelationUseCheckError, RelationUseError,
+    RelationUseRef, ScopeRef, SupportRef,
 };
 use crate::{ArtifactError, ArtifactRef};
 
@@ -365,6 +366,83 @@ pub trait SupportEnvironmentCatalog: ClaimCatalog + RelationCatalog {
     ) -> Option<SupportEnvironmentArtifact>;
 }
 
+/// Resolves the ordinary relation-use occurrence that names a support environment.
+pub trait RelationUseSupportCatalog: SupportEnvironmentCatalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse>;
+}
+
+/// A derived checked association between one relation-use occurrence and its relation-targeted
+/// support environment.
+///
+/// This proves only reference, target, scope, and applicability agreement. It is not closure,
+/// standing admission, relation evaluation, checker success, or warrant.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ResolvedRelationUseSupport {
+    relation_use: RelationUseRef,
+    environment: SupportEnvironmentRef,
+}
+
+impl ResolvedRelationUseSupport {
+    #[must_use]
+    pub const fn relation_use(&self) -> RelationUseRef {
+        self.relation_use
+    }
+    #[must_use]
+    pub const fn environment(&self) -> SupportEnvironmentRef {
+        self.environment
+    }
+}
+
+/// Resolves and checks a relation use's declared support identity.
+pub fn resolve_relation_use_support<C: RelationUseSupportCatalog>(
+    relation_use_ref: RelationUseRef,
+    catalog: &C,
+) -> Result<ResolvedRelationUseSupport, RelationUseSupportError> {
+    let relation_use = catalog.resolve_relation_use(relation_use_ref).ok_or(
+        RelationUseSupportError::UnresolvedRelationUse(relation_use_ref),
+    )?;
+    let calculated_use = relation_use.relation_use_ref()?;
+    if calculated_use != relation_use_ref {
+        return Err(RelationUseSupportError::RelationUseIdentityMismatch {
+            reference: relation_use_ref,
+            calculated: calculated_use,
+        });
+    }
+    relation_use.check(catalog)?;
+    let environment_ref =
+        SupportEnvironmentRef::from_artifact_ref(relation_use.support().as_artifact_ref());
+    let environment = catalog.resolve_support_environment(environment_ref).ok_or(
+        RelationUseSupportError::UnresolvedEnvironment(environment_ref),
+    )?;
+    let calculated_environment = environment.support_environment_ref()?;
+    if calculated_environment != environment_ref {
+        return Err(RelationUseSupportError::EnvironmentIdentityMismatch {
+            reference: environment_ref,
+            calculated: calculated_environment,
+        });
+    }
+    environment.check(catalog)?;
+    let SupportSubjectRef::Relation(target_relation) = environment.target() else {
+        return Err(RelationUseSupportError::ClaimTargetIsNotRelationUseSupport);
+    };
+    if target_relation != relation_use.relation() {
+        return Err(RelationUseSupportError::TargetRelationMismatch {
+            target: target_relation,
+            relation_use: relation_use.relation(),
+        });
+    }
+    if environment.scope() != relation_use.scope() {
+        return Err(RelationUseSupportError::ContextMismatch("scope"));
+    }
+    if environment.applicability() != relation_use.applicability() {
+        return Err(RelationUseSupportError::ContextMismatch("applicability"));
+    }
+    Ok(ResolvedRelationUseSupport {
+        relation_use: relation_use_ref,
+        environment: environment_ref,
+    })
+}
+
 fn checked_relation<C: SupportEnvironmentCatalog>(
     catalog: &C,
     reference_value: RelationRef,
@@ -574,6 +652,41 @@ pub enum SupportEnvironmentArtifactCheckError {
         reference: RawReturnRef,
         calculated: RawReturnRef,
     },
+}
+
+#[derive(Debug, Error)]
+pub enum RelationUseSupportError {
+    #[error(transparent)]
+    Environment(#[from] SupportEnvironmentArtifactError),
+    #[error(transparent)]
+    EnvironmentCheck(#[from] SupportEnvironmentArtifactCheckError),
+    #[error(transparent)]
+    RelationUse(#[from] RelationUseError),
+    #[error(transparent)]
+    RelationUseCheck(#[from] RelationUseCheckError),
+    #[error("relation use {0} is unavailable")]
+    UnresolvedRelationUse(RelationUseRef),
+    #[error("relation use {reference} hashes to {calculated}, not its claimed identity")]
+    RelationUseIdentityMismatch {
+        reference: RelationUseRef,
+        calculated: RelationUseRef,
+    },
+    #[error("support environment {0} is unavailable")]
+    UnresolvedEnvironment(SupportEnvironmentRef),
+    #[error("support environment {reference} hashes to {calculated}, not its claimed identity")]
+    EnvironmentIdentityMismatch {
+        reference: SupportEnvironmentRef,
+        calculated: SupportEnvironmentRef,
+    },
+    #[error("a claim-targeted support environment cannot yet support a relation-use association")]
+    ClaimTargetIsNotRelationUseSupport,
+    #[error("support target relation {target} differs from relation use relation {relation_use}")]
+    TargetRelationMismatch {
+        target: RelationRef,
+        relation_use: RelationRef,
+    },
+    #[error("support environment context differs from relation use at {0}")]
+    ContextMismatch(&'static str),
 }
 
 /// One candidate support route for a claim.

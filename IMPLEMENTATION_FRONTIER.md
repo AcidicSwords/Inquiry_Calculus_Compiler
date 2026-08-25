@@ -13,8 +13,9 @@ ordinary event record. Phase 6 now has canonical ordinary-event identity and app
 linkage. A derived structural view can now connect one preserved decoded candidate to its exact
 declared observation use; general supported-answer materialization remains reserved for the
 Phase 6/7 actuality-and-resolution boundary. Phase 11 now has canonical claim and candidate
-support-environment identity with structural provenance checking, but no `SupportRef` resolution
-or claim admission linkage.
+support-environment identity with structural provenance checking. Relation uses can structurally
+resolve matching relation-targeted environments through `SupportRef`, but no claim admission
+linkage exists.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned

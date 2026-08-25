@@ -11,12 +11,13 @@ use ic_core::{
     OpenPort, OpenQuery, OpenQueryCatalog, PortBinding, ProbeContractRef, ProbeOperator,
     ProbeOperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
     RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
-    RelationUse, RelationUseContext, RelationUseRef, ResolutionCatalog, ResolutionPath,
-    ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, StateRef, SupportEnvironmentArtifact,
+    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
+    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
+    ResolutionPathRef, RouteRef, ScopeRef, StateRef, SupportEnvironmentArtifact,
     SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
     SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef, TyIR,
     TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
-    decode_actual_event, match_decoded_observation_use,
+    decode_actual_event, match_decoded_observation_use, resolve_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -217,6 +218,12 @@ impl SupportEnvironmentCatalog for Catalog {
         reference: SupportEnvironmentRef,
     ) -> Option<SupportEnvironmentArtifact> {
         self.support_environments.get(&reference).cloned()
+    }
+}
+
+impl RelationUseSupportCatalog for Catalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
+        self.relation_uses.get(&reference).cloned()
     }
 }
 
@@ -566,6 +573,63 @@ fn support_environment_identity_preserves_candidate_support_without_closure() {
     )
     .expect("relation-targeted environment must remain representable");
     assert!(relation_environment.check(&fixture.catalog).is_ok());
+    let relation_environment = fixture
+        .catalog
+        .insert_support_environment(relation_environment);
+    let original_use = fixture
+        .catalog
+        .relation_uses
+        .get(&fixture.observation)
+        .expect("fixture observation must remain available")
+        .clone();
+    let linked_environment = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Relation(original_use.relation()),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        original_use.applicability(),
+        original_use.scope(),
+    )
+    .expect("use-targeted environment must canonicalize");
+    let linked_environment = fixture
+        .catalog
+        .insert_support_environment(linked_environment);
+    let linked_use = fixture.catalog.insert_relation_use(RelationUse::new(
+        original_use.relation(),
+        original_use.bindings().to_vec(),
+        RelationUseContext::new(
+            original_use.scope(),
+            original_use.applicability(),
+            original_use.grain(),
+            original_use.horizon(),
+            original_use.mode(),
+            linked_environment.as_support_ref(),
+            original_use.warrant(),
+        ),
+    ));
+    let link = resolve_relation_use_support(linked_use, &fixture.catalog)
+        .expect("matching relation-targeted support must link structurally");
+    assert_eq!(link.relation_use(), linked_use);
+    assert_eq!(link.environment(), linked_environment);
+    let context_mismatched_use = fixture.catalog.insert_relation_use(RelationUse::new(
+        original_use.relation(),
+        original_use.bindings().to_vec(),
+        RelationUseContext::new(
+            original_use.scope(),
+            original_use.applicability(),
+            original_use.grain(),
+            original_use.horizon(),
+            original_use.mode(),
+            relation_environment.as_support_ref(),
+            original_use.warrant(),
+        ),
+    ));
+    assert!(matches!(
+        resolve_relation_use_support(context_mismatched_use, &fixture.catalog),
+        Err(RelationUseSupportError::ContextMismatch("scope"))
+    ));
     let mismatched_context = SupportEnvironmentArtifact::new(
         SupportSubjectRef::Claim(claim),
         Vec::new(),

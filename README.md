@@ -215,9 +215,9 @@ claim-or-relation target, generic premise references, preserved raw returns, che
 dependencies, applicability, and scope. Its checker rehashes a claim target and actual
 returns; it rehashes a relation target as a relation schema, and requires a claim target's declared
 context to agree. It deliberately does not run
-opaque checkers, evaluate assumptions or open dependencies, assert closure, map a `SupportRef`
-back to an environment, or admit the target claim as standing. Those remain the next
-claim/support-admission boundary.
+opaque checkers, evaluate assumptions or open dependencies, assert closure, or admit the target
+claim as standing. A derived relation-use link can resolve only a matching relation-targeted
+environment through its exact `SupportRef`, scope, and applicability; that link is not admission.
 
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates
