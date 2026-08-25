@@ -58,6 +58,8 @@ or passing.
 | P2-QUERY-006 completion-fiber view revalidates its source query without selecting a completion | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 | P2-QUERY-007 direct normalization sorts to schema port order and is idempotent | PASS | `open_query_is_a_complete_partition_with_a_nonempty_open_section` |
 | P2-REL-006 canonical data-only relation-expression grammar round trip | PASS | `canonical_relation_expression_grammar_round_trips_without_evaluation` |
+| P3-IPROG-001 first-order Return/Ask canonical identities and explicit continuation reference | PASS | `iprog_identity::first_order_return_and_ask_round_trip_without_closures` |
+| P3-IPROG-002 malformed first-order program rejection | PASS | `iprog_identity::rejects_malformed_inquiry_program_encodings` |
 
 ## Pending specification and plan categories
 

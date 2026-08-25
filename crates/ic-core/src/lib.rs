@@ -6,6 +6,7 @@
 mod artifact;
 mod context;
 mod formula;
+mod iprog;
 mod query;
 mod relation;
 mod relation_expr;
@@ -22,6 +23,9 @@ pub use context::{
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,
     FormulaCheckError, FormulaError, FormulaIR, FormulaRef, RelationRef, RelationSignature, TermIR,
+};
+pub use iprog::{
+    IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgError, IProgIR, IProgRef,
 };
 pub use query::{
     CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,

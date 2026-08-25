@@ -21,8 +21,9 @@ inferring them from opaque payload bytes.
 
 Before completing Phase 2, resolve:
 
-> What is the smallest typed validation boundary for canonical relation expressions and dependent
-> binding now that the data-only source grammar preserves composition syntax without evaluation?
+> What is the smallest capture-safe explicit environment and typed validation boundary for
+> first-order `IProg::Ask` continuations, while preserving the unresolved relation-expression
+> validation/dependent-binding problem as a separate Phase 2 residual?
 
 The protected difference is visible in the accepted sources:
 
@@ -130,4 +131,6 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
   idempotent; it changes no bindings, modes, relation body, or completion claim.
 - RelationExprArtifact canonically stores `Relation`, `Bind`, `Join`, `Expose`, `Hide`, `Rename`,
   and `Guard` as data-only syntax with explicit dependencies; it does not evaluate them.
+- First-order IProg artifacts canonically encode `Return` and `Ask` with explicit QueryRef,
+  answer-slot name, and continuation IProgRef; no host closure exists.
 - A fixed independently calculated direct OpenQuery payload/envelope/SHA-256 fixture passes.
