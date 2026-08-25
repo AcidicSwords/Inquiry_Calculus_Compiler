@@ -12,6 +12,7 @@ mod event;
 mod factorization;
 mod finite_cell;
 mod formula;
+mod frontier;
 mod iprog;
 mod negation;
 mod probe;
@@ -63,6 +64,10 @@ pub use finite_cell::{
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,
     FormulaCheckError, FormulaError, FormulaIR, FormulaRef, RelationRef, RelationSignature, TermIR,
+};
+pub use frontier::{
+    ActiveNegationUse, CollectiveCoverageRef, GeneratorCoverageRef, NegationFrontierError,
+    NegationFrontierView,
 };
 pub use iprog::{
     IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgCatalog, IProgCheckError,

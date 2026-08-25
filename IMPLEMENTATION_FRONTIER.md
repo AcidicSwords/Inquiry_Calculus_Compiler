@@ -62,6 +62,13 @@ The protected difference is visible in the accepted sources:
   declaration, indexed context, and provenance. Its checker rejects a different presentation
   orientation/context, forged or incompatible schemas/use, and forged program identity. It does
   not execute the program, establish soundness/coverage, or admit a negation incidence.
+- `NegationFrontierView` now represents the plan's derived tagged use family: each
+  `ActiveNegationUse` retains the `NegationUseRef`, source, candidate-field relation, declared
+  semantic coverage, and a separately typed opaque generator/execution-coverage reference.
+  The view preserves member order/tags, rejects duplicate uses and a source mismatch, and lets an
+  empty frontier remain empty. It has no combined-negation relation, candidate incidence,
+  collective-coverage inference, rehashing/admission of its supplied declarations, or closure
+  authority.
 - `RawReturn` domain-separates and content-addresses exact opaque return bytes. It is admissible
   to the existing artifact store as ordinary immutable content but carries no ledger or
   actualization assertion by itself.

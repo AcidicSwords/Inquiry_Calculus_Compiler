@@ -131,6 +131,12 @@ relation-use and candidate-field schemas, and first-order soundness-program iden
 executes that program nor admits soundness, coverage, a frontier member, or a positive-negation
 incidence.
 
+A derived `NegationFrontierView` retains the tagged family of active use views without merging
+them: each member keeps its use identity, source, candidate-field relation, semantic coverage,
+and separately typed execution-coverage reference. It rejects duplicate use tags and mixed
+sources, but does not rehash or admit supplied declarations, infer collective coverage, generate
+candidates, or establish a negation incidence.
+
 Phase 6 preserves exact opaque probe-return bytes as immutable, domain-separated `RawReturn`
 artifacts before decoding. A raw return alone is not an actuality assertion, attempt, completion,
 interpretation, check, or warrant. The ordinary `ActualEvent` record resolves the former source
