@@ -49,13 +49,14 @@ or passing.
 | P2-REL-002 formula-defined relation exact port context | PASS | `formula_defined_relation_requires_the_exact_named_port_context` |
 | P2-REL-003 atom signature arity and argument-type checks | PASS | `checks_atom_arity_and_types_against_a_resolved_named_signature` |
 | P2-REL-004 duplicate named-port and malformed relation rejection | PASS | `rejects_duplicate_ports_and_malformed_relation_encodings` |
+| P2-REL-005 relation-use occurrence identity, typed bindings, and scope context | PASS | `relation_use_is_a_distinct_typed_and_scoped_occurrence` |
 
 ## Pending specification and plan categories
 
 | Category | Status | First planned phase |
 |---|---|---|
 | Typed forms, typed reification, and type verification | PARTIAL | Phase 1: canonical type artifacts, typed-form declarations, and structural checks pass; binding-native term/reification semantics remain pending |
-| Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: formula artifacts, typed terms, relation schemas, and atom-signature checks pass; relation uses and `OpenQuery` remain pending |
+| Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; `OpenQuery` remains pending |
 | First-order programs and proposal/actuality/authority separation | PENDING | Phase 3 |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4 |
 | Typed negation and coverage separation, fixtures 14-24 | PENDING | Phase 4 |

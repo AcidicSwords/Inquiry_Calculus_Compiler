@@ -1,10 +1,12 @@
 use std::collections::BTreeMap;
 
 use ic_core::{
-    ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef, FormulaArtifact,
-    FormulaCatalog, FormulaIR, FormulaRef, RelationBodyIR, RelationCheckError, RelationError,
-    RelationPort, RelationRef, RelationSchema, RelationSignature, TyIR, TypeArtifact, TypeCatalog,
-    TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
+    DischargeMode, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef,
+    PortBinding, RelationBodyIR, RelationCatalog, RelationCheckError, RelationError, RelationPort,
+    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseCheckError,
+    RelationUseContext, ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
+    TypeRef, TypeSymbol, TypedForm, TypedFormRef,
 };
 use serde::Deserialize;
 
@@ -22,6 +24,8 @@ struct Catalog {
     types: BTreeMap<TypeRef, TypeArtifact>,
     formulas: BTreeMap<FormulaRef, FormulaArtifact>,
     signatures: BTreeMap<RelationRef, RelationSignature>,
+    schemas: BTreeMap<RelationRef, RelationSchema>,
+    forms: BTreeMap<TypedFormRef, TypedForm>,
 }
 
 impl Catalog {
@@ -34,6 +38,22 @@ impl Catalog {
     fn insert_formula(&mut self, artifact: FormulaArtifact) -> FormulaRef {
         let reference = artifact.formula_ref().expect("formula fixture must encode");
         self.formulas.insert(reference, artifact);
+        reference
+    }
+
+    fn insert_schema(&mut self, artifact: RelationSchema) -> RelationRef {
+        let reference = artifact.relation_ref().expect("schema fixture must encode");
+        self.signatures.insert(
+            reference,
+            artifact.signature().expect("schema fixture must encode"),
+        );
+        self.schemas.insert(reference, artifact);
+        reference
+    }
+
+    fn insert_form(&mut self, form: TypedForm) -> TypedFormRef {
+        let reference = form.typed_form_ref().expect("form fixture must encode");
+        self.forms.insert(reference, form);
         reference
     }
 }
@@ -56,12 +76,18 @@ impl FormulaCatalog for Catalog {
         self.formulas.get(&reference).cloned()
     }
 
-    fn resolve_typed_form(&self, _reference: TypedFormRef) -> Option<TypedForm> {
-        None
+    fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm> {
+        self.forms.get(&reference).copied()
     }
 
     fn resolve_relation_signature(&self, reference: RelationRef) -> Option<RelationSignature> {
         self.signatures.get(&reference).cloned()
+    }
+}
+
+impl RelationCatalog for Catalog {
+    fn resolve_relation_schema(&self, reference: RelationRef) -> Option<RelationSchema> {
+        self.schemas.get(&reference).cloned()
     }
 }
 
@@ -216,5 +242,59 @@ fn rejects_duplicate_ports_and_malformed_relation_encodings() {
     assert!(matches!(
         RelationSchema::from_envelope(&wrong_kind),
         Err(RelationError::UnexpectedArtifactKind { .. })
+    ));
+}
+
+#[test]
+fn relation_use_is_a_distinct_typed_and_scoped_occurrence() {
+    let binding = binding(0x11);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let form_ref = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x22)));
+    let schema_ref = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("subject", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x33),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let context = RelationUseContext::new(
+        ScopeRef::from_artifact_ref(artifact(0x44)),
+        ApplicabilityRef::from_artifact_ref(artifact(0x55)),
+        GrainRef::from_artifact_ref(artifact(0x66)),
+        HorizonRef::from_artifact_ref(artifact(0x77)),
+        DischargeMode::Probe,
+        SupportRef::from_artifact_ref(artifact(0x88)),
+        None,
+    );
+    let occurrence = RelationUse::new(
+        schema_ref,
+        vec![PortBinding::new(
+            TypeSymbol::new("subject").expect("port name must be valid"),
+            form_ref,
+        )],
+        context,
+    );
+
+    assert_eq!(
+        RelationUse::from_envelope(&occurrence.envelope().expect("use must encode"))
+            .expect("use must decode"),
+        occurrence
+    );
+    assert!(occurrence.check(&catalog).is_ok());
+
+    let invalid_port = RelationUse::new(
+        schema_ref,
+        vec![PortBinding::new(
+            TypeSymbol::new("unknown").expect("port name must be valid"),
+            form_ref,
+        )],
+        context,
+    );
+    assert!(matches!(
+        invalid_port.check(&catalog),
+        Err(RelationUseCheckError::UnknownPort(_))
     ));
 }

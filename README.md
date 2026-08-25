@@ -5,7 +5,7 @@ including the adopted **Successor Reciprocal-Boundary / Positive-Negation Editio
 The semantic authority has advanced, but the executable implementation remains at
 **Phase 2**: repository authority, canonical artifact identity, immutable-artifact
 persistence, binding-scoped type artifacts, typed-form declarations, canonical formula
-artifacts, and checked relation schemas. Relation uses, open-query composition,
+artifacts, checked relation schemas, and immutable relation uses. Open-query composition,
 reification, program, event, and standing semantics are not implemented yet.
 
 ## Authority by question
@@ -37,7 +37,7 @@ evidence; they are not coequal forward authority.
 
 - `ic-core`: canonical artifact envelopes, binding-scoped `TyIR`, typed-form
   declarations, canonical formula artifacts, capture-safe typed terms, formula-defined or
-  binding-native relation schemas, canonical identity, and structural checking.
+binding-native relation schemas, canonical identity, and structural checking.
 - `ic-store`: SQLite migrations, verified immutable artifact storage, and transactional
   insertion of explicitly declared artifact dependencies.
 - `ic-runtime`: reserved package boundary; no runtime semantics yet.
@@ -62,6 +62,8 @@ Relation schemas keep their ordered named port signature distinct from their sem
 their body is either a canonical formula with that exact typed context or a separately
 identified binding-native contract artifact. Formula atom checking resolves that signature;
 no host callback is admitted as unrecorded relation meaning.
+An immutable `RelationUse` records one scoped occurrence, its typed bindings, required
+evidence mode, support, and optional warrant separately from the reusable schema.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

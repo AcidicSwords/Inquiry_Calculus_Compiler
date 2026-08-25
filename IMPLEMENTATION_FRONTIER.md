@@ -10,8 +10,9 @@ implemented phase. The repository has a pinned Rust workspace, exact versioned
 canonical artifact envelopes, stable SHA-256 content references, one artifact-only
 SQLite migration, verified immutable insert/fetch behavior, binding-scoped canonical
 type artifacts, typed-form declarations, canonical formula artifacts with capture-safe typed
-terms, and formula-defined or binding-native relation schemas with checked named atom
-signatures. `ic-runtime` and `ic-cli` contain no semantic machinery.
+terms, formula-defined or binding-native relation schemas with checked named atom
+signatures, and immutable scoped relation uses. `ic-runtime` and `ic-cli` contain no
+semantic machinery.
 Referencing artifacts now declare their dependencies explicitly;
 the one-writer store checks those dependencies in the insertion transaction rather than
 inferring them from opaque payload bytes.
@@ -32,7 +33,8 @@ The protected difference is visible in the accepted sources:
   transforms (`Bind`, `Expose`, `Plug`, `Normalize`, `Compose`, `DependentBind`, and
   `CompletionFiber`) without starting runtime semantics.
 - The completed relation boundary supplies immutable named signatures and semantic routes;
-  the remaining question is how to retain a particular use and partial-binding shape.
+  immutable relation uses retain scope, applicability, grain, horizon, evidence mode, support,
+  warrant, and typed bindings separately from a schema.
 
 Different answers change whether the same schema can be used in distinct scoped,
 applicable occurrences and whether a partially bound question retains exactly its legal
@@ -118,3 +120,4 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
 - Formula atoms validate arity and argument types against the resolved named signature.
 - Fixed relation bytes/SHA-256, decoding failure cases, duplicate-port rejection, and
   formula-context checks pass.
+- A relation use is a separately content-addressed occurrence and rejects unknown bound ports.
