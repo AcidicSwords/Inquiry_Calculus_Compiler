@@ -12,7 +12,9 @@ decoded/undefined/unknown results and can tie a single-open-port direct decoder 
 ordinary event record. Phase 6 now has canonical ordinary-event identity and append-only journal
 linkage. A derived structural view can now connect one preserved decoded candidate to its exact
 declared observation use; general supported-answer materialization remains reserved for the
-Phase 6/7 actuality-and-resolution boundary.
+Phase 6/7 actuality-and-resolution boundary. Phase 11 now has canonical claim identity and
+structural provenance checking, but no canonical support-environment identity or claim admission
+linkage.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -31,11 +33,11 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> Given a typed finite incompatibility pair tied to explicit source/candidate roles in a named,
-> non-generated relation use, what is the smallest provenance and admission boundary that can
-> establish its standing, determination relevance, and non-circularity without turning failed
-> search, projection, incomplete coverage, or caller-declared data into exteriority or silently
-> collapsing semantic and execution coverage?
+> Given an oriented typed finite incompatibility pair and canonical candidate claim records, what
+> is the smallest canonical support-environment and claim-linkage boundary that can establish
+> standing, determination relevance, and non-circularity without turning failed search,
+> projection, incomplete coverage, or caller-declared data into exteriority or silently collapsing
+> semantic and execution coverage?
 
 The protected difference is visible in the accepted sources:
 
@@ -118,6 +120,13 @@ The protected difference is visible in the accepted sources:
   inferred port spelling or a persisted authority record, so this still neither establishes
   standing/admission, observation actuality, determination relevance, non-circularity, coverage,
   or departure.
+- `ClaimArtifact` now canonically identifies the plan's ClaimIR boundary: opaque subject/payload,
+  source question, preserved raw-return references, resolution paths, scope, applicability, and
+  declared lifecycle status. Its checker rehashes/checks the named query, raw returns, and paths;
+  its canonical encoding rejects duplicate/noncanonical references and malformed statuses. A
+  `Standing` status is merely a declared lifecycle value, not a self-warrant: no support
+  environment, claim admission, actual return, standing computation, or semantic patch is
+  created by this artifact.
 - `TaggedExteriorClaim` now preserves the next dependent role as a derived view: immutable
   negation-use tag, source, candidate, departure-witness, and separately typed execution-coverage
   identity. Its checker rehashes and structurally checks the named use and witness, then requires
@@ -302,9 +311,11 @@ The protected difference is visible in the accepted sources:
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The decoded
 candidate/observation-use equality and finite-pair/use membership are now checked structurally.
-The same pair is now checked at explicit source/candidate role ports. The next discriminator must
-reject a purported departure whose use lacks separately admitted standing/relevance/non-circularity
-evidence or has no more than caller-declared finite-table support.
+The same pair is now checked at explicit source/candidate role ports, and claims retain checked
+candidate provenance without self-standing. The next discriminator must reject a purported
+departure whose claim/use lacks separately identified support-environment, least-fixed-point
+standing/relevance/non-circularity evidence or has no more than caller-declared finite-table
+support.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
 `T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty

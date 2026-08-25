@@ -5,6 +5,7 @@
 
 mod artifact;
 mod boundary;
+mod claim;
 mod context;
 mod cue;
 mod decoder;
@@ -41,6 +42,10 @@ pub use artifact::{
 };
 pub use boundary::{
     BOUNDARY_CHART_ARTIFACT_KIND, BOUNDARY_CHART_SCHEMA_VERSION, BoundaryChart, BoundaryChartError,
+};
+pub use claim::{
+    CLAIM_ARTIFACT_KIND, CLAIM_SCHEMA_VERSION, ClaimArtifact, ClaimCatalog, ClaimCheckError,
+    ClaimError, ClaimStatus,
 };
 pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,

@@ -2,19 +2,19 @@ use std::collections::BTreeMap;
 
 use ic_core::{
     ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef,
-    ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, CompletionCandidate,
-    CompletionCandidateCatalog, CompletionCandidateRef, DecodedObservationError, DecoderRef,
-    DeterminationPresentationRef, DischargeMode, FINITE_DECODER_ARTIFACT_KIND,
-    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
-    FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
-    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProvenanceRef, QueryRef,
-    RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort,
-    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
-    RelationUseRef, ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef,
-    RouteRef, ScopeRef, StateRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
-    TypeRef, TypeSymbol, TypedForm, TypedFormRef, decode_actual_event,
-    match_decoded_observation_use,
+    ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
+    ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
+    DecodedObservationError, DecoderRef, DeterminationPresentationRef, DischargeMode,
+    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
+    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
+    FormulaArtifact, FormulaCatalog, FormulaRef, GrainRef, HorizonRef, ObservationResultCatalog,
+    OpenPort, OpenQuery, OpenQueryCatalog, PortBinding, ProbeContractRef, ProbeOperator,
+    ProbeOperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
+    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
+    RelationUse, RelationUseContext, RelationUseRef, ResolutionCatalog, ResolutionPath,
+    ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, StateRef, SupportRef, TyIR,
+    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    decode_actual_event, match_decoded_observation_use,
 };
 
 #[derive(Clone, Default)]
@@ -414,6 +414,52 @@ fn finite_decoder_preserves_decoded_undefined_and_unknown_outcomes() {
     assert!(matches!(
         FiniteDecoder::decode_payload(&unknown_tag),
         Err(FiniteDecoderError::UnknownEntryTag(0xff))
+    ));
+}
+
+#[test]
+fn claim_identity_preserves_candidate_provenance_without_claiming_standing() {
+    let mut fixture = fixture();
+    let path = fixture.catalog.insert_path(ResolutionPath::new(
+        fixture.raw_type,
+        fixture.raw_type,
+        ResolutionPathIR::Identity,
+    ));
+    let claim = ClaimArtifact::new(
+        artifact(0x40),
+        fixture.query,
+        vec![fixture.decoded_raw],
+        vec![path],
+        ScopeRef::from_artifact_ref(artifact(0x41)),
+        ApplicabilityRef::from_artifact_ref(artifact(0x42)),
+        ClaimStatus::Standing,
+    )
+    .expect("claim references must canonicalize");
+    assert!(claim.check(&fixture.catalog).is_ok());
+    assert_eq!(
+        ClaimArtifact::from_envelope(&claim.envelope().expect("claim must encode"))
+            .expect("claim must decode"),
+        claim
+    );
+    assert_eq!(claim.status(), ClaimStatus::Standing);
+    assert!(matches!(
+        ClaimArtifact::new(
+            artifact(0x40),
+            fixture.query,
+            vec![fixture.decoded_raw, fixture.decoded_raw],
+            vec![path],
+            ScopeRef::from_artifact_ref(artifact(0x41)),
+            ApplicabilityRef::from_artifact_ref(artifact(0x42)),
+            ClaimStatus::Candidate,
+        ),
+        Err(ClaimError::DuplicateSupportingReturn(reference)) if reference == fixture.decoded_raw
+    ));
+    let mut malformed = claim.canonical_payload().expect("payload must encode");
+    let last = malformed.len() - 1;
+    malformed[last] = 0xff;
+    assert!(matches!(
+        ClaimArtifact::decode_payload(&malformed),
+        Err(ClaimError::UnknownStatus)
     ));
 }
 

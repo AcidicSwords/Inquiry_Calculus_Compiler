@@ -203,6 +203,14 @@ Checking revalidates types and exact composition interfaces, including cycle rej
 not run a decoder, relation, or program; name a supported answer set; resolve a raw return; or
 turn a partial result into an exact answer.
 
+Phase 11 now has a canonical `ClaimArtifact`: it retains an opaque proposition/payload identity,
+source question, preserved raw-return references, resolution paths, scope, applicability, and a
+declared lifecycle status. Its checker rehashes the typed/provenance references, rejects duplicate
+references and malformed status tags, and is intentionally not an admission rule: `Standing` in a
+claim artifact is only a stated status, not proof that any support route closed. The derived
+least-fixed-point standing engine remains separate until support-environment identity and
+claim/support linkage are implemented.
+
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates
 or is explicitly outside the decoder; an unlisted raw return remains `Unknown`. A direct
