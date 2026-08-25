@@ -109,7 +109,7 @@ The implementation recursion further established several corrections required to
 
 8. **Recovery is not a new semantic primitive.** A return fiber recovers a protected source relation when the protected observation induced by that relation is constant over the return fiber.
 
-9. **Multiple negation relations can jointly carry information that no one relation carries alone.** Their exploratory exterior space is a tagged sum; their accumulated return information is a product signature.
+9. **Multiple negation relations can jointly carry information that no one relation carries alone.** Their exploratory exterior space is a tagged sum; their accumulated return information is a product signature. That informational product is not one jointly actualizable return without supported co-applicability and joint-realizability evidence.
 
 10. **State-changing redetermination is not pure hole re-solving after adding a compatible exterior constraint.** Monotone compatible constraint addition cannot change an already determined source class. Genuine semantic change requires reconciliation/revision of the standing web, changed applicability, changed grain, changed binding, or prior underdetermination.
 
@@ -287,6 +287,13 @@ If no, quotienting/folding is permitted only relative to a declared:
 - continuation family;
 - recovery contract;
 - unlock condition.
+
+Among licensed representations that preserve inquiry-regenerative sufficiency, retain
+the minimal or nondominated frontier under the declared resource preorder.  Inquiry
+expands until protected live classes are separable and then subtracts until another
+removal would lose regeneration, continuation behavior, warrant provenance, or
+reopening.  This is an optimization discipline, not a universal scalar objective or a
+claim that one global minimum exists.
 
 The positive-negation successor adds a second implementation discipline:
 
@@ -1471,6 +1478,39 @@ This gives the exact interpretation of:
 
 No scalar recovery percentage belongs in the semantic core.
 
+Executable recovery must retain three outcomes rather than defining loss by set
+complement:
+
+```rust
+enum RecoveryStatusIR {
+    Recovered { certificate: ArtifactRef },
+    NotRecovered { separator: ArtifactRef },
+    Unknown { residual: OpenRef },
+}
+```
+
+`NotRecovered` requires two source candidates in the same return fiber whose protected
+relation signatures differ.  Absence of a recovery certificate is insufficient.  Only
+an exact decision/coverage certificate may identify the irrecoverable residue with
+`W - Recov(W)`.
+
+A source characterization may be exposed as a derived view over:
+
+```text
+supported determination presentation
+certified admitted internal variation
+tagged negation frontier
+three-valued recovery/loss profiles
+scope/applicability/grain/horizon/coverage/provenance
+open residuals and reopening routes
+```
+
+This view may support an external goal horizon or a recursively developed constitutive
+inquiry horizon.  Generated constitutive discriminators remain candidates until
+independently actualized, checked, warranted, and admitted.  Do not add an authoritative
+`CharacterizationIR` table or a new runtime opcode; construct the view from ordinary
+relations, events, fibers, and support.
+
 ---
 
 # 31. Near-negation order
@@ -1539,6 +1579,27 @@ For deterministic/exact signatures:
 
 Adding another lawful signature can refine but not coarsen the family observational partition.
 
+This product is an informational view, not an actuality constructor.  Component
+signatures supported under different occurrences or mutually exclusive applicability
+contexts remain individually usable information, but they do not become one realized
+composite return without explicit co-applicability and joint-realizability evidence.
+
+Use a derived certificate reference only when a consumer requires simultaneous
+realization:
+
+```rust
+struct JointnessCertificateIR {
+    components: Vec<SignatureRef>,
+    applicability: ApplicabilityRef,
+    joint_context: ContextRef,
+    evidence: Vec<ArtifactRef>,
+}
+```
+
+Do not require this certificate merely to retain or compare separately actualized
+information.  Require it when an operation treats the product as one actual composite
+observation.
+
 ---
 
 # 33. Schema recovery
@@ -1574,6 +1635,40 @@ Therefore joint gain belongs in:
 \]
 
 not in a semantic union of negation relations.
+
+The exact deterministic case is one instance of the generic factorization contract:
+
+\[
+\boxed{
+DetermineThrough(\sigma,\chi)
+\iff
+\ker\sigma\subseteq\ker\chi
+\iff
+\exists h.\ \chi=h\circ\sigma.
+}
+\]
+
+Implement one exact facility:
+
+```rust
+enum ExactDeterminationResult {
+    Exact { certificate: ArtifactRef },
+    NotDetermined { separator_certificate: ArtifactRef },
+}
+
+fn determine_through_exact(
+    available_signature: SignatureRef,
+    target_signature: SignatureRef,
+    scope: ScopeRef,
+    applicability: ApplicabilityRef,
+    horizon: HorizonRef,
+) -> ExactDeterminationResult;
+```
+
+The implementation must verify common scope, applicability, grain, binding, and
+horizon before applying the kernel test.  Working, partial, nondeterministic, or
+incompletely covered inputs use a separately typed result that may retain liabilities
+or return `Unknown`; they must not reuse `Exact` by convention.
 
 ---
 
@@ -2339,7 +2434,7 @@ Its own meaning remains open to reciprocal inquiry.
 
 # 54. Question-space growth
 
-After representation extension:
+After a conservative representation extension:
 
 \[
 \eta_t
@@ -2347,19 +2442,24 @@ After representation extension:
 \eta_{t+1},
 \]
 
-new typed relation schemas/questions may become constructible.
+every old type, relation, question constructor, typing rule, and protected
+interpretation remains transportable, while new typed relation schemas/questions may
+become constructible.
 
 Therefore generative inquiry can change its future question language:
 
 \[
 \boxed{
+\iota_Q:
 Q^\infty(\Sigma_t)
-\subseteq
+\hookrightarrow
 Q^\infty(\Sigma_{t+1})
 }
 \]
 
-when the extension is strictly discriminating.
+Strict inclusion requires a well-typed successor question outside the image of
+\(\iota_Q\).  Definitional replacement or rebinding need not preserve old question
+constructors, so it carries no unqualified monotonicity claim.
 
 This is the implementation mechanism for open-ended inquiry.
 
@@ -2762,6 +2862,57 @@ Reopen.
 
 The positive-negation successor therefore gives a canonical source of unlock witnesses but does not alter the compression machinery.
 
+Approximation licences must carry a directional or binding-specific soundness
+relation.  Equal scalar error does not make over-approximation, under-approximation,
+and other directional contracts interchangeable.  A method or fold whose validity
+depends on the admitted language, binding, probe basis, or protected horizon must also
+declare that extension domain through its applicability and unlock contract; a
+successor outside it forces `Reopen` rather than inheriting admissibility.
+
+Use the regenerative economy frontier for active representations and folds:
+
+\[
+\boxed{
+Economy_{\mathcal H,\preceq}(z)
+=
+Min_{\preceq}
+\{
+m:
+Regen^{inq}_{\mathcal H}(m,z)
+\land
+Licensed_{\mathcal H}(m,z)
+\}.
+}
+\]
+
+Retain every incomparable minimal candidate unless the declared preorder separates it.
+Do not assume a unique global `argmin` or that a minimum exists.  A current-consequence
+kernel check is not enough when continuation behavior, provenance, discriminators,
+residuals, or reopening fail to regenerate.  This optimization applies to licensed
+active structure; authoritative event history remains append-only.
+
+For a live linear dot-product binding, the exact consequence-subspace specialization
+may provide a compression certificate.  With
+
+\[
+M_Q=\mathbb E_{q\sim P_Q}[qq^\top],
+\]
+
+the exact quotient is
+
+\[
+\mathbb R^d/\ker M_Q\cong\operatorname{im}M_Q
+\]
+
+and has vector-space dimension `rank(M_Q)`.  The dimension lower bound applies to
+linear representations (or another explicitly admitted representation class), not to
+arbitrary encodings.  A certificate must retain the query-distribution version,
+second-moment derivation, arithmetic/rank exactness, horizon, scope, and unlock
+conditions.  Centered covariance is unlawful unless the mean direction is proven
+irrelevant; estimated matrices and floating thresholds remain working/approximate
+without certified bounds.  This theorem does not justify a vector database or a
+vector-first retrieval architecture.
+
 ---
 
 # 68. Method learning
@@ -2779,6 +2930,73 @@ A method may accelerate:
 Method utility remains traversal learning.
 
 It does not warrant semantic outputs.
+
+Native and learned methods share one typed registry contract:
+
+```rust
+struct MethodContractIR {
+    id: MethodRef,
+    implemented_relation: RelationRef,
+    applicability: ApplicabilityRef,
+    law: ArtifactRef,
+    coverage: CoverageRef,
+    authority: DischargeMode,
+    extension_domain: ExtensionDomainRef,
+    backend: BackendRef,
+    checker: Option<CheckerRef>,
+    cost: Option<CostModelRef>,
+    failure_schemas: Vec<ResidualSchemaRef>,
+    provenance: Vec<ArtifactRef>,
+}
+```
+
+Derive rather than collapse these states:
+
+```text
+admitted = the contract has standing acceptance
+runnable = its backend is available under current binding/resources
+usable(q) = admitted + runnable + applicable + type/coverage/authority match for q
+```
+
+Method execution preserves the existing actuality boundary.  A pure registered method
+may return without an event; an actualized backend compiles through `Probe` and stores
+its raw return before classification.  After decoding and checking, represent the
+semantic boundary as:
+
+```rust
+enum MethodResolutionIR {
+    Success(SupportedAnswerRef),
+    Residual(OpenRef),
+    Terminal(StopStatusRef),
+}
+```
+
+This is not the raw backend return.  In particular:
+
+```text
+certified empty solution -> typed semantic residual or exact terminal result
+backend unavailable/crash/timeout -> Blocked, ResourceBounded, or Unknown
+```
+
+Residual handlers are typed registry entries, not universal hard-coded branches:
+
+```rust
+struct MethodBridgeIR {
+    from_method: MethodRef,
+    residual_schema: ResidualSchemaRef,
+    to_method: MethodRef,
+    transport: IProgRef,
+    reentry_guard: FormulaRef,
+    reconstruct_input: IProgRef,
+}
+```
+
+A successful handler may reconstruct a new input and resume the suspended method
+through ordinary first-order `IProg`.  This layer adds no runtime opcode and no
+authoritative method-suspension table.  Conflict-core/repair, counterexample
+refinement, discriminator design, and sound approximation are candidate registry
+instances only when their own applicability, law, coverage, authority, and reentry
+guards are admitted.
 
 ---
 
@@ -2829,6 +3047,7 @@ departure witness indexes
 return fibers when deterministically reconstructible
 sixfold occurrence views
 recovery profiles
+coverage-indexed characterization views
 return-signature families
 active views
 cue plans
@@ -3046,10 +3265,39 @@ The successor requires all predecessor constitutional fixtures plus the followin
 
 65. Sixfold/recovery residual can generate `RepresentationGap`.
 66. New attribute can separate a previously collapsed protected pair.
-67. Admitted attribute enlarges constructible question space.
+67. Conservative attribute admission embeds old questions and enlarges the
+    constructible question space only with a witnessed new well-typed question;
+    rebinding does not imply inclusion.
 68. New probe capability remains unadmitted until binding-extension checks pass.
 69. New negation-use signature may reopen a previous fold.
 70. Recurrent separator may become a candidate attribute without automatic standing.
+
+## 74.8 Cross-cutting derived breakers
+
+These are additional later-phase obligations, not new reciprocal roles and not Phase 0
+passes:
+
+1. Exact deterministic factorization agrees with kernel inclusion, while incomplete
+   coverage cannot return `Exact`.
+2. Individually supported signatures under mutually exclusive contexts cannot become
+   one actual composite return without a jointness certificate.
+3. Conservative extension preserves old questions; a rebinding that removes an old
+   constructor defeats unqualified question-space inclusion.
+4. Certified semantic emptiness and operational backend failure route to distinct
+   method outcomes even when their surface error strings agree.
+5. Equal scalar error on over- and under-approximations does not license the same
+   protected inference.
+6. Current-consequence kernel inclusion may hold while a protected reopening
+   discriminator fails to factor, defeating inquiry-regenerative sufficiency.
+7. Missing recovery evidence remains `Unknown`; it does not enter a complement-defined
+   irrecoverable residue without witnessed non-recovery or exact decision coverage.
+8. One protected four-class quotient admits several incomparable minimal two-cue
+   separator bases.
+9. An exact finite rational dot-product binding reconstructs the quotient, consequence
+   subspace, and rank certificate.
+10. A deterministic nonzero-mean query defeats centered-covariance substitution.
+11. Query-distribution change reopens the consequence-subspace certificate; sampled or
+    floating-rank estimates remain working/approximate without certified bounds.
 
 All predecessor typing, compiler, actuality, history, standing, fold, binding, and self-revision fixtures remain required.
 
@@ -3127,8 +3375,12 @@ positive-negation OpenQuery
 use-specific reverse return fiber
 protected relation signature
 local RecoveryCheck
+three-valued RecoveryStatusIR
+derived coverage-indexed characterization view
 family return signatures
 schema recovery
+exact determine-through factorization
+jointness certificate when family information is actualized as one composite return
 seed/reorientation
 SixfoldOccurrenceView
 fiber-level reciprocal residuals
@@ -3223,6 +3475,9 @@ AnswerContract
 SurfacePlan
 BackendRequest
 RawReturnEnvelope
+MethodContractIR
+admitted/runnable/usable method classification
+typed method resolution after raw-return preservation
 MockProvider
 one real provider
 ```
@@ -3260,13 +3515,31 @@ sixfold mismatch
 cue ambiguity
 fold reopening
 ordinary residual ambiguity
+typed method residuals
 ```
 
 through the same interface.
 
+Add `MethodBridgeIR` and one residual-handler/reentry vertical slice compiled through
+first-order `IProg`; do not add a method-specific runtime effect or authoritative
+suspension table.
+
 ## Phase 13 — cue planning
 
 Implement exact finite and working approximate cue planning.
+
+For finite exact residual fields, expose a sufficient discriminator basis check:
+
+```text
+every protectedly distinct live pair
+-> at least one supported/applicable/covered cue with different answers
+```
+
+Select `Min` under a declared resource preorder and retain incomparable minimal bases.
+The joint answer signature may use the exact kernel check only when answer behavior is
+total, deterministic, and exactly covered.  Under incomplete generation or coverage,
+return a nondominated working frontier plus `Unknown` residuals rather than claiming a
+minimum or impossibility.
 
 ## Phase 14 — representation-gap detection
 
@@ -3290,6 +3563,7 @@ conservative observational extension
 rebinding
 BindingBridgeIR
 targeted reopening
+conservative question-language embedding and strict-growth witness
 ```
 
 ## Phase 16 — method learning and folds
@@ -3301,6 +3575,10 @@ operator occurrences
 method folds
 RecoveryContract
 CompressionLicence
+directional approximation soundness
+extension-domain-sensitive method/fold applicability
+regenerative economy frontier
+optional exact linear consequence-subspace certificate for a live numeric binding
 Unlock
 Reopen
 ```
@@ -4077,7 +4355,9 @@ exterior filling.  Pure return is the reverse section of that same relation.
 The return fiber recovers a protected source relation exactly when every source
 still possible through that fiber agrees on the protected consequence of the
 relation.  Multiple negation uses accumulate reusable information through the
-product of their return signatures, not through an untagged semantic union.
+product of their return signatures, not through an untagged semantic union.  The
+product remains a derived information view unless a supported jointness certificate
+licenses its interpretation as one actual composite return.
 
 The exterior filling is then taken as a new center of determination through an
 explicit seed/reorientation relation, and the same operation is repeated in the

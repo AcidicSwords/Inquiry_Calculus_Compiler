@@ -38,6 +38,7 @@ or passing.
 | Pure return versus warranted reconciliation, fixtures 48-52 | PENDING | Phase 4 |
 | Dependent sixfold and downstream `Gamma`, fixtures 53-64 | PENDING | Phase 4 |
 | Reciprocal representation and learning, fixtures 65-70 | PENDING | Phases 4, 12-16 |
+| Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PENDING | Phases 4, 10, 12-16 |
 | Return/Branch/Probe runtime and continuation descent | PENDING | Phase 5 |
 | Actuality, ledger/domain ordering, resolution, and replay | PENDING | Phases 6-7 |
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |
@@ -56,6 +57,14 @@ All 70 successor reciprocal-boundary fixtures are pending. Every unaffected pred
 typing, compiler, actuality, history, standing, fold, binding, and self-revision fixture
 also remains required. The former independent-round-trip reciprocal fixture survives
 only as ancestry and negative-breaker evidence; it is not successor conformance.
+
+The eleven cross-cutting derived breakers are also pending. They protect reusable
+consequences without adding reciprocal roles: exact determination-through, informational
+product versus joint actuality, conservative question-language growth, semantic method
+residual versus operational failure, directional approximation soundness,
+current-consequence versus inquiry-regenerative sufficiency, unknown versus witnessed
+recovery loss, incomparable minimal cue bases, exact linear consequence subspaces,
+the nonzero-mean covariance breaker, and query-distribution-sensitive reopening.
 
 The pending set also includes canonical minimum witnesses more specific than the plan
 summary: `top_B` refinement, recursive distinction composition, square

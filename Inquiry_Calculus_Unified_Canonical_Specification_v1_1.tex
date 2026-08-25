@@ -1301,6 +1301,30 @@ Determines_{\mathcal H}(W,x)
 The residual web need not recover a unique literal representation if every surviving filler has the same protected consequences.
 \end{definition}
 
+\begin{theorem}[Exact determination through a signature]\label{thm:determine-through}
+Let \(\sigma:X\to S\) be an exact deterministic available signature and let
+\(\chi:X\to C\) be a protected target signature over the same declared scope,
+applicability, grain, binding, and horizon.  Then
+\[
+\boxed{
+\chi=h\circ\sigma\ \text{ for some }h:\sigma[X]\to C
+\quad\Longleftrightarrow\quad
+\ker\sigma\subseteq\ker\chi.
+}
+\]
+Thus exact recovery, exact consequence-preserving compression, and other exact
+determination-through questions may reuse this factorization test when their
+signatures satisfy these hypotheses.  Working, partial, nondeterministic, or
+incompletely covered signatures require an explicit weaker contract and may return
+\(\mathsf{Unknown}\); they do not inherit exactness from this theorem.
+\end{theorem}
+
+\begin{proof}
+If \(\chi=h\circ\sigma\), equality under \(\sigma\) implies equality under \(\chi\).
+Conversely, kernel inclusion makes \(h(\sigma(x))=\chi(x)\) well defined on the image
+of \(\sigma\).
+\end{proof}
+
 \begin{definition}[Residual ambiguity]
 When more than one protected filler class survives,
 \[
@@ -1656,6 +1680,51 @@ For a source presentation \(W=W_D^\alpha(s)\), admitted use \(u\), and exterior 
 An exterior may recover some constitutive source relations without regenerating the entire protected source class.  This set-valued profile is semantic; no universal scalar recovery percentage is introduced.
 \end{definition}
 
+\begin{definition}[Three-valued recovery/loss profile]\label{def:recovery-loss-profile}
+For \(F=\RetField_u(e)\) and \(r\in W\), a positive non-recovery witness is a pair
+\(a,a'\in F\) such that
+\[
+\Sig_{r,\mathcal H}(a)\neq\Sig_{r,\mathcal H}(a').
+\]
+At an executable occurrence \(\omega\), retain
+\[
+\boxed{
+\mathsf{RecoveryStatus}_{\omega}(r,e;u)
+\in
+\{
+\mathsf{Recovered}(c),
+\mathsf{NotRecovered}(w),
+\mathsf{Unknown}(\delta)
+\}.
+}
+\]
+Here \(c\) is a recovery certificate, \(w\) is a protected signature-difference
+witness, and \(\delta\) records missing evidence, coverage, or decision capability.
+Consequently
+\[
+W\setminus\mathsf{Recov}_{W,\mathcal H}(s,e;u)
+\]
+may be called an irrecoverable residue only under a declared exact decision/coverage
+certificate.  Otherwise that complement unlawfully merges witnessed loss with
+\(\mathsf{Unknown}\).
+\end{definition}
+
+\begin{definition}[Derived constitutive characterization]\label{def:characterization-view}
+A coverage-indexed characterization view of a source \(s\) is reconstructed from its
+supported determination presentation, positively certified admitted variation that
+remains in the protected source class, tagged negation frontier, and the three-valued
+recovery/loss profiles of admitted exterior occurrences.  It retains scope,
+applicability, grain, binding, horizon, coverage, provenance, and open residuals.
+
+This view may serve an externally declared goal horizon or a recursively developed
+constitutive inquiry horizon.  A recursively generated discriminator enters the latter
+only through ordinary independent actualization, checking, warrant, and admission; it
+cannot protect or warrant itself merely because the characterization program generated
+it.  The view is relative and versioned, not an absolute essence, new semantic
+primitive, or authoritative history species.  A compressed characterization is lawful
+only under inquiry-regenerative sufficiency.
+\end{definition}
+
 \begin{definition}[Near-negation recovery order]\label{def:near-negation-order}
 For two admitted tagged exterior occurrences \((u_1,e_1)\) and \((u_2,e_2)\), write
 \[
@@ -1690,6 +1759,17 @@ For deterministic exact signatures,
 Adding a lawful coordinate may refine but cannot coarsen the exact family observational partition.  Information accumulates through this product, not through an untagged union of negation relations.
 \end{definition}
 
+\begin{law}[Family information is not joint actuality]\label{law:family-jointness}
+The product \(\sigma_{\mathcal U}\) is a tagged derived information view over its
+declared family.  Component signatures supported in different occurrences or
+contexts do not thereby form one jointly actualizable return.  Any binding that
+interprets \((\bar\sigma_1,\ldots,\bar\sigma_n)\) as a single realized composite
+observation must supply supported co-applicability and joint-realizability evidence,
+with the component provenance and contexts preserved.  Absent that evidence, family
+factorization may combine retained information but may not manufacture a composite
+actual event.
+\end{law}
+
 \begin{definition}[Schema and family recovery]\label{def:family-recovery}
 A protected source observation \(\chi_{r,\mathcal H}\) is recoverable from the admitted negation-use family when
 \[
@@ -1706,6 +1786,9 @@ Equivalently, where factorization is available, there is an \(h\) such that
 }
 \]
 Family recovery may therefore succeed when no member signature alone recovers the observation; the canonical three-state breaker witnesses this joint gain.  Occurrence-local recovery remains fixed by the use, fiber, and evidence available at that historical occurrence and is not retroactively strengthened by a later learned use.
+This is the specialization of \cref{thm:determine-through} to the exact deterministic
+family signature; \cref{law:family-jointness} still prevents informational product
+recovery from being read as proof of simultaneous actualizability.
 \end{definition}
 
 \begin{theorem}[Compatible monotone return cannot revise a determined source]\label{thm:monotone-return}
@@ -3138,6 +3221,40 @@ Regen^{inq}_{\mathcal H}(m,z)
 holds when \(Regen_{\mathcal H}(m,z)\) holds and \(m\) also retains or can regenerate the protected discriminators, residuals, support dependencies, or reopening routes needed to test and revise \(z\).
 \end{definition}
 
+\begin{definition}[Regenerative economy frontier]\label{def:regenerative-economy}
+Let \(\preceq\) be a binding-supplied resource preorder and let
+\(\mathsf{Licensed}_{\mathcal H}(m,z)\) include the required scope, applicability,
+authority, provenance, continuation, recovery, and unlock contracts.  Define
+\[
+\boxed{
+\mathsf{Economy}_{\mathcal H,\preceq}(z)
+=
+\operatorname{Min}_{\preceq}
+\{
+m:
+Regen^{inq}_{\mathcal H}(m,z)
+\land
+\mathsf{Licensed}_{\mathcal H}(m,z)
+\}.
+}
+\]
+This is a minimal or nondominated frontier, not a promised unique global
+\(\arg\min\).  It may be empty when no admitted representation satisfies the protected
+contract.  Exact consequence factorization such as
+\(\ker m\subseteq\ker\chi\) discharges only the named consequence; it is not equivalent
+to inquiry-regenerative sufficiency unless the discriminators, continuations,
+provenance, residuals, and reopening obligations also factor through \(m\).
+\end{definition}
+
+\begin{law}[Differentiate only enough to regenerate]\label{law:regenerative-economy}
+Inquiry may add distinctions until protectedly different live completions are
+separable, then subtract distinctions whose removal preserves the declared
+inquiry-regenerative contract.  A further subtraction is blocked by a witnessed loss
+of protected regeneration, discrimination, continuation behavior, warrant provenance,
+or reopening.  This law governs licensed active representations and folds; it does not
+authorize deletion or rewriting of authoritative history.
+\end{law}
+
 \begin{definition}[Understanding]
 Understanding is a derived role, not a new semantic species:
 \[
@@ -3640,6 +3757,12 @@ An approximate licence must state:
 \item whether continuation behavior is also approximated.
 \end{enumerate}
 
+The distortion relation or preorder must preserve the direction of the licensed
+inference.  An over-approximation, an under-approximation, and a binding-specific
+approximation with the same scalar error are not interchangeable merely because that
+number agrees.  Any implementation encoding approximation by a scalar alone must be
+rejected when the directional contracts discharge different protected claims.
+
 Approximate compression may never be reported as exact protected equivalence.
 
 \section{Unlock field}
@@ -3732,6 +3855,29 @@ Q^\infty(\Sigma)
 denote the mathematical set of all well-typed questions constructible from the current relation/operator presentation, open-port grammar, admitted bindings, and unbounded semantic composition.
 
 It need not be computably enumerable.
+
+\begin{theorem}[Conservative question-language growth]\label{thm:conservative-question-growth}
+Suppose a presentation change \(j:\Sigma_t\hookrightarrow\Sigma_{t+1}\) is a
+conservative extension: every old type, relation, question constructor, typing rule,
+and protected interpretation remains available through \(j\).  Then structural
+transport induces an embedding
+\[
+\boxed{
+\iota_Q:Q^\infty(\Sigma_t)\hookrightarrow Q^\infty(\Sigma_{t+1}).
+}
+\]
+The image inclusion is strict only when the successor admits at least one well-typed
+question not in the image of \(\iota_Q\).  Rebinding, replacement, or semantic revision
+is not necessarily conservative, so no unqualified inclusion of question universes is
+licensed for those changes.
+\end{theorem}
+
+\begin{proof}
+Transport each old question syntax tree and its typing derivation through \(j\).
+Preservation of constructors, typing, and interpretation makes the transport
+well-defined and injective.  Strictness requires a successor question without an old
+preimage.  If old constructors or meanings are removed, the transport need not exist.
+\end{proof}
 
 \section{Executable question universe}
 
@@ -3853,6 +3999,33 @@ By assumption, there exists an expressible protected context \(K\) with distinct
 This theorem is relative to the binding, represented repertoire, protection horizon, and resource assumptions.  Acquisition of a new relation/context can lawfully reopen an old quotient.
 
 \section{Question selection}
+
+\begin{definition}[Sufficient discriminator basis]\label{def:separator-basis}
+Let \(Z\) be a live residual field and let \(C\) be a family of supported, applicable,
+well-typed discriminators with declared answer semantics and coverage.  The family is
+sufficient for \(Z\) at horizon \(\mathcal H\) when
+\[
+\boxed{
+z_1\not\equiv_{\mathcal H}z_2
+\Longrightarrow
+\exists c\in C.\,
+\mathsf{Ans}_c(z_1)\neq\mathsf{Ans}_c(z_2).
+}
+\]
+For exact total deterministic answer signatures
+\(A_C:Z\to\prod_{c\in C}\mathsf{Ans}(c)\), this is equivalent to
+\[
+\boxed{\ker A_C\subseteq{\equiv_{\mathcal H}}.}
+\]
+Given a binding-supplied resource preorder, the smallest sufficient bases form
+\[
+\operatorname{Min}_{\preceq}
+\{C:\mathsf{SepBasis}_{\mathcal H}(C,Z)\}.
+\]
+Several incomparable minimal bases may induce the same protected quotient.  Under
+partial generation, observation, or coverage, failure to find such a basis remains
+\(\mathsf{Unknown}\) or resource-bounded rather than proving that none exists.
+\end{definition}
 
 The calculus does not impose a universal scalar objective.  When several executable questions are incomparable, retain a nondominated frontier over binding-supplied dimensions such as:
 \begin{itemize}
@@ -4004,26 +4177,35 @@ When a controller is synthesized over an abstraction, the abstraction-to-concret
 A native method is registered by a compact typed contract:
 \[
 \boxed{
-\mathcal M=
-(
-\mathsf{id},
-X,
-Y,
-R_{\mathrm{in}},
-R_{\mathrm{out}},
-\mathsf{Applicability},
-\mathsf{Authority},
-\mathsf{Backend},
-\mathsf{Checker},
-\mathsf{Cost},
-\mathsf{Provenance}
-).
+\begin{aligned}
+\mathcal M=(
+&\mathsf{id},R_m:X\rightsquigarrow Y,
+\mathsf{Applicability},\mathsf{Law},\mathsf{Coverage},\mathsf{Authority},\\
+&\mathsf{ExtensionDomain},\mathsf{Backend},\mathsf{Checker},\mathsf{Cost},
+\mathsf{FailureSchemas},\mathsf{Provenance}).
+\end{aligned}
 }
 \]
 
 The generic inquiry compiler should use a mature native method when its input/output relation lawfully discharges the open relation.  The calculus does not reproduce domain algorithms merely because inquiry can describe them.
 
-A method result re-enters the ordinary return/decode/warrant lifecycle.
+A method is \emph{admitted} when this contract has standing acceptance, \emph{runnable}
+when its declared backend is available under the current resource and binding state,
+and \emph{usable} for a particular open port only when it is admitted, runnable,
+applicable, type-compatible, sufficiently covered, and authorized for that port.
+None of these predicates implies either of the others without the stated evidence.
+
+\begin{law}[Failure-closed method boundary]\label{law:method-residual}
+A method result re-enters the ordinary return/decode/check/warrant lifecycle.  When
+actual execution occurs, its raw return is preserved before classification.  A checked
+semantic non-discharge---for example, a certified empty solution field or a retained
+counterexample---may produce a typed residual or an exact terminal status.  Backend
+absence, crash, timeout, malformed return, or undecided checking does not establish
+semantic emptiness, impossibility, or contradiction; it remains an operational
+\(\mathsf{Blocked}\), \(\mathsf{ResourceBounded}\), or \(\mathsf{Unknown}\) result as
+applicable.  Residual handling and resumption compile through ordinary first-order
+answer-dependent programs and introduce no new runtime effect.
+\end{law}
 
 \part{Learning, Patches, and Self-Revision}
 
@@ -4711,6 +4893,69 @@ Let \(\kappa:X\to K\) be a protected consequence and \(\eta:X\to S\) a candidate
 \]
 for some \(h:S\to K\).  The representation is insufficient when a pair in one \(\eta\)-cell has protected-different consequences.  It contains potentially unnecessary detail when a coarser representation still supports the same protected factorization.  Thus explanatory inquiry alternates refinement until consequence separates with coarsening until nonconsequential detail disappears.
 
+\section{Linear dot-product consequence binding}
+
+The following is a binding-specific exact specialization, not constitutional linear or
+probabilistic structure.
+
+\begin{theorem}[Consequence subspace]\label{thm:consequence-subspace}
+Let \(\Omega=\mathbb R^d\), let \(P_Q\) have finite second moment
+\[
+M_Q=\mathbb E_{q\sim P_Q}[qq^\top],
+\]
+and protect the dot-product consequence family
+\(\mathsf{Cons}_q(x)=q^\top x\) up to \(P_Q\)-almost-everywhere equality.  Then
+\[
+x\sim x'
+\quad\Longleftrightarrow\quad
+x-x'\in\ker M_Q.
+\]
+Hence the coarsest exact vector-space quotient is
+\[
+\boxed{\mathbb R^d/\ker M_Q,}
+\]
+and the induced map
+\[
+[x]\longmapsto M_Qx
+\]
+is a canonical linear isomorphism onto \(\operatorname{im}M_Q\).  Its vector-space
+dimension is \(\operatorname{rank}M_Q\).
+\end{theorem}
+
+\begin{proof}
+For \(v=x-x'\),
+\[
+\mathbb E[(q^\top v)^2]=v^\top M_Qv.
+\]
+The integrand is nonnegative, so the expectation vanishes exactly when
+\(q^\top v=0\) almost everywhere.  Since \(M_Q\) is positive semidefinite,
+\(v^\top M_Qv=0\) exactly when \(v\in\ker M_Q\).  The remaining claims follow from
+the first isomorphism theorem and rank--nullity.
+\end{proof}
+
+\begin{corollary}[Minimal linear consequence dimension]
+If \(h:\mathbb R^d\to\mathbb R^k\) is linear and exact for this consequence family,
+then
+\[
+\ker h\subseteq\ker M_Q,
+\qquad
+k\geq\operatorname{rank}M_Q.
+\]
+The bound is attained by projection onto \(\operatorname{im}M_Q\), or equivalently by
+any linear coordinate representation of the quotient.  No dimension lower bound is
+claimed for arbitrary untyped, discontinuous, or otherwise unrestricted encodings.
+\end{corollary}
+
+\begin{remark}[Second moment, evidence, and reopening]
+Centered covariance cannot replace \(M_Q\) unless the query mean is zero.  For the
+deterministic query \(q=\mu\neq0\), covariance is zero while
+\(M_Q=\mu\mu^\top\) retains the consequence-relevant mean direction.  The binding must
+therefore preserve the query-distribution identity/version and the exactness evidence
+for \(M_Q\).  A sample estimate or floating-point rank threshold supplies only a
+working/approximate licence unless certified bounds establish the protected claim, and
+a distribution change is an unlock condition for the quotient.
+\end{remark}
+
 \section{Cause}
 
 Cause is not a primitive of the kernel.  A causal binding must supply stronger relations than correlation or succession: intervention semantics, counterfactual semantics, structural equations, potential outcomes, process mechanisms, or another native theory.  The Inquiry Calculus opens and tests those relations but does not infer causality from co-occurrence alone.
@@ -4976,10 +5221,45 @@ The following seventy fixtures are additional to, and do not replace, the predec
 \begin{enumerate}\setcounter{enumi}{64}
 \item A sixfold/recovery residual can generate \(\mathsf{RepresentationGap}\).
 \item A new attribute can separate a previously collapsed protected pair.
-\item An admitted attribute enlarges the constructible question space.
+\item A conservatively admitted attribute preserves old constructible questions, and
+strictly enlarges the question space only when it constructs a well-typed question
+outside the old image; rebinding alone establishes no such inclusion.
 \item A new probe capability remains unadmitted until binding-extension checks pass.
 \item A new negation-use signature may reopen a previous fold.
 \item A recurrent separator may become a candidate attribute without automatic standing.
+\end{enumerate}
+
+\section{Cross-cutting derived-breaker obligations}\label{sec:derived-breakers}
+
+The following fixtures protect derived contracts used across several later phases.
+They do not add semantic primitives and do not count as additional reciprocal roles:
+\begin{enumerate}
+\item exact deterministic \(\chi\) factors through \(\sigma\) exactly when
+\(\ker\sigma\subseteq\ker\chi\), while an incomplete signature remains
+\(\mathsf{Unknown}\);
+\item two individually supported signatures with mutually exclusive applicability
+contexts fail joint actualization without a compatibility/jointness witness;
+\item a conservative representation extension embeds every old well-typed question,
+while a rebinding fixture that removes an old constructor defeats unqualified
+question-universe inclusion;
+\item a certified empty method solution produces a typed semantic residual, whereas a
+backend crash with the same surface error text produces only an operational stop;
+\item equal scalar distortion for an over-approximation and an under-approximation
+does not license the same protected inference;
+\item current-consequence kernel inclusion holds while a protected reopening
+discriminator fails to factor, so consequence sufficiency does not masquerade as
+inquiry-regenerative sufficiency;
+\item a relation with neither a recovery certificate nor a non-recovery witness remains
+\(\mathsf{Unknown}\) instead of entering a complement-defined irrecoverable residue;
+\item one four-class protected quotient admits several incomparable minimal two-cue
+separator bases;
+\item an exact finite rational dot-product binding reconstructs
+\(\mathbb R^d/\ker M_Q\cong\operatorname{im}M_Q\) and its rank;
+\item a deterministic nonzero-mean query has zero centered covariance but a rank-one
+second moment and therefore defeats covariance substitution;
+\item a changed query distribution reopens the consequence-subspace quotient, while a
+sample-estimated or floating-rank result remains working/approximate without certified
+bounds.
 \end{enumerate}
 
 \section{Probe conformance}
@@ -4998,6 +5278,8 @@ No exact fold/quotient may be admitted without:
 \end{enumerate}
 
 Approximate folds must state distortion.
+Their conformance fixtures must also distinguish the direction or binding-specific
+soundness relation of that distortion whenever direction changes what may be inferred.
 
 \section{Warrant conformance}
 
@@ -5102,11 +5384,19 @@ Every consequentially represented value, relation, distinction, question, operat
 
 A live determination is represented by an explicit, supported relational presentation.  Its exterior is not presumed from a boundary projection and is not obtained by Boolean complement.  A candidate is positively established as outside the determination when a standing determination-relevant discriminator places source and candidate in incompatible typed cells.  An oriented relation whose admitted incidences have such departure witnesses may serve as a typed negation use, with semantic coverage stated independently of execution coverage.
 
-A determination may admit multiple negation uses.  They remain a tagged family: the relation use that licensed an exterior remains part of the reciprocal occurrence because different uses can return different source fields.  Inquiry partially binds one such relation to the source and positively determines an exterior filling.  Pure return is the reverse section of that same relation.  The return fiber recovers a protected source relation exactly when every source still possible through that fiber agrees on its protected signature.  Multiple negation uses accumulate reusable information through the product of their return signatures, not through an untagged semantic union.
+A determination may admit multiple negation uses.  They remain a tagged family: the relation use that licensed an exterior remains part of the reciprocal occurrence because different uses can return different source fields.  Inquiry partially binds one such relation to the source and positively determines an exterior filling.  Pure return is the reverse section of that same relation.  The return fiber recovers a protected source relation exactly when every source still possible through that fiber agrees on its protected signature.  Multiple negation uses accumulate reusable information through the product of their return signatures, not through an untagged semantic union; that product does not become one actual composite return without supported jointness evidence.
 
 The exterior filling is then taken as a new center of determination through an explicit seed/reorientation relation, and the same operation is repeated in the reciprocal orientation.  The six dependent roles \((S_X,O_X,R_X;S_Y,O_Y,R_Y)\) are therefore a derived reciprocal trace, not six independent openings and not a separate history.  Exact reciprocal closure is fiber- and coverage-relative.  \(\Gamma_D\) checks joint compatibility only after the dependent roles have been generated.
 
 A generated exterior does not revise standing semantics.  If warranted actuality invalidates the standing source web, reconciliation/revision produces a successor web; compatible monotone constraint addition alone cannot transform an already determined source into a protectedly different source.  Every surviving return ambiguity, recovery failure, seed mismatch, reciprocal mismatch, or compatibility failure becomes an ordinary protected residual and feeds the generic separator engine.  When a required separator is absent only from current materialization, generation continues within the admitted language.  When no admitted question, probe, or representation can express a witnessed protected distinction, the result is a representation or binding gap.
+
+A coverage-indexed characterization may be derived from the supported determination,
+certified internal variation, tagged exterior frontier, and three-valued recovery/loss
+profiles.  It remains relative and versioned; generated constitutive discriminators
+require independent admission.  Active representations approach a regenerative
+economy frontier by differentiating until protected live classes are separable and
+subtracting until any further removal would lose regeneration, continuation,
+provenance, warrant, or reopening.
 
 A question is a partially bound typed relation.  Binding what is known while preserving the relation leaves a residual section/fiber: a structured hole whose lawful fillers are the answer field.  A web of such residual relations determines a form to the extent that the intersection of its solution fibers collapses to one protected equivalence class.  Abstraction is therefore regenerative when it removes a filling but preserves enough relational constraint to regenerate the protected form and the discriminators needed to reopen it.  A source inquiry program composes these open relations through answer-dependent continuations and lowers by typed discharge authority to pure computation, generation, actual probing, checking, and warrant.
 
@@ -5149,10 +5439,12 @@ Symbol & Meaning\\
 \(\mathcal N_D^\alpha(s)\) & tagged dependent family of admitted negation-use frontiers\\
 \(\RetField_u(e)=N_u^{-1}[e]\) & same-use reverse return fiber\\
 \(\Recover_{\mathcal H}(r,F)\) & protected signature of relation \(r\) is constant over return fiber \(F\)\\
+\(\mathsf{RecoveryStatus}_{\omega}(r,e;u)\) & certified recovery, witnessed non-recovery, or unknown at an occurrence\\
 \(\Xi_D(\omega)\) & dependent sixfold role view reconstructed for reciprocal occurrence \(\omega\)\\
 \(\widetilde B_D\) & oriented double cover \(B_D\times\{+,-\}\)\\
 \(\iota\) & reciprocal orientation involution on the double cover\\
 \(Regen_{\mathcal H}(m,z)\) & representation \(m\) regenerates protected structure of \(z\)\\
+\(\mathsf{Economy}_{\mathcal H,\preceq}(z)\) & minimal licensed representations that preserve inquiry regeneration\\
 \(K::=\mathsf{Return}_I\mid\mathsf{Ask}\) & source inquiry question-program language\\
 
 \(A,B,X,Y,Z\) & typed carriers/interfaces\\
@@ -5266,6 +5558,14 @@ A future implementation must contain executable witnesses for at least:
 \item a selected stable return rejected as closure while a second protected class survives in the return fiber;
 \item departure coexisting with protected equivalence under the current horizon;
 \item family product recovery succeeding where each individual return signature fails;
+\item family product information rejected as one actual composite return when the
+component applicability contexts are mutually exclusive and no jointness witness exists;
+\item exact deterministic determination-through agreeing with kernel inclusion while
+an incomplete-coverage case remains \(\mathsf{Unknown}\);
+\item a current-consequence-sufficient representation rejected as inquiry-regenerative
+when it loses a protected reopening discriminator;
+\item a recovery/loss profile retaining \(\mathsf{Unknown}\) separately from witnessed
+non-recovery;
 \item compatible monotone return preserving an already determined class while warranted reconciliation remains separately capable of revision;
 \item a dependent sixfold occurrence retaining \(R_X\neq O_Y\), \(R_Y\neq O_X\), one-sided stability, and a downstream-only \(\Gamma_D\);
 \item oriented double-cover traversal alternating \(\iota\) and \(\tau_D\) without synthesizing reverse negation or conflating either with domain crossing;
@@ -5276,6 +5576,10 @@ A future implementation must contain executable witnesses for at least:
 \item a source \(\mathsf{Ask}\) program whose partial answer constructs a new question rather than selecting a fixed branch;
 \item a representation defect \(\eta(x)=\eta(y)\) with protected-different consequence that generates a separating representation/probe inquiry;
 \item a new probe/tool basis element exposing a protected distinction unavailable to the old basis;
+\item conservative question-language extension transporting every old question and a
+rebinding counterexample defeating unqualified inclusion;
+\item several incomparable minimal separator bases inducing the same protected
+four-class quotient;
 
 \item one relation schema generating several questions by different open ports;
 \item discharge-authority rejection of generative filling for an actual/check/warrant port;
@@ -5294,6 +5598,12 @@ A future implementation must contain executable witnesses for at least:
 \item exact compression reopening by a new observation;
 \item reopening by a new protected continuation even without a new current observation;
 \item approximate compression retaining a distortion/residual contract;
+\item equal scalar distortion for over- and under-approximation rejected as authority
+to discharge the same protected claim;
+\item certified method non-discharge producing a typed residual while an operational
+backend failure with the same surface message remains a nonsemantic stop;
+\item an exact rational consequence-subspace quotient with rank certificate, a
+nonzero-mean covariance breaker, and query-distribution-change reopening;
 \item semantic versus traversal patch separation;
 \item self-revision candidate failing self-promotion without independent evidence;
 \item semantic frontier containing an unavailable question while executable frontier lawfully returns \(\mathsf{Unknown}\);

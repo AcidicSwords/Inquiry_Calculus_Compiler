@@ -44,15 +44,32 @@ These are recorded now but do not outrank the Phase 1 obligation:
   `DeterminationPresentation`; keep later minimization reversible.
 - **Phase 4 reciprocal core:** implement positive departure, oriented and tagged
   `NegationUse`, distinct semantic/execution coverage, same-use return fibers,
-  protected recovery, seed/reorientation, dependent sixfold occurrence views,
-  residuals, and downstream `Gamma` checking. Boundary projection, failed search,
-  unknown results, and protected non-equivalence alone must not manufacture exteriority.
+  protected recovery, exact `DetermineThrough` factorization, seed/reorientation,
+  dependent sixfold occurrence views, residuals, and downstream `Gamma` checking.
+  A family signature is accumulated information, not one jointly actualizable return;
+  composite actualization requires supported jointness. Boundary projection, failed
+  search, unknown results, and protected non-equivalence alone must not manufacture
+  exteriority. Recovery checks remain three-valued; a coverage-indexed constitutive
+  characterization is a derived view, not an authoritative object or self-warranting
+  horizon.
 - **Phase 6:** reconcile the canonical required boundary reference with the planned
   optional distinction reference, and represent request, attempt, raw return, and
   interpretation without collapsing them.
 - **First referencing artifact:** extend the store transaction so every referenced
   artifact is present before committing a record; do not infer references from opaque
   payload bytes.
+- **Phase 10/12 method boundary:** register typed, law-carrying method contracts;
+  preserve raw actual returns; separate certified semantic non-discharge from backend
+  failure; and route typed residual handlers/reentry through first-order `IProg` without
+  a new runtime opcode.
+- **Phases 15-16 extension and approximation:** claim question-language monotonicity
+  only for conservative extensions with an explicit old-question embedding, and retain
+  directional approximation soundness plus extension-sensitive reopening.
+- **Phases 13 and 16 regenerative economy:** compute exact finite sufficient cue bases
+  and retain incomparable minima under the declared preorder; minimize only among
+  licensed inquiry-regenerative representations. A linear dot-product binding may use
+  the exact second-moment consequence-subspace certificate, but sampled/floating
+  estimates remain approximate and query-distribution change reopens the fold.
 
 The global cross-binding standing-lift research question remains deferred to Phase 17
 and does not block the next implementation phase. None of these queued questions
