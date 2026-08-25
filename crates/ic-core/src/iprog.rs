@@ -10,7 +10,7 @@ use crate::{
 /// Canonical artifact kind for first-order inquiry programs.
 pub const IPROG_ARTIFACT_KIND: &str = "ic.iprog";
 /// Payload schema version for first-order inquiry programs.
-pub const IPROG_SCHEMA_VERSION: u32 = 1;
+pub const IPROG_SCHEMA_VERSION: u32 = 2;
 
 macro_rules! artifact_reference {
     ($name:ident) => {
@@ -41,6 +41,30 @@ macro_rules! artifact_reference {
 }
 artifact_reference!(IProgRef);
 
+/// One named, explicitly supplied lexical value for an `IProgIR::Ask` continuation.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ProgramBinding {
+    name: TypeSymbol,
+    value: TypedFormRef,
+}
+
+impl ProgramBinding {
+    #[must_use]
+    pub const fn new(name: TypeSymbol, value: TypedFormRef) -> Self {
+        Self { name, value }
+    }
+
+    #[must_use]
+    pub const fn name(&self) -> &TypeSymbol {
+        &self.name
+    }
+
+    #[must_use]
+    pub const fn value(&self) -> TypedFormRef {
+        self.value
+    }
+}
+
 /// Capture-safe, first-order inquiry-program syntax.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum IProgIR {
@@ -49,6 +73,7 @@ pub enum IProgIR {
     },
     Ask {
         question: QueryRef,
+        environment: Vec<ProgramBinding>,
         answer_slot: TypeSymbol,
         continuation: IProgRef,
     },
@@ -84,11 +109,13 @@ impl IProgArtifact {
             }
             IProgIR::Ask {
                 question,
+                environment,
                 answer_slot,
                 continuation,
             } => {
                 encoded.push(1);
                 reference(&mut encoded, question.as_artifact_ref());
+                bindings(&mut encoded, environment)?;
                 text(&mut encoded, answer_slot.as_str())?;
                 reference(&mut encoded, continuation.as_artifact_ref());
             }
@@ -104,10 +131,12 @@ impl IProgArtifact {
             },
             1 => {
                 let question = QueryRef::from_artifact_ref(c.reference()?);
+                let environment = c.bindings()?;
                 let answer_slot = c.symbol()?;
                 let continuation = IProgRef::from_artifact_ref(c.reference()?);
                 IProgIR::Ask {
                     question,
+                    environment,
                     answer_slot,
                     continuation,
                 }
@@ -152,10 +181,16 @@ impl IProgArtifact {
             IProgIR::Return { value } => refs.push(value.as_artifact_ref()),
             IProgIR::Ask {
                 question,
+                environment,
                 continuation,
                 ..
             } => {
                 refs.push(question.as_artifact_ref());
+                refs.extend(
+                    environment
+                        .iter()
+                        .map(|binding| binding.value.as_artifact_ref()),
+                );
                 refs.push(continuation.as_artifact_ref());
             }
         }
@@ -169,6 +204,25 @@ fn text(encoded: &mut Vec<u8>, value: &str) -> Result<(), IProgError> {
     let length = u32::try_from(value.len()).map_err(|_| IProgError::SlotTooLong(value.len()))?;
     encoded.extend_from_slice(&length.to_be_bytes());
     encoded.extend_from_slice(value.as_bytes());
+    Ok(())
+}
+
+fn bindings(encoded: &mut Vec<u8>, bindings: &[ProgramBinding]) -> Result<(), IProgError> {
+    let length = u32::try_from(bindings.len())
+        .map_err(|_| IProgError::EnvironmentTooLarge(bindings.len()))?;
+    let mut names = std::collections::BTreeSet::new();
+    for binding in bindings {
+        if !names.insert(binding.name.as_str()) {
+            return Err(IProgError::DuplicateEnvironmentBinding(
+                binding.name.as_str().to_owned(),
+            ));
+        }
+    }
+    encoded.extend_from_slice(&length.to_be_bytes());
+    for binding in bindings {
+        text(encoded, binding.name.as_str())?;
+        reference(encoded, binding.value.as_artifact_ref());
+    }
     Ok(())
 }
 struct Cursor<'a> {
@@ -211,6 +265,33 @@ impl<'a> Cursor<'a> {
         let s = String::from_utf8(self.take(l)?.to_vec()).map_err(IProgError::InvalidSlotUtf8)?;
         TypeSymbol::new(s.clone()).map_err(|_| IProgError::InvalidSlot(s))
     }
+    fn bindings(&mut self) -> Result<Vec<ProgramBinding>, IProgError> {
+        let b: [u8; 4] = self
+            .take(4)?
+            .try_into()
+            .map_err(|_| IProgError::TruncatedPayload)?;
+        let length = usize::try_from(u32::from_be_bytes(b))
+            .map_err(|_| IProgError::PayloadLengthOverflow)?;
+        let minimum_bytes = length
+            .checked_mul(36)
+            .ok_or(IProgError::PayloadLengthOverflow)?;
+        if minimum_bytes > self.remaining() {
+            return Err(IProgError::TruncatedPayload);
+        }
+        let mut bindings = Vec::with_capacity(length);
+        let mut names = std::collections::BTreeSet::new();
+        for _ in 0..length {
+            let name = self.symbol()?;
+            if !names.insert(name.as_str().to_owned()) {
+                return Err(IProgError::DuplicateEnvironmentBinding(
+                    name.as_str().to_owned(),
+                ));
+            }
+            let value = TypedFormRef::from_artifact_ref(self.reference()?);
+            bindings.push(ProgramBinding::new(name, value));
+        }
+        Ok(bindings)
+    }
     const fn finished(&self) -> bool {
         self.position == self.bytes.len()
     }
@@ -228,6 +309,10 @@ pub enum IProgError {
     SlotTooLong(usize),
     #[error("answer slot bytes are not valid UTF-8")]
     InvalidSlotUtf8(#[source] std::string::FromUtf8Error),
+    #[error("explicit environment is too large: {0} bindings")]
+    EnvironmentTooLarge(usize),
+    #[error("duplicate explicit environment binding {0:?}")]
+    DuplicateEnvironmentBinding(String),
     #[error("inquiry-program payload is truncated")]
     TruncatedPayload,
     #[error("inquiry-program payload length overflows this platform")]

@@ -75,8 +75,10 @@ Direct query normalization canonically orders ports by the relation schema and i
 it does not normalize through relation evaluation.
 
 The Phase 3 source-program kernel has begun: `IProg` is canonical inspectable data with
-`Return` and `Ask`; an ask carries a `QueryRef`, named answer slot, and continuation reference.
-It is not a Rust closure or executable runtime program.
+`Return` and `Ask`; an ask carries a `QueryRef`, a unique ordered explicit environment of
+named typed-form references, a named answer slot, and a continuation reference. It is not a
+Rust closure or executable runtime program. The environment is part of the program identity and
+declared dependency list, so a continuation has no hidden host-state capture.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

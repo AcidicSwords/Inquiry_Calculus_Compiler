@@ -1,6 +1,7 @@
 use ic_core::{
     ArtifactEnvelope, ArtifactKind, ArtifactRef, IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION,
-    IProgArtifact, IProgError, IProgIR, IProgRef, QueryRef, TypeRef, TypeSymbol, TypedFormRef,
+    IProgArtifact, IProgError, IProgIR, IProgRef, ProgramBinding, QueryRef, TypeRef, TypeSymbol,
+    TypedFormRef,
 };
 
 fn artifact(byte: u8) -> ArtifactRef {
@@ -18,6 +19,10 @@ fn first_order_return_and_ask_round_trip_without_closures() {
         result,
         IProgIR::Ask {
             question,
+            environment: vec![ProgramBinding::new(
+                TypeSymbol::new("standing").expect("environment name must be valid"),
+                TypedFormRef::from_artifact_ref(artifact(0x55)),
+            )],
             answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
             continuation,
         },
@@ -42,8 +47,39 @@ fn first_order_return_and_ask_round_trip_without_closures() {
     );
     assert_eq!(
         asked.referenced_artifacts(),
-        vec![artifact(0x11), artifact(0x33), artifact(0x44)]
+        vec![
+            artifact(0x11),
+            artifact(0x33),
+            artifact(0x55),
+            artifact(0x44)
+        ]
     );
+}
+
+#[test]
+fn rejects_duplicate_explicit_environment_names() {
+    let program = IProgArtifact::new(
+        TypeRef::from_artifact_ref(artifact(0x11)),
+        IProgIR::Ask {
+            question: QueryRef::from_artifact_ref(artifact(0x33)),
+            environment: vec![
+                ProgramBinding::new(
+                    TypeSymbol::new("standing").expect("name must be valid"),
+                    TypedFormRef::from_artifact_ref(artifact(0x55)),
+                ),
+                ProgramBinding::new(
+                    TypeSymbol::new("standing").expect("name must be valid"),
+                    TypedFormRef::from_artifact_ref(artifact(0x66)),
+                ),
+            ],
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: IProgRef::from_artifact_ref(artifact(0x44)),
+        },
+    );
+    assert!(matches!(
+        program.canonical_payload(),
+        Err(IProgError::DuplicateEnvironmentBinding(name)) if name == "standing"
+    ));
 }
 
 #[test]

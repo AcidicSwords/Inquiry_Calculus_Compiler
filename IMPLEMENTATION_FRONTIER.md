@@ -3,7 +3,8 @@
 **Accepted semantic authority:** Inquiry Calculus v1.1, Successor
 Reciprocal-Boundary / Positive-Negation Edition.
 
-**Accepted implementation state:** Phase 2 relation-schema local gates complete on 2026-08-25.
+**Accepted implementation state:** Phase 3 first-order program identity has an explicit
+environment on 2026-08-25.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -19,27 +20,27 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before completing Phase 2, resolve:
+Before admitting program validation or execution, resolve:
 
-> What is the smallest capture-safe explicit environment and typed validation boundary for
-> first-order `IProg::Ask` continuations, while preserving the unresolved relation-expression
-> validation/dependent-binding problem as a separate Phase 2 residual?
+> What is the smallest recursively checked typed boundary for first-order `IProg::Ask`
+> continuations, including the answer binding and explicit environment, without interpreting
+> a query answer or executing a program?
 
 The protected difference is visible in the accepted sources:
 
-- The canonical schema defines a data-only relational query IR around binding, exposure,
-  hiding, renaming, and guarded restriction; the implementation plan names the more
-  operational transform list.
-- Direct `OpenQuery` now enforces the canonical partial-binding partition and nonempty open
-  section; checked `Bind` and `Expose` preserve that form without running a relation. `Plug`
-  supplies a complete typed candidate assignment but cannot assert that the relation holds.
-- The next representation must distinguish syntactic data transforms from semantic relation
-  evaluation and defer any actual completion fiber to a later executable route.
+- `IProg::Ask` now preserves a `QueryRef`, a unique ordered explicit environment of named
+  typed-form references, a named answer slot, and a continuation reference as canonical data.
+  It neither invokes a host closure nor reads captured state.
+- The remaining check must establish the result type of `Return`, the declared types of the
+  environment, the answer-slot binding derived from a checked query, and result-type agreement
+  across a referenced continuation without evaluating either relation or program.
+- Relation-expression validation and dependent binding remain a separate Phase 2 residual:
+  program checking must consume only the direct checked-query boundary it can establish.
 
-Different answers change whether query composition is inspectable and canonical or hides an
-evaluation policy in a helper. The next discriminator must include a fixed transform encoding,
-signature preservation for binding/exposure, composition with named-port provenance, and a
-breaker proving that a completion-fiber view is not an actual answer.
+Different answers change whether first-order continuation input is statically inspectable or
+silently delegated to runtime policy. The next discriminator must reject a forged typed-form
+identity, an undeclared environment value, an answer-slot type incompatible with a checked query,
+and a continuation whose declared result type differs from the enclosing program.
 
 ## Known later questions
 
@@ -132,5 +133,6 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
 - RelationExprArtifact canonically stores `Relation`, `Bind`, `Join`, `Expose`, `Hide`, `Rename`,
   and `Guard` as data-only syntax with explicit dependencies; it does not evaluate them.
 - First-order IProg artifacts canonically encode `Return` and `Ask` with explicit QueryRef,
-  answer-slot name, and continuation IProgRef; no host closure exists.
+  unique named typed-form environment, answer-slot name, and continuation IProgRef; no host
+  closure or hidden captured state exists.
 - A fixed independently calculated direct OpenQuery payload/envelope/SHA-256 fixture passes.

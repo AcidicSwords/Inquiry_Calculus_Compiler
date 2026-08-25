@@ -60,6 +60,7 @@ or passing.
 | P2-REL-006 canonical data-only relation-expression grammar round trip | PASS | `canonical_relation_expression_grammar_round_trips_without_evaluation` |
 | P3-IPROG-001 first-order Return/Ask canonical identities and explicit continuation reference | PASS | `iprog_identity::first_order_return_and_ask_round_trip_without_closures` |
 | P3-IPROG-002 malformed first-order program rejection | PASS | `iprog_identity::rejects_malformed_inquiry_program_encodings` |
+| P3-IPROG-003 explicit named environment identity, declared dependencies, and duplicate-name rejection | PASS | `iprog_identity::{first_order_return_and_ask_round_trip_without_closures,rejects_duplicate_explicit_environment_names}` |
 
 ## Pending specification and plan categories
 
@@ -67,7 +68,7 @@ or passing.
 |---|---|---|
 | Typed forms, typed reification, and type verification | PARTIAL | Phase 1: canonical type artifacts, typed-form declarations, and structural checks pass; binding-native term/reification semantics remain pending |
 | Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: direct `OpenQuery` partial bindings, data-only relation expressions, checked `Bind`/`Expose`, candidate-only `Plug`, direct schema-order normalization, a derived completion-fiber view, formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; typed expression validation and dependent binding remain pending |
-| First-order programs and proposal/actuality/authority separation | PENDING | Phase 3 |
+| First-order programs and proposal/actuality/authority separation | PARTIAL | Phase 3: canonical `Return`/`Ask` identity, explicit environment, and malformed-input rejection pass; recursive typed continuation validation and runtime separation remain pending |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4 |
 | Typed negation and coverage separation, fixtures 14-24 | PENDING | Phase 4 |
 | Tagged multiple negation uses, fixtures 25-33 | PENDING | Phase 4 |
