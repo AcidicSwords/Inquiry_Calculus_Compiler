@@ -4,8 +4,9 @@
 Reciprocal-Boundary / Positive-Negation Edition.
 
 **Accepted implementation state:** Phase 3 first-order program syntax and structural checking
-pass on 2026-08-25; Phase 4 claim-local determination-presentation identity passes. Supported
-answer materialization remains reserved for the Phase 6/7 actuality-and-resolution boundary.
+pass on 2026-08-25; Phase 4 claim-local determination-presentation identity and source/ancestry
+checking pass. Supported answer materialization remains reserved for the Phase 6/7
+actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -21,12 +22,11 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before treating a determination presentation as an admissible standing source for departure,
-resolve:
+Before claiming a candidate has departed from a standing source determination, resolve:
 
-> What is the smallest catalog check for `DeterminationPresentation` that revalidates its typed
-> source and predecessor ancestry while preserving the relational web as a claim-local reference
-> until its own schema and admission/minimization law are implemented?
+> What is the smallest positive, relevant, non-circular `DepartureWitness` representation and
+> check that distinguishes supported incompatibility from failed equality, retrieval, search,
+> projection, or protected non-equivalence?
 
 The protected difference is visible in the accepted sources:
 
@@ -38,11 +38,15 @@ The protected difference is visible in the accepted sources:
   the specific standing claim; its exact admission/minimization is a research gate.
 - A `CompletionCandidate` remains only a full typed query filling. It does not establish relation
   membership, support, actuality, a resolution path, or a selected answer.
+- Determination checking rehashes and checks the typed source, requires its binding to match the
+  presentation, and recursively checks an optional predecessor. An ancestry edge may change the
+  web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
+  or horizon. It does not admit the web or generate departure.
 
-Different answers determine whether a stored presentation is tied to the source it claims or can
-be forged by an arbitrary typed-form/reference pairing. The next discriminator must reject a
-forged typed source, a binding mismatch, a forged predecessor reference, and an ancestry edge
-whose distinction/orientation/context no longer matches the successor presentation.
+Different answers determine whether exteriority rests on positive determination-relevant evidence
+or on absence/error conflation. The next discriminator must accept only a typed, supported,
+source-presentation-relevant incompatibility certificate and reject failed equality, failed
+search/retrieval, chart projection, and bare protected difference.
 
 ## Known later questions
 

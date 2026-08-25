@@ -1,10 +1,11 @@
-use std::{fmt, str::FromStr};
+use std::{collections::BTreeSet, fmt, str::FromStr};
 
 use thiserror::Error;
 
 use crate::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
-    BindingVersionRef, GrainRef, HorizonRef, ScopeRef, SupportRef, TypedFormRef,
+    BindingVersionRef, FormulaCatalog, GrainRef, HorizonRef, ScopeRef, SupportRef, TypeCheckError,
+    TypeError, TypedFormRef,
 };
 
 /// Canonical artifact kind for claim-local determination presentations.
@@ -89,6 +90,15 @@ pub struct DeterminationPresentation {
     horizon: HorizonRef,
     support: SupportRef,
     predecessor: Option<DeterminationPresentationRef>,
+}
+
+/// The checked source for determination presentations and their ancestry.
+pub trait DeterminationCatalog: FormulaCatalog {
+    /// Resolves a determination presentation by its claimed stable identity.
+    fn resolve_determination_presentation(
+        &self,
+        reference: DeterminationPresentationRef,
+    ) -> Option<DeterminationPresentation>;
 }
 
 impl DeterminationPresentation {
@@ -272,6 +282,107 @@ impl DeterminationPresentation {
         Self::decode_payload(envelope.canonical_payload())
     }
 
+    /// Revalidates the typed source and context-preserving predecessor ancestry.
+    ///
+    /// Relational-web admission and minimization remain separate: this check establishes only
+    /// that the presentation names the source and ancestry it claims to name.
+    pub fn check<C: DeterminationCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), DeterminationPresentationCheckError> {
+        let reference = self.determination_presentation_ref()?;
+        let mut visiting = BTreeSet::new();
+        let mut completed = BTreeSet::new();
+        self.check_inner(reference, catalog, &mut visiting, &mut completed)
+    }
+
+    fn check_inner<C: DeterminationCatalog>(
+        &self,
+        reference: DeterminationPresentationRef,
+        catalog: &C,
+        visiting: &mut BTreeSet<DeterminationPresentationRef>,
+        completed: &mut BTreeSet<DeterminationPresentationRef>,
+    ) -> Result<(), DeterminationPresentationCheckError> {
+        if completed.contains(&reference) {
+            return Ok(());
+        }
+        if !visiting.insert(reference) {
+            return Err(DeterminationPresentationCheckError::CyclicPredecessor(
+                reference,
+            ));
+        }
+        let source = catalog.resolve_typed_form(self.source).ok_or(
+            DeterminationPresentationCheckError::UnresolvedSource(self.source),
+        )?;
+        let calculated = source.typed_form_ref()?;
+        if calculated != self.source {
+            return Err(
+                DeterminationPresentationCheckError::SourceReferenceIdentityMismatch {
+                    reference: self.source,
+                    calculated,
+                },
+            );
+        }
+        source.check(catalog)?;
+        if source.binding() != self.binding {
+            return Err(DeterminationPresentationCheckError::SourceBindingMismatch {
+                expected: self.binding,
+                actual: source.binding(),
+            });
+        }
+        let checked = if let Some(predecessor_ref) = self.predecessor {
+            let predecessor = catalog
+                .resolve_determination_presentation(predecessor_ref)
+                .ok_or(DeterminationPresentationCheckError::UnresolvedPredecessor(
+                    predecessor_ref,
+                ))?;
+            let calculated = predecessor.determination_presentation_ref()?;
+            if calculated != predecessor_ref {
+                return Err(
+                    DeterminationPresentationCheckError::PredecessorReferenceIdentityMismatch {
+                        reference: predecessor_ref,
+                        calculated,
+                    },
+                );
+            }
+            if let Some(field) = self.predecessor_context_difference(&predecessor) {
+                return Err(
+                    DeterminationPresentationCheckError::PredecessorContextMismatch { field },
+                );
+            }
+            predecessor.check_inner(predecessor_ref, catalog, visiting, completed)
+        } else {
+            Ok(())
+        };
+        visiting.remove(&reference);
+        if checked.is_ok() {
+            completed.insert(reference);
+        }
+        checked
+    }
+
+    fn predecessor_context_difference(&self, predecessor: &Self) -> Option<&'static str> {
+        if self.distinction != predecessor.distinction {
+            Some("distinction")
+        } else if self.orientation != predecessor.orientation {
+            Some("orientation")
+        } else if self.source != predecessor.source {
+            Some("source")
+        } else if self.binding != predecessor.binding {
+            Some("binding")
+        } else if self.scope != predecessor.scope {
+            Some("scope")
+        } else if self.applicability != predecessor.applicability {
+            Some("applicability")
+        } else if self.grain != predecessor.grain {
+            Some("grain")
+        } else if self.horizon != predecessor.horizon {
+            Some("horizon")
+        } else {
+            None
+        }
+    }
+
     #[must_use]
     pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
         let mut references = vec![
@@ -361,4 +472,38 @@ pub enum DeterminationPresentationError {
     },
     #[error("unsupported determination-presentation schema version {0}")]
     UnsupportedSchemaVersion(u32),
+}
+
+/// Errors from structural determination-presentation checking.
+#[derive(Debug, Error)]
+pub enum DeterminationPresentationCheckError {
+    #[error(transparent)]
+    Presentation(#[from] DeterminationPresentationError),
+    #[error(transparent)]
+    Type(#[from] TypeError),
+    #[error(transparent)]
+    TypeCheck(#[from] TypeCheckError),
+    #[error("source typed form {0} is not available from the declared catalog")]
+    UnresolvedSource(TypedFormRef),
+    #[error("catalog source form {reference} hashes to {calculated}, not its claimed identity")]
+    SourceReferenceIdentityMismatch {
+        reference: TypedFormRef,
+        calculated: TypedFormRef,
+    },
+    #[error("source form binding {actual} does not match presentation binding {expected}")]
+    SourceBindingMismatch {
+        expected: BindingVersionRef,
+        actual: BindingVersionRef,
+    },
+    #[error("predecessor presentation {0} is not available from the declared catalog")]
+    UnresolvedPredecessor(DeterminationPresentationRef),
+    #[error("catalog predecessor {reference} hashes to {calculated}, not its claimed identity")]
+    PredecessorReferenceIdentityMismatch {
+        reference: DeterminationPresentationRef,
+        calculated: DeterminationPresentationRef,
+    },
+    #[error("predecessor presentation changes indexed context field {field}")]
+    PredecessorContextMismatch { field: &'static str },
+    #[error("determination-presentation predecessor graph contains cycle at {0}")]
+    CyclicPredecessor(DeterminationPresentationRef),
 }

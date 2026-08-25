@@ -23,8 +23,9 @@ pub use context::{
 };
 pub use determination::{
     DETERMINATION_PRESENTATION_ARTIFACT_KIND, DETERMINATION_PRESENTATION_SCHEMA_VERSION,
-    DeterminationPresentation, DeterminationPresentationError, DeterminationPresentationRef,
-    DistinctionRef, Orientation, RelationalWebRef,
+    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationCheckError,
+    DeterminationPresentationError, DeterminationPresentationRef, DistinctionRef, Orientation,
+    RelationalWebRef,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,
