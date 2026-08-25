@@ -72,6 +72,11 @@ The protected difference is visible in the accepted sources:
   coverage before applying kernel inclusion. It returns an explicit factor map or a concrete
   separator pair; it does not accept incomplete, working, or nondeterministic data as exact and
   does not itself create recovery, standing, or actuality.
+- A derived `RecoveryStatusIR` keeps `Recovered`, positively witnessed `NotRecovered`, and
+  `Unknown` distinct. Its finite checker accepts only a separately certified complete finite
+  same-use fiber table: constant protected signatures produce a finite recovery result, differing
+  signatures produce a concrete pair, and an empty table is rejected. It neither constructs or
+  certifies a fiber nor turns missing coverage into a loss result.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

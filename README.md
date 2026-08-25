@@ -133,6 +133,14 @@ horizon, and domain. It returns either the explicit factor map or a pair witness
 available output with protectedly different target output. Working, partial, nondeterministic, or
 incompletely covered inputs are not accepted as exact signatures.
 
+Phase 4 also has derived three-valued recovery result data: `Recovered` requires an explicit
+certificate reference, `NotRecovered` requires an explicit separator reference, and `Unknown`
+retains an open-query residual. The exact finite recovery checker can only inspect a separately
+certified complete same-use return-fiber signature table: it reports constant protected
+signatures or supplies two differing candidates. It rejects an empty table and does not create a
+return fiber, validate its certificate, turn incomplete coverage into loss, or establish an
+actual occurrence.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

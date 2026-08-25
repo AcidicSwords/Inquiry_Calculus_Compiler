@@ -13,6 +13,7 @@ mod iprog;
 mod negation;
 mod query;
 mod raw_return;
+mod recovery;
 mod relation;
 mod relation_expr;
 mod relation_use;
@@ -59,6 +60,10 @@ pub use query::{
 };
 pub use raw_return::{
     RAW_RETURN_ARTIFACT_KIND, RAW_RETURN_SCHEMA_VERSION, RawReturn, RawReturnError, RawReturnRef,
+};
+pub use recovery::{
+    ExactFiberRecovery, ExactFiberRecoveryError, RecoverySeparator, RecoveryStatusIR,
+    check_exact_fiber_recovery,
 };
 pub use relation::{
     RELATION_SCHEMA_ARTIFACT_KIND, RELATION_SCHEMA_VERSION, RelationBodyIR, RelationCheckError,
