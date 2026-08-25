@@ -86,6 +86,13 @@ supported-answer representation. A `CompletionCandidate` is not such an answer. 
 normalization, registered pure operations, and execution remain deferred rather than being
 simulated with an unsupported candidate.
 
+Phase 5 has a first-order structural `ProgramIR` in `ic-runtime`: typed `Return`, nonempty
+internal `Branch`, and `Probe` suspension/resume blocks. Verification rechecks typed returns,
+closed targets, and the representable guarded-recurrence boundary; a branch-only cycle is
+rejected. Stepping a probe only creates a suspension, and resumption carries a `RawReturnRef`
+without dispatching, decoding, or treating it as an actual event. Probe operator schemas and
+raw-return-dependent continuation selection remain later contracts.
+
 Phase 4 has begun with canonical `DeterminationPresentation` artifacts. A presentation records
 one distinction orientation, typed source, claim-local relational-web reference, binding, scope,
 applicability, grain, horizon, support, and optional predecessor presentation. It is neither a

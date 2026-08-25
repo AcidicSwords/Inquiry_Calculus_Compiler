@@ -3,10 +3,10 @@
 **Accepted semantic authority:** Inquiry Calculus v1.1, Successor
 Reciprocal-Boundary / Positive-Negation Edition.
 
-**Accepted implementation state:** Phase 3 first-order program syntax and structural checking
-pass on 2026-08-25; Phase 4 claim-local determination-presentation checking and positive
-departure-witness identity/context checking pass. Supported answer materialization remains
-reserved for the Phase 6/7 actuality-and-resolution boundary.
+**Accepted implementation state:** Phase 3 first-order source-program syntax/checking, Phase 4
+determination-presentation/departure/negation-declaration identity checking, and Phase 5
+structural runtime control-flow checking pass on 2026-08-25. Supported answer materialization
+remains reserved for the Phase 6/7 actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -14,9 +14,9 @@ canonical artifact envelopes, stable SHA-256 content references, one artifact-on
 SQLite migration, verified immutable insert/fetch behavior, binding-scoped canonical
 type artifacts, typed-form declarations, canonical formula artifacts with capture-safe typed
 terms, formula-defined or binding-native relation schemas with checked named atom
-signatures, immutable scoped relation uses, and opaque raw-return identity. `ic-runtime` and
-`ic-cli` contain no semantic machinery. A `RawReturn` preserves exact external bytes before
-decode but is not an actual event, attempt, or semantic completion.
+signatures, immutable scoped relation uses, opaque raw-return identity, and a first-order
+runtime control-flow verifier. `ic-cli` contains no semantic machinery. A `RawReturn` preserves
+exact external bytes before decode but is not an actual event, attempt, or semantic completion.
 Referencing artifacts now declare their dependencies explicitly;
 the one-writer store checks those dependencies in the insertion transaction rather than
 inferring them from opaque payload bytes.
@@ -58,6 +58,11 @@ The protected difference is visible in the accepted sources:
   to the existing artifact store as ordinary immutable content but carries no ledger or
   actualization assertion by itself; the unresolved event-record boundary/distinction shape
   remains deferred.
+- `ProgramIR` has only the canonical runtime terminators: typed `Return`, nonempty `Branch`, and
+  `Probe` with an explicit resume target. Its verifier rechecks returns and target closure and
+  rejects presently unguarded branch-only recurrence. A probe step suspends and a resumption
+  carries a `RawReturnRef`; neither step calls an operator, records an event, decodes a result, or
+  chooses a raw-return-dependent continuation.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

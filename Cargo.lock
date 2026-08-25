@@ -533,6 +533,10 @@ dependencies = [
 [[package]]
 name = "ic-runtime"
 version = "0.1.0"
+dependencies = [
+ "ic-core",
+ "thiserror",
+]
 
 [[package]]
 name = "ic-store"

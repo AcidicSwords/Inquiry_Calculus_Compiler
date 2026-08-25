@@ -72,6 +72,8 @@ or passing.
 | P4-NEGATION-IR-001 oriented negation-use and semantic-coverage canonical identity | PASS | `negation_identity::negation_use_round_trips_and_keeps_semantic_coverage_distinct` |
 | P4-NEGATION-IR-002 malformed negation-use rejection | PASS | `negation_identity::negation_use_rejects_malformed_encodings` |
 | P4-NEGATION-IR-003 presentation/relation-use/program linkage validation | PASS | `relation_schema::negation_use_check_requires_one_oriented_presentation_context` |
+| P5-RUNTIME-001 typed Return/Branch/Probe control flow and suspension/resume | PASS | `ic-runtime::program::verified_runtime_program_branches_suspends_and_preserves_raw_return_identity` |
+| P5-RUNTIME-002 empty, dangling, and unguarded branch control-flow rejection | PASS | `ic-runtime::program::runtime_verifier_rejects_empty_dangling_and_unguarded_branch_control_flow` |
 | P6-RAW-001 raw-return opaque byte preservation and content identity | PASS | `raw_return_identity::raw_return_preserves_exact_opaque_bytes_and_domain_separates_identity` |
 | P6-RAW-002 raw-return envelope-domain rejection | PASS | `raw_return_identity::raw_return_rejects_the_wrong_envelope_domain` |
 
@@ -90,7 +92,7 @@ or passing.
 | Dependent sixfold and downstream `Gamma`, fixtures 53-64 | PENDING | Phase 4 |
 | Reciprocal representation and learning, fixtures 65-70 | PENDING | Phases 4, 12-16 |
 | Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PENDING | Phases 4, 10, 12-16 |
-| Return/Branch/Probe runtime and continuation descent | PENDING | Phase 5 |
+| Return/Branch/Probe runtime and continuation descent | PARTIAL | Phase 5: typed Return/Branch/Probe control flow, structural verification, and non-actual suspension/resume pass; operator contracts, actual dispatch, raw-dependent continuation selection, and runtime persistence remain pending |
 | Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return identity passes; attempt/event shape, journal ordering, replay, and resolution remain pending |
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |
 | Retained/access/active separation and recurrent memory crawl | PENDING | Phase 9 |
