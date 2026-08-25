@@ -49,6 +49,41 @@ macro_rules! artifact_reference {
 artifact_reference!(FormulaRef);
 artifact_reference!(RelationRef);
 
+/// The binding-scoped ordered type signature of a resolved relation schema.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RelationSignature {
+    reference: RelationRef,
+    binding: BindingVersionRef,
+    ports: Vec<TypeRef>,
+}
+
+impl RelationSignature {
+    /// Constructs a relation signature supplied by a checked relation catalog.
+    #[must_use]
+    pub fn new(reference: RelationRef, binding: BindingVersionRef, ports: Vec<TypeRef>) -> Self {
+        Self {
+            reference,
+            binding,
+            ports,
+        }
+    }
+
+    #[must_use]
+    pub const fn reference(&self) -> RelationRef {
+        self.reference
+    }
+
+    #[must_use]
+    pub const fn binding(&self) -> BindingVersionRef {
+        self.binding
+    }
+
+    #[must_use]
+    pub fn ports(&self) -> &[TypeRef] {
+        &self.ports
+    }
+}
+
 /// A typed term usable in the first-order formula grammar.
 ///
 /// De Bruijn indices make quantified formulas capture-safe. Index zero denotes the
@@ -249,6 +284,20 @@ impl FormulaArtifact {
     /// Relation-atom signatures are checked by the relation-schema layer. This method
     /// deliberately does not reinterpret an atom's relation reference as opaque bytes.
     pub fn check_terms<C: FormulaCatalog>(&self, catalog: &C) -> Result<(), FormulaCheckError> {
+        self.check_with_atoms(catalog, false)
+    }
+
+    /// Checks formula structure, including atom arity and argument types, against a
+    /// catalog that resolves the referenced relation signatures.
+    pub fn check<C: FormulaCatalog>(&self, catalog: &C) -> Result<(), FormulaCheckError> {
+        self.check_with_atoms(catalog, true)
+    }
+
+    fn check_with_atoms<C: FormulaCatalog>(
+        &self,
+        catalog: &C,
+        check_atoms: bool,
+    ) -> Result<(), FormulaCheckError> {
         let mut visiting = BTreeSet::new();
         let mut completed = BTreeSet::new();
         check_context(&self.context, self.binding, catalog)?;
@@ -259,6 +308,7 @@ impl FormulaArtifact {
             catalog,
             &mut visiting,
             &mut completed,
+            check_atoms,
         )
     }
 }
@@ -270,6 +320,13 @@ pub trait FormulaCatalog: TypeCatalog {
 
     /// Resolves a typed-form declaration by its claimed stable identity.
     fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm>;
+
+    /// Resolves a relation's checked named-port signature. Formula-only catalogs may
+    /// return `None`; callers then use `FormulaArtifact::check_terms` until relation
+    /// schema validation is available.
+    fn resolve_relation_signature(&self, _reference: RelationRef) -> Option<RelationSignature> {
+        None
+    }
 }
 
 fn check_context<C: TypeCatalog>(
@@ -298,12 +355,58 @@ fn check_formula_node<C: FormulaCatalog>(
     catalog: &C,
     visiting: &mut BTreeSet<FormulaRef>,
     completed: &mut BTreeSet<FormulaRef>,
+    check_atoms: bool,
 ) -> Result<(), FormulaCheckError> {
     match formula {
         FormulaIR::Top | FormulaIR::Bottom => Ok(()),
-        FormulaIR::Atom { arguments, .. } => {
-            for argument in arguments {
-                check_term(argument, binding, context, catalog)?;
+        FormulaIR::Atom {
+            relation,
+            arguments,
+        } => {
+            let argument_types = arguments
+                .iter()
+                .map(|argument| check_term(argument, binding, context, catalog))
+                .collect::<Result<Vec<_>, _>>()?;
+            if !check_atoms {
+                return Ok(());
+            }
+            let Some(signature) = catalog.resolve_relation_signature(*relation) else {
+                return Err(FormulaCheckError::UnresolvedRelation(*relation));
+            };
+            if signature.reference() != *relation {
+                return Err(FormulaCheckError::RelationReferenceIdentityMismatch {
+                    reference: *relation,
+                    returned: signature.reference(),
+                });
+            }
+            if signature.binding() != binding {
+                return Err(FormulaCheckError::RelationBindingMismatch {
+                    reference: *relation,
+                    expected: binding,
+                    actual: signature.binding(),
+                });
+            }
+            if signature.ports().len() != argument_types.len() {
+                return Err(FormulaCheckError::AtomArityMismatch {
+                    relation: *relation,
+                    expected: signature.ports().len(),
+                    actual: argument_types.len(),
+                });
+            }
+            for (index, (expected, actual)) in signature
+                .ports()
+                .iter()
+                .zip(argument_types.iter())
+                .enumerate()
+            {
+                if expected != actual {
+                    return Err(FormulaCheckError::AtomArgumentTypeMismatch {
+                        relation: *relation,
+                        index,
+                        expected: *expected,
+                        actual: *actual,
+                    });
+                }
             }
             Ok(())
         }
@@ -320,19 +423,57 @@ fn check_formula_node<C: FormulaCatalog>(
             }
         }
         FormulaIR::And { left, right } | FormulaIR::Or { left, right } => {
-            check_formula_ref(*left, binding, context, catalog, visiting, completed)?;
-            check_formula_ref(*right, binding, context, catalog, visiting, completed)
+            check_formula_ref(
+                *left,
+                binding,
+                context,
+                catalog,
+                visiting,
+                completed,
+                check_atoms,
+            )?;
+            check_formula_ref(
+                *right,
+                binding,
+                context,
+                catalog,
+                visiting,
+                completed,
+                check_atoms,
+            )
         }
         FormulaIR::Implies {
             premise,
             conclusion,
         } => {
-            check_formula_ref(*premise, binding, context, catalog, visiting, completed)?;
-            check_formula_ref(*conclusion, binding, context, catalog, visiting, completed)
+            check_formula_ref(
+                *premise,
+                binding,
+                context,
+                catalog,
+                visiting,
+                completed,
+                check_atoms,
+            )?;
+            check_formula_ref(
+                *conclusion,
+                binding,
+                context,
+                catalog,
+                visiting,
+                completed,
+                check_atoms,
+            )
         }
-        FormulaIR::Not(body) => {
-            check_formula_ref(*body, binding, context, catalog, visiting, completed)
-        }
+        FormulaIR::Not(body) => check_formula_ref(
+            *body,
+            binding,
+            context,
+            catalog,
+            visiting,
+            completed,
+            check_atoms,
+        ),
         FormulaIR::Exists { binder, body } | FormulaIR::Forall { binder, body } => {
             let binder_type = resolve_type(*binder, catalog)?;
             if binder_type.binding() != binding {
@@ -345,7 +486,15 @@ fn check_formula_node<C: FormulaCatalog>(
             binder_type.check(catalog)?;
             let mut body_context = context.to_vec();
             body_context.push(*binder);
-            check_formula_ref(*body, binding, &body_context, catalog, visiting, completed)
+            check_formula_ref(
+                *body,
+                binding,
+                &body_context,
+                catalog,
+                visiting,
+                completed,
+                check_atoms,
+            )
         }
     }
 }
@@ -357,6 +506,7 @@ fn check_formula_ref<C: FormulaCatalog>(
     catalog: &C,
     visiting: &mut BTreeSet<FormulaRef>,
     completed: &mut BTreeSet<FormulaRef>,
+    check_atoms: bool,
 ) -> Result<(), FormulaCheckError> {
     if completed.contains(&reference) {
         return Ok(());
@@ -395,6 +545,7 @@ fn check_formula_ref<C: FormulaCatalog>(
         catalog,
         visiting,
         completed,
+        check_atoms,
     )?;
     visiting.remove(&reference);
     completed.insert(reference);
@@ -733,6 +884,39 @@ pub enum FormulaCheckError {
         expected: BindingVersionRef,
         actual: BindingVersionRef,
         reference: TypeRef,
+    },
+
+    #[error("relation {0} is not available from the declared catalog")]
+    UnresolvedRelation(RelationRef),
+
+    #[error(
+        "catalog signature for relation {reference} identifies itself as {returned}, not its requested identity"
+    )]
+    RelationReferenceIdentityMismatch {
+        reference: RelationRef,
+        returned: RelationRef,
+    },
+
+    #[error("relation {reference} belongs to binding {actual}, expected {expected}")]
+    RelationBindingMismatch {
+        expected: BindingVersionRef,
+        actual: BindingVersionRef,
+        reference: RelationRef,
+    },
+
+    #[error("atom for relation {relation} supplies {actual} arguments, expected {expected}")]
+    AtomArityMismatch {
+        relation: RelationRef,
+        expected: usize,
+        actual: usize,
+    },
+
+    #[error("argument {index} for relation {relation} has type {actual}, expected {expected}")]
+    AtomArgumentTypeMismatch {
+        relation: RelationRef,
+        index: usize,
+        expected: TypeRef,
+        actual: TypeRef,
     },
 
     #[error("formula {0} is not available from the declared catalog")]

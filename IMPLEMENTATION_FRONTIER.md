@@ -3,14 +3,15 @@
 **Accepted semantic authority:** Inquiry Calculus v1.1, Successor
 Reciprocal-Boundary / Positive-Negation Edition.
 
-**Accepted implementation state:** Phase 2 formula-kernel local gates complete on 2026-08-25.
+**Accepted implementation state:** Phase 2 relation-schema local gates complete on 2026-08-25.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
 canonical artifact envelopes, stable SHA-256 content references, one artifact-only
 SQLite migration, verified immutable insert/fetch behavior, binding-scoped canonical
-type artifacts, typed-form declarations, and canonical formula artifacts with
-capture-safe typed terms. `ic-runtime` and `ic-cli` contain no semantic machinery.
+type artifacts, typed-form declarations, canonical formula artifacts with capture-safe typed
+terms, and formula-defined or binding-native relation schemas with checked named atom
+signatures. `ic-runtime` and `ic-cli` contain no semantic machinery.
 Referencing artifacts now declare their dependencies explicitly;
 the one-writer store checks those dependencies in the insertion transaction rather than
 inferring them from opaque payload bytes.
@@ -19,23 +20,25 @@ inferring them from opaque payload bytes.
 
 Before completing Phase 2, resolve:
 
-> What is the smallest relation-schema definition boundary that admits both formula
-> defined and binding-native relations, while letting formula atoms check their named
-> port arity and types without introducing a hidden host callback?
+> What is the smallest first-order `OpenQuery` boundary that represents a relation use,
+> a well-typed partial binding, a nonempty open-port set, and explicit data-only query
+> composition without performing relation evaluation or inventing runtime behavior?
 
 The protected difference is visible in the accepted sources:
 
-- The canonical schema gives a named typed signature and permits binding-native
-  relations; it does not say that every relation must be reducible to a formula.
-- The implementation plan records `body: FormulaRef` while also requiring relations to
-  remain binding-native and forbidding an unrecorded host callback.
-- Formula atoms now retain relation references and typed terms, but their signature
-  checks cannot be completed until a resolved relation schema supplies port types.
+- The canonical schema defines partial bindings, nonempty open-port questions, fibers,
+  and a data-only relational query IR.
+- The implementation plan requires `RelationUse` occurrence identity plus `OpenQuery`
+  transforms (`Bind`, `Expose`, `Plug`, `Normalize`, `Compose`, `DependentBind`, and
+  `CompletionFiber`) without starting runtime semantics.
+- The completed relation boundary supplies immutable named signatures and semantic routes;
+  the remaining question is how to retain a particular use and partial-binding shape.
 
-Different answers change whether a primitive binding relation is representable and
-whether an atom can be shown well typed. The next discriminator must include a
-formula-defined relation, an explicit binding-native relation contract, wrong arity,
-wrong port type, duplicate port name, and nonempty open-port fixtures.
+Different answers change whether the same schema can be used in distinct scoped,
+applicable occurrences and whether a partially bound question retains exactly its legal
+answer coordinates. The next discriminator must include empty-open rejection, duplicate
+or unknown ports, type-mismatched bindings, distinct use identities for the same schema,
+and canonical round trips for each data-only query transform.
 
 ## Known later questions
 
@@ -105,3 +108,13 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
   equality, and nested formula contexts are structurally checked.
 - FormulaIR contains only classical logical `Not`; contextual `NegationUse` remains a
   later relation-use contract.
+
+## Phase 2 relation-schema evidence
+
+- Relation schemas canonically preserve binding, ordered named typed ports, body route,
+  law references, and provenance references.
+- A formula-defined body must have the schema's exact port-type context; a binding-native
+  body has an immutable contract artifact reference and no executable host callback.
+- Formula atoms validate arity and argument types against the resolved named signature.
+- Fixed relation bytes/SHA-256, decoding failure cases, duplicate-port rejection, and
+  formula-context checks pass.

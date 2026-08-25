@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use ic_core::{
     ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef, FORMULA_ARTIFACT_KIND,
     FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog, FormulaCheckError, FormulaError,
-    FormulaIR, FormulaRef, RelationRef, TermIR, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
-    TypeRef, TypedForm, TypedFormRef,
+    FormulaIR, FormulaRef, RelationRef, RelationSignature, TermIR, TyIR, TypeArtifact, TypeCatalog,
+    TypeFamilyRef, TypeRef, TypedForm, TypedFormRef,
 };
 use serde::Deserialize;
 
@@ -22,6 +22,7 @@ struct Catalog {
     types: BTreeMap<TypeRef, TypeArtifact>,
     formulas: BTreeMap<FormulaRef, FormulaArtifact>,
     forms: BTreeMap<TypedFormRef, TypedForm>,
+    signatures: BTreeMap<RelationRef, RelationSignature>,
 }
 
 impl Catalog {
@@ -66,6 +67,10 @@ impl FormulaCatalog for Catalog {
 
     fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm> {
         self.forms.get(&reference).copied()
+    }
+
+    fn resolve_relation_signature(&self, reference: RelationRef) -> Option<RelationSignature> {
+        self.signatures.get(&reference).cloned()
     }
 }
 
@@ -299,5 +304,56 @@ fn checks_typed_terms_capture_safe_quantification_and_contexts() {
     assert!(matches!(
         wrong_equality.check_terms(&catalog),
         Err(FormulaCheckError::BoundTypeMismatch { .. })
+    ));
+}
+
+#[test]
+fn checks_atom_arity_and_types_against_a_resolved_named_signature() {
+    let binding = binding(0x11);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let boolean = catalog.insert_type(TypeArtifact::new(binding, TyIR::Bool));
+    let unit_form = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x22)));
+    let boolean_form = catalog.insert_form(TypedForm::new(binding, boolean, artifact(0x33)));
+    let relation = RelationRef::from_artifact_ref(artifact(0x44));
+    catalog.signatures.insert(
+        relation,
+        RelationSignature::new(relation, binding, vec![unit]),
+    );
+
+    let valid = FormulaArtifact::new(
+        binding,
+        Vec::new(),
+        FormulaIR::Atom {
+            relation,
+            arguments: vec![TermIR::Form(unit_form)],
+        },
+    );
+    assert!(valid.check(&catalog).is_ok());
+
+    let wrong_arity = FormulaArtifact::new(
+        binding,
+        Vec::new(),
+        FormulaIR::Atom {
+            relation,
+            arguments: Vec::new(),
+        },
+    );
+    assert!(matches!(
+        wrong_arity.check(&catalog),
+        Err(FormulaCheckError::AtomArityMismatch { .. })
+    ));
+
+    let wrong_type = FormulaArtifact::new(
+        binding,
+        Vec::new(),
+        FormulaIR::Atom {
+            relation,
+            arguments: vec![TermIR::Form(boolean_form)],
+        },
+    );
+    assert!(matches!(
+        wrong_type.check(&catalog),
+        Err(FormulaCheckError::AtomArgumentTypeMismatch { .. })
     ));
 }

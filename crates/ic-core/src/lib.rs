@@ -5,6 +5,7 @@
 
 mod artifact;
 mod formula;
+mod relation;
 mod ty;
 
 pub use artifact::{
@@ -13,7 +14,11 @@ pub use artifact::{
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,
-    FormulaCheckError, FormulaError, FormulaIR, FormulaRef, RelationRef, TermIR,
+    FormulaCheckError, FormulaError, FormulaIR, FormulaRef, RelationRef, RelationSignature, TermIR,
+};
+pub use relation::{
+    RELATION_SCHEMA_ARTIFACT_KIND, RELATION_SCHEMA_VERSION, RelationBodyIR, RelationCheckError,
+    RelationError, RelationPort, RelationSchema,
 };
 pub use ty::{
     BindingVersionRef, TYPE_ARTIFACT_KIND, TYPE_SCHEMA_VERSION, TYPED_FORM_ARTIFACT_KIND,

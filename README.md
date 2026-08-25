@@ -3,11 +3,10 @@
 This repository contains the Rust reference implementation of Inquiry Calculus v1.1,
 including the adopted **Successor Reciprocal-Boundary / Positive-Negation Edition**.
 The semantic authority has advanced, but the executable implementation remains at
-**Phase 1**: repository authority, canonical artifact identity, immutable-artifact
-persistence, binding-scoped type artifacts, and typed-form declarations. Relation,
-reification, program, event, and standing semantics are not implemented yet. Phase 2 has
-begun with canonical formula artifacts and capture-safe typed terms; relation schemas,
-relation uses, and OpenQuery remain pending.
+**Phase 2**: repository authority, canonical artifact identity, immutable-artifact
+persistence, binding-scoped type artifacts, typed-form declarations, canonical formula
+artifacts, and checked relation schemas. Relation uses, open-query composition,
+reification, program, event, and standing semantics are not implemented yet.
 
 ## Authority by question
 
@@ -37,8 +36,8 @@ evidence; they are not coequal forward authority.
 ## Workspace
 
 - `ic-core`: canonical artifact envelopes, binding-scoped `TyIR`, typed-form
-  declarations, canonical formula artifacts, capture-safe typed terms, canonical identity,
-  and structural type checking.
+  declarations, canonical formula artifacts, capture-safe typed terms, formula-defined or
+  binding-native relation schemas, canonical identity, and structural checking.
 - `ic-store`: SQLite migrations, verified immutable artifact storage, and transactional
   insertion of explicitly declared artifact dependencies.
 - `ic-runtime`: reserved package boundary; no runtime semantics yet.
@@ -59,6 +58,10 @@ relation atoms, equality, conjunction, disjunction, implication, classical logic
 negation, and existential/universal quantification. The classical minimal basis is an
 explicit future derivation route, never a normalization that erases source structure.
 Logical `Not` is not contextual typed negation and cannot create a `NegationUse`.
+Relation schemas keep their ordered named port signature distinct from their semantic route:
+their body is either a canonical formula with that exact typed context or a separately
+identified binding-native contract artifact. Formula atom checking resolves that signature;
+no host callback is admitted as unrecorded relation meaning.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
