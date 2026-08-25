@@ -95,7 +95,10 @@ Phase 4 also has canonical `DepartureWitness` identity. It binds a source determ
 presentation to typed source/candidate observations, their typed fillings, an incompatibility-use
 identity, support, and context. The artifact itself is not an exterior predicate and cannot turn
 failed equality, search, retrieval, projection, unknown status, or protected non-equivalence into
-departure.
+departure. Its current structural check rehashes and checks the named presentation, forms, and
+relation uses; requires the presentation's distinction, source, binding, scope, applicability,
+grain, and horizon; and rejects a use outside that context. It still does not evaluate an
+observation, establish incompatibility, or certify non-circular positive evidence.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

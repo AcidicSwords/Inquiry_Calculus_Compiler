@@ -2,13 +2,15 @@ use std::collections::BTreeMap;
 
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
-    DischargeMode, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef,
-    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, OpenPort, OpenQuery,
-    OpenQueryCatalog, OpenQueryCheckError, PortBinding, ProgramBinding, RelationBodyIR,
-    RelationCatalog, RelationCheckError, RelationError, RelationExprArtifact, RelationExprIR,
-    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
-    RelationUseCheckError, RelationUseContext, ScopeRef, SupportRef, TyIR, TypeArtifact,
-    TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    DepartureCatalog, DepartureWitness, DepartureWitnessCheckError, DeterminationCatalog,
+    DeterminationPresentation, DeterminationPresentationRef, DischargeMode, DistinctionRef,
+    FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef, IProgArtifact,
+    IProgCatalog, IProgCheckError, IProgIR, IProgRef, OpenPort, OpenQuery, OpenQueryCatalog,
+    OpenQueryCheckError, PortBinding, ProgramBinding, RelationBodyIR, RelationCatalog,
+    RelationCheckError, RelationError, RelationExprArtifact, RelationExprIR, RelationPort,
+    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseCheckError,
+    RelationUseContext, RelationalWebRef, ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog,
+    TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
 };
 use serde::Deserialize;
 
@@ -28,6 +30,8 @@ struct Catalog {
     signatures: BTreeMap<RelationRef, RelationSignature>,
     schemas: BTreeMap<RelationRef, RelationSchema>,
     forms: BTreeMap<TypedFormRef, TypedForm>,
+    presentations: BTreeMap<DeterminationPresentationRef, DeterminationPresentation>,
+    relation_uses: BTreeMap<ic_core::RelationUseRef, RelationUse>,
     queries: BTreeMap<ic_core::QueryRef, OpenQuery>,
     programs: BTreeMap<IProgRef, IProgArtifact>,
 }
@@ -58,6 +62,25 @@ impl Catalog {
     fn insert_form(&mut self, form: TypedForm) -> TypedFormRef {
         let reference = form.typed_form_ref().expect("form fixture must encode");
         self.forms.insert(reference, form);
+        reference
+    }
+
+    fn insert_presentation(
+        &mut self,
+        presentation: DeterminationPresentation,
+    ) -> DeterminationPresentationRef {
+        let reference = presentation
+            .determination_presentation_ref()
+            .expect("presentation fixture must encode");
+        self.presentations.insert(reference, presentation);
+        reference
+    }
+
+    fn insert_relation_use(&mut self, relation_use: RelationUse) -> ic_core::RelationUseRef {
+        let reference = relation_use
+            .relation_use_ref()
+            .expect("relation-use fixture must encode");
+        self.relation_uses.insert(reference, relation_use);
         reference
     }
 
@@ -104,6 +127,21 @@ impl FormulaCatalog for Catalog {
 impl RelationCatalog for Catalog {
     fn resolve_relation_schema(&self, reference: RelationRef) -> Option<RelationSchema> {
         self.schemas.get(&reference).cloned()
+    }
+}
+
+impl DeterminationCatalog for Catalog {
+    fn resolve_determination_presentation(
+        &self,
+        reference: DeterminationPresentationRef,
+    ) -> Option<DeterminationPresentation> {
+        self.presentations.get(&reference).cloned()
+    }
+}
+
+impl DepartureCatalog for Catalog {
+    fn resolve_relation_use(&self, reference: ic_core::RelationUseRef) -> Option<RelationUse> {
+        self.relation_uses.get(&reference).cloned()
     }
 }
 
@@ -425,6 +463,152 @@ fn relation_use_is_a_distinct_typed_and_scoped_occurrence() {
     assert!(matches!(
         invalid_port.check(&catalog),
         Err(RelationUseCheckError::UnknownPort(_))
+    ));
+}
+
+#[test]
+fn departure_witness_check_requires_the_declared_presentation_and_context() {
+    let binding = binding(0x11);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let source = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x21)));
+    let candidate = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x22)));
+    let source_answer = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x23)));
+    let candidate_answer = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x24)));
+    let distinction = DistinctionRef::from_artifact_ref(artifact(0x31));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x32));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0x33));
+    let grain = GrainRef::from_artifact_ref(artifact(0x34));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0x35));
+    let support = SupportRef::from_artifact_ref(artifact(0x36));
+    let presentation = catalog.insert_presentation(DeterminationPresentation::new(
+        distinction,
+        ic_core::Orientation::X,
+        source,
+        RelationalWebRef::from_artifact_ref(artifact(0x37)),
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        support,
+        None,
+    ));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        Vec::new(),
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x38),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        support,
+        None,
+    );
+    let source_observation =
+        catalog.insert_relation_use(RelationUse::new(relation, Vec::new(), context));
+    let candidate_observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        Vec::new(),
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Check,
+            support,
+            None,
+        ),
+    ));
+    let incompatibility = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        Vec::new(),
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Warrant,
+            support,
+            None,
+        ),
+    ));
+    let witness = DepartureWitness::new(
+        distinction,
+        source,
+        candidate,
+        presentation,
+        source_observation,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        support,
+        scope,
+        applicability,
+        grain,
+    );
+    assert!(witness.check(&catalog).is_ok());
+
+    let wrong_source = DepartureWitness::new(
+        distinction,
+        candidate,
+        candidate,
+        presentation,
+        source_observation,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        support,
+        scope,
+        applicability,
+        grain,
+    );
+    assert!(matches!(
+        wrong_source.check(&catalog),
+        Err(DepartureWitnessCheckError::PresentationMismatch("source"))
+    ));
+
+    let wrong_context = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        Vec::new(),
+        RelationUseContext::new(
+            ScopeRef::from_artifact_ref(artifact(0x39)),
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Probe,
+            support,
+            None,
+        ),
+    ));
+    let context_mismatch = DepartureWitness::new(
+        distinction,
+        source,
+        candidate,
+        presentation,
+        wrong_context,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        support,
+        scope,
+        applicability,
+        grain,
+    );
+    assert!(matches!(
+        context_mismatch.check(&catalog),
+        Err(DepartureWitnessCheckError::RelationUseContextMismatch(reference))
+            if reference == wrong_context
     ));
 }
 

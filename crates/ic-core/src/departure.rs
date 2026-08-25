@@ -4,8 +4,10 @@ use thiserror::Error;
 
 use crate::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
-    DeterminationPresentationRef, DistinctionRef, GrainRef, RelationUseRef, ScopeRef, SupportRef,
-    TypedFormRef,
+    DeterminationCatalog, DeterminationPresentationCheckError, DeterminationPresentationError,
+    DeterminationPresentationRef, DistinctionRef, GrainRef, RelationCatalog, RelationUse,
+    RelationUseCheckError, RelationUseError, RelationUseRef, ScopeRef, SupportRef, TypeCheckError,
+    TypeError, TypedFormRef,
 };
 
 /// Canonical artifact kind for positive determination-relative departure witnesses.
@@ -61,6 +63,12 @@ pub struct DepartureWitness {
     scope: ScopeRef,
     applicability: ApplicabilityRef,
     grain: GrainRef,
+}
+
+/// The checked source for departure-witness references.
+pub trait DepartureCatalog: DeterminationCatalog + RelationCatalog {
+    /// Resolves a relation use by its claimed stable identity.
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse>;
 }
 
 impl DepartureWitness {
@@ -214,6 +222,106 @@ impl DepartureWitness {
         Self::decode_payload(envelope.canonical_payload())
     }
 
+    /// Checks that this witness describes one exact standing presentation and context.
+    ///
+    /// It does not evaluate either observation, infer incompatibility, or certify that the
+    /// declared relation uses are non-circular; those require later observation and derivation
+    /// representations.
+    pub fn check<C: DepartureCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), DepartureWitnessCheckError> {
+        let presentation = catalog
+            .resolve_determination_presentation(self.source_presentation)
+            .ok_or(DepartureWitnessCheckError::UnresolvedPresentation(
+                self.source_presentation,
+            ))?;
+        let calculated = presentation.determination_presentation_ref()?;
+        if calculated != self.source_presentation {
+            return Err(
+                DepartureWitnessCheckError::PresentationReferenceIdentityMismatch {
+                    reference: self.source_presentation,
+                    calculated,
+                },
+            );
+        }
+        presentation.check(catalog)?;
+        if self.distinction != presentation.distinction() {
+            return Err(DepartureWitnessCheckError::PresentationMismatch(
+                "distinction",
+            ));
+        }
+        if self.source != presentation.source() {
+            return Err(DepartureWitnessCheckError::PresentationMismatch("source"));
+        }
+        if self.scope != presentation.scope() {
+            return Err(DepartureWitnessCheckError::PresentationMismatch("scope"));
+        }
+        if self.applicability != presentation.applicability() {
+            return Err(DepartureWitnessCheckError::PresentationMismatch(
+                "applicability",
+            ));
+        }
+        if self.grain != presentation.grain() {
+            return Err(DepartureWitnessCheckError::PresentationMismatch("grain"));
+        }
+        for form in [
+            self.source,
+            self.candidate,
+            self.source_answer,
+            self.candidate_answer,
+        ] {
+            let resolved = catalog
+                .resolve_typed_form(form)
+                .ok_or(DepartureWitnessCheckError::UnresolvedTypedForm(form))?;
+            let calculated = resolved.typed_form_ref()?;
+            if calculated != form {
+                return Err(
+                    DepartureWitnessCheckError::TypedFormReferenceIdentityMismatch {
+                        reference: form,
+                        calculated,
+                    },
+                );
+            }
+            resolved.check(catalog)?;
+            if resolved.binding() != presentation.binding() {
+                return Err(DepartureWitnessCheckError::TypedFormBindingMismatch {
+                    expected: presentation.binding(),
+                    actual: resolved.binding(),
+                });
+            }
+        }
+        for use_ref in [
+            self.source_observation,
+            self.candidate_observation,
+            self.incompatibility,
+        ] {
+            let relation_use = catalog
+                .resolve_relation_use(use_ref)
+                .ok_or(DepartureWitnessCheckError::UnresolvedRelationUse(use_ref))?;
+            let calculated = relation_use.relation_use_ref()?;
+            if calculated != use_ref {
+                return Err(
+                    DepartureWitnessCheckError::RelationUseReferenceIdentityMismatch {
+                        reference: use_ref,
+                        calculated,
+                    },
+                );
+            }
+            relation_use.check(catalog)?;
+            if relation_use.scope() != self.scope
+                || relation_use.applicability() != self.applicability
+                || relation_use.grain() != self.grain
+                || relation_use.horizon() != presentation.horizon()
+            {
+                return Err(DepartureWitnessCheckError::RelationUseContextMismatch(
+                    use_ref,
+                ));
+            }
+        }
+        Ok(())
+    }
+
     #[must_use]
     pub fn referenced_artifacts(&self) -> [ArtifactRef; 13] {
         [
@@ -281,4 +389,53 @@ pub enum DepartureWitnessError {
     },
     #[error("unsupported departure-witness schema version {0}")]
     UnsupportedSchemaVersion(u32),
+}
+
+/// Errors from structural positive-departure witness checking.
+#[derive(Debug, Error)]
+pub enum DepartureWitnessCheckError {
+    #[error(transparent)]
+    Witness(#[from] DepartureWitnessError),
+    #[error(transparent)]
+    PresentationEncoding(#[from] DeterminationPresentationError),
+    #[error(transparent)]
+    Presentation(#[from] DeterminationPresentationCheckError),
+    #[error(transparent)]
+    Type(#[from] TypeError),
+    #[error(transparent)]
+    TypeCheck(#[from] TypeCheckError),
+    #[error(transparent)]
+    RelationUse(#[from] RelationUseCheckError),
+    #[error(transparent)]
+    RelationUseEncoding(#[from] RelationUseError),
+    #[error("source presentation {0} is not available from the declared catalog")]
+    UnresolvedPresentation(DeterminationPresentationRef),
+    #[error("catalog presentation {reference} hashes to {calculated}, not its claimed identity")]
+    PresentationReferenceIdentityMismatch {
+        reference: DeterminationPresentationRef,
+        calculated: DeterminationPresentationRef,
+    },
+    #[error("departure witness does not match its source presentation's {0}")]
+    PresentationMismatch(&'static str),
+    #[error("typed form {0} is not available from the declared catalog")]
+    UnresolvedTypedForm(TypedFormRef),
+    #[error("catalog typed form {reference} hashes to {calculated}, not its claimed identity")]
+    TypedFormReferenceIdentityMismatch {
+        reference: TypedFormRef,
+        calculated: TypedFormRef,
+    },
+    #[error("typed form binding {actual} does not match presentation binding {expected}")]
+    TypedFormBindingMismatch {
+        expected: crate::BindingVersionRef,
+        actual: crate::BindingVersionRef,
+    },
+    #[error("relation use {0} is not available from the declared catalog")]
+    UnresolvedRelationUse(RelationUseRef),
+    #[error("catalog relation use {reference} hashes to {calculated}, not its claimed identity")]
+    RelationUseReferenceIdentityMismatch {
+        reference: RelationUseRef,
+        calculated: RelationUseRef,
+    },
+    #[error("relation use {0} does not match the departure witness context")]
+    RelationUseContextMismatch(RelationUseRef),
 }

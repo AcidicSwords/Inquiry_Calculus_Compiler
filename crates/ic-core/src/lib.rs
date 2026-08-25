@@ -23,8 +23,8 @@ pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,
 };
 pub use departure::{
-    DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureWitness,
-    DepartureWitnessError, DepartureWitnessRef,
+    DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureCatalog,
+    DepartureWitness, DepartureWitnessCheckError, DepartureWitnessError, DepartureWitnessRef,
 };
 pub use determination::{
     DETERMINATION_PRESENTATION_ARTIFACT_KIND, DETERMINATION_PRESENTATION_SCHEMA_VERSION,

@@ -5,8 +5,8 @@ Reciprocal-Boundary / Positive-Negation Edition.
 
 **Accepted implementation state:** Phase 3 first-order program syntax and structural checking
 pass on 2026-08-25; Phase 4 claim-local determination-presentation checking and positive
-departure-witness identity pass. Supported answer materialization remains reserved for the Phase
-6/7 actuality-and-resolution boundary.
+departure-witness identity/context checking pass. Supported answer materialization remains
+reserved for the Phase 6/7 actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -24,9 +24,9 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> What is the smallest catalog check that ties `DepartureWitness` to its exact standing
-> presentation and declared relation-use context, while leaving relation evaluation,
-> incompatibility semantics, and non-circular derivation as later represented boundaries?
+> What is the smallest typed observation-result and incompatibility-certificate boundary that
+> can positively establish departure without turning failed search, projection, or incomplete
+> coverage into exteriority or silently collapsing semantic and execution coverage?
 
 The protected difference is visible in the accepted sources:
 
@@ -42,15 +42,17 @@ The protected difference is visible in the accepted sources:
   presentation, and recursively checks an optional predecessor. An ancestry edge may change the
   web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
   or horizon. It does not admit the web or generate departure.
-- `DepartureWitness` now canonically retains the source/candidate forms, source presentation,
+- `DepartureWitness` canonically retains the source/candidate forms, source presentation,
   source and candidate observation uses, their typed fillings, incompatibility use, support,
-  scope, applicability, and grain. Constructing it evaluates no relation and proves neither
-  incompatibility nor exteriority.
+  scope, applicability, and grain. Its checker rehashes every resolved identity, type-checks its
+  forms, requires the presentation's source and indexed context, and rejects relation uses with
+  different scope/applicability/grain/horizon. Constructing or checking it evaluates no relation
+  and proves neither incompatibility nor exteriority.
 
-Different answers determine whether certificate components actually describe one standing
-determination or merely coexist in an artifact. The next discriminator must reject a forged
-presentation/reference, a source that differs from the presentation source, and observation or
-incompatibility uses whose scope/applicability/grain differs from the claimed witness context.
+Different answers determine whether a positive certificate can distinguish an actual supported
+departure from merely coexisting identifiers, failed work, and incomplete evidence. The next
+discriminator must reject a purported departure whose observation result, incompatible answers,
+or derivation route is not independently represented and checked.
 
 ## Known later questions
 
