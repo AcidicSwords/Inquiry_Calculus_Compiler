@@ -146,6 +146,13 @@ requires their source/candidate and determination context to agree. Thus the sam
 remain distinct under different uses. The view does not evaluate `N_u(source, candidate)`, admit
 the use, establish a positive exterior, actualize a result, or confer support or warrant.
 
+Phase 13 has an exact finite discriminator-basis checker. Given caller-certified total,
+deterministic, exactly covered cue and protected signatures over one indexed domain, it verifies
+that every protectedly distinct pair has a differing cue answer or returns a concrete unseparated
+pair. It permits an empty basis only when the protected signature is constant. It does not certify
+the input tables' coverage/support/applicability, choose a resource-minimal basis, claim global
+minimality or impossibility, or define a query-selection policy.
+
 Phase 4 also represents an oriented `NegationUse` declaration as a distinct immutable relation
 use tied to one determination presentation. Its semantic coverage (`ExactExhaustive`,
 `ExactOnField`, `CertifiedPartial`, or `WorkingOpen`) is identity data and deliberately differs

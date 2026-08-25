@@ -6,6 +6,7 @@
 mod artifact;
 mod boundary;
 mod context;
+mod cue;
 mod departure;
 mod determination;
 mod event;
@@ -36,6 +37,10 @@ pub use boundary::{
 };
 pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,
+};
+pub use cue::{
+    ExactFiniteCueBasisError, ExactFiniteCueBasisResult, FiniteCueSeparator,
+    check_exact_finite_cue_basis,
 };
 pub use departure::{
     DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureCatalog,

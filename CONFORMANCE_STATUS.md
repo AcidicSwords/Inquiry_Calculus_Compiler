@@ -75,6 +75,7 @@ or passing.
 | P4-INCOMPAT-IR-001 finite declared-pair incompatibility preserves positive witness, no-witness, and unknown | PASS | `finite_cell::{finite_incompatibility_requires_a_positive_declared_pair,finite_incompatibility_rejects_duplicate_pair_declarations}` |
 | P4-INCOMPAT-IR-002 typed finite declared-pair checker rehashes/type-checks cross-typed values | PASS | `finite_cell::{typed_finite_incompatibility_rehashes_checked_cross_typed_pairs,typed_finite_incompatibility_rejects_duplicate_and_forged_declarations}` |
 | P4-EXTERIOR-IR-001 derived tagged exterior-claim preserves use identity and structural witness linkage | PASS | `relation_schema::tagged_exterior_claim_preserves_use_tag_without_admitting_an_incidence` |
+| P13-CUE-IR-001 exact finite discriminator-basis sufficiency and concrete residual separator | PASS | `cue::{exact_finite_cue_basis_returns_a_protected_separator_or_sufficiency,empty_basis_is_only_sufficient_for_a_constant_protected_signature,exact_finite_cue_basis_rejects_context_and_domain_mismatches}` |
 | P4-FRONTIER-IR-001 tagged active-use frontier preserves distinct use and execution-coverage identities | PASS | `frontier::tagged_frontier_keeps_same_source_through_distinct_use_identities` |
 | P4-FRONTIER-IR-002 duplicate tags, source mismatch, and empty-frontier closure inference reject | PASS | `frontier::{tagged_frontier_rejects_duplicate_use_and_mismatched_source,empty_frontier_does_not_infer_coverage_or_closure}` |
 | P4-NEGATION-IR-001 oriented negation-use and semantic-coverage canonical identity | PASS | `negation_identity::negation_use_round_trips_and_keeps_semantic_coverage_distinct` |
@@ -129,7 +130,7 @@ or passing.
 | Retained/access/active separation and recurrent memory crawl | PENDING | Phase 9 |
 | Surface/backend/raw-return compilation boundaries | PARTIAL | Phase 10: canonical compiled probe-operator and recurrent probe-contract identities are distinct from runtime control flow and raw return; contract comparability/bridges, surface plans, backend requests, rendering, dispatch, and provider execution remain pending |
 | Positive standing, support environments, and rootless cycles | PENDING | Phase 11 |
-| Separator generation, cue planning, and bounded unknown results | PENDING | Phases 12-13 |
+| Separator generation, cue planning, and bounded unknown results | PARTIAL | Phase 13: exact finite total/deterministic/caller-covered sufficient-basis checking and concrete separators pass; generator regimes, resource-preorder minimization, approximate/frontier results, and bounded unknown residuals remain pending |
 | Materialization, expressibility, and representation gaps | PENDING | Phase 14 |
 | Binding extension, bridges, rebinding, and history locality | PENDING | Phase 15 |
 | Folding, recovery, compression licences, and reopening | PENDING | Phase 16 |

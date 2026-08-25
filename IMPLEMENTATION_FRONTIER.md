@@ -152,6 +152,13 @@ The protected difference is visible in the accepted sources:
   compatibility, optional traversal, grain, and horizon. It preserves empty or omitted roles as
   such; it does not validate the opaque field contracts yet or derive an exterior, return fiber,
   coverage, reverse negation, global partition, or sixfold occurrence.
+- The exact finite `check_exact_finite_cue_basis` checker now tests the canonical sufficient-basis
+  condition over caller-certified total, deterministic, exactly covered signatures. It returns
+  `Sufficient` only when every protectedly distinct finite pair differs on some cue, otherwise a
+  concrete protected separator with the common cue answers. It permits an empty basis only for a
+  constant protected signature and rejects context/domain mismatches. It does not certify input
+  coverage/support/applicability, select a resource-minimal basis, claim global minimality or
+  impossibility, or schedule a query.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next
