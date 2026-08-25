@@ -5,6 +5,7 @@
 
 mod artifact;
 mod context;
+mod determination;
 mod formula;
 mod iprog;
 mod query;
@@ -19,6 +20,11 @@ pub use artifact::{
 };
 pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,
+};
+pub use determination::{
+    DETERMINATION_PRESENTATION_ARTIFACT_KIND, DETERMINATION_PRESENTATION_SCHEMA_VERSION,
+    DeterminationPresentation, DeterminationPresentationError, DeterminationPresentationRef,
+    DistinctionRef, Orientation, RelationalWebRef,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,

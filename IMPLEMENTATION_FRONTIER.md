@@ -4,8 +4,8 @@
 Reciprocal-Boundary / Positive-Negation Edition.
 
 **Accepted implementation state:** Phase 3 first-order program syntax and structural checking
-pass on 2026-08-25; supported-answer materialization remains reserved for the Phase 6/7
-actuality-and-resolution boundary.
+pass on 2026-08-25; Phase 4 claim-local determination-presentation identity passes. Supported
+answer materialization remains reserved for the Phase 6/7 actuality-and-resolution boundary.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -21,28 +21,28 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before constructing any reciprocal exterior or negation use, resolve:
+Before treating a determination presentation as an admissible standing source for departure,
+resolve:
 
-> What is the smallest claim-local, versioned `DeterminationPresentation` artifact that retains
-> only the supported dependency web of a standing source determination with its scope,
-> applicability, grain, horizon, and provenance?
+> What is the smallest catalog check for `DeterminationPresentation` that revalidates its typed
+> source and predecessor ancestry while preserving the relational web as a claim-local reference
+> until its own schema and admission/minimization law are implemented?
 
 The protected difference is visible in the accepted sources:
 
-- A `CompletionCandidate` is explicitly only a full typed query filling. It does not establish
-  relation membership, support, actuality, a resolution path, or a selected answer.
-- `SuppAns(q)` requires a declared decoder/resolution route and preserves nonempty partial sets.
-  The stable plan places resolution paths, decoder contracts, partial/ambiguous results, holes,
-  and fibers in Phase 7 after Phase 6 raw actuality. The Phase 3 answer slot remains inspectable
-  syntax; it may not be substituted or executed as if that later evidence existed.
-- The successor Phase 4 contract can begin without that runtime boundary: a determination
-  presentation is a supported claim-local web, not an answer result, an exterior, a negation
-  use, or a standing revision.
+- `DeterminationPresentation` now has a canonical artifact identity for distinction, `X`/`Y`
+  orientation, typed source, relational-web reference, binding, scope, applicability, grain,
+  horizon, support, and optional predecessor. These fields all domain-separate the presentation.
+- The relational web is deliberately not inferred from every retained fact or every relation
+  mentioning the source. The canonical reversible default remains the support/dependency web of
+  the specific standing claim; its exact admission/minimization is a research gate.
+- A `CompletionCandidate` remains only a full typed query filling. It does not establish relation
+  membership, support, actuality, a resolution path, or a selected answer.
 
-Different answers determine whether stored source information remains claim-local and reversible
-or is silently inflated into a global fact store or a boundary role. The first discriminator must
-reject an unrelated retained fact as constitutive, a forged dependency reference, and a
-presentation whose contextual/provenance fields do not match its declared source determination.
+Different answers determine whether a stored presentation is tied to the source it claims or can
+be forged by an arbitrary typed-form/reference pairing. The next discriminator must reject a
+forged typed source, a binding mismatch, a forged predecessor reference, and an ancestry edge
+whose distinction/orientation/context no longer matches the successor presentation.
 
 ## Known later questions
 

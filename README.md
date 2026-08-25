@@ -86,6 +86,11 @@ supported-answer representation. A `CompletionCandidate` is not such an answer. 
 normalization, registered pure operations, and execution remain deferred rather than being
 simulated with an unsupported candidate.
 
+Phase 4 has begun with canonical `DeterminationPresentation` artifacts. A presentation records
+one distinction orientation, typed source, claim-local relational-web reference, binding, scope,
+applicability, grain, horizon, support, and optional predecessor presentation. It is neither a
+complete fact store nor a departure, negation use, exterior, return, or standing revision.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

@@ -63,6 +63,8 @@ or passing.
 | P3-IPROG-003 explicit named environment identity, declared dependencies, and duplicate-name rejection | PASS | `iprog_identity::{first_order_return_and_ask_round_trip_without_closures,rejects_duplicate_explicit_environment_names}` |
 | P3-IPROG-004 structural program checking revalidates result, typed forms, query, and continuation | PASS | `relation_schema::first_order_program_check_rejects_forged_or_result_mismatched_continuations` |
 | P3-IPROG-005 stable Ask-with-environment byte/hash vector | PASS | `fixtures/iprogs/iprog-v2-ask-environment.json` |
+| P4-DETERMINATION-IR-001 claim-local determination-presentation canonical identity and ancestry | PASS | `determination_identity::determination_presentations_round_trip_with_explicit_context_and_ancestry` |
+| P4-DETERMINATION-IR-002 malformed determination-presentation rejection | PASS | `determination_identity::determination_presentations_reject_malformed_encodings` |
 
 ## Pending specification and plan categories
 
@@ -71,7 +73,7 @@ or passing.
 | Typed forms, typed reification, and type verification | PARTIAL | Phase 1: canonical type artifacts, typed-form declarations, and structural checks pass; binding-native term/reification semantics remain pending |
 | Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: direct `OpenQuery` partial bindings, data-only relation expressions, checked `Bind`/`Expose`, candidate-only `Plug`, direct schema-order normalization, a derived completion-fiber view, formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; typed expression validation and dependent binding remain pending |
 | First-order programs and proposal/actuality/authority separation | PARTIAL | Phase 3: canonical `Return`/`Ask` identity, explicit environment, malformed-input rejection, and recursive structural validation pass; supported-answer representation, substitution, normalization, pure operations, and runtime separation remain pending |
-| Successor determination and departure, fixtures 1-13 | PENDING | Phase 4 |
+| Successor determination and departure, fixtures 1-13 | PENDING | Phase 4: claim-local determination-presentation identity and malformed-input rejection pass; admission, departure, and all successor fixtures remain pending |
 | Typed negation and coverage separation, fixtures 14-24 | PENDING | Phase 4 |
 | Tagged multiple negation uses, fixtures 25-33 | PENDING | Phase 4 |
 | Same-use return and protected recovery, fixtures 34-47 | PENDING | Phase 4 |
