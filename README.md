@@ -219,6 +219,11 @@ opaque checkers, evaluate assumptions or open dependencies, assert closure, or a
 claim as standing. A derived relation-use link can resolve only a matching relation-targeted
 environment through its exact `SupportRef`, scope, and applicability; that link is not admission.
 
+`standing_from_declared_support` now checks a claim-targeted environment and every declared
+standing premise before translating it into the existing least-fixed-point input. Applicability,
+checker success, and invalidation remain an explicit assessment; it is not proof, warrant, or an
+independent-ingress validator.
+
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates
 or is explicitly outside the decoder; an unlisted raw return remains `Unknown`. A direct

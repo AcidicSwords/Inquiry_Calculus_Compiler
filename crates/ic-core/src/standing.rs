@@ -689,6 +689,115 @@ pub enum RelationUseSupportError {
     ContextMismatch(&'static str),
 }
 
+/// One explicitly declared assessment of the closure conditions not evaluable by this phase.
+///
+/// The assessment is intentionally separate from `SupportEnvironmentArtifact`: it can drive a
+/// derived standing computation only after the artifact identities are checked, but it neither
+/// proves applicability/check success nor promotes itself to a warrant.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DeclaredSupportClosure {
+    environment: SupportEnvironmentRef,
+    standing_premises: BTreeSet<ClaimRef>,
+    applicable: bool,
+    checks_discharged: bool,
+    invalidated: bool,
+}
+
+impl DeclaredSupportClosure {
+    #[must_use]
+    pub fn new(
+        environment: SupportEnvironmentRef,
+        standing_premises: Vec<ClaimRef>,
+        applicable: bool,
+        checks_discharged: bool,
+        invalidated: bool,
+    ) -> Self {
+        Self {
+            environment,
+            standing_premises: standing_premises.into_iter().collect(),
+            applicable,
+            checks_discharged,
+            invalidated,
+        }
+    }
+
+    #[must_use]
+    pub const fn environment(&self) -> SupportEnvironmentRef {
+        self.environment
+    }
+    #[must_use]
+    pub const fn standing_premises(&self) -> &BTreeSet<ClaimRef> {
+        &self.standing_premises
+    }
+}
+
+/// Builds the existing least-fixed-point problem from checked canonical support records and
+/// explicitly declared unevaluable closure conditions.
+pub fn standing_from_declared_support<C: SupportEnvironmentCatalog>(
+    ingress: Vec<ClaimRef>,
+    closures: &[DeclaredSupportClosure],
+    catalog: &C,
+) -> Result<Standing, DeclaredStandingError> {
+    let mut environments = Vec::with_capacity(closures.len());
+    for closure in closures {
+        let environment = catalog
+            .resolve_support_environment(closure.environment)
+            .ok_or(DeclaredStandingError::UnresolvedEnvironment(
+                closure.environment,
+            ))?;
+        let calculated = environment.support_environment_ref()?;
+        if calculated != closure.environment {
+            return Err(DeclaredStandingError::EnvironmentIdentityMismatch {
+                reference: closure.environment,
+                calculated,
+            });
+        }
+        environment.check(catalog)?;
+        let SupportSubjectRef::Claim(claim) = environment.target() else {
+            return Err(DeclaredStandingError::RelationTargetCannotEnterClaimStanding);
+        };
+        for premise in closure.standing_premises() {
+            checked_claim(catalog, *premise)?;
+            if !environment.premises().contains(&premise.as_artifact_ref()) {
+                return Err(DeclaredStandingError::PremiseNotNamedByEnvironment {
+                    environment: closure.environment,
+                    premise: *premise,
+                });
+            }
+        }
+        let mut declared =
+            SupportEnvironment::new(claim, closure.standing_premises().iter().copied().collect())
+                .with_applicability(closure.applicable)
+                .with_checks_discharged(closure.checks_discharged)
+                .invalidated(closure.invalidated);
+        declared = declared.with_open_dependencies(environment.open_dependencies().to_vec());
+        environments.push(declared);
+    }
+    Ok(standing(&StandingProblem::new(ingress, environments)))
+}
+
+#[derive(Debug, Error)]
+pub enum DeclaredStandingError {
+    #[error(transparent)]
+    Environment(#[from] SupportEnvironmentArtifactError),
+    #[error(transparent)]
+    EnvironmentCheck(#[from] SupportEnvironmentArtifactCheckError),
+    #[error("support environment {0} is unavailable")]
+    UnresolvedEnvironment(SupportEnvironmentRef),
+    #[error("support environment {reference} hashes to {calculated}, not its claimed identity")]
+    EnvironmentIdentityMismatch {
+        reference: SupportEnvironmentRef,
+        calculated: SupportEnvironmentRef,
+    },
+    #[error("a relation-targeted environment cannot enter claim standing")]
+    RelationTargetCannotEnterClaimStanding,
+    #[error("standing premise {premise} is not named by support environment {environment}")]
+    PremiseNotNamedByEnvironment {
+        environment: SupportEnvironmentRef,
+        premise: ClaimRef,
+    },
+}
+
 /// One candidate support route for a claim.
 ///
 /// The specification's `Closed_X(E, lambda)` has five conditions. Two of them are decided here

@@ -336,7 +336,10 @@ content address; it rechecks claim/raw-return identities, relation schemas, and 
 context but does not evaluate opaque roles or close a route. A relation use now resolves a
 matching relation-targeted environment through its exact `SupportRef`, relation, scope, and
 applicability; a claim-targeted environment and every closure/admission condition remain
-unresolved.
+unresolved. `standing_from_declared_support` now checks a claim-targeted environment and every
+declared standing premise before translating it into the existing least-fixed-point input, but its
+applicability/check/invalidation conditions remain caller declarations; it is not a warrant or
+independent-ingress validator.
 
 ## Known later questions
 

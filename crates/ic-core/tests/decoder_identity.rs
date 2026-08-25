@@ -4,20 +4,21 @@ use ic_core::{
     ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef,
     ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
     ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    DecodedObservationError, DecoderRef, DeterminationPresentationRef, DischargeMode,
-    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
-    FormulaArtifact, FormulaCatalog, FormulaRef, GrainRef, HorizonRef, ObservationResultCatalog,
-    OpenPort, OpenQuery, OpenQueryCatalog, PortBinding, ProbeContractRef, ProbeOperator,
-    ProbeOperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
-    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
-    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
-    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
-    ResolutionPathRef, RouteRef, ScopeRef, StateRef, SupportEnvironmentArtifact,
-    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
-    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef, TyIR,
-    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
-    decode_actual_event, match_decoded_observation_use, resolve_relation_use_support,
+    DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecoderRef,
+    DeterminationPresentationRef, DischargeMode, FINITE_DECODER_ARTIFACT_KIND,
+    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
+    FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProvenanceRef, QueryRef,
+    RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort,
+    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog,
+    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, StateRef,
+    SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
+    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
+    SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
+    TypedForm, TypedFormRef, decode_actual_event, match_decoded_observation_use,
+    resolve_relation_use_support, standing_from_declared_support,
 };
 
 #[derive(Clone, Default)]
@@ -629,6 +630,50 @@ fn support_environment_identity_preserves_candidate_support_without_closure() {
     assert!(matches!(
         resolve_relation_use_support(context_mismatched_use, &fixture.catalog),
         Err(RelationUseSupportError::ContextMismatch("scope"))
+    ));
+    let root = fixture.catalog.insert_claim(
+        ClaimArtifact::new(
+            artifact(0x5a),
+            fixture.query,
+            vec![fixture.decoded_raw],
+            vec![path],
+            scope,
+            applicability,
+            ClaimStatus::Checked,
+        )
+        .expect("root claim must canonicalize"),
+    );
+    let standing_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Claim(claim),
+            vec![root.as_artifact_ref()],
+            vec![fixture.decoded_raw],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("standing environment must canonicalize"),
+    );
+    let closure = DeclaredSupportClosure::new(standing_environment, vec![root], true, true, false);
+    let standing = standing_from_declared_support(vec![root], &[closure], &fixture.catalog)
+        .expect("checked declared closure must enter the existing least fixed point");
+    assert!(standing.contains(claim));
+    assert!(matches!(
+        standing_from_declared_support(
+            vec![root],
+            &[DeclaredSupportClosure::new(
+                standing_environment,
+                vec![claim],
+                true,
+                true,
+                false,
+            )],
+            &fixture.catalog,
+        ),
+        Err(DeclaredStandingError::PremiseNotNamedByEnvironment { premise, .. })
+            if premise == claim
     ));
     let mismatched_context = SupportEnvironmentArtifact::new(
         SupportSubjectRef::Claim(claim),
