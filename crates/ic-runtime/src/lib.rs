@@ -4,11 +4,11 @@
 //! dispatches an operator, records an actuality event, decodes a raw return, or selects a
 //! raw-return-dependent continuation; those contracts remain Phase 6/7 work.
 
-use std::{collections::BTreeMap, fmt, str::FromStr};
+use std::collections::BTreeMap;
 
+pub use ic_core::ProbeOperatorRef;
 use ic_core::{
-    ArtifactError, ArtifactRef, RawReturnRef, TypeCatalog, TypeCheckError, TypeError, TypeRef,
-    TypedForm, TypedFormRef,
+    RawReturnRef, TypeCatalog, TypeCheckError, TypeError, TypeRef, TypedForm, TypedFormRef,
 };
 use thiserror::Error;
 
@@ -25,36 +25,6 @@ impl BlockTarget {
     #[must_use]
     pub const fn value(self) -> u32 {
         self.0
-    }
-}
-
-/// An opaque, separately admitted probe-operator identity.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct ProbeOperatorRef(ArtifactRef);
-
-impl ProbeOperatorRef {
-    #[must_use]
-    pub const fn from_artifact_ref(reference: ArtifactRef) -> Self {
-        Self(reference)
-    }
-
-    #[must_use]
-    pub const fn as_artifact_ref(self) -> ArtifactRef {
-        self.0
-    }
-}
-
-impl fmt::Display for ProbeOperatorRef {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(formatter)
-    }
-}
-
-impl FromStr for ProbeOperatorRef {
-    type Err = ArtifactError;
-
-    fn from_str(value: &str) -> Result<Self, Self::Err> {
-        ArtifactRef::from_str(value).map(Self)
     }
 }
 

@@ -93,6 +93,12 @@ rejected. Stepping a probe only creates a suspension, and resumption carries a `
 without dispatching, decoding, or treating it as an actual event. Probe operator schemas and
 raw-return-dependent continuation selection remain later contracts.
 
+`ProbeOperator` now has a canonical compiled-operator identity shared with the runtime probe
+terminator. Its explicit fields are query, boundary chart, active view, backend, executable-code,
+return type, decoder contract, probe contract, and compiler version. The artifact remains distinct
+from surface plans, backend requests, and raw returns; creating or naming it does not render a
+request, dispatch a backend, decode a result, or create an actual event.
+
 Phase 4 has begun with canonical `DeterminationPresentation` artifacts. A presentation records
 one distinction orientation, typed source, claim-local relational-web reference, binding, scope,
 applicability, grain, horizon, support, and optional predecessor presentation. It is neither a

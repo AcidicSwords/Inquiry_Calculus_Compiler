@@ -79,6 +79,11 @@ The protected difference is visible in the accepted sources:
   rejects presently unguarded branch-only recurrence. A probe step suspends and a resumption
   carries a `RawReturnRef`; neither step calls an operator, records an event, decodes a result, or
   chooses a raw-return-dependent continuation.
+- `ProbeOperator` is a canonical compiled-operator artifact shared by the runtime's `Probe`
+  terminator. It records query, boundary chart, active view, backend, executable-code, return
+  type, decoder contract, probe contract, and compiler-version identities. It is deliberately
+  distinct from a backend request and raw return, and does not validate, render, dispatch, decode,
+  or actualize any field.
 - `ResolutionPath` now records typed identity, decoder, relation, composition, and program route
   syntax with exact source/target type composition. Its checker validates only types and composed
   interfaces; it does not run or admit the referenced route, derive a decoder result, or create a

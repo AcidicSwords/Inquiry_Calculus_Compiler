@@ -13,6 +13,7 @@ mod factorization;
 mod formula;
 mod iprog;
 mod negation;
+mod probe;
 mod query;
 mod raw_return;
 mod recovery;
@@ -64,6 +65,10 @@ pub use iprog::{
 pub use negation::{
     NEGATION_USE_ARTIFACT_KIND, NEGATION_USE_SCHEMA_VERSION, NegationCatalog, NegationCoverage,
     NegationUse, NegationUseCheckError, NegationUseError, NegationUseRef,
+};
+pub use probe::{
+    PROBE_OPERATOR_ARTIFACT_KIND, PROBE_OPERATOR_SCHEMA_VERSION, ProbeOperator, ProbeOperatorError,
+    ProbeOperatorRef,
 };
 pub use query::{
     CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,
