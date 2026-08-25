@@ -224,6 +224,11 @@ standing premise before translating it into the existing least-fixed-point input
 checker success, and invalidation remain an explicit assessment; it is not proof, warrant, or an
 independent-ingress validator.
 
+Phase 14 now has `DeclaredFiniteGeneratorRegime`, a derived finite view that keeps declared route
+availability separate from current materialization and from selection. A fresh declared route is
+not evidence of a representation gap, and absence from this finite view is not evidence that no
+lawful route exists.
+
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates
 or is explicitly outside the decoder; an unlisted raw return remains `Unknown`. A direct

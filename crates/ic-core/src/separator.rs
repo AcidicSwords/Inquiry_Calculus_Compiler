@@ -5,7 +5,7 @@
 //! generator, policy, answer, or representation-gap verdict: those require their own admitted
 //! evaluators and evidence routes.
 
-use std::{fmt, str::FromStr};
+use std::{collections::BTreeSet, fmt, str::FromStr};
 
 use thiserror::Error;
 
@@ -59,6 +59,89 @@ artifact_reference!(ProtectedClassRef);
 artifact_reference!(StructureViewRef);
 artifact_reference!(GeneratorRegimeRef);
 artifact_reference!(EffectivityRef);
+
+/// A finite, caller-declared generator regime and its currently materialized route identities.
+///
+/// This is a narrow Phase-14 boundary: route membership is declared, not discovered, and the
+/// regime does not choose or execute a route. Its purpose is to retain the distinction between a
+/// route that is available in the declared regime and one that has actually been materialized.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DeclaredFiniteGeneratorRegime {
+    regime: GeneratorRegimeRef,
+    routes: Vec<ArtifactRef>,
+    materialized: BTreeSet<ArtifactRef>,
+}
+
+impl DeclaredFiniteGeneratorRegime {
+    pub fn new(
+        regime: GeneratorRegimeRef,
+        mut routes: Vec<ArtifactRef>,
+        materialized: Vec<ArtifactRef>,
+    ) -> Result<Self, DeclaredFiniteGeneratorRegimeError> {
+        routes.sort_unstable();
+        if let Some(duplicate) = routes
+            .windows(2)
+            .find_map(|pair| (pair[0] == pair[1]).then_some(pair[0]))
+        {
+            return Err(DeclaredFiniteGeneratorRegimeError::DuplicateRoute(
+                duplicate,
+            ));
+        }
+        let materialized: BTreeSet<_> = materialized.into_iter().collect();
+        if let Some(route) = materialized.iter().find(|route| !routes.contains(route)) {
+            return Err(DeclaredFiniteGeneratorRegimeError::MaterializedRouteOutsideRegime(*route));
+        }
+        Ok(Self {
+            regime,
+            routes,
+            materialized,
+        })
+    }
+
+    #[must_use]
+    pub const fn regime(&self) -> GeneratorRegimeRef {
+        self.regime
+    }
+    #[must_use]
+    pub fn routes(&self) -> &[ArtifactRef] {
+        &self.routes
+    }
+    #[must_use]
+    pub const fn materialized(&self) -> &BTreeSet<ArtifactRef> {
+        &self.materialized
+    }
+
+    /// Distinguishes materialized, fresh-within-regime, and unavailable route identities.
+    #[must_use]
+    pub fn route_status(&self, route: ArtifactRef) -> DeclaredRouteMaterialization {
+        if !self.routes.contains(&route) {
+            DeclaredRouteMaterialization::OutsideDeclaredRegime
+        } else if self.materialized.contains(&route) {
+            DeclaredRouteMaterialization::Materialized
+        } else {
+            DeclaredRouteMaterialization::FreshWithinRegime
+        }
+    }
+}
+
+/// Materialization state relative only to one caller-declared finite regime.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum DeclaredRouteMaterialization {
+    /// The route is one of the declared candidates and has been materialized.
+    Materialized,
+    /// The route is declared available but not currently materialized.
+    FreshWithinRegime,
+    /// No statement about expressibility follows from absence from this declared finite set.
+    OutsideDeclaredRegime,
+}
+
+#[derive(Debug, Error)]
+pub enum DeclaredFiniteGeneratorRegimeError {
+    #[error("declared generator regime repeats route {0}")]
+    DuplicateRoute(ArtifactRef),
+    #[error("materialized route {0} is not in the declared generator regime")]
+    MaterializedRouteOutsideRegime(ArtifactRef),
+}
 
 /// One declared generic residual to be separated by a later admitted inquiry route.
 ///

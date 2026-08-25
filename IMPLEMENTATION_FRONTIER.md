@@ -341,6 +341,11 @@ declared standing premise before translating it into the existing least-fixed-po
 applicability/check/invalidation conditions remain caller declarations; it is not a warrant or
 independent-ingress validator.
 
+Phase 14 now has a finite declared generator-regime view separating currently materialized routes
+from fresh routes already in the declared regime and from routes outside it. It does not certify
+lawfulness, completeness, or a representation gap; exact no-separator and independently
+witnessed expressibility remain future questions.
+
 ## Known later questions
 
 These are recorded now but do not outrank the Phase 4 determination boundary:

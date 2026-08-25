@@ -1,5 +1,6 @@
 use ic_core::{
-    ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef, EffectivityRef,
+    ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef, DeclaredFiniteGeneratorRegime,
+    DeclaredFiniteGeneratorRegimeError, DeclaredRouteMaterialization, EffectivityRef,
     GeneratorRegimeRef, GrainRef, HorizonRef, ProtectedClassRef, ProtectedCompletionFieldRef,
     SEPARATOR_PROBLEM_ARTIFACT_KIND, SEPARATOR_PROBLEM_SCHEMA_VERSION, SeparatorProblem,
     SeparatorProblemError, StructureViewRef,
@@ -103,5 +104,36 @@ fn separator_problem_rejects_malformed_and_wrong_domain_encodings() {
     assert!(matches!(
         SeparatorProblem::from_envelope(&wrong_schema),
         Err(SeparatorProblemError::UnsupportedSchemaVersion(_))
+    ));
+}
+
+#[test]
+fn declared_finite_generator_regime_keeps_materialization_distinct_from_availability() {
+    let regime = GeneratorRegimeRef::from_artifact_ref(artifact(0x61));
+    let route_a = artifact(0x62);
+    let route_b = artifact(0x63);
+    let routes = DeclaredFiniteGeneratorRegime::new(regime, vec![route_b, route_a], vec![route_a])
+        .expect("declared regime must canonicalize route membership");
+    assert_eq!(routes.routes(), [route_a, route_b]);
+    assert_eq!(
+        routes.route_status(route_a),
+        DeclaredRouteMaterialization::Materialized
+    );
+    assert_eq!(
+        routes.route_status(route_b),
+        DeclaredRouteMaterialization::FreshWithinRegime
+    );
+    assert_eq!(
+        routes.route_status(artifact(0x64)),
+        DeclaredRouteMaterialization::OutsideDeclaredRegime
+    );
+    assert!(matches!(
+        DeclaredFiniteGeneratorRegime::new(regime, vec![route_a, route_a], Vec::new()),
+        Err(DeclaredFiniteGeneratorRegimeError::DuplicateRoute(reference)) if reference == route_a
+    ));
+    assert!(matches!(
+        DeclaredFiniteGeneratorRegime::new(regime, vec![route_a], vec![route_b]),
+        Err(DeclaredFiniteGeneratorRegimeError::MaterializedRouteOutsideRegime(reference))
+            if reference == route_b
     ));
 }
