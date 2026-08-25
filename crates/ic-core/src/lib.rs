@@ -1,7 +1,7 @@
-//! Phase 0 identity infrastructure for Inquiry Calculus.
+//! Canonical identity and structural-checking infrastructure for Inquiry Calculus.
 //!
-//! This crate deliberately does not define Phase 1 semantic types. It only defines
-//! the versioned canonical envelope used to assign stable content identities.
+//! Every persisted semantic artifact uses the versioned canonical envelope to assign a stable
+//! content identity. Individual modules state their phase and semantic limits explicitly.
 
 mod artifact;
 mod boundary;
@@ -115,7 +115,9 @@ pub use probe_contract::{
     ProbeContractRef,
 };
 pub use query::{
-    CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,
+    COMPLETION_CANDIDATE_ARTIFACT_KIND, COMPLETION_CANDIDATE_SCHEMA_VERSION, CompletionCandidate,
+    CompletionCandidateCheckError, CompletionCandidateError, CompletionCandidateRef,
+    CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,
     OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError,
     OpenQueryError, OpenQueryFiberError, OpenQueryPlugError, OpenQueryTransformError, QueryRef,
 };

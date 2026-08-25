@@ -4,13 +4,18 @@ use thiserror::Error;
 
 use crate::{
     ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, DischargeMode, PortBinding,
-    RelationCatalog, RelationRef, RelationUseContext, TypeError, TypeSymbol, TypedFormRef,
+    RelationCatalog, RelationRef, RelationUseContext, TypeCheckError, TypeError, TypeSymbol,
+    TypedFormRef,
 };
 
 /// Canonical artifact kind for data-only open relation questions.
 pub const OPEN_QUERY_ARTIFACT_KIND: &str = "ic.open-query";
 /// Payload schema version for data-only open relation questions.
 pub const OPEN_QUERY_SCHEMA_VERSION: u32 = 1;
+/// Canonical artifact kind for one complete typed filling of an open query.
+pub const COMPLETION_CANDIDATE_ARTIFACT_KIND: &str = "ic.completion-candidate";
+/// Payload schema version for complete typed query fillings.
+pub const COMPLETION_CANDIDATE_SCHEMA_VERSION: u32 = 1;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct QueryRef(ArtifactRef);
@@ -32,6 +37,34 @@ impl fmt::Display for QueryRef {
     }
 }
 impl FromStr for QueryRef {
+    type Err = ArtifactError;
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        ArtifactRef::from_str(value).map(Self)
+    }
+}
+
+/// Stable identity for a complete typed filling of one particular open query.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct CompletionCandidateRef(ArtifactRef);
+
+impl CompletionCandidateRef {
+    #[must_use]
+    pub const fn from_artifact_ref(reference: ArtifactRef) -> Self {
+        Self(reference)
+    }
+    #[must_use]
+    pub const fn as_artifact_ref(self) -> ArtifactRef {
+        self.0
+    }
+}
+
+impl fmt::Display for CompletionCandidateRef {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
+impl FromStr for CompletionCandidateRef {
     type Err = ArtifactError;
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         ArtifactRef::from_str(value).map(Self)
@@ -88,6 +121,201 @@ impl CompletionCandidate {
     #[must_use]
     pub fn bindings(&self) -> &[PortBinding] {
         &self.bindings
+    }
+
+    /// Canonically encodes the query identity and its complete named assignment.
+    ///
+    /// A completion candidate is an element of the question's answer carrier. It remains only a
+    /// candidate: this artifact does not evaluate the relation, establish membership in its
+    /// completion fiber, preserve an actual raw return, or make an answer supported.
+    pub fn canonical_payload(&self) -> Result<Vec<u8>, CompletionCandidateError> {
+        let bindings = self.canonical_bindings()?;
+        let mut encoded = Vec::with_capacity(36 + 64 * bindings.len());
+        reference(&mut encoded, self.source.as_artifact_ref());
+        candidate_count(&mut encoded, bindings.len())?;
+        for binding in bindings {
+            candidate_text(&mut encoded, binding.port().as_str())?;
+            reference(&mut encoded, binding.value().as_artifact_ref());
+        }
+        Ok(encoded)
+    }
+
+    pub fn decode_payload(payload: &[u8]) -> Result<Self, CompletionCandidateError> {
+        let mut cursor = Cursor::new(payload);
+        let source = QueryRef::from_artifact_ref(cursor.reference()?);
+        let binding_count = cursor.count()?;
+        let mut bindings = Vec::with_capacity(binding_count);
+        for _ in 0..binding_count {
+            bindings.push(PortBinding::new(
+                cursor.port_name()?,
+                TypedFormRef::from_artifact_ref(cursor.reference()?),
+            ));
+        }
+        if !cursor.finished() {
+            return Err(CompletionCandidateError::TrailingPayloadBytes(
+                cursor.remaining(),
+            ));
+        }
+        let candidate = Self { source, bindings };
+        candidate.canonical_bindings()?;
+        if !candidate.bindings_are_canonical() {
+            return Err(CompletionCandidateError::NonCanonicalBindingOrder);
+        }
+        Ok(candidate)
+    }
+
+    pub fn envelope(&self) -> Result<ArtifactEnvelope, CompletionCandidateError> {
+        Ok(ArtifactEnvelope::from_canonical_payload(
+            ArtifactKind::new(COMPLETION_CANDIDATE_ARTIFACT_KIND)?,
+            COMPLETION_CANDIDATE_SCHEMA_VERSION,
+            self.canonical_payload()?,
+        ))
+    }
+
+    pub fn completion_candidate_ref(
+        &self,
+    ) -> Result<CompletionCandidateRef, CompletionCandidateError> {
+        Ok(CompletionCandidateRef::from_artifact_ref(
+            self.envelope()?.artifact_ref()?,
+        ))
+    }
+
+    pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, CompletionCandidateError> {
+        if envelope.kind().as_str() != COMPLETION_CANDIDATE_ARTIFACT_KIND {
+            return Err(CompletionCandidateError::UnexpectedArtifactKind {
+                expected: COMPLETION_CANDIDATE_ARTIFACT_KIND,
+                actual: envelope.kind().as_str().to_owned(),
+            });
+        }
+        if envelope.schema_version() != COMPLETION_CANDIDATE_SCHEMA_VERSION {
+            return Err(CompletionCandidateError::UnsupportedSchemaVersion(
+                envelope.schema_version(),
+            ));
+        }
+        Self::decode_payload(envelope.canonical_payload())
+    }
+
+    /// Revalidates that this is a complete well-typed assignment for its named source query.
+    ///
+    /// The check deliberately proves no relation proposition and no resolution result. It is the
+    /// structural answer-carrier boundary needed before a future decoder can represent a
+    /// supported *set* of candidates without coercing arbitrary forms into answers.
+    pub fn check<C: OpenQueryCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), CompletionCandidateCheckError> {
+        let query = catalog
+            .resolve_open_query(self.source)
+            .ok_or(CompletionCandidateCheckError::UnresolvedQuery(self.source))?;
+        let calculated = query.query_ref()?;
+        if calculated != self.source {
+            return Err(
+                CompletionCandidateCheckError::QueryReferenceIdentityMismatch {
+                    reference: self.source,
+                    calculated,
+                },
+            );
+        }
+        query.check(catalog)?;
+        let schema = catalog.resolve_relation_schema(query.relation()).ok_or(
+            CompletionCandidateCheckError::UnresolvedRelation(query.relation()),
+        )?;
+        if schema.relation_ref()? != query.relation() {
+            return Err(
+                CompletionCandidateCheckError::RelationReferenceIdentityMismatch {
+                    reference: query.relation(),
+                    calculated: schema.relation_ref()?,
+                },
+            );
+        }
+        schema.check(catalog)?;
+
+        let bindings = self.canonical_bindings()?;
+        if bindings.len() != schema.ports().len() {
+            return Err(CompletionCandidateCheckError::IncompleteAssignment {
+                expected: schema.ports().len(),
+                actual: bindings.len(),
+            });
+        }
+        for binding in &bindings {
+            let expected = schema
+                .ports()
+                .iter()
+                .find(|port| port.name() == binding.port())
+                .ok_or_else(|| {
+                    CompletionCandidateCheckError::UnknownPort(binding.port().clone())
+                })?;
+            let form = catalog.resolve_typed_form(binding.value()).ok_or(
+                CompletionCandidateCheckError::UnresolvedTypedForm(binding.value()),
+            )?;
+            let calculated = form.typed_form_ref()?;
+            if calculated != binding.value() {
+                return Err(
+                    CompletionCandidateCheckError::TypedFormReferenceIdentityMismatch {
+                        reference: binding.value(),
+                        calculated,
+                    },
+                );
+            }
+            if form.binding() != schema.binding() {
+                return Err(CompletionCandidateCheckError::TypedFormBindingMismatch {
+                    expected: schema.binding(),
+                    actual: form.binding(),
+                });
+            }
+            if form.ty() != expected.ty() {
+                return Err(CompletionCandidateCheckError::PortTypeMismatch {
+                    port: binding.port().clone(),
+                    expected: expected.ty(),
+                    actual: form.ty(),
+                });
+            }
+            form.check(catalog)?;
+        }
+        for bound in query.bound_ports() {
+            let actual = bindings
+                .iter()
+                .find(|binding| binding.port() == bound.port())
+                .expect("a complete checked assignment has every schema port");
+            if actual.value() != bound.value() {
+                return Err(CompletionCandidateCheckError::BoundValueMismatch {
+                    port: bound.port().clone(),
+                    expected: bound.value(),
+                    actual: actual.value(),
+                });
+            }
+        }
+        Ok(())
+    }
+
+    #[must_use]
+    pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
+        let mut references = vec![self.source.as_artifact_ref()];
+        references.extend(
+            self.bindings
+                .iter()
+                .map(|binding| binding.value().as_artifact_ref()),
+        );
+        references
+    }
+
+    fn canonical_bindings(&self) -> Result<Vec<&PortBinding>, CompletionCandidateError> {
+        let mut bindings = self.bindings.iter().collect::<Vec<_>>();
+        bindings.sort_unstable_by(|left, right| left.port().as_str().cmp(right.port().as_str()));
+        for pair in bindings.windows(2) {
+            if pair[0].port() == pair[1].port() {
+                return Err(CompletionCandidateError::DuplicatePort(
+                    pair[0].port().clone(),
+                ));
+            }
+        }
+        Ok(bindings)
+    }
+
+    fn bindings_are_canonical(&self) -> bool {
+        self.bindings
+            .windows(2)
+            .all(|pair| pair[0].port().as_str() < pair[1].port().as_str())
     }
 }
 
@@ -423,6 +651,7 @@ impl OpenQuery {
 
         let mut bindings = self.bound_ports.clone();
         bindings.extend(answers);
+        bindings.sort_unstable_by(|left, right| left.port().as_str().cmp(right.port().as_str()));
         let completed = Self::new(self.relation, bindings.clone(), Vec::new(), self.context);
         completed.check_partition(catalog, false)?;
         Ok(CompletionCandidate {
@@ -458,6 +687,17 @@ fn count(encoded: &mut Vec<u8>, value: usize) -> Result<(), OpenQueryError> {
 }
 fn text(encoded: &mut Vec<u8>, value: &str) -> Result<(), OpenQueryError> {
     count(encoded, value.len())?;
+    encoded.extend_from_slice(value.as_bytes());
+    Ok(())
+}
+fn candidate_count(encoded: &mut Vec<u8>, value: usize) -> Result<(), CompletionCandidateError> {
+    let value =
+        u32::try_from(value).map_err(|_| CompletionCandidateError::CollectionTooLong(value))?;
+    encoded.extend_from_slice(&value.to_be_bytes());
+    Ok(())
+}
+fn candidate_text(encoded: &mut Vec<u8>, value: &str) -> Result<(), CompletionCandidateError> {
+    candidate_count(encoded, value.len())?;
     encoded.extend_from_slice(value.as_bytes());
     Ok(())
 }
@@ -580,6 +820,30 @@ pub enum OpenQueryError {
     UnsupportedSchemaVersion(u32),
 }
 
+/// Errors from canonical completion-candidate identity and decoding.
+#[derive(Debug, Error)]
+pub enum CompletionCandidateError {
+    #[error(transparent)]
+    Artifact(#[from] ArtifactError),
+    #[error(transparent)]
+    Query(#[from] OpenQueryError),
+    #[error("completion-candidate collection is too long: {0} entries")]
+    CollectionTooLong(usize),
+    #[error("completion candidate names port {0} more than once")]
+    DuplicatePort(TypeSymbol),
+    #[error("completion-candidate payload contains noncanonical port ordering")]
+    NonCanonicalBindingOrder,
+    #[error("completion-candidate payload contains {0} trailing bytes")]
+    TrailingPayloadBytes(usize),
+    #[error("expected artifact kind {expected:?}, got {actual:?}")]
+    UnexpectedArtifactKind {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("unsupported completion-candidate schema version {0}")]
+    UnsupportedSchemaVersion(u32),
+}
+
 #[derive(Debug, Error)]
 pub enum OpenQueryCheckError {
     #[error(transparent)]
@@ -622,6 +886,67 @@ pub enum OpenQueryCheckError {
         port: TypeSymbol,
         expected: crate::TypeRef,
         actual: crate::TypeRef,
+    },
+}
+
+/// Errors from checking a complete typed filling against its named open query.
+#[derive(Debug, Error)]
+pub enum CompletionCandidateCheckError {
+    #[error(transparent)]
+    Candidate(#[from] CompletionCandidateError),
+    #[error(transparent)]
+    Query(#[from] OpenQueryError),
+    #[error(transparent)]
+    QueryCheck(#[from] OpenQueryCheckError),
+    #[error(transparent)]
+    Schema(#[from] crate::RelationCheckError),
+    #[error(transparent)]
+    RelationArtifact(#[from] crate::RelationError),
+    #[error(transparent)]
+    TypeArtifact(#[from] TypeError),
+    #[error(transparent)]
+    TypeCheck(#[from] TypeCheckError),
+    #[error("open query {0} is not available from the declared catalog")]
+    UnresolvedQuery(QueryRef),
+    #[error("catalog query {reference} hashes to {calculated}, not its claimed identity")]
+    QueryReferenceIdentityMismatch {
+        reference: QueryRef,
+        calculated: QueryRef,
+    },
+    #[error("relation {0} is not available from the declared catalog")]
+    UnresolvedRelation(RelationRef),
+    #[error("catalog relation {reference} hashes to {calculated}, not its claimed identity")]
+    RelationReferenceIdentityMismatch {
+        reference: RelationRef,
+        calculated: RelationRef,
+    },
+    #[error("completion candidate has {actual} bindings, expected {expected}")]
+    IncompleteAssignment { expected: usize, actual: usize },
+    #[error("completion candidate names unknown port {0}")]
+    UnknownPort(TypeSymbol),
+    #[error("typed form {0} is not available from the declared catalog")]
+    UnresolvedTypedForm(TypedFormRef),
+    #[error("catalog typed form {reference} hashes to {calculated}, not its claimed identity")]
+    TypedFormReferenceIdentityMismatch {
+        reference: TypedFormRef,
+        calculated: TypedFormRef,
+    },
+    #[error("typed form binding {actual} does not match relation binding {expected}")]
+    TypedFormBindingMismatch {
+        expected: crate::BindingVersionRef,
+        actual: crate::BindingVersionRef,
+    },
+    #[error("completion candidate port {port} has type {actual}, expected {expected}")]
+    PortTypeMismatch {
+        port: TypeSymbol,
+        expected: crate::TypeRef,
+        actual: crate::TypeRef,
+    },
+    #[error("completion candidate changes already-bound port {port} from {expected} to {actual}")]
+    BoundValueMismatch {
+        port: TypeSymbol,
+        expected: TypedFormRef,
+        actual: TypedFormRef,
     },
 }
 

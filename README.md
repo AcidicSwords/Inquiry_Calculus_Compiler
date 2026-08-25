@@ -65,8 +65,10 @@ An immutable `RelationUse` records one scoped occurrence, its typed bindings, re
 evidence mode, support, and optional warrant separately from the reusable schema.
 An `OpenQuery` partitions every relation port into an explicitly typed binding or a nonempty
 open section. Checked `Bind` and `Expose` move exactly one port across that boundary while
-leaving a nonempty question. `Plug` can construct a complete typed candidate assignment, but it
-does not evaluate the relation, establish fiber membership, or manufacture actuality.
+leaving a nonempty question. `Plug` can construct a canonical, content-addressed complete typed
+candidate assignment for that question; its checker revalidates the source query, every port,
+type, binding, and already-bound value. It does not evaluate the relation, establish fiber
+membership, manufacture actuality, or make the candidate a supported answer.
 A completion fiber is represented only as a source-query-derived view that revalidates the
 query; it is never collapsed into a selected completion.
 Direct query normalization canonically orders ports by the relation schema and is idempotent;
@@ -80,7 +82,8 @@ declared dependency list, so a continuation has no hidden host-state capture.
 Structural checking revalidates every named type, typed form, open query, environment value, and
 continuation identity; `Return` values and continuations must share the enclosing result type.
 The answer slot remains syntax until Phase 6/7 actuality and resolution provide an explicit
-supported-answer representation. A `CompletionCandidate` is not such an answer. Substitution,
+supported-answer-set representation. A `CompletionCandidate` now has canonical identity as one
+element of the answer carrier, but is not such a supported answer set. Substitution,
 normalization, registered pure operations, and execution remain deferred rather than being
 simulated with an unsupported candidate.
 
@@ -190,10 +193,11 @@ reapplied. This is a persistence and integrity check only; state-transition repl
 return resolution, and accepted-state reconstruction remain later contracts.
 
 Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and
-program routes each preserve their input/output types and referenced route identity. Checking
-revalidates types and exact composition interfaces, including cycle rejection. It does not run a
-decoder, relation, or program; name a supported answer set; resolve a raw return; or turn a
-partial result into an exact answer.
+program routes each preserve their input/output types and referenced route identity. A complete
+query filling now has independent canonical identity before it is admitted into any result.
+Checking revalidates types and exact composition interfaces, including cycle rejection. It does
+not run a decoder, relation, or program; name a supported answer set; resolve a raw return; or
+turn a partial result into an exact answer.
 
 The reusable exact finite `DetermineThrough` facility implements the canonical kernel-inclusion
 test for deterministic, fully covered signatures sharing binding, scope, applicability, grain,

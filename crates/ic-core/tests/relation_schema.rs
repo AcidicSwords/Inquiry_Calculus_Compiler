@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
+    CompletionCandidate, CompletionCandidateCheckError, CompletionCandidateError,
     DeclaredIncidenceError, DepartureCatalog, DepartureWitness, DepartureWitnessCheckError,
     DepartureWitnessRef, DeterminationCatalog, DeterminationPresentation,
     DeterminationPresentationRef, DischargeMode, DistinctionRef, ExactFiniteSignature,
@@ -2219,5 +2220,128 @@ fn an_exterior_claim_must_name_an_incidence_its_own_use_declares() {
     assert!(matches!(
         check_declared_incidence(&claim, &foreign, &catalog),
         Err(DeclaredIncidenceError::ExtensionIsForAnotherUse { .. })
+    ));
+}
+
+#[test]
+fn completion_candidate_has_canonical_answer_carrier_identity_without_supporting_it() {
+    let mut catalog = Catalog::default();
+    let binding = binding(0x81);
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let known = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x82)));
+    let alternative_known = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x83)));
+    let answer = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x84)));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("known", unit), port("answer", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x85),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let query = OpenQuery::new(
+        relation,
+        vec![PortBinding::new(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            known,
+        )],
+        vec![OpenPort::new(
+            TypeSymbol::new("answer").expect("port name must be valid"),
+            DischargeMode::Probe,
+        )],
+        RelationUseContext::new(
+            ScopeRef::from_artifact_ref(artifact(0x86)),
+            ApplicabilityRef::from_artifact_ref(artifact(0x87)),
+            GrainRef::from_artifact_ref(artifact(0x88)),
+            HorizonRef::from_artifact_ref(artifact(0x89)),
+            DischargeMode::Probe,
+            SupportRef::from_artifact_ref(artifact(0x8a)),
+            None,
+        ),
+    );
+    catalog.insert_query(query.clone());
+    let completion = query
+        .plug(
+            vec![PortBinding::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                answer,
+            )],
+            &catalog,
+        )
+        .expect("well-typed filling must be constructible");
+
+    let envelope = completion.envelope().expect("candidate must encode");
+    assert_eq!(
+        CompletionCandidate::from_envelope(&envelope).expect("candidate must decode"),
+        completion
+    );
+    assert!(completion.check(&catalog).is_ok());
+    assert_eq!(
+        completion.referenced_artifacts(),
+        vec![
+            query
+                .query_ref()
+                .expect("query must hash")
+                .as_artifact_ref(),
+            answer.as_artifact_ref(),
+            known.as_artifact_ref(),
+        ]
+    );
+
+    let changed_query = OpenQuery::new(
+        relation,
+        vec![PortBinding::new(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            known,
+        )],
+        vec![OpenPort::new(
+            TypeSymbol::new("answer").expect("port name must be valid"),
+            DischargeMode::Check,
+        )],
+        *query.context(),
+    );
+    let changed_completion = changed_query
+        .plug(
+            vec![PortBinding::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                answer,
+            )],
+            &catalog,
+        )
+        .expect("same values under a different question remain a candidate");
+    assert_ne!(
+        completion
+            .completion_candidate_ref()
+            .expect("candidate must hash"),
+        changed_completion
+            .completion_candidate_ref()
+            .expect("candidate must hash")
+    );
+
+    let mut forged_payload = completion.canonical_payload().expect("payload must encode");
+    let final_reference = forged_payload.len() - 32;
+    forged_payload[final_reference..]
+        .copy_from_slice(alternative_known.as_artifact_ref().as_bytes());
+    let forged = CompletionCandidate::decode_payload(&forged_payload)
+        .expect("well-formed forged payload must still decode");
+    assert!(matches!(
+        forged.check(&catalog),
+        Err(CompletionCandidateCheckError::BoundValueMismatch { .. })
+    ));
+    assert!(matches!(
+        CompletionCandidate::decode_payload(&forged_payload[..forged_payload.len() - 1]),
+        Err(CompletionCandidateError::Query(_))
+    ));
+
+    let canonical_payload = completion.canonical_payload().expect("payload must encode");
+    let prefix = 36; // QueryRef plus the binding count.
+    let first_length = 4 + "answer".len() + 32;
+    let mut noncanonical = canonical_payload[..prefix].to_vec();
+    noncanonical.extend_from_slice(&canonical_payload[prefix + first_length..]);
+    noncanonical.extend_from_slice(&canonical_payload[prefix..prefix + first_length]);
+    assert!(matches!(
+        CompletionCandidate::decode_payload(&noncanonical),
+        Err(CompletionCandidateError::NonCanonicalBindingOrder)
     ));
 }

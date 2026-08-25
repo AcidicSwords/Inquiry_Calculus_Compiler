@@ -6,7 +6,8 @@ Reciprocal-Boundary / Positive-Negation Edition.
 **Accepted implementation state:** Phase 3 first-order source-program syntax/checking, Phase 4
 determination-presentation/departure/negation-declaration identity checking, and Phase 5
 structural runtime control-flow checking pass on 2026-08-25. Phase 7 typed resolution-path
-identity and interface composition checking also pass. Phase 6 now has canonical ordinary-event
+identity and interface composition checking also pass. A complete typed query filling now has a
+canonical checked identity, but not support status. Phase 6 now has canonical ordinary-event
 identity and append-only journal linkage; supported answer materialization remains reserved for
 the Phase 6/7 actuality-and-resolution boundary.
 
@@ -39,8 +40,11 @@ The protected difference is visible in the accepted sources:
 - The relational web is deliberately not inferred from every retained fact or every relation
   mentioning the source. The canonical reversible default remains the support/dependency web of
   the specific standing claim; its exact admission/minimization is a research gate.
-- A `CompletionCandidate` remains only a full typed query filling. It does not establish relation
-  membership, support, actuality, a resolution path, or a selected answer.
+- A `CompletionCandidate` is now a canonical content-addressed full typed query filling. Its
+  checker revalidates its named source query, complete port assignment, types, binding, and
+  already-bound values, so the same forms under a different question retain a different identity.
+  It does not establish relation membership, support, actuality, a resolution path, or a selected
+  answer.
 - Determination checking rehashes and checks the typed source, requires its binding to match the
   presentation, and recursively checks an optional predecessor. An ancestry edge may change the
   web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
@@ -285,9 +289,10 @@ These are recorded now but do not outrank the Phase 4 determination boundary:
   web of the standing source determination, with exact scope, applicability, grain,
   horizon, version, and provenance, is the smallest lawful
   `DeterminationPresentation`; keep later minimization reversible.
-- **Phase 3/7 answer materialization:** retain the `Ask` answer binder as first-order syntax
-  until the Phase 6 actuality and Phase 7 resolution/fiber contracts supply a supported answer
-  representation. Do not coerce a `CompletionCandidate` into an answer, perform substitution,
+- **Phase 3/7 answer materialization:** canonical complete candidates now represent individual
+  elements of an answer carrier, but retain the `Ask` answer binder as first-order syntax until
+  the Phase 6 actuality and Phase 7 resolution/fiber contracts supply a supported answer-*set*
+  representation. Do not coerce a `CompletionCandidate` into support, perform substitution,
   select a branch, or claim normalization based on it.
 - **Phase 4 reciprocal core:** implement positive departure, oriented and tagged
   `NegationUse`, distinct semantic/execution coverage, same-use return fibers,
@@ -363,7 +368,8 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
 - Direct open queries retain only a typed complete port partition with a nonempty open section;
   they do not execute relations or claim completion fibers. Checked `Bind` and `Expose` move
   one port only while preserving that invariant.
-- Plugged candidate assignments preserve query provenance and complete typed bindings, but have
+- Plugged candidate assignments have canonical identity, preserve query provenance and complete
+  typed bindings, and revalidate their source query, types, binding, and fixed values; they have
   no semantic membership, actuality, support, or warrant status.
 - CompletionFiberView is a source-query-derived, revalidated view only; it neither enumerates
   the fiber nor identifies any candidate as a member.
