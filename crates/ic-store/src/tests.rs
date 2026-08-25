@@ -1,4 +1,4 @@
-use ic_core::{ArtifactKind, ArtifactRef};
+use ic_core::{ArtifactKind, ArtifactRef, BindingVersionRef, TyIR, TypeArtifact};
 
 use super::*;
 
@@ -62,6 +62,54 @@ async fn insertion_rejects_reference_mismatch() {
         store.insert_at(wrong_ref, &artifact).await,
         Err(StoreError::ReferenceMismatch { .. })
     ));
+}
+
+#[tokio::test]
+async fn referencing_insert_requires_declared_dependencies_before_commit() {
+    let store = migrated_store().await;
+    let binding_artifact = envelope(b"binding-v1");
+    let binding_ref = binding_artifact
+        .artifact_ref()
+        .expect("binding fixture must hash");
+    let type_artifact = TypeArtifact::new(
+        BindingVersionRef::from_artifact_ref(binding_ref),
+        TyIR::Unit,
+    );
+    let type_envelope = type_artifact.envelope().expect("type fixture must encode");
+    let type_ref = type_envelope
+        .artifact_ref()
+        .expect("type fixture must hash");
+
+    assert!(matches!(
+        store
+            .insert_referencing(&type_envelope, &type_artifact.referenced_artifacts())
+            .await,
+        Err(StoreError::MissingReferencedArtifact(reference)) if reference == binding_ref
+    ));
+    assert_eq!(
+        store.get(type_ref).await.expect("fetch must pass"),
+        None,
+        "a failed dependency check must not insert the dependent artifact"
+    );
+
+    store
+        .insert(&binding_artifact)
+        .await
+        .expect("dependency insert must pass");
+    assert_eq!(
+        store
+            .insert_referencing(&type_envelope, &type_artifact.referenced_artifacts())
+            .await
+            .expect("dependency-complete type insert must pass"),
+        type_ref
+    );
+    assert_eq!(
+        store
+            .insert_referencing(&type_envelope, &type_artifact.referenced_artifacts())
+            .await
+            .expect("duplicate dependency-complete type insert must pass"),
+        type_ref
+    );
 }
 
 #[tokio::test]

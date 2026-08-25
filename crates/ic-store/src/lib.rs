@@ -1,8 +1,9 @@
-//! Phase 0 SQLite persistence for immutable canonical artifacts.
+//! Immutable SQLite persistence for canonical artifacts.
 //!
-//! This crate intentionally contains no event journal or later-phase semantic state.
+//! The store has no event journal or later-phase semantic state. Referencing artifacts
+//! are admitted only through an explicit dependency list; opaque payloads are not parsed.
 
-use std::str::FromStr;
+use std::{collections::BTreeSet, str::FromStr};
 
 use ic_core::{ArtifactEnvelope, ArtifactError, ArtifactRef};
 use sqlx::{
@@ -49,6 +50,23 @@ impl ArtifactStore {
         Ok(artifact_ref)
     }
 
+    /// Inserts an envelope after confirming that all declared dependencies already exist.
+    ///
+    /// References are supplied by the typed artifact constructor, never inferred from an
+    /// opaque payload. The presence checks and insert share one transaction, so a failed
+    /// dependency check cannot leave a partially inserted referencing artifact behind.
+    #[tracing::instrument(skip(self, envelope, references))]
+    pub async fn insert_referencing(
+        &self,
+        envelope: &ArtifactEnvelope,
+        references: &[ArtifactRef],
+    ) -> Result<ArtifactRef, StoreError> {
+        let artifact_ref = envelope.artifact_ref()?;
+        self.insert_at_referencing(artifact_ref, envelope, references)
+            .await?;
+        Ok(artifact_ref)
+    }
+
     /// Inserts an envelope only if its calculated identity matches `expected`.
     ///
     /// Repeating an identical insertion is a no-op. Existing different bytes under the
@@ -59,6 +77,17 @@ impl ArtifactStore {
         expected: ArtifactRef,
         envelope: &ArtifactEnvelope,
     ) -> Result<(), StoreError> {
+        self.insert_at_referencing(expected, envelope, &[]).await
+    }
+
+    /// Inserts an envelope at `expected` after checking its explicit dependencies.
+    #[tracing::instrument(skip(self, envelope, references), fields(artifact_ref = %expected))]
+    pub async fn insert_at_referencing(
+        &self,
+        expected: ArtifactRef,
+        envelope: &ArtifactEnvelope,
+        references: &[ArtifactRef],
+    ) -> Result<(), StoreError> {
         let calculated = envelope.artifact_ref()?;
         if expected != calculated {
             return Err(StoreError::ReferenceMismatch {
@@ -68,24 +97,38 @@ impl ArtifactStore {
         }
 
         let encoded = envelope.encode()?;
+        let mut transaction = self.pool.begin().await?;
+        let unique_references: BTreeSet<_> = references.iter().copied().collect();
+        for reference in unique_references {
+            let exists: Option<i64> =
+                sqlx::query_scalar("SELECT 1 FROM artifacts WHERE artifact_ref = ?")
+                    .bind(reference.as_bytes().as_slice())
+                    .fetch_optional(&mut *transaction)
+                    .await?;
+            if exists.is_none() {
+                return Err(StoreError::MissingReferencedArtifact(reference));
+            }
+        }
+
         sqlx::query(
             "INSERT OR IGNORE INTO artifacts (artifact_ref, canonical_envelope) VALUES (?, ?)",
         )
         .bind(expected.as_bytes().as_slice())
         .bind(&encoded)
-        .execute(&self.pool)
+        .execute(&mut *transaction)
         .await?;
 
         let stored: Vec<u8> =
             sqlx::query_scalar("SELECT canonical_envelope FROM artifacts WHERE artifact_ref = ?")
                 .bind(expected.as_bytes().as_slice())
-                .fetch_one(&self.pool)
+                .fetch_one(&mut *transaction)
                 .await?;
 
         if stored != encoded {
             return Err(StoreError::ReferenceConflict(expected));
         }
 
+        transaction.commit().await?;
         Ok(())
     }
 
@@ -142,6 +185,9 @@ pub enum StoreError {
 
     #[error("different bytes already exist under artifact reference {0}")]
     ReferenceConflict(ArtifactRef),
+
+    #[error("referenced artifact {0} must be present before inserting the dependent artifact")]
+    MissingReferencedArtifact(ArtifactRef),
 
     #[error("stored envelope for {artifact_ref} is corrupt")]
     CorruptArtifact {

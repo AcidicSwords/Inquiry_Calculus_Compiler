@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-08-25
 **Standing semantics:** Inquiry Calculus v1.1, Successor Reciprocal-Boundary / Positive-Negation Edition
-**Implemented boundary:** Phase 0 only
+**Implemented boundary:** Phase 1 typed-form and binding-identity kernel
 
 Passing means only that the named executable fixture distinguishes its stated behavior.
 It does not imply completion of a later phase or of the full v1.1 specification.
@@ -24,11 +24,23 @@ or passing.
 | P0-STORE-004 corruption detection on read | PASS | `fetch_detects_corrupt_envelope_and_reference` |
 | P0-GATE-001 formatting/check/clippy/tests | PASS | local Phase 0 gate run on 2026-08-24 |
 
+## Demonstrated Phase 1 fixtures
+
+| Fixture | Status | Witness |
+|---|---|---|
+| P1-TY-001 canonical type grammar round trip | PASS | `type_identity::canonical_type_grammar_round_trips_and_domain_separates` |
+| P1-TY-002 stable named-type byte/hash vector | PASS | `fixtures/types/type-v1-named.json` |
+| P1-TY-003 `Prog(A)` and unary `Code(A)` domain separation | PASS | `canonical_type_grammar_round_trips_and_domain_separates` |
+| P1-TY-004 malformed type and typed-form encoding rejection | PASS | `rejects_malformed_type_and_typed_form_encodings` |
+| P1-TY-005 binding, child identity, and dependent-family checks | PASS | `checks_binding_scope_children_and_dependent_family_domain` |
+| P1-FORM-001 typed-form declaration canonical identity and binding scope | PASS | `checks_binding_scope_children_and_dependent_family_domain` |
+| P1-STORE-001 explicit reference dependency transaction | PASS | `referencing_insert_requires_declared_dependencies_before_commit` |
+
 ## Pending specification and plan categories
 
 | Category | Status | First planned phase |
 |---|---|---|
-| Typed forms, typed reification, and type verification | PENDING | Phase 1 |
+| Typed forms, typed reification, and type verification | PARTIAL | Phase 1: canonical type artifacts, typed-form declarations, and structural checks pass; binding-native term/reification semantics remain pending |
 | Relations, open ports, partial binding, and question kernels | PENDING | Phase 2 |
 | First-order programs and proposal/actuality/authority separation | PENDING | Phase 3 |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4 |

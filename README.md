@@ -3,9 +3,9 @@
 This repository contains the Rust reference implementation of Inquiry Calculus v1.1,
 including the adopted **Successor Reciprocal-Boundary / Positive-Negation Edition**.
 The semantic authority has advanced, but the executable implementation remains at
-**Phase 0**: repository authority, canonical artifact identity, and the initial
-immutable-artifact persistence boundary. No Phase 1 semantic type system is
-implemented yet.
+**Phase 1**: repository authority, canonical artifact identity, immutable-artifact
+persistence, binding-scoped type artifacts, and typed-form declarations. Relation,
+term, reification, program, event, and standing semantics are not implemented yet.
 
 ## Authority by question
 
@@ -34,13 +34,26 @@ evidence; they are not coequal forward authority.
 
 ## Workspace
 
-- `ic-core`: canonical artifact envelopes and content references.
-- `ic-store`: SQLite migrations and verified immutable artifact storage.
+- `ic-core`: canonical artifact envelopes, binding-scoped `TyIR`, typed-form
+  declarations, canonical identity, and structural type checking.
+- `ic-store`: SQLite migrations, verified immutable artifact storage, and transactional
+  insertion of explicitly declared artifact dependencies.
 - `ic-runtime`: reserved package boundary; no runtime semantics yet.
 - `ic-cli`: reserved binary boundary; no command surface yet.
 
 The initial implementation is single-process and uses one authoritative SQLite writer.
 Semantic identities never depend on SQLite row IDs or filesystem locations.
+
+The Phase 1 grammar follows the canonical v1.1 semantics: binary product/sum,
+`Prog(A)`, and unary `Code(A)`. A binding-local named type carries its immutable binding
+and version identity. `Int`, `Text`, `Bytes`, n-ary product/sum, and input/output
+`Code` remain unadopted plan candidates rather than silently assigned semantic identity.
+Dependent `Sigma`/`Pi` types preserve an explicit checked family reference; the
+binding-native family language and form reification remain later work.
+
+When an artifact declares references, the caller supplies those references explicitly
+to the store. The store checks their presence in the same transaction as the insert;
+it never discovers references by parsing an opaque payload.
 
 ## Checks
 
