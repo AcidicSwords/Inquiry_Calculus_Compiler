@@ -249,6 +249,13 @@ The protected difference is visible in the accepted sources:
   candidate. It neither supplies resource facts, generates candidates, establishes supplied-set
   exhaustiveness, certifies exact input coverage/support/applicability, nor claims global minima,
   impossibility, or policy selection.
+- `SeparatorProblem` now has canonical identity for the plan's generic residual boundary:
+  protected completion field, optional target class, binding, grain, horizon, available
+  structure, generator regime, and effectivity. It domain-separates each field and exposes its
+  declared dependencies for transactional storage, but does not establish that a residual exists,
+  generate or schedule a question, decide no-separator/representation-gap, or make a working
+  generator exhaustive. Its opaque regime/structure/effectivity roles await the Phase 12/14
+  contracts that give them evaluators.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

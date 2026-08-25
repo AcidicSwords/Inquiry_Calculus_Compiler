@@ -29,6 +29,7 @@ mod relation_expr;
 mod relation_use;
 mod resolution;
 mod seed;
+mod separator;
 mod sixfold;
 mod standing;
 mod ty;
@@ -143,6 +144,11 @@ pub use resolution::{
     ResolutionPathRef,
 };
 pub use seed::{SeedReorientation, SeedReorientationError};
+pub use separator::{
+    EffectivityRef, GeneratorRegimeRef, ProtectedClassRef, ProtectedCompletionFieldRef,
+    SEPARATOR_PROBLEM_ARTIFACT_KIND, SEPARATOR_PROBLEM_SCHEMA_VERSION, SeparatorProblem,
+    SeparatorProblemError, SeparatorProblemRef, StructureViewRef,
+};
 pub use sixfold::{GammaError, ReciprocalOccurrence, ReciprocalOccurrenceError, RoleComparison};
 pub use standing::{ClaimRef, Standing, StandingProblem, SupportEnvironment, standing};
 pub use ty::{
