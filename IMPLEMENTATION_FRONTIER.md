@@ -64,6 +64,12 @@ The protected difference is visible in the accepted sources:
   observed pair is `NoWitness`; either unknown input is `Unknown`. It does not type-check values,
   admit the table as standing, prove relevance/coverage/support, connect to a relation use, or
   establish departure/exteriority.
+- The derived `check_typed_finite_incompatibility` checker carries `TypedFormRef` values and
+  resolves, rehashes, and type-checks each declared table member plus both observed forms. It
+  permits distinct source/candidate types, returns `NoWitness` for an unlisted well-typed pair,
+  retains `Unknown` for a missing value, and rejects forged or invalid declarations explicitly.
+  It does not actualize observations, make the table standing, prove incompatibility relevance,
+  coverage, support, or non-circularity, link to a relation use, or establish departure/exteriority.
 - `NegationUse` now records one distinct oriented relation-use declaration, its source
   determination, candidate field, structural soundness-program reference, semantic-coverage
   declaration, indexed context, and provenance. Its checker rejects a different presentation

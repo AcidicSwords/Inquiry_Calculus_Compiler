@@ -61,7 +61,10 @@ pub use factorization::{
 pub use finite_cell::{
     FiniteCellComparison, FiniteCellError, FiniteCellSeparator, FiniteIncompatibilityError,
     FiniteIncompatibilityResult, FiniteIncompatibilityTable, FiniteIncompatibilityWitness,
-    FiniteObservation, check_finite_incompatibility, compare_finite_observation_cells,
+    FiniteObservation, FiniteTypedObservationCatalog, TypedFiniteIncompatibilityError,
+    TypedFiniteIncompatibilityResult, TypedFiniteIncompatibilityTable,
+    TypedFiniteIncompatibilityWitness, TypedFiniteObservation, check_finite_incompatibility,
+    check_typed_finite_incompatibility, compare_finite_observation_cells,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,

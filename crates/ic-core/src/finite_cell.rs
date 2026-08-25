@@ -9,7 +9,9 @@ use std::collections::BTreeSet;
 
 use thiserror::Error;
 
-use crate::ArtifactRef;
+use crate::{
+    ArtifactRef, FormulaCatalog, TypeCatalog, TypeCheckError, TypeError, TypedForm, TypedFormRef,
+};
 
 /// One coordinate of a finite represented observation.
 ///
@@ -219,5 +221,210 @@ pub enum FiniteIncompatibilityError {
     DuplicatePair {
         source_value: ArtifactRef,
         candidate_value: ArtifactRef,
+    },
+}
+
+/// The minimal catalog needed to resolve a finite typed observation without making that
+/// observation a formula, a relation result, or an actual event.
+pub trait FiniteTypedObservationCatalog: TypeCatalog {
+    /// Resolves a typed-form declaration by its claimed stable identity.
+    fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm>;
+}
+
+impl<C: FormulaCatalog + ?Sized> FiniteTypedObservationCatalog for C {
+    fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm> {
+        FormulaCatalog::resolve_typed_form(self, reference)
+    }
+}
+
+/// One finite observation whose established value is a checked typed-form declaration.
+///
+/// `Unknown` remains distinct from every typed value. It is not an observation result, a
+/// negative answer, or evidence that a source or candidate lies inside a determination.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum TypedFiniteObservation {
+    /// A value represented by a typed-form declaration.
+    Observed(TypedFormRef),
+    /// The value has not been established through the declared route.
+    Unknown,
+}
+
+/// One positively declared ordered incompatible pair of checked typed-form declarations.
+///
+/// This witness establishes only membership in its caller-declared finite table after both
+/// declarations have been resolved, rehashed, and type-checked. It is not a standing
+/// incompatibility relation, support, relevance, coverage, or departure certificate.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct TypedFiniteIncompatibilityWitness {
+    source_value: TypedFormRef,
+    candidate_value: TypedFormRef,
+}
+
+impl TypedFiniteIncompatibilityWitness {
+    /// Returns the source typed-form declaration.
+    #[must_use]
+    pub const fn source_value(self) -> TypedFormRef {
+        self.source_value
+    }
+
+    /// Returns the candidate typed-form declaration.
+    #[must_use]
+    pub const fn candidate_value(self) -> TypedFormRef {
+        self.candidate_value
+    }
+}
+
+/// A finite ordered table of incompatibility pairs whose values must be checked typed forms.
+///
+/// The two sides may have different declared types: the canonical departure contract permits
+/// observations into distinct codomains. This table does not itself admit a cross-type relation.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct TypedFiniteIncompatibilityTable {
+    pairs: BTreeSet<(TypedFormRef, TypedFormRef)>,
+}
+
+impl TypedFiniteIncompatibilityTable {
+    /// Creates one finite typed table, rejecting duplicate pair declarations.
+    pub fn new(
+        pairs: Vec<(TypedFormRef, TypedFormRef)>,
+    ) -> Result<Self, TypedFiniteIncompatibilityError> {
+        let mut declared = BTreeSet::new();
+        for pair in pairs {
+            if !declared.insert(pair) {
+                return Err(TypedFiniteIncompatibilityError::DuplicatePair {
+                    source_value: pair.0,
+                    candidate_value: pair.1,
+                });
+            }
+        }
+        Ok(Self { pairs: declared })
+    }
+
+    /// Returns the declared ordered typed-form pairs.
+    #[must_use]
+    pub const fn pairs(&self) -> &BTreeSet<(TypedFormRef, TypedFormRef)> {
+        &self.pairs
+    }
+
+    /// Resolves, rehashes, and type-checks every declaration retained by this finite table.
+    ///
+    /// This validates representation identity, not observation provenance or semantic admission.
+    pub fn check<C: FiniteTypedObservationCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), TypedFiniteIncompatibilityError> {
+        for (source_value, candidate_value) in &self.pairs {
+            check_typed_finite_form(catalog, "table source", *source_value)?;
+            check_typed_finite_form(catalog, "table candidate", *candidate_value)?;
+        }
+        Ok(())
+    }
+}
+
+/// Result of checking a finite typed observation pair against a finite typed table.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum TypedFiniteIncompatibilityResult {
+    /// The observed typed-form pair appears in the declared, checked finite table.
+    Incompatible(TypedFiniteIncompatibilityWitness),
+    /// Both typed values are established but the table supplies no pair witness.
+    NoWitness,
+    /// At least one typed value is not established through the declared route.
+    Unknown,
+}
+
+/// Checks a typed finite pair without inferring standing incompatibility or departure.
+///
+/// The table and both observed declarations are resolved, rehashed, and type-checked. A listed
+/// pair is still only derived finite evidence: this function does not evaluate an observation
+/// route, make the table standing, establish relevance/non-circularity/coverage/support, link a
+/// relation use, or construct a [`DepartureWitness`](crate::DepartureWitness).
+pub fn check_typed_finite_incompatibility<C: FiniteTypedObservationCatalog>(
+    table: &TypedFiniteIncompatibilityTable,
+    catalog: &C,
+    source: TypedFiniteObservation,
+    candidate: TypedFiniteObservation,
+) -> Result<TypedFiniteIncompatibilityResult, TypedFiniteIncompatibilityError> {
+    table.check(catalog)?;
+    let (
+        TypedFiniteObservation::Observed(source_value),
+        TypedFiniteObservation::Observed(candidate_value),
+    ) = (source, candidate)
+    else {
+        return Ok(TypedFiniteIncompatibilityResult::Unknown);
+    };
+    check_typed_finite_form(catalog, "source observation", source_value)?;
+    check_typed_finite_form(catalog, "candidate observation", candidate_value)?;
+    Ok(if table.pairs.contains(&(source_value, candidate_value)) {
+        TypedFiniteIncompatibilityResult::Incompatible(TypedFiniteIncompatibilityWitness {
+            source_value,
+            candidate_value,
+        })
+    } else {
+        TypedFiniteIncompatibilityResult::NoWitness
+    })
+}
+
+fn check_typed_finite_form<C: FiniteTypedObservationCatalog>(
+    catalog: &C,
+    role: &'static str,
+    reference: TypedFormRef,
+) -> Result<(), TypedFiniteIncompatibilityError> {
+    let typed_form = catalog
+        .resolve_typed_form(reference)
+        .ok_or(TypedFiniteIncompatibilityError::UnresolvedTypedForm { role, reference })?;
+    let calculated = typed_form.typed_form_ref()?;
+    if calculated != reference {
+        return Err(
+            TypedFiniteIncompatibilityError::TypedFormReferenceIdentityMismatch {
+                role,
+                reference,
+                calculated,
+            },
+        );
+    }
+    typed_form
+        .check(catalog)
+        .map_err(|source| TypedFiniteIncompatibilityError::InvalidTypedForm { role, source })
+}
+
+/// Errors from constructing or checking a finite typed incompatibility table.
+#[derive(Debug, Error)]
+pub enum TypedFiniteIncompatibilityError {
+    #[error(transparent)]
+    TypedFormIdentity(#[from] TypeError),
+
+    #[error("finite typed incompatibility table repeats ({source_value}, {candidate_value})")]
+    DuplicatePair {
+        /// The duplicated source typed-form declaration.
+        source_value: TypedFormRef,
+        /// The duplicated candidate typed-form declaration.
+        candidate_value: TypedFormRef,
+    },
+
+    #[error("{role} typed form {reference} is not available from the declared catalog")]
+    UnresolvedTypedForm {
+        /// The table or observation position being checked.
+        role: &'static str,
+        /// The unresolved typed-form reference.
+        reference: TypedFormRef,
+    },
+
+    #[error("{role} typed form {reference} hashes to {calculated}, not its claimed identity")]
+    TypedFormReferenceIdentityMismatch {
+        /// The table or observation position being checked.
+        role: &'static str,
+        /// The claimed typed-form identity.
+        reference: TypedFormRef,
+        /// The identity calculated from the resolved declaration.
+        calculated: TypedFormRef,
+    },
+
+    #[error("{role} typed form is not well-typed: {source}")]
+    InvalidTypedForm {
+        /// The table or observation position being checked.
+        role: &'static str,
+        /// The type-checking failure.
+        #[source]
+        source: TypeCheckError,
     },
 }

@@ -131,6 +131,14 @@ one listed observed pair yields a positive finite witness, an unlisted observed 
 establishes that the table is standing, supported, relevant, covered, or connected to a
 `RelationUse` or `DepartureWitness`.
 
+The typed finite companion retains `TypedFormRef` values instead. Before it returns a listed-pair
+witness, it resolves, rehashes, and type-checks every table entry and both observed declarations;
+the two sides may have distinct declared types. An invalid declaration is an explicit validation
+error, an unlisted valid pair remains `NoWitness`, and an unavailable value remains `Unknown`.
+This is still derived finite evidence only: it does not actualize an observation, admit a standing
+incompatibility relation, establish relevance, coverage, support, or non-circularity, connect a
+`RelationUse`, or establish departure/exteriority.
+
 Phase 4 also represents an oriented `NegationUse` declaration as a distinct immutable relation
 use tied to one determination presentation. Its semantic coverage (`ExactExhaustive`,
 `ExactOnField`, `CertifiedPartial`, or `WorkingOpen`) is identity data and deliberately differs
