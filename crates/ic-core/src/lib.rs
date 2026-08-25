@@ -10,6 +10,7 @@ mod departure;
 mod determination;
 mod event;
 mod factorization;
+mod finite_cell;
 mod formula;
 mod iprog;
 mod negation;
@@ -54,6 +55,10 @@ pub use factorization::{
     ExactFamilyDeterminationResult, ExactFamilyFactorization, ExactFamilySignature,
     ExactFiniteSignature, FamilyKernelSeparator, KernelSeparator, SignatureContext,
     determine_through_exact, determine_through_exact_family,
+};
+pub use finite_cell::{
+    FiniteCellComparison, FiniteCellError, FiniteCellSeparator, FiniteObservation,
+    compare_finite_observation_cells,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,

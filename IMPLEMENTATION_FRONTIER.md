@@ -51,6 +51,12 @@ The protected difference is visible in the accepted sources:
   forms, requires the presentation's source and indexed context, and rejects relation uses with
   different scope/applicability/grain/horizon. Constructing or checking it evaluates no relation
   and proves neither incompatibility nor exteriority.
+- The derived `compare_finite_observation_cells` checker now supplies the exact finite
+  cell-exclusion discriminator: an observed unequal coordinate gives a separator; no separator
+  with any unknown coordinate remains `Unknown`; a completely observed equal table is only a
+  same-table result. Its exhaustive binary fixture covers 65,536 pairs. It neither gives those
+  coordinate values typed observation provenance nor establishes relevance, standing
+  incompatibility, support, a `DepartureWitness`, or exteriority.
 - `NegationUse` now records one distinct oriented relation-use declaration, its source
   determination, candidate field, structural soundness-program reference, semantic-coverage
   declaration, indexed context, and provenance. Its checker rejects a different presentation

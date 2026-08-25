@@ -117,6 +117,12 @@ relation uses; requires the presentation's distinction, source, binding, scope, 
 grain, and horizon; and rejects a use outside that context. It still does not evaluate an
 observation, establish incompatibility, or certify non-circular positive evidence.
 
+For the exact finite special case, a derived cell comparator can expose one observed unequal
+coordinate, retain `Unknown` when the table lacks a positive separator, and distinguish fully
+observed equality only within that table. Its 65,536-pair binary fixture is a mathematical
+separator breaker, not a typed observation result, incompatibility certificate, departure witness,
+or exteriority claim.
+
 Phase 4 also represents an oriented `NegationUse` declaration as a distinct immutable relation
 use tied to one determination presentation. Its semantic coverage (`ExactExhaustive`,
 `ExactOnField`, `CertifiedPartial`, or `WorkingOpen`) is identity data and deliberately differs
