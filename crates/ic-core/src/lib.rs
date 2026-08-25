@@ -4,6 +4,7 @@
 //! the versioned canonical envelope used to assign stable content identities.
 
 mod artifact;
+mod boundary;
 mod context;
 mod departure;
 mod determination;
@@ -24,6 +25,9 @@ mod ty;
 pub use artifact::{
     ARTIFACT_DOMAIN, ARTIFACT_WIRE_VERSION, ArtifactEnvelope, ArtifactError, ArtifactKind,
     ArtifactRef,
+};
+pub use boundary::{
+    BOUNDARY_CHART_ARTIFACT_KIND, BOUNDARY_CHART_SCHEMA_VERSION, BoundaryChart, BoundaryChartError,
 };
 pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,

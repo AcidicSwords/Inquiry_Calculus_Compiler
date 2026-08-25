@@ -89,6 +89,8 @@ or passing.
 | P4-RECOVERY-IR-002 empty fiber rejection and unknown/loss separation | PASS | `recovery::empty_or_incomplete_evidence_is_not_conflated_with_non_recovery` |
 | P4-FAMILY-IR-001 joint exact-family factorization without composite actuality | PASS | `family_factorization::exact_family_product_recovers_a_target_that_no_member_recovers` |
 | P4-FAMILY-IR-002 empty/mismatched family rejection and joint separator | PASS | `family_factorization::exact_family_product_rejects_bad_coverage_and_exposes_joint_kernel_separators` |
+| P4-BOUNDARY-IR-001 local boundary-chart canonical identity preserves tagged frontiers and open roles | PASS | `boundary_identity::boundary_chart_keeps_tagged_frontiers_and_absent_roles_explicit` |
+| P4-BOUNDARY-IR-002 malformed chart optional-field rejection | PASS | `boundary_identity::boundary_chart_rejects_malformed_optional_and_count_fields` |
 
 ## Pending specification and plan categories
 
@@ -102,7 +104,7 @@ or passing.
 | Tagged multiple negation uses, fixtures 25-33 | PARTIAL | Phase 4: exact finite tagged family product and joint-information factorization pass; admitted frontiers, coverage certificates, jointness evidence, and successor fixtures remain pending |
 | Same-use return and protected recovery, fixtures 34-47 | PARTIAL | Phase 4: derived three-valued recovery status and exact finite signature-constancy checking pass; same-use fiber derivation/certification, occurrence context, and successor fixtures remain pending |
 | Pure return versus warranted reconciliation, fixtures 48-52 | PENDING | Phase 4 |
-| Dependent sixfold and downstream `Gamma`, fixtures 53-64 | PENDING | Phase 4 |
+| Dependent sixfold and downstream `Gamma`, fixtures 53-64 | PARTIAL | Phase 4: derived local boundary-chart identity preserves declared context and absent roles; sixfold reconstruction, field validation, and all successor fixtures remain pending |
 | Reciprocal representation and learning, fixtures 65-70 | PENDING | Phases 4, 12-16 |
 | Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PARTIAL | Phase 4: exact finite determination-through factorization/kernel separators, exact finite recovery constancy/separators, and informational tagged-family factorization pass; all other derived breakers and non-exact contracts remain pending |
 | Return/Branch/Probe runtime and continuation descent | PARTIAL | Phase 5: typed Return/Branch/Probe control flow, structural verification, and non-actual suspension/resume pass; operator contracts, actual dispatch, raw-dependent continuation selection, and runtime persistence remain pending |

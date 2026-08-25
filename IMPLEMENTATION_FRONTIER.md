@@ -90,6 +90,11 @@ The protected difference is visible in the accepted sources:
   same-use fiber table: constant protected signatures produce a finite recovery result, differing
   signatures produce a concrete pair, and an empty table is rejected. It neither constructs or
   certifies a fiber nor turns missing coverage into a loss result.
+- `BoundaryChart` now assigns a canonical derived identity to the plan's declared local-chart
+  inputs: query, `X`/`Y`/boundary types, projections, determinations, tagged use frontiers, seed,
+  compatibility, optional traversal, grain, and horizon. It preserves empty or omitted roles as
+  such; it does not validate the opaque field contracts yet or derive an exterior, return fiber,
+  coverage, reverse negation, global partition, or sixfold occurrence.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

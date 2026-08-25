@@ -153,6 +153,13 @@ emits a concrete joint kernel separator. This is a derived information calculati
 not claim that component observations were co-applicable, jointly realized, or one composite
 actual event.
 
+`BoundaryChart` is now a derived, content-addressed local chart record. It retains the query,
+`X`/`Y`/boundary type references, projections, determination references, oriented use frontiers,
+seed, compatibility formula, optional traversal, grain, and horizon. It preserves missing fields
+as missing and does not infer a partition, exterior, return, coverage, reciprocal role, or sixfold
+view from the record. Field-level semantic validation awaits the typed boundary/operator/state
+contracts that those fields reference.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.
