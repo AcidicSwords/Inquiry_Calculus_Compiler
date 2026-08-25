@@ -127,6 +127,12 @@ revalidates types and exact composition interfaces, including cycle rejection. I
 decoder, relation, or program; name a supported answer set; resolve a raw return; or turn a
 partial result into an exact answer.
 
+The reusable exact finite `DetermineThrough` facility implements the canonical kernel-inclusion
+test for deterministic, fully covered signatures sharing binding, scope, applicability, grain,
+horizon, and domain. It returns either the explicit factor map or a pair witnessing equal
+available output with protectedly different target output. Working, partial, nondeterministic, or
+incompletely covered inputs are not accepted as exact signatures.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

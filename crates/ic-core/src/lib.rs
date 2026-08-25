@@ -7,6 +7,7 @@ mod artifact;
 mod context;
 mod departure;
 mod determination;
+mod factorization;
 mod formula;
 mod iprog;
 mod negation;
@@ -34,6 +35,10 @@ pub use determination::{
     DeterminationCatalog, DeterminationPresentation, DeterminationPresentationCheckError,
     DeterminationPresentationError, DeterminationPresentationRef, DistinctionRef, Orientation,
     RelationalWebRef,
+};
+pub use factorization::{
+    ExactDeterminationError, ExactDeterminationResult, ExactFactorization, ExactFiniteSignature,
+    KernelSeparator, SignatureContext, determine_through_exact,
 };
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,

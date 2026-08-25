@@ -80,6 +80,8 @@ or passing.
 | P7-RESOLUTION-IR-001 typed resolution-route identity round trip | PASS | `resolution_identity::resolution_paths_round_trip_without_executing_their_route` |
 | P7-RESOLUTION-IR-002 identity and exact composition-interface validation | PASS | `resolution_identity::resolution_paths_check_identity_and_exact_composition_interfaces` |
 | P7-RESOLUTION-IR-003 malformed resolution-path rejection | PASS | `resolution_identity::resolution_paths_reject_malformed_envelopes` |
+| P4-DETERMINE-THROUGH-001 exact finite kernel-inclusion factorization | PASS | `factorization::exact_factorization_constructs_the_target_map_when_kernels_are_included` |
+| P4-DETERMINE-THROUGH-002 kernel separator and context/coverage mismatch rejection | PASS | `factorization::exact_factorization_returns_a_kernel_separator_and_rejects_incomplete_contexts` |
 
 ## Pending specification and plan categories
 
@@ -95,7 +97,7 @@ or passing.
 | Pure return versus warranted reconciliation, fixtures 48-52 | PENDING | Phase 4 |
 | Dependent sixfold and downstream `Gamma`, fixtures 53-64 | PENDING | Phase 4 |
 | Reciprocal representation and learning, fixtures 65-70 | PENDING | Phases 4, 12-16 |
-| Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PENDING | Phases 4, 10, 12-16 |
+| Cross-cutting determination, jointness, recovery-loss, regenerative-economy, method, growth, approximation, and consequence-subspace breakers | PARTIAL | Phase 4: exact finite determination-through factorization and kernel separators pass; all other derived breakers and non-exact contracts remain pending |
 | Return/Branch/Probe runtime and continuation descent | PARTIAL | Phase 5: typed Return/Branch/Probe control flow, structural verification, and non-actual suspension/resume pass; operator contracts, actual dispatch, raw-dependent continuation selection, and runtime persistence remain pending |
 | Actuality, ledger/domain ordering, resolution, and replay | PARTIAL | Phase 6: opaque immutable raw-return identity passes. Phase 7: typed resolution-route identity and composition checking pass; attempt/event shape, journal ordering, route execution, answer sets, replay, and full resolution remain pending |
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |

@@ -68,6 +68,10 @@ The protected difference is visible in the accepted sources:
   syntax with exact source/target type composition. Its checker validates only types and composed
   interfaces; it does not run or admit the referenced route, derive a decoder result, or create a
   supported answer.
+- The reusable finite exact `DetermineThrough` checker validates shared indexed context and
+  coverage before applying kernel inclusion. It returns an explicit factor map or a concrete
+  separator pair; it does not accept incomplete, working, or nondeterministic data as exact and
+  does not itself create recovery, standing, or actuality.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next
