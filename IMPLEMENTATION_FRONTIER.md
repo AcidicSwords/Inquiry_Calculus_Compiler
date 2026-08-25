@@ -48,6 +48,11 @@ The protected difference is visible in the accepted sources:
   forms, requires the presentation's source and indexed context, and rejects relation uses with
   different scope/applicability/grain/horizon. Constructing or checking it evaluates no relation
   and proves neither incompatibility nor exteriority.
+- `NegationUse` now records one distinct oriented relation-use declaration, its source
+  determination, candidate field, structural soundness-program reference, semantic-coverage
+  declaration, indexed context, and provenance. Its checker rejects a different presentation
+  orientation/context, forged or incompatible schemas/use, and forged program identity. It does
+  not execute the program, establish soundness/coverage, or admit a negation incidence.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next

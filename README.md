@@ -100,6 +100,14 @@ relation uses; requires the presentation's distinction, source, binding, scope, 
 grain, and horizon; and rejects a use outside that context. It still does not evaluate an
 observation, establish incompatibility, or certify non-circular positive evidence.
 
+Phase 4 also represents an oriented `NegationUse` declaration as a distinct immutable relation
+use tied to one determination presentation. Its semantic coverage (`ExactExhaustive`,
+`ExactOnField`, `CertifiedPartial`, or `WorkingOpen`) is identity data and deliberately differs
+from later execution/materialization coverage. The checker validates the presentation context,
+relation-use and candidate-field schemas, and first-order soundness-program identity. It neither
+executes that program nor admits soundness, coverage, a frontier member, or a positive-negation
+incidence.
+
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
 it never discovers references by parsing an opaque payload.

@@ -69,6 +69,9 @@ or passing.
 | P4-DEPARTURE-IR-001 positive departure-witness canonical identity | PASS | `departure_identity::departure_witnesses_round_trip_with_all_positive_evidence_roles` |
 | P4-DEPARTURE-IR-002 malformed departure-witness rejection | PASS | `departure_identity::departure_witnesses_reject_malformed_encodings` |
 | P4-DEPARTURE-IR-003 presentation, typed-form, and relation-use context validation | PASS | `relation_schema::departure_witness_check_requires_the_declared_presentation_and_context` |
+| P4-NEGATION-IR-001 oriented negation-use and semantic-coverage canonical identity | PASS | `negation_identity::negation_use_round_trips_and_keeps_semantic_coverage_distinct` |
+| P4-NEGATION-IR-002 malformed negation-use rejection | PASS | `negation_identity::negation_use_rejects_malformed_encodings` |
+| P4-NEGATION-IR-003 presentation/relation-use/program linkage validation | PASS | `relation_schema::negation_use_check_requires_one_oriented_presentation_context` |
 
 ## Pending specification and plan categories
 
@@ -78,7 +81,7 @@ or passing.
 | Relations, open ports, partial binding, and question kernels | PARTIAL | Phase 2: direct `OpenQuery` partial bindings, data-only relation expressions, checked `Bind`/`Expose`, candidate-only `Plug`, direct schema-order normalization, a derived completion-fiber view, formula artifacts, typed terms, relation schemas, atom-signature checks, and relation uses pass; typed expression validation and dependent binding remain pending |
 | First-order programs and proposal/actuality/authority separation | PARTIAL | Phase 3: canonical `Return`/`Ask` identity, explicit environment, malformed-input rejection, and recursive structural validation pass; supported-answer representation, substitution, normalization, pure operations, and runtime separation remain pending |
 | Successor determination and departure, fixtures 1-13 | PENDING | Phase 4: claim-local determination-presentation identity and malformed-input rejection pass; admission, departure, and all successor fixtures remain pending |
-| Typed negation and coverage separation, fixtures 14-24 | PENDING | Phase 4 |
+| Typed negation and coverage separation, fixtures 14-24 | PARTIAL | Phase 4: oriented declaration identity, coverage-state separation, malformed-input rejection, and structural linkage pass; soundness, admission, execution coverage, and all successor fixtures remain pending |
 | Tagged multiple negation uses, fixtures 25-33 | PENDING | Phase 4 |
 | Same-use return and protected recovery, fixtures 34-47 | PENDING | Phase 4 |
 | Pure return versus warranted reconciliation, fixtures 48-52 | PENDING | Phase 4 |

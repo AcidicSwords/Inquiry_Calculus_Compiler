@@ -9,6 +9,7 @@ mod departure;
 mod determination;
 mod formula;
 mod iprog;
+mod negation;
 mod query;
 mod relation;
 mod relation_expr;
@@ -39,6 +40,10 @@ pub use formula::{
 pub use iprog::{
     IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgCatalog, IProgCheckError,
     IProgError, IProgIR, IProgRef, ProgramBinding,
+};
+pub use negation::{
+    NEGATION_USE_ARTIFACT_KIND, NEGATION_USE_SCHEMA_VERSION, NegationCatalog, NegationCoverage,
+    NegationUse, NegationUseCheckError, NegationUseError, NegationUseRef,
 };
 pub use query::{
     CompletionCandidate, CompletionFiberView, CompletionFiberViewError, OPEN_QUERY_ARTIFACT_KIND,

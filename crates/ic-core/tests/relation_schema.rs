@@ -5,12 +5,13 @@ use ic_core::{
     DepartureCatalog, DepartureWitness, DepartureWitnessCheckError, DeterminationCatalog,
     DeterminationPresentation, DeterminationPresentationRef, DischargeMode, DistinctionRef,
     FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef, IProgArtifact,
-    IProgCatalog, IProgCheckError, IProgIR, IProgRef, OpenPort, OpenQuery, OpenQueryCatalog,
-    OpenQueryCheckError, PortBinding, ProgramBinding, RelationBodyIR, RelationCatalog,
-    RelationCheckError, RelationError, RelationExprArtifact, RelationExprIR, RelationPort,
-    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseCheckError,
-    RelationUseContext, RelationalWebRef, ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog,
-    TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    IProgCatalog, IProgCheckError, IProgIR, IProgRef, NegationCoverage, NegationUse,
+    NegationUseCheckError, OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError, PortBinding,
+    ProgramBinding, RelationBodyIR, RelationCatalog, RelationCheckError, RelationError,
+    RelationExprArtifact, RelationExprIR, RelationPort, RelationRef, RelationSchema,
+    RelationSignature, RelationUse, RelationUseCheckError, RelationUseContext, RelationalWebRef,
+    ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
+    TypedForm, TypedFormRef,
 };
 use serde::Deserialize;
 
@@ -609,6 +610,85 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
         context_mismatch.check(&catalog),
         Err(DepartureWitnessCheckError::RelationUseContextMismatch(reference))
             if reference == wrong_context
+    ));
+}
+
+#[test]
+fn negation_use_check_requires_one_oriented_presentation_context() {
+    let binding = binding(0x11);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let source = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x21)));
+    let presentation = catalog.insert_presentation(DeterminationPresentation::new(
+        DistinctionRef::from_artifact_ref(artifact(0x22)),
+        ic_core::Orientation::X,
+        source,
+        RelationalWebRef::from_artifact_ref(artifact(0x23)),
+        binding,
+        ScopeRef::from_artifact_ref(artifact(0x24)),
+        ApplicabilityRef::from_artifact_ref(artifact(0x25)),
+        GrainRef::from_artifact_ref(artifact(0x26)),
+        HorizonRef::from_artifact_ref(artifact(0x27)),
+        SupportRef::from_artifact_ref(artifact(0x28)),
+        None,
+    ));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        Vec::new(),
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x29),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let relation_use = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        Vec::new(),
+        RelationUseContext::new(
+            ScopeRef::from_artifact_ref(artifact(0x24)),
+            ApplicabilityRef::from_artifact_ref(artifact(0x25)),
+            GrainRef::from_artifact_ref(artifact(0x26)),
+            HorizonRef::from_artifact_ref(artifact(0x27)),
+            DischargeMode::Check,
+            SupportRef::from_artifact_ref(artifact(0x28)),
+            None,
+        ),
+    ));
+    let derivation =
+        catalog.insert_program(IProgArtifact::new(unit, IProgIR::Return { value: source }));
+    let use_declaration = NegationUse::new(
+        relation_use,
+        DistinctionRef::from_artifact_ref(artifact(0x22)),
+        ic_core::Orientation::X,
+        presentation,
+        relation,
+        derivation,
+        NegationCoverage::CertifiedPartial,
+        ApplicabilityRef::from_artifact_ref(artifact(0x25)),
+        ScopeRef::from_artifact_ref(artifact(0x24)),
+        GrainRef::from_artifact_ref(artifact(0x26)),
+        HorizonRef::from_artifact_ref(artifact(0x27)),
+        Vec::new(),
+    );
+    assert!(use_declaration.check(&catalog).is_ok());
+
+    let wrong_orientation = NegationUse::new(
+        relation_use,
+        DistinctionRef::from_artifact_ref(artifact(0x22)),
+        ic_core::Orientation::Y,
+        presentation,
+        relation,
+        derivation,
+        NegationCoverage::CertifiedPartial,
+        ApplicabilityRef::from_artifact_ref(artifact(0x25)),
+        ScopeRef::from_artifact_ref(artifact(0x24)),
+        GrainRef::from_artifact_ref(artifact(0x26)),
+        HorizonRef::from_artifact_ref(artifact(0x27)),
+        Vec::new(),
+    );
+    assert!(matches!(
+        wrong_orientation.check(&catalog),
+        Err(NegationUseCheckError::PresentationMismatch("orientation"))
     ));
 }
 
