@@ -129,8 +129,9 @@ the plan's optional `DistinctionRef`, alongside parent, state, question, operato
 grain, route, binding, backend-version, and provenance references. The SQLite event ledger writes
 the event artifact and head-linked ledger row atomically; it rejects forks/stale parents and
 non-raw return or non-chart boundary artifacts, and revalidates event/raw-return/boundary identity
-on read. It does not dispatch a probe, validate opaque state/boundary/operator contracts, decode
-the result, resolve an answer, or prove a semantic interpretation.
+or non-operator artifacts, and revalidates event/raw-return/boundary/operator identity on read.
+It does not dispatch a probe, validate opaque state/boundary/operator contracts, decode the
+result, resolve an answer, or prove a semantic interpretation.
 
 The event ledger has a file-backed restart witness: closing its single connection and reopening the
 database preserves canonical event identity and parent-linked order after embedded migrations are

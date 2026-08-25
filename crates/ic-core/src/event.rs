@@ -12,8 +12,8 @@ use thiserror::Error;
 
 use crate::{
     ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart,
-    BoundaryChartError, DistinctionRef, GrainRef, QueryRef, RawReturn, RawReturnError,
-    RawReturnRef,
+    BoundaryChartError, DistinctionRef, GrainRef, ProbeOperator, ProbeOperatorError,
+    ProbeOperatorRef, QueryRef, RawReturn, RawReturnError, RawReturnRef,
 };
 
 /// Canonical artifact kind for one ordinary, realized actuality occurrence.
@@ -57,9 +57,11 @@ macro_rules! artifact_reference {
 artifact_reference!(EventRef);
 artifact_reference!(StateRef);
 artifact_reference!(BoundaryRef);
-artifact_reference!(OperatorRef);
 artifact_reference!(RouteRef);
 artifact_reference!(ProvenanceRef);
+
+/// The event-spine name for the shared compiled probe-operator identity.
+pub type OperatorRef = ProbeOperatorRef;
 
 /// One append-only actual occurrence.
 ///
@@ -73,7 +75,7 @@ pub struct ActualEvent {
     question: QueryRef,
     boundary: BoundaryRef,
     distinction: Option<DistinctionRef>,
-    operator: OperatorRef,
+    operator: ProbeOperatorRef,
     raw_return: RawReturnRef,
     state_after: StateRef,
     grain: GrainRef,
@@ -92,7 +94,7 @@ impl ActualEvent {
         question: QueryRef,
         boundary: BoundaryRef,
         distinction: Option<DistinctionRef>,
-        operator: OperatorRef,
+        operator: ProbeOperatorRef,
         raw_return: RawReturnRef,
         state_after: StateRef,
         grain: GrainRef,
@@ -139,7 +141,7 @@ impl ActualEvent {
         self.distinction
     }
     #[must_use]
-    pub const fn operator(&self) -> OperatorRef {
+    pub const fn operator(&self) -> ProbeOperatorRef {
         self.operator
     }
     #[must_use]
@@ -419,6 +421,16 @@ pub fn check_actual_event<C: ActualEventCatalog>(
             calculated,
         });
     }
+    let operator = catalog.resolve_probe_operator(event.operator).ok_or(
+        ActualEventCheckError::UnresolvedProbeOperator(event.operator),
+    )?;
+    let calculated = operator.probe_operator_ref()?;
+    if calculated != event.operator {
+        return Err(ActualEventCheckError::ProbeOperatorIdentityMismatch {
+            reference: event.operator,
+            calculated,
+        });
+    }
     Ok(())
 }
 
@@ -430,6 +442,7 @@ pub trait RawReturnCatalog {
 /// The currently available catalog boundary for actual-event identity checking.
 pub trait ActualEventCatalog: RawReturnCatalog {
     fn resolve_boundary_chart(&self, reference: BoundaryRef) -> Option<BoundaryChart>;
+    fn resolve_probe_operator(&self, reference: ProbeOperatorRef) -> Option<ProbeOperator>;
 }
 
 /// Errors from the currently available actual-event validation boundary.
@@ -441,6 +454,8 @@ pub enum ActualEventCheckError {
     RawReturn(#[from] RawReturnError),
     #[error(transparent)]
     BoundaryChart(#[from] BoundaryChartError),
+    #[error(transparent)]
+    ProbeOperator(#[from] ProbeOperatorError),
     #[error("raw return {0} is unavailable from the declared catalog")]
     UnresolvedRawReturn(RawReturnRef),
     #[error("catalog raw return {reference} hashes to {calculated}, not its claimed identity")]
@@ -454,5 +469,12 @@ pub enum ActualEventCheckError {
     BoundaryIdentityMismatch {
         reference: BoundaryRef,
         calculated: BoundaryRef,
+    },
+    #[error("probe operator {0} is unavailable from the declared catalog")]
+    UnresolvedProbeOperator(ProbeOperatorRef),
+    #[error("catalog probe operator {reference} hashes to {calculated}, not its claimed identity")]
+    ProbeOperatorIdentityMismatch {
+        reference: ProbeOperatorRef,
+        calculated: ProbeOperatorRef,
     },
 }

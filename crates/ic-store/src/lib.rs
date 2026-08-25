@@ -8,7 +8,8 @@ use std::{collections::BTreeSet, str::FromStr};
 
 use ic_core::{
     ActualEvent, ActualEventError, ArtifactEnvelope, ArtifactError, ArtifactRef, BoundaryChart,
-    BoundaryChartError, BoundaryRef, EventRef, RawReturn, RawReturnError, RawReturnRef,
+    BoundaryChartError, BoundaryRef, EventRef, ProbeOperator, ProbeOperatorError, ProbeOperatorRef,
+    RawReturn, RawReturnError, RawReturnRef,
 };
 use sqlx::{
     SqlitePool,
@@ -185,6 +186,7 @@ impl ArtifactStore {
         let encoded = envelope.encode()?;
         self.verify_raw_return(event.raw_return()).await?;
         self.verify_boundary_chart(event.boundary()).await?;
+        self.verify_probe_operator(event.operator()).await?;
         let mut transaction = self.pool.begin().await?;
 
         let unique_references: BTreeSet<_> = event.referenced_artifacts().into_iter().collect();
@@ -280,6 +282,7 @@ impl ArtifactStore {
         }
         self.verify_raw_return(event.raw_return()).await?;
         self.verify_boundary_chart(event.boundary()).await?;
+        self.verify_probe_operator(event.operator()).await?;
         Ok(Some(event))
     }
 
@@ -338,6 +341,21 @@ impl ArtifactStore {
         }
         Ok(())
     }
+
+    async fn verify_probe_operator(&self, operator: ProbeOperatorRef) -> Result<(), StoreError> {
+        let envelope = self.get(operator.as_artifact_ref()).await?.ok_or(
+            StoreError::MissingReferencedArtifact(operator.as_artifact_ref()),
+        )?;
+        let operator_value = ProbeOperator::from_envelope(&envelope)?;
+        let calculated = operator_value.probe_operator_ref()?;
+        if calculated != operator {
+            return Err(StoreError::CorruptReference {
+                stored: operator.as_artifact_ref(),
+                calculated: calculated.as_artifact_ref(),
+            });
+        }
+        Ok(())
+    }
 }
 
 fn parse_artifact_ref(bytes: Vec<u8>) -> Result<ArtifactRef, StoreError> {
@@ -374,6 +392,9 @@ pub enum StoreError {
 
     #[error("boundary-chart encoding failed")]
     BoundaryChart(#[from] BoundaryChartError),
+
+    #[error("probe-operator encoding failed")]
+    ProbeOperator(#[from] ProbeOperatorError),
 
     #[error("expected artifact reference {expected}, but envelope calculated {calculated}")]
     ReferenceMismatch {

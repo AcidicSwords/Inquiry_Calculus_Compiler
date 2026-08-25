@@ -6,8 +6,8 @@ use std::{
 use ic_core::{
     ActualEvent, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef,
     DeterminationPresentationRef, EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef,
-    ProvenanceRef, QueryRef, RawReturn, RawReturnError, RawReturnRef, RelationRef, RelationUseRef,
-    RouteRef, StateRef, TyIR, TypeArtifact, TypeRef,
+    ProbeOperator, ProvenanceRef, QueryRef, RawReturn, RawReturnError, RawReturnRef, RelationRef,
+    RelationUseRef, RouteRef, StateRef, TyIR, TypeArtifact, TypeRef,
 };
 
 use super::*;
@@ -70,13 +70,33 @@ async fn event_fixture(
             .await
             .expect("boundary chart must insert"),
     );
+    let operator = OperatorRef::from_artifact_ref(
+        store
+            .insert(
+                &ProbeOperator::new(
+                    QueryRef::from_artifact_ref(chart_field),
+                    boundary,
+                    chart_field,
+                    chart_field,
+                    chart_field,
+                    TypeRef::from_artifact_ref(chart_field),
+                    chart_field,
+                    chart_field,
+                    chart_field,
+                )
+                .envelope()
+                .expect("probe operator must encode"),
+            )
+            .await
+            .expect("probe operator must insert"),
+    );
     ActualEvent::new(
         ledger_parent,
         StateRef::from_artifact_ref(stored_ref(store, b"state-before").await),
         QueryRef::from_artifact_ref(stored_ref(store, b"question").await),
         boundary,
         None,
-        OperatorRef::from_artifact_ref(stored_ref(store, b"operator").await),
+        operator,
         ic_core::RawReturnRef::from_artifact_ref(raw_return),
         StateRef::from_artifact_ref(stored_ref(store, b"state-after").await),
         GrainRef::from_artifact_ref(stored_ref(store, b"grain").await),
@@ -192,6 +212,28 @@ async fn actual_event_append_rejects_stale_parent_and_detects_ledger_corruption(
         store.append_actual_event(&wrong_boundary_event).await,
         Err(StoreError::BoundaryChart(
             ic_core::BoundaryChartError::UnexpectedArtifactKind { .. }
+        ))
+    ));
+    let wrong_operator = OperatorRef::from_artifact_ref(stored_ref(&store, b"not-operator").await);
+    let wrong_operator_event = ActualEvent::new(
+        first.ledger_parent(),
+        first.state_before(),
+        first.question(),
+        first.boundary(),
+        first.distinction(),
+        wrong_operator,
+        first.raw_return(),
+        first.state_after(),
+        first.grain(),
+        first.route(),
+        first.binding(),
+        first.backend_version(),
+        first.provenance(),
+    );
+    assert!(matches!(
+        store.append_actual_event(&wrong_operator_event).await,
+        Err(StoreError::ProbeOperator(
+            ic_core::ProbeOperatorError::UnexpectedArtifactKind { .. }
         ))
     ));
     let first_ref = store

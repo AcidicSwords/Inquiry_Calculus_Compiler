@@ -3,9 +3,9 @@ use std::collections::BTreeMap;
 use ic_core::{
     ActualEvent, ActualEventCatalog, ActualEventCheckError, ActualEventError, ArtifactRef,
     BindingVersionRef, BoundaryChart, BoundaryRef, DeterminationPresentationRef, DistinctionRef,
-    EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef, ProvenanceRef, QueryRef, RawReturn,
-    RawReturnCatalog, RawReturnRef, RelationRef, RelationUseRef, RouteRef, StateRef, TypeRef,
-    check_actual_event, check_raw_return,
+    EventRef, FormulaRef, GrainRef, HorizonRef, OperatorRef, ProbeOperator, ProbeOperatorRef,
+    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationRef,
+    RelationUseRef, RouteRef, StateRef, TypeRef, check_actual_event, check_raw_return,
 };
 
 fn artifact(byte: u8) -> ArtifactRef {
@@ -78,6 +78,7 @@ impl RawReturnCatalog for RawReturns {
 struct EventCatalog {
     raw_returns: BTreeMap<RawReturnRef, RawReturn>,
     boundary_charts: BTreeMap<BoundaryRef, BoundaryChart>,
+    probe_operators: BTreeMap<ProbeOperatorRef, ProbeOperator>,
 }
 
 impl RawReturnCatalog for EventCatalog {
@@ -89,6 +90,10 @@ impl RawReturnCatalog for EventCatalog {
 impl ActualEventCatalog for EventCatalog {
     fn resolve_boundary_chart(&self, reference: BoundaryRef) -> Option<BoundaryChart> {
         self.boundary_charts.get(&reference).cloned()
+    }
+
+    fn resolve_probe_operator(&self, reference: ProbeOperatorRef) -> Option<ProbeOperator> {
+        self.probe_operators.get(&reference).cloned()
     }
 }
 
@@ -109,6 +114,20 @@ fn boundary_chart() -> BoundaryChart {
         None,
         GrainRef::from_artifact_ref(artifact(39)),
         HorizonRef::from_artifact_ref(artifact(40)),
+    )
+}
+
+fn probe_operator(boundary: BoundaryRef) -> ProbeOperator {
+    ProbeOperator::new(
+        QueryRef::from_artifact_ref(artifact(42)),
+        boundary,
+        artifact(43),
+        artifact(44),
+        artifact(45),
+        TypeRef::from_artifact_ref(artifact(46)),
+        artifact(47),
+        artifact(48),
+        artifact(49),
     )
 }
 
@@ -134,11 +153,29 @@ fn actual_event_requires_a_rehashed_boundary_chart_without_checking_its_open_rol
     let raw_ref = raw.raw_return_ref().expect("raw return must encode");
     let chart = boundary_chart();
     let boundary_ref = chart.boundary_ref().expect("chart must encode");
+    let operator = probe_operator(boundary_ref);
+    let operator_ref = operator.probe_operator_ref().expect("operator must encode");
     let catalog = EventCatalog {
         raw_returns: BTreeMap::from([(raw_ref, raw)]),
         boundary_charts: BTreeMap::from([(boundary_ref, chart)]),
+        probe_operators: BTreeMap::from([(operator_ref, operator)]),
     };
-    assert!(check_actual_event(&event_at_boundary(raw_ref, None, boundary_ref), &catalog).is_ok());
+    let checked_event = ActualEvent::new(
+        Some(EventRef::from_artifact_ref(artifact(1))),
+        StateRef::from_artifact_ref(artifact(2)),
+        QueryRef::from_artifact_ref(artifact(3)),
+        boundary_ref,
+        None,
+        operator_ref,
+        raw_ref,
+        StateRef::from_artifact_ref(artifact(6)),
+        GrainRef::from_artifact_ref(artifact(7)),
+        RouteRef::from_artifact_ref(artifact(8)),
+        BindingVersionRef::from_artifact_ref(artifact(9)),
+        artifact(10),
+        ProvenanceRef::from_artifact_ref(artifact(11)),
+    );
+    assert!(check_actual_event(&checked_event, &catalog).is_ok());
 
     let missing = BoundaryRef::from_artifact_ref(artifact(41));
     assert!(matches!(

@@ -81,8 +81,8 @@ or passing.
 | P6-RAW-003 raw-return opaque artifact-store round trip | PASS | `ic-store::tests::raw_returns_persist_as_opaque_immutable_artifacts_without_decoding` |
 | P6-EVENT-IR-001 canonical event identity keeps required boundary and optional distinction distinct | PASS | `event_identity::actual_event_requires_boundary_and_keeps_optional_distinction_separate` |
 | P6-EVENT-IR-002 event raw-return recheck without decoding | PASS | `event_identity::actual_event_rechecks_the_opaque_raw_return_without_decoding_or_interpreting_it` |
-| P6-EVENT-IR-003 event boundary-chart recheck without inferring open chart roles | PASS | `event_identity::actual_event_requires_a_rehashed_boundary_chart_without_checking_its_open_roles` |
-| P6-EVENT-STORE-001 append-only ledger ordering, idempotence, raw/boundary-kind rejection, and parent corruption detection | PASS | `ic-store::tests::{actual_events_append_in_order_and_recheck_stored_identity,actual_event_append_rejects_stale_parent_and_detects_ledger_corruption}` |
+| P6-EVENT-IR-003 event boundary-chart and probe-operator recheck without inferring open contracts | PASS | `event_identity::actual_event_requires_a_rehashed_boundary_chart_without_checking_its_open_roles` |
+| P6-EVENT-STORE-001 append-only ledger ordering, idempotence, raw/boundary/operator-kind rejection, and parent corruption detection | PASS | `ic-store::tests::{actual_events_append_in_order_and_recheck_stored_identity,actual_event_append_rejects_stale_parent_and_detects_ledger_corruption}` |
 | P6-EVENT-STORE-002 file-backed journal restart and immutable ledger revalidation | PASS | `ic-store::tests::event_ledger_reopens_and_revalidates_immutable_history_after_restart` |
 | P7-RESOLUTION-IR-001 typed resolution-route identity round trip | PASS | `resolution_identity::resolution_paths_round_trip_without_executing_their_route` |
 | P7-RESOLUTION-IR-002 identity and exact composition-interface validation | PASS | `resolution_identity::resolution_paths_check_identity_and_exact_composition_interfaces` |

@@ -70,6 +70,9 @@ The protected difference is visible in the accepted sources:
 - Event and ledger checks now require the named `BoundaryRef` to resolve and rehash as a genuine
   `BoundaryChart`, in addition to requiring the raw-return artifact. They do not validate the
   chart's opaque projections, determinations, use frontiers, seed, compatibility, or open roles.
+- `ActualEvent` now uses the shared `ProbeOperatorRef` type and checks the named artifact as a
+  genuine `ProbeOperator` alongside boundary and raw return. This verifies only operator identity,
+  not backend, executable code, contracts, rendering, dispatch, or effect actuality.
 - The file-backed SQLite journal has a restart witness: after the authoritative connection closes,
   reopening and reapplying embedded migrations preserves the immutable event identity and ordered
   ledger chain. This is persistence/revalidation only, not replay of state transition semantics,
