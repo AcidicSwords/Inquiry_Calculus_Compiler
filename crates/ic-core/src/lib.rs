@@ -6,6 +6,7 @@
 mod artifact;
 mod context;
 mod formula;
+mod query;
 mod relation;
 mod relation_use;
 mod ty;
@@ -20,6 +21,10 @@ pub use context::{
 pub use formula::{
     FORMULA_ARTIFACT_KIND, FORMULA_SCHEMA_VERSION, FormulaArtifact, FormulaCatalog,
     FormulaCheckError, FormulaError, FormulaIR, FormulaRef, RelationRef, RelationSignature, TermIR,
+};
+pub use query::{
+    OPEN_QUERY_ARTIFACT_KIND, OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCheckError,
+    OpenQueryError, QueryRef,
 };
 pub use relation::{
     RELATION_SCHEMA_ARTIFACT_KIND, RELATION_SCHEMA_VERSION, RelationBodyIR, RelationCheckError,

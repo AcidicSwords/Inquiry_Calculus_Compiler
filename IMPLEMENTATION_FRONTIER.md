@@ -21,26 +21,24 @@ inferring them from opaque payload bytes.
 
 Before completing Phase 2, resolve:
 
-> What is the smallest first-order `OpenQuery` boundary that represents a relation use,
-> a well-typed partial binding, a nonempty open-port set, and explicit data-only query
-> composition without performing relation evaluation or inventing runtime behavior?
+> What is the smallest canonical data-only query-transform representation for binding,
+> exposure, plugging, normalization, composition, dependent binding, and completion-fiber
+> views without treating any transform as relation evaluation or a runtime opcode?
 
 The protected difference is visible in the accepted sources:
 
-- The canonical schema defines partial bindings, nonempty open-port questions, fibers,
-  and a data-only relational query IR.
-- The implementation plan requires `RelationUse` occurrence identity plus `OpenQuery`
-  transforms (`Bind`, `Expose`, `Plug`, `Normalize`, `Compose`, `DependentBind`, and
-  `CompletionFiber`) without starting runtime semantics.
-- The completed relation boundary supplies immutable named signatures and semantic routes;
-  immutable relation uses retain scope, applicability, grain, horizon, evidence mode, support,
-  warrant, and typed bindings separately from a schema.
+- The canonical schema defines a data-only relational query IR around binding, exposure,
+  hiding, renaming, and guarded restriction; the implementation plan names the more
+  operational transform list.
+- Direct `OpenQuery` now enforces the canonical partial-binding partition and nonempty open
+  section, but does not yet retain a transform expression or derive its resulting signature.
+- The next representation must distinguish syntactic data transforms from semantic relation
+  evaluation and defer any actual completion fiber to a later executable route.
 
-Different answers change whether the same schema can be used in distinct scoped,
-applicable occurrences and whether a partially bound question retains exactly its legal
-answer coordinates. The next discriminator must include empty-open rejection, duplicate
-or unknown ports, type-mismatched bindings, distinct use identities for the same schema,
-and canonical round trips for each data-only query transform.
+Different answers change whether query composition is inspectable and canonical or hides an
+evaluation policy in a helper. The next discriminator must include a fixed transform encoding,
+signature preservation for binding/exposure, composition with named-port provenance, and a
+breaker proving that a completion-fiber view is not an actual answer.
 
 ## Known later questions
 
@@ -121,3 +119,5 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
 - Fixed relation bytes/SHA-256, decoding failure cases, duplicate-port rejection, and
   formula-context checks pass.
 - A relation use is a separately content-addressed occurrence and rejects unknown bound ports.
+- Direct open queries retain only a typed complete port partition with a nonempty open section;
+  they do not execute relations or claim completion fibers.

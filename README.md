@@ -5,8 +5,9 @@ including the adopted **Successor Reciprocal-Boundary / Positive-Negation Editio
 The semantic authority has advanced, but the executable implementation remains at
 **Phase 2**: repository authority, canonical artifact identity, immutable-artifact
 persistence, binding-scoped type artifacts, typed-form declarations, canonical formula
-artifacts, checked relation schemas, and immutable relation uses. Open-query composition,
-reification, program, event, and standing semantics are not implemented yet.
+artifacts, checked relation schemas, immutable relation uses, and direct data-only
+`OpenQuery` partial bindings. Query composition, reification, program, event, and standing
+semantics are not implemented yet.
 
 ## Authority by question
 
@@ -64,6 +65,8 @@ identified binding-native contract artifact. Formula atom checking resolves that
 no host callback is admitted as unrecorded relation meaning.
 An immutable `RelationUse` records one scoped occurrence, its typed bindings, required
 evidence mode, support, and optional warrant separately from the reusable schema.
+An `OpenQuery` partitions every relation port into an explicitly typed binding or a nonempty
+open section; it does not evaluate the relation or manufacture a completion fiber.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;

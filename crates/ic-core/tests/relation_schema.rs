@@ -3,10 +3,11 @@ use std::collections::BTreeMap;
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
     DischargeMode, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GrainRef, HorizonRef,
-    PortBinding, RelationBodyIR, RelationCatalog, RelationCheckError, RelationError, RelationPort,
-    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseCheckError,
-    RelationUseContext, ScopeRef, SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
-    TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    OpenPort, OpenQuery, OpenQueryCheckError, PortBinding, RelationBodyIR, RelationCatalog,
+    RelationCheckError, RelationError, RelationPort, RelationRef, RelationSchema,
+    RelationSignature, RelationUse, RelationUseCheckError, RelationUseContext, ScopeRef,
+    SupportRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm,
+    TypedFormRef,
 };
 use serde::Deserialize;
 
@@ -296,5 +297,82 @@ fn relation_use_is_a_distinct_typed_and_scoped_occurrence() {
     assert!(matches!(
         invalid_port.check(&catalog),
         Err(RelationUseCheckError::UnknownPort(_))
+    ));
+}
+
+#[test]
+fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
+    let binding = binding(0x11);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let boolean = catalog.insert_type(TypeArtifact::new(binding, TyIR::Bool));
+    let unit_form = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x22)));
+    let schema_ref = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("known", unit), port("answer", boolean)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x33),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let context = RelationUseContext::new(
+        ScopeRef::from_artifact_ref(artifact(0x44)),
+        ApplicabilityRef::from_artifact_ref(artifact(0x55)),
+        GrainRef::from_artifact_ref(artifact(0x66)),
+        HorizonRef::from_artifact_ref(artifact(0x77)),
+        DischargeMode::Probe,
+        SupportRef::from_artifact_ref(artifact(0x88)),
+        None,
+    );
+    let query = OpenQuery::new(
+        schema_ref,
+        vec![PortBinding::new(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            unit_form,
+        )],
+        vec![OpenPort::new(
+            TypeSymbol::new("answer").expect("port name must be valid"),
+            DischargeMode::Probe,
+        )],
+        context,
+    );
+
+    assert_eq!(
+        OpenQuery::from_envelope(&query.envelope().expect("query must encode"))
+            .expect("query must decode"),
+        query
+    );
+    assert!(query.check(&catalog).is_ok());
+
+    let empty_open = OpenQuery::new(
+        schema_ref,
+        vec![PortBinding::new(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            unit_form,
+        )],
+        Vec::new(),
+        context,
+    );
+    assert!(matches!(
+        empty_open.check(&catalog),
+        Err(OpenQueryCheckError::EmptyOpenPorts)
+    ));
+
+    let overlapping = OpenQuery::new(
+        schema_ref,
+        vec![PortBinding::new(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            unit_form,
+        )],
+        vec![OpenPort::new(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            DischargeMode::Check,
+        )],
+        context,
+    );
+    assert!(matches!(
+        overlapping.check(&catalog),
+        Err(OpenQueryCheckError::DuplicatePort(_))
     ));
 }

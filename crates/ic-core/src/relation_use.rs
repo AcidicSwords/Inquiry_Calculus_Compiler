@@ -113,6 +113,35 @@ impl RelationUseContext {
             warrant,
         }
     }
+
+    #[must_use]
+    pub const fn scope(&self) -> ScopeRef {
+        self.scope
+    }
+    #[must_use]
+    pub const fn applicability(&self) -> ApplicabilityRef {
+        self.applicability
+    }
+    #[must_use]
+    pub const fn grain(&self) -> GrainRef {
+        self.grain
+    }
+    #[must_use]
+    pub const fn horizon(&self) -> HorizonRef {
+        self.horizon
+    }
+    #[must_use]
+    pub const fn mode(&self) -> DischargeMode {
+        self.mode
+    }
+    #[must_use]
+    pub const fn support(&self) -> SupportRef {
+        self.support
+    }
+    #[must_use]
+    pub const fn warrant(&self) -> Option<WarrantRef> {
+        self.warrant
+    }
 }
 
 impl RelationUse {
