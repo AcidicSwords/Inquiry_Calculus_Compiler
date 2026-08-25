@@ -420,6 +420,35 @@ fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
         query
     );
     assert!(query.check(&catalog).is_ok());
+    let unnormalized = OpenQuery::new(
+        schema_ref,
+        vec![PortBinding::new(
+            TypeSymbol::new("known").expect("port name must be valid"),
+            unit_form,
+        )],
+        vec![
+            OpenPort::new(
+                TypeSymbol::new("next").expect("port name must be valid"),
+                DischargeMode::Check,
+            ),
+            OpenPort::new(
+                TypeSymbol::new("answer").expect("port name must be valid"),
+                DischargeMode::Probe,
+            ),
+        ],
+        context,
+    );
+    let normalized = unnormalized
+        .normalize(&catalog)
+        .expect("well-typed port ordering must normalize");
+    assert_eq!(normalized.open_ports()[0].port().as_str(), "answer");
+    assert_eq!(normalized.open_ports()[1].port().as_str(), "next");
+    assert_eq!(
+        normalized
+            .normalize(&catalog)
+            .expect("normalization is idempotent"),
+        normalized
+    );
     let query_ref = catalog.insert_query(query.clone());
     let fiber = query
         .completion_fiber_view(&catalog)

@@ -21,9 +21,9 @@ inferring them from opaque payload bytes.
 
 Before completing Phase 2, resolve:
 
-> What is the smallest canonical data-only representation of normalization, composition, and
-> dependent binding now that `Bind`, `Expose`, candidate-only `Plug`, and source-revalidated
-> completion-fiber views preserve the checked direct partial-binding form?
+> What is the smallest canonical data-only representation of composition and dependent binding
+> now that schema-order normalization, `Bind`, `Expose`, candidate-only `Plug`, and
+> source-revalidated completion-fiber views preserve the checked direct partial-binding form?
 
 The protected difference is visible in the accepted sources:
 
@@ -127,4 +127,6 @@ authorizes Phase 2 completion before its relation-schema discriminator has been 
   no semantic membership, actuality, support, or warrant status.
 - CompletionFiberView is a source-query-derived, revalidated view only; it neither enumerates
   the fiber nor identifies any candidate as a member.
+- Direct normalization reorders bound and open ports by the checked schema signature and is
+  idempotent; it changes no bindings, modes, relation body, or completion claim.
 - A fixed independently calculated direct OpenQuery payload/envelope/SHA-256 fixture passes.

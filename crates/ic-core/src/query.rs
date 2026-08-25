@@ -365,6 +365,34 @@ impl OpenQuery {
         Ok(transformed)
     }
 
+    /// Canonicalizes the direct query's port ordering to its relation schema's signature order.
+    ///
+    /// This is a limited Phase 2 normalization: it preserves the exact bound/open partition and
+    /// does not inspect, execute, or otherwise alter relation meaning.
+    pub fn normalize<C: RelationCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<Self, OpenQueryTransformError> {
+        self.check(catalog)?;
+        let schema = catalog
+            .resolve_relation_schema(self.relation)
+            .ok_or(OpenQueryCheckError::UnresolvedRelation(self.relation))?;
+        let order = |port: &TypeSymbol| {
+            schema
+                .ports()
+                .iter()
+                .position(|candidate| candidate.name() == port)
+                .expect("checked query port must occur in its resolved schema")
+        };
+        let mut bound_ports = self.bound_ports.clone();
+        bound_ports.sort_by_key(|binding| order(binding.port()));
+        let mut open_ports = self.open_ports.clone();
+        open_ports.sort_by_key(|open| order(open.port()));
+        let normalized = Self::new(self.relation, bound_ports, open_ports, self.context);
+        normalized.check(catalog)?;
+        Ok(normalized)
+    }
+
     /// Supplies all currently open ports as a typed full assignment without evaluating the relation.
     pub fn plug<C: RelationCatalog>(
         &self,

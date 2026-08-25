@@ -71,6 +71,8 @@ leaving a nonempty question. `Plug` can construct a complete typed candidate ass
 does not evaluate the relation, establish fiber membership, or manufacture actuality.
 A completion fiber is represented only as a source-query-derived view that revalidates the
 query; it is never collapsed into a selected completion.
+Direct query normalization canonically orders ports by the relation schema and is idempotent;
+it does not normalize through relation evaluation.
 
 When an artifact declares references, the caller supplies those references explicitly
 to the store. The store checks their presence in the same transaction as the insert;
