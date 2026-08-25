@@ -12,11 +12,13 @@ mod determination;
 mod event;
 mod exterior;
 mod factorization;
+mod fiber;
 mod finite_cell;
 mod formula;
 mod frontier;
 mod iprog;
 mod negation;
+mod negation_query;
 mod probe;
 mod probe_contract;
 mod query;
@@ -26,6 +28,9 @@ mod relation;
 mod relation_expr;
 mod relation_use;
 mod resolution;
+mod seed;
+mod sixfold;
+mod standing;
 mod ty;
 
 pub use artifact::{
@@ -67,6 +72,12 @@ pub use factorization::{
     ExactFiniteSignature, FamilyKernelSeparator, KernelSeparator, SignatureContext,
     determine_through_exact, determine_through_exact_family,
 };
+pub use fiber::{
+    DeclaredIncidenceError, ExactNegationField, ExactReturnFiber, FiberRecoveryError,
+    FiniteNegationExtension, ReturnClosure, ReturnFiberError, SelectedReturn,
+    TypedFiniteNegationExtension, TypedNegationExtensionError, check_declared_incidence,
+    check_fiber_recovery, check_return_closure, exact_return_fiber,
+};
 pub use finite_cell::{
     FiniteCellComparison, FiniteCellError, FiniteCellSeparator, FiniteIncompatibilityError,
     FiniteIncompatibilityResult, FiniteIncompatibilityTable, FiniteIncompatibilityWitness,
@@ -90,6 +101,9 @@ pub use iprog::{
 pub use negation::{
     NEGATION_USE_ARTIFACT_KIND, NEGATION_USE_SCHEMA_VERSION, NegationCatalog, NegationCoverage,
     NegationUse, NegationUseCheckError, NegationUseError, NegationUseRef,
+};
+pub use negation_query::{
+    PositiveNegationQuery, PositiveNegationQueryError, positive_negation_query,
 };
 pub use probe::{
     PROBE_OPERATOR_ARTIFACT_KIND, PROBE_OPERATOR_SCHEMA_VERSION, ProbeOperator, ProbeOperatorError,
@@ -128,6 +142,9 @@ pub use resolution::{
     ResolutionPath, ResolutionPathCheckError, ResolutionPathError, ResolutionPathIR,
     ResolutionPathRef,
 };
+pub use seed::{SeedReorientation, SeedReorientationError};
+pub use sixfold::{GammaError, ReciprocalOccurrence, ReciprocalOccurrenceError, RoleComparison};
+pub use standing::{ClaimRef, Standing, StandingProblem, SupportEnvironment, standing};
 pub use ty::{
     BindingVersionRef, TYPE_ARTIFACT_KIND, TYPE_SCHEMA_VERSION, TYPED_FORM_ARTIFACT_KIND,
     TYPED_FORM_SCHEMA_VERSION, TyIR, TypeArtifact, TypeCatalog, TypeCheckError, TypeError,

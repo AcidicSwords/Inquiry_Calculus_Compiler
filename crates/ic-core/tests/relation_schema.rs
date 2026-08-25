@@ -2,17 +2,22 @@ use std::collections::BTreeMap;
 
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
-    DepartureCatalog, DepartureWitness, DepartureWitnessCheckError, DepartureWitnessRef,
-    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef, DischargeMode,
-    DistinctionRef, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GeneratorCoverageRef,
-    GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef,
-    NegationCoverage, NegationUse, NegationUseCheckError, NegationUseRef, OpenPort, OpenQuery,
-    OpenQueryCatalog, OpenQueryCheckError, PortBinding, ProgramBinding, RelationBodyIR,
-    RelationCatalog, RelationCheckError, RelationError, RelationExprArtifact, RelationExprIR,
-    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
-    RelationUseCheckError, RelationUseContext, RelationalWebRef, ScopeRef, SupportRef,
-    TaggedExteriorCatalog, TaggedExteriorClaim, TaggedExteriorClaimError, TyIR, TypeArtifact,
-    TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    DeclaredIncidenceError, DepartureCatalog, DepartureWitness, DepartureWitnessCheckError,
+    DepartureWitnessRef, DeterminationCatalog, DeterminationPresentation,
+    DeterminationPresentationRef, DischargeMode, DistinctionRef, ExactFiniteSignature,
+    FiniteNegationExtension, FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GammaError,
+    GeneratorCoverageRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgIR, IProgRef, NegationCoverage, NegationUse, NegationUseCheckError, NegationUseRef,
+    OpenPort, OpenQuery, OpenQueryCatalog, OpenQueryCheckError, PortBinding,
+    PositiveNegationQueryError, ProgramBinding, ReciprocalOccurrence, ReciprocalOccurrenceError,
+    RelationBodyIR, RelationCatalog, RelationCheckError, RelationError, RelationExprArtifact,
+    RelationExprIR, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
+    RelationUseCheckError, RelationUseContext, RelationalWebRef, ReturnClosure, RoleComparison,
+    ScopeRef, SeedReorientation, SeedReorientationError, SelectedReturn, SignatureContext,
+    SupportRef, TaggedExteriorCatalog, TaggedExteriorClaim, TaggedExteriorClaimError, TyIR,
+    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedFiniteNegationExtension,
+    TypedForm, TypedFormRef, TypedNegationExtensionError, check_declared_incidence,
+    check_return_closure, exact_return_fiber, positive_negation_query,
 };
 use serde::Deserialize;
 
@@ -728,6 +733,78 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
             relation_use,
         }) if relation_use == candidate_observation
     ));
+
+    // A generated observation proposes an answer; it never supports one. The
+    // pair below differs in exactly one coordinate -- the declared evidence
+    // route -- so it isolates that coordinate and nothing else.
+    let observation_ports = |left, right| {
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                left,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                right,
+            ),
+        ]
+    };
+    let generated_observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        observation_ports(source, source_answer),
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Generate,
+            support,
+            None,
+        ),
+    ));
+    let pure_observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        observation_ports(source, source_answer),
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Pure,
+            support,
+            None,
+        ),
+    ));
+    let witness_through = |observation| {
+        DepartureWitness::new(
+            distinction,
+            source,
+            candidate,
+            presentation,
+            observation,
+            candidate_observation,
+            source_answer,
+            candidate_answer,
+            incompatibility,
+            support,
+            scope,
+            applicability,
+            grain,
+        )
+    };
+
+    assert!(matches!(
+        witness_through(generated_observation).check(&catalog),
+        Err(DepartureWitnessCheckError::GeneratedEvidenceRoute {
+            claim: "source observation",
+            relation_use,
+        }) if relation_use == generated_observation
+    ));
+
+    // The rejection must be of generation specifically, not of every route that
+    // is not a probe: a Pure derivation from already-standing data is lawful,
+    // and a check that admitted only Probe would fail here.
+    assert!(witness_through(pure_observation).check(&catalog).is_ok());
 }
 
 #[test]
@@ -928,6 +1005,90 @@ fn tagged_exterior_claim_preserves_use_tag_without_admitting_an_incidence() {
             calculated,
         }) if reference == forged_use && calculated == first_use
     ));
+
+    // Plan section 37 and fixture 56: the seed may carry the same form across the reorientation,
+    // and that must not be read as role collapse. The identity seed still has to name a relation
+    // use, and that use must bind the form twice -- once as the exterior it was taken at, once as
+    // the reciprocal source it becomes.
+    let left = TypeSymbol::new("left").expect("port name must be valid");
+    let right = TypeSymbol::new("right").expect("port name must be valid");
+    let identity_seed_use = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(left.clone(), candidate),
+            PortBinding::new(right.clone(), candidate),
+        ],
+        context,
+    ));
+    let identity_seed = SeedReorientation::new(first, identity_seed_use, candidate);
+    assert!(identity_seed.check(&catalog).is_ok());
+    assert!(identity_seed.is_identity_seed());
+    assert_eq!(identity_seed.exterior_form(), candidate);
+    assert_eq!(identity_seed.reoriented_source(), candidate);
+    assert_eq!(
+        identity_seed.exterior().negation_use(),
+        first_use,
+        "reorientation does not discard the use that produced O_X"
+    );
+
+    // The wrong implementation this rejects: treating S_Y == O_X as "no seed needed". A use that
+    // mentions the form only once has not said which occurrence is which role.
+    let single_binding = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![PortBinding::new(left.clone(), candidate)],
+        context,
+    ));
+    assert!(matches!(
+        SeedReorientation::new(first, single_binding, candidate).check(&catalog),
+        Err(SeedReorientationError::SeedDoesNotRelateThePair { .. })
+    ));
+
+    // A non-identity seed relates two distinct forms.
+    let reoriented = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xa3)));
+    let bridge_use = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(left.clone(), candidate),
+            PortBinding::new(right, reoriented),
+        ],
+        context,
+    ));
+    let bridged = SeedReorientation::new(first, bridge_use, reoriented);
+    assert!(bridged.check(&catalog).is_ok());
+    assert!(!bridged.is_identity_seed());
+
+    // Both tags survive: one exterior form reoriented under two uses stays two occurrences.
+    let through_second = SeedReorientation::new(second, bridge_use, reoriented);
+    assert!(through_second.check(&catalog).is_ok());
+    assert_ne!(
+        bridged.exterior().negation_use(),
+        through_second.exterior().negation_use()
+    );
+
+    // A generated seed proposes a filling; section 26's "supported typed seed relation" refuses it.
+    let generated_seed = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(left, candidate),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                reoriented,
+            ),
+        ],
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Generate,
+            support,
+            None,
+        ),
+    ));
+    assert!(matches!(
+        SeedReorientation::new(first, generated_seed, reoriented).check(&catalog),
+        Err(SeedReorientationError::GeneratedSeedRoute(route)) if route == generated_seed
+    ));
 }
 
 #[test]
@@ -1006,6 +1167,155 @@ fn negation_use_check_requires_one_oriented_presentation_context() {
     assert!(matches!(
         wrong_orientation.check(&catalog),
         Err(NegationUseCheckError::PresentationMismatch("orientation"))
+    ));
+}
+
+#[test]
+fn positive_negation_query_binds_the_presented_source_and_opens_the_candidate() {
+    let binding = binding(0x11);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let source = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x21)));
+    let other = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x2A)));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x24));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0x25));
+    let grain = GrainRef::from_artifact_ref(artifact(0x26));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0x27));
+    let support = SupportRef::from_artifact_ref(artifact(0x28));
+    let distinction = DistinctionRef::from_artifact_ref(artifact(0x22));
+
+    let presentation = catalog.insert_presentation(DeterminationPresentation::new(
+        distinction,
+        ic_core::Orientation::X,
+        source,
+        RelationalWebRef::from_artifact_ref(artifact(0x23)),
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        support,
+        None,
+    ));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("source", unit), port("candidate", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x29),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Check,
+        support,
+        None,
+    );
+    let source_port = TypeSymbol::new("source").expect("port name must be valid");
+    let candidate_port = TypeSymbol::new("candidate").expect("port name must be valid");
+
+    let bound_source = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![PortBinding::new(source_port.clone(), source)],
+        context,
+    ));
+    let derivation =
+        catalog.insert_program(IProgArtifact::new(unit, IProgIR::Return { value: source }));
+    let declare = |relation_use, coverage| {
+        NegationUse::new(
+            relation_use,
+            distinction,
+            ic_core::Orientation::X,
+            presentation,
+            relation,
+            derivation,
+            coverage,
+            applicability,
+            scope,
+            grain,
+            horizon,
+            Vec::new(),
+        )
+    };
+
+    let partial = declare(bound_source, NegationCoverage::CertifiedPartial);
+    let question = positive_negation_query(&partial, DischargeMode::Probe, &catalog)
+        .expect("a bound source with a free candidate port is a question");
+
+    // The source stays bound: the question asks what is exterior to *this* source, not which
+    // pairs the relation happens to relate.
+    assert_eq!(question.query().relation(), relation);
+    assert!(
+        question
+            .query()
+            .bound_ports()
+            .iter()
+            .any(|held| held.value() == source)
+    );
+    assert_eq!(question.query().open_ports().len(), 1);
+    assert_eq!(question.query().open_ports()[0].port(), &candidate_port);
+    assert_eq!(
+        question.query().open_ports()[0].mode(),
+        DischargeMode::Probe
+    );
+
+    // Plan section 23: the licensing use survives into the occurrence. Section 26: the declared
+    // semantic coverage travels with it, so a working relation cannot later be read as closed.
+    assert_eq!(
+        question.negation_use(),
+        partial.negation_use_ref().expect("use must hash")
+    );
+    assert_eq!(
+        question.semantic_coverage(),
+        NegationCoverage::CertifiedPartial
+    );
+
+    let working = declare(bound_source, NegationCoverage::WorkingOpen);
+    let working_question = positive_negation_query(&working, DischargeMode::Probe, &catalog)
+        .expect("coverage does not change constructibility");
+    assert_ne!(working_question.negation_use(), question.negation_use());
+    assert_eq!(
+        working_question.semantic_coverage(),
+        NegationCoverage::WorkingOpen
+    );
+
+    // A relation with every port bound is a proposition, not a question.
+    let fully_bound = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(source_port, source),
+            PortBinding::new(candidate_port.clone(), other),
+        ],
+        context,
+    ));
+    assert!(matches!(
+        positive_negation_query(
+            &declare(fully_bound, NegationCoverage::CertifiedPartial),
+            DischargeMode::Probe,
+            &catalog
+        ),
+        Err(PositiveNegationQueryError::NoOpenCandidatePort)
+    ));
+
+    // The wrong implementation this rejects: opening a well-typed question over the relation
+    // without binding the presented source. It still has a nonempty open section and still
+    // type-checks, but it is a different question.
+    let source_unbound = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![PortBinding::new(candidate_port, other)],
+        context,
+    ));
+    assert!(matches!(
+        positive_negation_query(
+            &declare(source_unbound, NegationCoverage::CertifiedPartial),
+            DischargeMode::Probe,
+            &catalog
+        ),
+        Err(PositiveNegationQueryError::SourceNotBound(unbound)) if unbound == source
     ));
 }
 
@@ -1277,5 +1587,637 @@ fn open_query_is_a_complete_partition_with_a_nonempty_open_section() {
     assert!(matches!(
         overlapping.check(&catalog),
         Err(OpenQueryCheckError::DuplicatePort(_))
+    ));
+}
+
+/// Builds one two-port relation use binding `left` and `right`.
+fn pair_use(
+    catalog: &mut Catalog,
+    relation: RelationRef,
+    left: TypedFormRef,
+    right: TypedFormRef,
+    context: RelationUseContext,
+) -> ic_core::RelationUseRef {
+    catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("left").expect("port name must be valid"),
+                left,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("right").expect("port name must be valid"),
+                right,
+            ),
+        ],
+        context,
+    ))
+}
+
+#[test]
+fn sixfold_roles_are_generated_dependently_and_gamma_stays_downstream() {
+    let binding = binding(0xc1);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let source_x = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xc2)));
+    let exterior_x = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xc3)));
+    let source_y = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xc4)));
+    let exterior_y = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xc5)));
+    let answer_a = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xc6)));
+    let answer_b = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xc7)));
+    let other_y_source = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xc8)));
+
+    let distinction = DistinctionRef::from_artifact_ref(artifact(0xc9));
+    let scope = ScopeRef::from_artifact_ref(artifact(0xca));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0xcb));
+    let grain = GrainRef::from_artifact_ref(artifact(0xcc));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0xcd));
+    let support = SupportRef::from_artifact_ref(artifact(0xce));
+    let context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        support,
+        None,
+    );
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("left", unit), port("right", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0xcf),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+
+    let presentation_x = catalog.insert_presentation(DeterminationPresentation::new(
+        distinction,
+        ic_core::Orientation::X,
+        source_x,
+        RelationalWebRef::from_artifact_ref(artifact(0xd0)),
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        support,
+        None,
+    ));
+    let presentation_y = catalog.insert_presentation(DeterminationPresentation::new(
+        distinction,
+        ic_core::Orientation::Y,
+        source_y,
+        RelationalWebRef::from_artifact_ref(artifact(0xd0)),
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        support,
+        None,
+    ));
+
+    let x_source_obs = pair_use(&mut catalog, relation, source_x, answer_a, context);
+    let x_cand_obs = pair_use(&mut catalog, relation, exterior_x, answer_b, context);
+    let x_incompat = pair_use(&mut catalog, relation, answer_a, answer_b, context);
+    let departure_x = catalog.insert_departure(DepartureWitness::new(
+        distinction,
+        source_x,
+        exterior_x,
+        presentation_x,
+        x_source_obs,
+        x_cand_obs,
+        answer_a,
+        answer_b,
+        x_incompat,
+        support,
+        scope,
+        applicability,
+        grain,
+    ));
+    let y_source_obs = pair_use(&mut catalog, relation, source_y, answer_a, context);
+    let y_cand_obs = pair_use(&mut catalog, relation, exterior_y, answer_b, context);
+    let departure_y = catalog.insert_departure(DepartureWitness::new(
+        distinction,
+        source_y,
+        exterior_y,
+        presentation_y,
+        y_source_obs,
+        y_cand_obs,
+        answer_a,
+        answer_b,
+        x_incompat,
+        support,
+        scope,
+        applicability,
+        grain,
+    ));
+
+    let soundness = catalog.insert_program(IProgArtifact::new(
+        unit,
+        IProgIR::Return { value: source_x },
+    ));
+    let use_x = catalog.insert_negation_use(NegationUse::new(
+        x_source_obs,
+        distinction,
+        ic_core::Orientation::X,
+        presentation_x,
+        relation,
+        soundness,
+        NegationCoverage::CertifiedPartial,
+        applicability,
+        scope,
+        grain,
+        horizon,
+        vec![artifact(0xd1)],
+    ));
+    let use_y = catalog.insert_negation_use(NegationUse::new(
+        y_source_obs,
+        distinction,
+        ic_core::Orientation::Y,
+        presentation_y,
+        relation,
+        soundness,
+        NegationCoverage::CertifiedPartial,
+        applicability,
+        scope,
+        grain,
+        horizon,
+        vec![artifact(0xd2)],
+    ));
+
+    let claim_x = TaggedExteriorClaim::new(
+        use_x,
+        source_x,
+        exterior_x,
+        departure_x,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0xd3)),
+    );
+    let claim_y = TaggedExteriorClaim::new(
+        use_y,
+        source_y,
+        exterior_y,
+        departure_y,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0xd4)),
+    );
+    assert!(claim_x.check(&catalog).is_ok());
+    assert!(claim_y.check(&catalog).is_ok());
+
+    let seed_use = pair_use(&mut catalog, relation, exterior_x, source_y, context);
+    let seed = SeedReorientation::new(claim_x, seed_use, source_y);
+    assert!(seed.check(&catalog).is_ok());
+
+    let x_extension = FiniteNegationExtension::new(
+        use_x,
+        vec![(source_x.as_artifact_ref(), exterior_x.as_artifact_ref())],
+    )
+    .expect("unique incidences");
+    let x_fiber = exact_return_fiber(&x_extension, exterior_x.as_artifact_ref()).expect("declared");
+    let y_extension = FiniteNegationExtension::new(
+        use_y,
+        vec![
+            (source_y.as_artifact_ref(), exterior_y.as_artifact_ref()),
+            (
+                other_y_source.as_artifact_ref(),
+                exterior_y.as_artifact_ref(),
+            ),
+        ],
+    )
+    .expect("unique incidences");
+    let y_fiber = exact_return_fiber(&y_extension, exterior_y.as_artifact_ref()).expect("declared");
+
+    let occurrence = ReciprocalOccurrence::new(
+        seed,
+        x_fiber.clone(),
+        Some(source_x.as_artifact_ref()),
+        claim_y,
+        y_fiber.clone(),
+        Some(source_y.as_artifact_ref()),
+    )
+    .expect("selections are drawn from their fibers");
+    assert!(occurrence.check(&catalog).is_ok());
+    assert_eq!(occurrence.source_x(), source_x);
+    assert_eq!(occurrence.exterior_x(), exterior_x);
+    assert_eq!(occurrence.source_y(), source_y);
+    assert_eq!(occurrence.exterior_y(), exterior_y);
+
+    // Fixture 53: the Y side continues from the seeded source. An unrelated claim is refused,
+    // which is what makes this an occurrence rather than six independent openings.
+    let unrelated = ReciprocalOccurrence::new(
+        seed,
+        x_fiber.clone(),
+        Some(source_x.as_artifact_ref()),
+        claim_x,
+        y_fiber.clone(),
+        None,
+    )
+    .expect("membership still holds");
+    assert!(matches!(
+        unrelated.check(&catalog),
+        Err(ReciprocalOccurrenceError::ReciprocalSourceIsNotTheSeededSource { .. })
+    ));
+
+    // Fixture 55: R_X arises from the reverse section of that same use, so a fiber under the
+    // other use is a different return entirely.
+    let foreign_fiber =
+        exact_return_fiber(&y_extension, exterior_y.as_artifact_ref()).expect("declared");
+    let wrong_use =
+        ReciprocalOccurrence::new(seed, foreign_fiber, None, claim_y, y_fiber.clone(), None)
+            .expect("no selection to check");
+    assert!(matches!(
+        wrong_use.check(&catalog),
+        Err(ReciprocalOccurrenceError::ReturnFiberUseMismatch("X"))
+    ));
+
+    // Fixture 59: Gamma is downstream and may not manufacture a missing filling.
+    let without_rx =
+        ReciprocalOccurrence::new(seed, x_fiber.clone(), None, claim_y, y_fiber.clone(), None)
+            .expect("no selection to check");
+    assert!(matches!(
+        without_rx.gamma_reachable(),
+        Err(GammaError::RoleMissing("R_X"))
+    ));
+    assert!(occurrence.gamma_reachable().is_ok());
+    assert_eq!(
+        without_rx.selected_return_x(),
+        None,
+        "reaching for Gamma did not supply the role it found missing"
+    );
+
+    // Fixture 60: a stable X return coexists with an unstable Y return in one occurrence.
+    let signature_context =
+        SignatureContext::new(binding, scope, applicability, grain, horizon, unit);
+    let x_signatures = ExactFiniteSignature::new(
+        signature_context,
+        vec![(source_x.as_artifact_ref(), artifact(0xe0))],
+    )
+    .expect("unique domain values");
+    let y_signatures = ExactFiniteSignature::new(
+        signature_context,
+        vec![
+            (source_y.as_artifact_ref(), artifact(0xe0)),
+            (other_y_source.as_artifact_ref(), artifact(0xe1)),
+        ],
+    )
+    .expect("unique domain values");
+    let x_selection = SelectedReturn::select(x_fiber, source_x.as_artifact_ref()).expect("member");
+    let y_selection = SelectedReturn::select(y_fiber, source_y.as_artifact_ref()).expect("member");
+    assert!(matches!(
+        check_return_closure(&x_selection, &x_signatures).expect("domain is the fiber"),
+        ReturnClosure::Closed { .. }
+    ));
+    assert!(matches!(
+        check_return_closure(&y_selection, &y_signatures).expect("domain is the fiber"),
+        ReturnClosure::Open { .. }
+    ));
+
+    // Section 40: identical fillings are protected-equivalent under any horizon; differing ones
+    // are undecided here, never different.
+    let residuals = occurrence.residuals();
+    assert_eq!(residuals[0], RoleComparison::Coincident, "S_X was selected");
+    assert_eq!(
+        residuals[1],
+        RoleComparison::Undecided,
+        "O_X and S_Y differ in form; no horizon has been consulted"
+    );
+    assert_eq!(residuals[2], RoleComparison::Undecided);
+    assert_eq!(residuals[3], RoleComparison::Coincident, "S_Y was selected");
+    assert_eq!(
+        without_rx.residuals()[0],
+        RoleComparison::Undecided,
+        "an unselected return has not been compared, which is not a failed comparison"
+    );
+}
+
+#[test]
+fn a_typed_negation_extension_checks_each_incidence_against_the_port_it_fills() {
+    let binding = binding(0xf1);
+    let mut catalog = Catalog::default();
+    // The two ports carry DIFFERENT types on purpose. A relation whose source and candidate
+    // types coincide would hide a check that compared each form against the wrong port, the same
+    // way a symmetric extension would hide image-for-preimage.
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let boolean = catalog.insert_type(TypeArtifact::new(binding, TyIR::Bool));
+    let source = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xf2)));
+    let candidate = catalog.insert_form(TypedForm::new(binding, boolean, artifact(0xf3)));
+    let other_candidate = catalog.insert_form(TypedForm::new(binding, boolean, artifact(0xf4)));
+    let wrong_type = catalog.insert_form(TypedForm::new(binding, unit, artifact(0xf5)));
+
+    let distinction = DistinctionRef::from_artifact_ref(artifact(0xf6));
+    let scope = ScopeRef::from_artifact_ref(artifact(0xf7));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0xf8));
+    let grain = GrainRef::from_artifact_ref(artifact(0xf9));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0xfa));
+    let support = SupportRef::from_artifact_ref(artifact(0xfb));
+    let context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        support,
+        None,
+    );
+    let presentation = catalog.insert_presentation(DeterminationPresentation::new(
+        distinction,
+        ic_core::Orientation::X,
+        source,
+        RelationalWebRef::from_artifact_ref(artifact(0xfc)),
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        support,
+        None,
+    ));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("source", unit), port("candidate", boolean)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0xfd),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    // The use binds the source port and leaves the candidate port open, exactly as the
+    // positive-negation question requires.
+    let bound_source = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![PortBinding::new(
+            TypeSymbol::new("source").expect("port name must be valid"),
+            source,
+        )],
+        context,
+    ));
+    let soundness =
+        catalog.insert_program(IProgArtifact::new(unit, IProgIR::Return { value: source }));
+    let use_ref = catalog.insert_negation_use(NegationUse::new(
+        bound_source,
+        distinction,
+        ic_core::Orientation::X,
+        presentation,
+        relation,
+        soundness,
+        NegationCoverage::CertifiedPartial,
+        applicability,
+        scope,
+        grain,
+        horizon,
+        Vec::new(),
+    ));
+
+    let extension = TypedFiniteNegationExtension::declare(
+        use_ref,
+        vec![(source, candidate), (source, other_candidate)],
+    )
+    .expect("unique incidences");
+    assert!(extension.check(&catalog).is_ok());
+
+    // The wrong implementation this rejects: checking each form against the other port. With
+    // Unit and Bool ports a swap is visible; with two Unit ports it would not be.
+    let swapped = TypedFiniteNegationExtension::declare(use_ref, vec![(candidate, source)])
+        .expect("unique incidences");
+    assert!(matches!(
+        swapped.check(&catalog),
+        Err(TypedNegationExtensionError::IncidenceTypeMismatch { role: "source", .. })
+    ));
+
+    let mistyped = TypedFiniteNegationExtension::declare(use_ref, vec![(source, wrong_type)])
+        .expect("unique incidences");
+    assert!(matches!(
+        mistyped.check(&catalog),
+        Err(TypedNegationExtensionError::IncidenceTypeMismatch {
+            role: "candidate",
+            ..
+        })
+    ));
+
+    // Section 26: the forward section is the candidate field the question ranges over.
+    let field = extension.negation_field(source);
+    assert_eq!(field.negation_use(), use_ref);
+    assert_eq!(field.source(), source);
+    assert_eq!(field.candidates().len(), 2);
+    assert!(field.contains(candidate));
+    assert!(field.contains(other_candidate));
+
+    // An empty field is an empty declared list, not an assertion that the source has no exterior.
+    assert!(
+        extension
+            .negation_field(other_candidate)
+            .candidates()
+            .is_empty()
+    );
+
+    // Image and preimage are the two directions of one declared extension: for every declared
+    // incidence the candidate is in the field of its source, and the source is in the fiber of
+    // its candidate.
+    let erased = extension
+        .erase()
+        .expect("typed incidences stay unique when erased");
+    for (declared_source, declared_candidate) in extension.incidences() {
+        assert!(
+            extension
+                .negation_field(*declared_source)
+                .contains(*declared_candidate)
+        );
+        let fiber = exact_return_fiber(&erased, declared_candidate.as_artifact_ref())
+            .expect("a declared incidence has a return");
+        assert!(fiber.contains(declared_source.as_artifact_ref()));
+        assert_eq!(fiber.use_ref(), use_ref);
+    }
+
+    // A forged form reference is refused rather than silently skipped.
+    let forged = TypedFormRef::from_artifact_ref(artifact(0xee));
+    let forged_extension = TypedFiniteNegationExtension::declare(use_ref, vec![(source, forged)])
+        .expect("unique incidences");
+    assert!(matches!(
+        forged_extension.check(&catalog),
+        Err(TypedNegationExtensionError::UnresolvedForm(missing)) if missing == forged
+    ));
+}
+
+#[test]
+fn an_exterior_claim_must_name_an_incidence_its_own_use_declares() {
+    let binding = binding(0x71);
+    let mut catalog = Catalog::default();
+    let unit = catalog.insert_type(TypeArtifact::new(binding, TyIR::Unit));
+    let source_one = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x72)));
+    let source_two = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x73)));
+    let candidate_one = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x74)));
+    let candidate_two = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x75)));
+    let answer_a = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x76)));
+    let answer_b = catalog.insert_form(TypedForm::new(binding, unit, artifact(0x77)));
+
+    let distinction = DistinctionRef::from_artifact_ref(artifact(0x78));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x79));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0x7a));
+    let grain = GrainRef::from_artifact_ref(artifact(0x7b));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0x7c));
+    let support = SupportRef::from_artifact_ref(artifact(0x7d));
+    let context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        support,
+        None,
+    );
+    let presentation = catalog.insert_presentation(DeterminationPresentation::new(
+        distinction,
+        ic_core::Orientation::X,
+        source_one,
+        RelationalWebRef::from_artifact_ref(artifact(0x7e)),
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        support,
+        None,
+    ));
+    let relation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("source", unit), port("candidate", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x7f),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let bound_source = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![PortBinding::new(
+            TypeSymbol::new("source").expect("port name must be valid"),
+            source_one,
+        )],
+        context,
+    ));
+    // The observations `d_A: A ~> C` and the incompatibility are relations in their own right,
+    // distinct from the negation relation whose ports are source and candidate.
+    let observation = catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![port("left", unit), port("right", unit)],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x81),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let source_obs = pair_use(&mut catalog, observation, source_one, answer_a, context);
+    let candidate_obs = pair_use(&mut catalog, observation, candidate_one, answer_b, context);
+    let incompat = pair_use(&mut catalog, observation, answer_a, answer_b, context);
+    let departure = catalog.insert_departure(DepartureWitness::new(
+        distinction,
+        source_one,
+        candidate_one,
+        presentation,
+        source_obs,
+        candidate_obs,
+        answer_a,
+        answer_b,
+        incompat,
+        support,
+        scope,
+        applicability,
+        grain,
+    ));
+    let soundness = catalog.insert_program(IProgArtifact::new(
+        unit,
+        IProgIR::Return { value: source_one },
+    ));
+    let use_ref = catalog.insert_negation_use(NegationUse::new(
+        bound_source,
+        distinction,
+        ic_core::Orientation::X,
+        presentation,
+        relation,
+        soundness,
+        NegationCoverage::CertifiedPartial,
+        applicability,
+        scope,
+        grain,
+        horizon,
+        Vec::new(),
+    ));
+    let other_use = catalog.insert_negation_use(NegationUse::new(
+        bound_source,
+        distinction,
+        ic_core::Orientation::X,
+        presentation,
+        relation,
+        soundness,
+        NegationCoverage::WorkingOpen,
+        applicability,
+        scope,
+        grain,
+        horizon,
+        Vec::new(),
+    ));
+
+    let claim = TaggedExteriorClaim::new(
+        use_ref,
+        source_one,
+        candidate_one,
+        departure,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0x80)),
+    );
+
+    // Two incidences, so the candidate the claim names is not the only one in the extension.
+    let extension = TypedFiniteNegationExtension::declare(
+        use_ref,
+        vec![(source_one, candidate_one), (source_two, candidate_two)],
+    )
+    .expect("unique incidences");
+    check_declared_incidence(&claim, &extension, &catalog)
+        .expect("the declared incidence must check");
+
+    // The wrong implementation this rejects: looking for the candidate anywhere in the extension
+    // rather than paired with this source. `candidate_two` is declared exterior to `source_two`,
+    // which says nothing about `source_one`.
+    let crossed = TaggedExteriorClaim::new(
+        use_ref,
+        source_one,
+        candidate_two,
+        departure,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0x80)),
+    );
+    // A claim whose candidate disagrees with its own witness fails before the field is reached.
+    assert!(matches!(
+        check_declared_incidence(&crossed, &extension, &catalog),
+        Err(DeclaredIncidenceError::Claim(_))
+    ));
+
+    // The discriminating case. The claim is internally consistent, and its candidate DOES appear
+    // in the extension -- paired with the other source. An implementation that looked for the
+    // candidate anywhere would admit this; the field of `source_one` is empty, so it is refused.
+    let undeclared_extension =
+        TypedFiniteNegationExtension::declare(use_ref, vec![(source_two, candidate_one)])
+            .expect("unique incidences");
+    assert!(
+        undeclared_extension
+            .incidences()
+            .iter()
+            .any(|(_, candidate)| *candidate == candidate_one),
+        "the candidate must be present in the extension for this to discriminate"
+    );
+    assert!(matches!(
+        check_declared_incidence(&claim, &undeclared_extension, &catalog),
+        Err(DeclaredIncidenceError::IncidenceNotDeclared {
+            declared_source,
+            candidate,
+        }) if declared_source == source_one && candidate == candidate_one
+    ));
+
+    // An extension declared for another use cannot vouch for this claim.
+    let foreign =
+        TypedFiniteNegationExtension::declare(other_use, vec![(source_one, candidate_one)])
+            .expect("unique incidences");
+    assert!(matches!(
+        check_declared_incidence(&claim, &foreign, &catalog),
+        Err(DeclaredIncidenceError::ExtensionIsForAnotherUse { .. })
     ));
 }

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# ic-inject -- UserPromptSubmit.  Re-states the loop every turn.
+#
+# A protocol read once at turn 1 does not constrain an edit at turn 40.  This is
+# the cheap half of the harness: the gates refuse, this one remembers.
+
+set -uo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$HERE/../.." && pwd)"
+cat >/dev/null   # drain the payload; nothing here depends on it
+
+STATUS="$(bash "$HERE/ic-trace" status 2>&1 | sed 's/^/  /')"
+
+OBLIGATION="$(awk '/^## Strongest live obligation/{f=1;next} f&&/^> /{sub(/^> /,"");printf "%s ",$0} f&&/^$/&&p{exit} f&&/^> /{p=1}' \
+    "$ROOT/IMPLEMENTATION_FRONTIER.md" 2>/dev/null)"
+[ -n "$OBLIGATION" ] || OBLIGATION='(IMPLEMENTATION_FRONTIER.md: no live obligation parsed)'
+
+CONTEXT="INQUIRY HARNESS ACTIVE -- consequential work runs the loop, not a checklist.
+
+  ENSURE      probe the repo before recalling it; remembered state is not actuality
+  FRONTIER    name the one live obligation this serves, or stop: scope unjustified
+  DIFFERENCE  current observable / required observable / protected difference /
+              scope-applicability-grain-horizon / independent discriminator
+  LOCUS       smallest boundary accounting for it; several live => separator first
+  CHALLENGE   the smallest WRONG implementation your check must reject
+  SEAL        ic-trace seal ...   <- mutations are refused until this exists
+  ACT         preserve the raw return before reading it
+  CHECK       mechanical discriminator against the sealed prediction
+  RESIDUAL    one of nine classes, never pass/fail
+  SUBTRACT    is there a smaller protected-equivalent realization?
+  STOP        one of six states; Satisfied needs a warrant; Unknown is lawful
+
+Standing prohibitions, from the calculus this repository specifies:
+  departure must be POSITIVE   -- a concrete incompatible pair, never failed search
+  Unknown != Negative          -- not found is not absent
+  coverage_sem != coverage_exec-- handled is not exercised
+  fiber != selected return     -- what else would this same relation return?
+  no self-warrant              -- you may not be the independent check
+  generation != actuality != check != warrant
+
+Live obligation (IMPLEMENTATION_FRONTIER.md):
+  ${OBLIGATION}
+
+Ledger:
+${STATUS}"
+
+printf '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"%s"}}\n' \
+    "$(printf '%s' "$CONTEXT" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\t/\\t/g' \
+         | awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }')"

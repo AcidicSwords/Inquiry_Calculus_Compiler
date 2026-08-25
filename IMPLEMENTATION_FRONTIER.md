@@ -51,7 +51,13 @@ The protected difference is visible in the accepted sources:
   forms, requires the presentation's source and indexed context, and rejects relation uses with
   different scope/applicability/grain/horizon. Each source/candidate observation use must also
   bind its declared form and answer, and the incompatibility use must bind the two declared
-  answers. Constructing or checking it evaluates no relation and proves neither incompatibility
+  answers. Each of the three evidence uses must additionally declare an evidence route other than
+  `Generate`: a generator proposes a provisional filling and can never supply positive departure
+  evidence. The other four modes are retained, so a `Pure` derivation from already-standing data
+  remains lawful and the rule rejects generation rather than everything that is not a probe.
+  This is a check on the *declared* route only. A use that declares `Probe` while nothing was
+  probed still passes, so the discharge mode is not yet evidence that the route was taken.
+  Constructing or checking it evaluates no relation and proves neither incompatibility
   nor exteriority.
 - The derived `compare_finite_observation_cells` checker now supplies the exact finite
   cell-exclusion discriminator: an observed unequal coordinate gives a separator; no separator
@@ -142,6 +148,83 @@ The protected difference is visible in the accepted sources:
   factor map only under kernel inclusion, and otherwise gives a pair with identical family values
   and different targets. The product is accumulated information, not co-applicability,
   joint-realizability, a composite raw return, or a composite actual event.
+- `positive_negation_query` now builds the plan's step-10 question `?y[N_u(x, y)]` as an ordinary
+  `OpenQuery`: the presented source stays bound, the remaining schema ports are exposed under a
+  declared discharge route, and the context is inherited from the negation use. It refuses a
+  relation whose ports are all bound, because that is a proposition rather than a question, and
+  refuses a use that does not bind the presented source, because that asks which pairs the
+  relation relates rather than what is exterior to this source. The result retains the negation-use
+  tag and the declared semantic coverage so neither is dropped on the way to an answer. Building
+  the question evaluates no relation, produces no candidate, and creates no exterior; an answer
+  reached generatively would still be a generated `O_X`.
+- `SeedReorientation` now represents the plan's step-14 seed `Seed_Y(O_X, S_Y)`. It takes a
+  `TaggedExteriorClaim` rather than a bare form, so `O_X` arrives carrying the `X`-side use tag
+  that section 38 requires to remain occurrence provenance. `exterior_form` and
+  `reoriented_source` are separate fields and stay separate when they hold the same form: an
+  identity seed still names a relation use, and that use must bind the form twice, once for each
+  role. Checking revalidates the exterior claim, rehashes the seed use, refuses a merely
+  generative route, and requires the seed to share the negation use's indexed context. It does not
+  evaluate the seed relation, select `S_Y`, admit the reorientation, or make the reciprocal side
+  actual; `is_identity_seed` reports a coincidence of fillings, never a collapse of roles.
+- Steps 10, 11, and 14 are joined by a declared finite extension rather than by evaluation. Plan
+  section 77 makes a deterministic finite list the first lawful realisation of a negation
+  frontier, so this is the planned route and not a stopgap; what remains out of phase is the
+  general case, where a formula-bodied relation would need binding-supplied denotation to be
+  decided. `TypedFiniteNegationExtension` resolves and rehashes its negation use, reads that
+  use's relation, requires one bound source port and one open candidate port, and type-checks
+  every declared incidence against the port it fills. It supplies the forward section
+  `NegField_u(s)` that section 26 makes the candidate field of a positive-negation question, and
+  erases to the untyped extension so the existing reverse-section, selection, and closure entry
+  points apply unchanged. Membership in that field is candidacy under a declared list: a candidate
+  there is not an exterior and becomes one only through its own departure witness, and an empty
+  field reports an empty declaration rather than the absence of an exterior. The extension is
+  still declared, not derived from a relation body.
+- `check_declared_incidence` closes the last unchecked joint in the `X` chain. The specification
+  defines the role as recording `e` in `NegField_u(s)`, and `TaggedExteriorClaim` had to omit that
+  membership for want of a field, saying so in its own documentation. A claim checked against a
+  declared extension must now name an incidence that extension relates to its own source under its
+  own use; a candidate related to some *other* source in the same extension is refused. This
+  establishes the declared incidence only, and does not relieve the departure witness of
+  establishing exteriority. The claim artifact deliberately holds no extension reference, so
+  `TaggedExteriorClaim::check` alone still does not require an incidence: the requirement applies
+  when a caller supplies an extension, and making it unconditional would mean admitting an
+  extension into the negation use itself.
+  This does **not** put the sixfold view out of reach. Plan section 43 marks `ox_occurrence`,
+  `rx`, `ry`, and `compatibility` optional and calls the view non-authoritative, so a partial
+  occurrence carrying `Unknown` where actuality is absent is its designed shape, not a
+  degenerate one. What the view still lacks is a checked notion behind its `rx` field: section 28
+  makes `R_X` a supported selection *from* the return fiber and distinct from the fiber.
+- `SelectedReturn` now supplies that role. Selection refuses any source the return does not admit,
+  so `R_X` is drawn from the fiber by construction, and `check_return_closure` takes the selection
+  but derives its verdict from every source the fiber admits: a selected return equal to the
+  source, entirely stable when read alone, still reports `Open` with the concrete surviving pair
+  while a second protected class remains. Membership is enforced; the selection's *support* is not
+  represented, because supported answers await the Phase 6/7 boundary.
+- `ReciprocalOccurrence` now assembles the derived sixfold view. Its fields are the dependency
+  chain rather than six slots: the seed carries `u_X`, `S_X`, `O_X`, and `S_Y` as one checked unit,
+  and the `Y`-side claim must continue from that `S_Y`, so a flat record of six roles cannot
+  reinstate the independent-openings conception the successor edition replaced. A one-sided
+  inquiry is not a value of the type at all. Checking additionally requires each return fiber to
+  be the reverse section of its own use taken at its own exterior, and both orientations to belong
+  to one distinction. `gamma_reachable` refuses while a selected return is missing and supplies
+  none, keeping `Gamma_D` downstream. The four section-40 comparisons report only `Coincident` or
+  `Undecided`: identical fillings are protected-equivalent under every horizon, while differing
+  fillings are undecided here, because deciding `equiv_H` needs a protected-horizon evaluator that
+  no phase supplies. Section 43's `ox_occurrence`/`oy_occurrence` event links and stored recovery
+  references are deliberately absent, having no producer; the view carries no canonical identity,
+  since section 43 calls it derived and not authoritative history.
+- The derived `exact_return_fiber` now supplies the same-use reverse section `N_u^{-1}[e]` over a
+  caller-declared finite negation extension, retaining the use tag so two uses reaching one
+  exterior keep two distinct returns. It is the whole fiber, never a selected return: the
+  successor fixtures that every admitted incidence returns its source, and that source membership
+  does not imply unique return determination, are both executable. An exterior with no declared
+  incidence is refused rather than reported as an empty fiber, so a missing declaration does not
+  become a negative result. `check_fiber_recovery` then requires the protected-signature domain to
+  equal the derived fiber, closing the gap in which recovery could be reported against a table
+  unconnected to any incidence. The extension remains caller-declared: the retained
+  `NegationUseRef` is not resolved, so nothing yet checks that it names an admitted use or that
+  the declared pairs match that relation. Admission, evaluation, coverage, and actuality are
+  untouched.
 - A derived `RecoveryStatusIR` keeps `Recovered`, positively witnessed `NotRecovered`, and
   `Unknown` distinct. Its finite checker accepts only a separately certified complete finite
   same-use fiber table: constant protected signatures produce a finite recovery result, differing
@@ -171,6 +254,21 @@ Different answers determine whether a positive certificate can distinguish an ac
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The next
 discriminator must reject a purported departure whose observation result, incompatible answers,
 or derivation route is not independently represented and checked.
+
+Phase 11 has a least-fixed-point standing engine. `standing()` iterates
+`T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty
+set until it closes. Growing from nothing rather than shrinking from everything is what the
+no-rootless-positive-support-cycle theorem requires: a family of claims supporting only one
+another is entirely self-consistent and belongs to the greatest fixed point, while the least fixed
+point never reaches it. Grounding one member by ingress admits the whole cycle, so the theorem
+forbids rootless cycles rather than cycles. `SupportEnvironment` decides the two closed-support
+conditions that depend on the standing set — premises requiring standing, and an empty open
+dependency boundary — and carries applicability, independent-check success, and inconsistency
+policy as caller declarations, none of which has an evaluator in this phase. Several incomparable
+environments may support one claim, and one closing route suffices. The engine reasons from the
+declarations it is given: it does not verify that an ingress fact is grounded or that a declared
+check ran, and the `SupportRef` fields carried by relation uses and departure witnesses are still
+opaque and unconnected to any `ClaimRef`.
 
 ## Known later questions
 

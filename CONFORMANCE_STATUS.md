@@ -70,11 +70,17 @@ or passing.
 | P4-DEPARTURE-IR-002 malformed departure-witness rejection | PASS | `departure_identity::departure_witnesses_reject_malformed_encodings` |
 | P4-DEPARTURE-IR-003 presentation, typed-form, and relation-use context validation | PASS | `relation_schema::departure_witness_check_requires_the_declared_presentation_and_context` |
 | P4-DEPARTURE-IR-004 source/candidate observation and incompatibility claimed-pair linkage | PASS | `relation_schema::departure_witness_check_requires_the_declared_presentation_and_context` |
+| P4-DEPARTURE-IR-005 declared `Generate` evidence route rejected without over-rejecting a `Pure` derivation | PASS | `relation_schema::departure_witness_check_requires_the_declared_presentation_and_context` |
 | P4-CELL-IR-001 exact finite cell separator/exclusion coincidence across 65,536 binary pairs | PASS | `finite_cell::exact_finite_cell_exclusion_and_separator_existence_coincide_for_65536_pairs` |
 | P4-CELL-IR-002 unknown finite observation remains neither separator nor same-cell conclusion | PASS | `finite_cell::{unknown_observation_never_becomes_a_positive_separator_or_same_cell_claim,comparison_rejects_mismatched_coordinate_schemas}` |
 | P4-INCOMPAT-IR-001 finite declared-pair incompatibility preserves positive witness, no-witness, and unknown | PASS | `finite_cell::{finite_incompatibility_requires_a_positive_declared_pair,finite_incompatibility_rejects_duplicate_pair_declarations}` |
 | P4-INCOMPAT-IR-002 typed finite declared-pair checker rehashes/type-checks cross-typed values | PASS | `finite_cell::{typed_finite_incompatibility_rehashes_checked_cross_typed_pairs,typed_finite_incompatibility_rejects_duplicate_and_forged_declarations}` |
 | P4-EXTERIOR-IR-001 derived tagged exterior-claim preserves use identity and structural witness linkage | PASS | `relation_schema::tagged_exterior_claim_preserves_use_tag_without_admitting_an_incidence` |
+| P4-EXTERIOR-IR-002 a tagged exterior claim checked against a declared extension must name an incidence that extension relates to its own source, under its own use | PASS | `relation_schema::an_exterior_claim_must_name_an_incidence_its_own_use_declares` |
+| P4-SEED-IR-001 identity and bridged seed reorientation retain both roles, the use tag, and refuse a generated route (successor fixture 56) | PASS | `relation_schema::tagged_exterior_claim_preserves_use_tag_without_admitting_an_incidence` |
+| P4-SIXFOLD-IR-001 dependent reciprocal occurrence: the Y side continues from the seeded source and each return fiber is its own use taken at its own exterior (successor fixtures 53, 55) | PASS | `relation_schema::sixfold_roles_are_generated_dependently_and_gamma_stays_downstream` |
+| P4-SIXFOLD-IR-002 Gamma refuses while a role is missing and supplies none; a stable X return coexists with an unstable Y return; differing role fillings report Undecided, not different (successor fixtures 59, 60) | PASS | `relation_schema::sixfold_roles_are_generated_dependently_and_gamma_stays_downstream` |
+| P4-NEGQUERY-IR-001 positive-negation question binds the presented source, opens the candidate, and retains use tag and semantic coverage | PASS | `relation_schema::positive_negation_query_binds_the_presented_source_and_opens_the_candidate` |
 | P13-CUE-IR-001 exact finite discriminator-basis sufficiency and concrete residual separator | PASS | `cue::{exact_finite_cue_basis_returns_a_protected_separator_or_sufficiency,empty_basis_is_only_sufficient_for_a_constant_protected_signature,exact_finite_cue_basis_rejects_context_and_domain_mismatches}` |
 | P13-CUE-IR-002 finite declared resource preorder retains incomparable sufficient candidates | PASS | `cue::{finite_resource_preorder_keeps_incomparable_sufficient_bases_and_residuals,finite_resource_preorder_rejects_invalid_orders_and_candidates}` |
 | P4-FRONTIER-IR-001 tagged active-use frontier preserves distinct use and execution-coverage identities | PASS | `frontier::tagged_frontier_keeps_same_source_through_distinct_use_identities` |
@@ -103,12 +109,18 @@ or passing.
 | P7-RESOLUTION-IR-003 malformed resolution-path rejection | PASS | `resolution_identity::resolution_paths_reject_malformed_envelopes` |
 | P4-DETERMINE-THROUGH-001 exact finite kernel-inclusion factorization | PASS | `factorization::exact_factorization_constructs_the_target_map_when_kernels_are_included` |
 | P4-DETERMINE-THROUGH-002 kernel separator and context/coverage mismatch rejection | PASS | `factorization::exact_factorization_returns_a_kernel_separator_and_rejects_incomplete_contexts` |
+| P4-FIBER-IR-001 exact finite same-use reverse return section, source membership, and non-unique return (successor fixtures 34-35) | PASS | `fiber::{every_admitted_incidence_returns_its_source_through_the_same_use,the_same_exterior_through_two_uses_keeps_two_distinct_returns}` |
+| P4-FIBER-IR-002 undeclared exterior, duplicate incidence, and fiber/signature domain disagreement reject | PASS | `fiber::{an_undeclared_exterior_has_no_return_and_a_duplicate_incidence_is_refused,recovery_is_checked_against_the_derived_fiber_not_an_unconnected_table}` |
+| P4-FIBER-IR-003 selection is drawn from the return fiber, and closure is decided from the whole fiber rather than the selection (successor fixture 37) | PASS | `fiber::a_stable_selected_return_does_not_close_a_fiber_that_still_splits` |
+| P4-NEGFIELD-IR-001 typed finite negation extension type-checks each incidence against the port it fills, supplies the forward section `NegField_u(s)`, and agrees with the reverse section on every declared incidence | PASS | `relation_schema::a_typed_negation_extension_checks_each_incidence_against_the_port_it_fills` |
 | P4-RECOVERY-IR-001 exact finite protected-signature constancy | PASS | `recovery::exact_fiber_recovery_requires_signature_constancy_and_emits_a_positive_separator` |
 | P4-RECOVERY-IR-002 empty fiber rejection and unknown/loss separation | PASS | `recovery::empty_or_incomplete_evidence_is_not_conflated_with_non_recovery` |
 | P4-FAMILY-IR-001 joint exact-family factorization without composite actuality | PASS | `family_factorization::exact_family_product_recovers_a_target_that_no_member_recovers` |
 | P4-FAMILY-IR-002 empty/mismatched family rejection and joint separator | PASS | `family_factorization::exact_family_product_rejects_bad_coverage_and_exposes_joint_kernel_separators` |
 | P4-BOUNDARY-IR-001 local boundary-chart canonical identity preserves tagged frontiers and open roles | PASS | `boundary_identity::boundary_chart_keeps_tagged_frontiers_and_absent_roles_explicit` |
 | P4-BOUNDARY-IR-002 malformed chart optional-field rejection | PASS | `boundary_identity::boundary_chart_rejects_malformed_optional_and_count_fields` |
+| P11-STAND-IR-001 least-fixed-point standing: a rootless positive support cycle never enters, and grounding one member admits the cycle | PASS | `standing::a_rootless_support_cycle_never_enters_standing` |
+| P11-STAND-IR-002 each of the five closed-support conditions independently blocks a route, and one closed route suffices among incomparable environments | PASS | `standing::{each_closed_support_condition_independently_blocks_a_route,one_closed_route_suffices_when_another_is_blocked,standing_grows_only_through_routes_that_already_reach}` |
 
 ## Pending specification and plan categories
 
@@ -130,7 +142,7 @@ or passing.
 | Paired actuality and reciprocal residual reconstruction | PENDING | Phase 8 |
 | Retained/access/active separation and recurrent memory crawl | PENDING | Phase 9 |
 | Surface/backend/raw-return compilation boundaries | PARTIAL | Phase 10: canonical compiled probe-operator and recurrent probe-contract identities are distinct from runtime control flow and raw return; contract comparability/bridges, surface plans, backend requests, rendering, dispatch, and provider execution remain pending |
-| Positive standing, support environments, and rootless cycles | PENDING | Phase 11 |
+| Positive standing, support environments, and rootless cycles | PARTIAL | Phase 11: least-fixed-point standing over declared support environments, the five closed-support conditions, and the no-rootless-cycle theorem pass; claim artifacts, support-environment identity, and connection to the SupportRef fields carried elsewhere remain pending |
 | Separator generation, cue planning, and bounded unknown results | PARTIAL | Phase 13: exact finite total/deterministic/caller-covered sufficient-basis checking, concrete separators, and nondominated selection over caller-supplied finite candidate/resource-preorder inputs pass; generator regimes, candidate-set exhaustiveness, approximate/frontier results, and bounded unknown residuals remain pending |
 | Materialization, expressibility, and representation gaps | PENDING | Phase 14 |
 | Binding extension, bridges, rebinding, and history locality | PENDING | Phase 15 |

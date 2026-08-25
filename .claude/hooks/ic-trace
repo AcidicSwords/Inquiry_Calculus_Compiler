@@ -1,0 +1,196 @@
+#!/usr/bin/env bash
+# ic-trace -- the inquiry ledger.
+#
+# An append-only, parent-linked, fingerprinted record of one agent's reasoning,
+# carrying the same laws this repository already imposes on its own event spine:
+# a raw return is preserved before anything interprets it, a prediction is sealed
+# before the action it predicts, and no record is ever rewritten.
+#
+#   ic-trace init [slug]      open a trace for this session
+#   ic-trace status           current file, seq, open cycle, fuel
+#   ic-trace open             exit 0 iff a cycle is open (a seal with no residual)
+#   ic-trace <kind> k=v ...   append one record
+#
+# Kinds and their required keys:
+#   ensure    task authority invariants
+#   question  q mode answer branch          mode: Pure|Generate|Probe|Check|Warrant
+#   seal      should_change invariants discriminator wrong_impl
+#   raw       cmd (file= digest is computed, or digest=)
+#   check     verdict coverage
+#   residual  class                         see RESIDUAL_CLASSES below
+#   stop      state                         see STOP_STATES below
+#   note      text
+#
+# Exit 1 refuses the append.  Refusal is the point: a repeated fingerprint with a
+# repeated answer is not progress, and exhausted fuel is ResourceBounded, not a
+# licence to continue.
+
+set -uo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+TRACE_DIR="$ROOT/.claude/trace"
+STATE="$TRACE_DIR/.state"
+FUEL="$TRACE_DIR/.fuel"
+DEFAULT_FUEL=24
+
+RESIDUAL_CLASSES="none persists regression wrong_locus missing_dep weak_discriminator env_failure unknown resource"
+STOP_STATES="Satisfied Equivalent Impossible Blocked Unknown ResourceBounded"
+MODES="Pure Generate Probe Check Warrant"
+
+die() { printf 'ic-trace: %s\n' "$*" >&2; exit 1; }
+
+esc() {
+    printf '%s' "$1" \
+        | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\t/\\t/g' \
+        | awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }'
+}
+
+in_list() {
+    local needle="$1" item
+    shift
+    for item in $1; do [ "$item" = "$needle" ] && return 0; done
+    return 1
+}
+
+trace_file() {
+    [ -f "$STATE" ] || die "no open trace; run: .claude/hooks/ic-trace init"
+    printf '%s' "$TRACE_DIR/$(cat "$STATE")"
+}
+
+next_seq() {
+    local f="$1"
+    [ -s "$f" ] || { printf '1'; return; }
+    awk -F'"seq":' 'NF>1 { split($2, a, ","); n = a[1] + 0 } END { print n + 1 }' "$f"
+}
+
+# Fingerprint = question identity + bindings + repository actuality.
+# Two questions asked against the same repository state with the same bindings
+# are the same question, whatever words wrap them.
+fingerprint() {
+    local q="$1" bindings="$2" head dirty
+    head="$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || printf 'no-head')"
+    dirty="$(git -C "$ROOT" status --porcelain 2>/dev/null | sha256sum | cut -c1-16)"
+    printf '%s\0%s\0%s\0%s' "$q" "$bindings" "$head" "$dirty" \
+        | sha256sum | cut -c1-16
+}
+
+cmd="${1:-}"
+[ -n "$cmd" ] || die "usage: ic-trace <init|status|open|KIND> [k=v ...]"
+shift || true
+
+case "$cmd" in
+init)
+    mkdir -p "$TRACE_DIR"
+    slug="${1:-session}"
+    name="$(date +%Y%m%d-%H%M%S)-${slug//[^A-Za-z0-9._-]/-}.jsonl"
+    : > "$TRACE_DIR/$name"
+    printf '%s' "$name" > "$STATE"
+    printf '%s' "$DEFAULT_FUEL" > "$FUEL"
+    printf 'trace: %s (fuel %s)\n' ".claude/trace/$name" "$DEFAULT_FUEL"
+    exit 0
+    ;;
+status)
+    if [ ! -f "$STATE" ]; then printf 'no open trace\n'; exit 0; fi
+    f="$(trace_file)"
+    printf 'file    : .claude/trace/%s\n' "$(cat "$STATE")"
+    printf 'records : %s\n' "$(wc -l < "$f" | tr -d ' ')"
+    printf 'fuel    : %s\n' "$(cat "$FUEL" 2>/dev/null || printf '?')"
+    if grep -q '"kind":"seal"' "$f" 2>/dev/null; then
+        last_seal="$(grep -n '"kind":"seal"' "$f" | tail -1 | cut -d: -f1)"
+        last_res="$(grep -n '"kind":"residual"' "$f" | tail -1 | cut -d: -f1)"
+        if [ -z "$last_res" ] || [ "$last_seal" -gt "$last_res" ]; then
+            printf 'cycle   : OPEN (seal at line %s, no residual)\n' "$last_seal"
+        else
+            printf 'cycle   : closed\n'
+        fi
+    else
+        printf 'cycle   : none sealed\n'
+    fi
+    exit 0
+    ;;
+open)
+    [ -f "$STATE" ] || exit 1
+    f="$(trace_file)"
+    grep -q '"kind":"seal"' "$f" 2>/dev/null || exit 1
+    last_seal="$(grep -n '"kind":"seal"' "$f" | tail -1 | cut -d: -f1)"
+    last_res="$(grep -n '"kind":"residual"' "$f" | tail -1 | cut -d: -f1)"
+    [ -z "$last_res" ] && exit 0
+    [ "$last_seal" -gt "$last_res" ] && exit 0
+    exit 1
+    ;;
+ensure|question|seal|raw|check|residual|stop|note) ;;
+*) die "unknown kind '$cmd'" ;;
+esac
+
+f="$(trace_file)"
+
+declare -A kv=()
+for arg in "$@"; do
+    case "$arg" in
+        *=*) kv["${arg%%=*}"]="${arg#*=}" ;;
+        *) die "argument '$arg' is not key=value" ;;
+    esac
+done
+
+need() {
+    for k in "$@"; do
+        [ -n "${kv[$k]:-}" ] || die "kind '$cmd' requires non-empty $k="
+    done
+}
+
+case "$cmd" in
+ensure)   need task authority invariants ;;
+question) need q mode answer branch
+          in_list "${kv[mode]}" "$MODES" || die "mode must be one of: $MODES" ;;
+seal)     need should_change invariants discriminator wrong_impl ;;
+raw)      need cmd ;;
+check)    need verdict coverage ;;
+residual) need class
+          in_list "${kv[class]}" "$RESIDUAL_CLASSES" || die "class must be one of: $RESIDUAL_CLASSES" ;;
+stop)     need state
+          in_list "${kv[state]}" "$STOP_STATES" || die "state must be one of: $STOP_STATES" ;;
+note)     need text ;;
+esac
+
+# A raw return is preserved and digested before any record interprets it.
+if [ "$cmd" = "raw" ] && [ -n "${kv[file]:-}" ]; then
+    [ -f "${kv[file]}" ] || die "raw file '${kv[file]}' does not exist"
+    kv[digest]="$(sha256sum "${kv[file]}" | cut -c1-32)"
+fi
+
+fp=""
+if [ "$cmd" = "question" ]; then
+    fp="$(fingerprint "${kv[q]}" "${kv[bindings]:-}")"
+    # grep -c prints 0 and exits 1 on no match; take the count, not the status.
+    prior="$(grep -c "\"fp\":\"$fp\"" "$f" 2>/dev/null)"
+    prior="${prior:-0}"
+    if [ "$prior" -gt 0 ] \
+       && grep "\"fp\":\"$fp\"" "$f" | grep -qF "\"answer\":\"$(esc "${kv[answer]}")\""; then
+        die "repeated state: this question, these bindings, this repository, this answer.
+GUARDED_RECUR admits no progress here.  Either change the bindings, change the
+repository and observe it, admit a new distinction, or stop with Unknown."
+    fi
+    remaining="$(cat "$FUEL" 2>/dev/null)"
+    remaining="${remaining:-$DEFAULT_FUEL}"
+    if [ "$remaining" -le 0 ]; then
+        die "fuel exhausted.  The honest close is:
+  .claude/hooks/ic-trace stop state=ResourceBounded partial=... frontier=..."
+    fi
+    printf '%s' "$((remaining - 1))" > "$FUEL"
+fi
+
+seq="$(next_seq "$f")"
+parent=$((seq - 1))
+[ "$parent" -lt 1 ] && parent=0
+
+{
+    printf '{"seq":%s,"parent":%s,"ts":"%s","kind":"%s"' \
+        "$seq" "$parent" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$cmd"
+    [ -n "$fp" ] && printf ',"fp":"%s"' "$fp"
+    for k in "${!kv[@]}"; do
+        printf ',"%s":"%s"' "$(esc "$k")" "$(esc "${kv[$k]}")"
+    done
+    printf '}\n'
+} >> "$f"
+
+printf 'ic-trace: %s #%s appended\n' "$cmd" "$seq"

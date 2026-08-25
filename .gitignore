@@ -8,6 +8,10 @@
 *.sqlite-shm
 *.sqlite-wal
 
+# Inquiry-ledger working evidence. The harness itself is committed; the traces
+# are not, except when a DECISIONS.jsonl entry cites one as its evidence.
+/.claude/trace/
+
 # Local configuration and secrets
 .env
 .env.*

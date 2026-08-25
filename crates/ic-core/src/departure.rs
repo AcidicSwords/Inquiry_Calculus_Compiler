@@ -5,9 +5,9 @@ use thiserror::Error;
 use crate::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
     DeterminationCatalog, DeterminationPresentationCheckError, DeterminationPresentationError,
-    DeterminationPresentationRef, DistinctionRef, GrainRef, RelationCatalog, RelationUse,
-    RelationUseCheckError, RelationUseError, RelationUseRef, ScopeRef, SupportRef, TypeCheckError,
-    TypeError, TypedFormRef,
+    DeterminationPresentationRef, DischargeMode, DistinctionRef, GrainRef, RelationCatalog,
+    RelationUse, RelationUseCheckError, RelationUseError, RelationUseRef, ScopeRef, SupportRef,
+    TypeCheckError, TypeError, TypedFormRef,
 };
 
 /// Canonical artifact kind for positive determination-relative departure witnesses.
@@ -333,6 +333,20 @@ impl DepartureWitness {
                     use_ref,
                 ));
             }
+            // A generator proposes a provisional filling; it never supports one.
+            // Admitting a `Generate` route here would let a merely generated
+            // answer stand as positive departure evidence, which is the exact
+            // self-promotion the departure contract exists to refuse. The other
+            // modes are left alone: a `Pure` derivation from already-standing
+            // data is a lawful route, so this rejects generation, not everything
+            // that is not a probe. It does not establish that the retained
+            // routes are actually supported; support remains unrepresented.
+            if relation_use.mode() == DischargeMode::Generate {
+                return Err(DepartureWitnessCheckError::GeneratedEvidenceRoute {
+                    claim,
+                    relation_use: use_ref,
+                });
+            }
             if !relation_use_binds_pair(&relation_use, left, right) {
                 return Err(DepartureWitnessCheckError::ClaimedPairNotBound {
                     claim,
@@ -363,7 +377,7 @@ impl DepartureWitness {
     }
 }
 
-fn relation_use_binds_pair(
+pub(crate) fn relation_use_binds_pair(
     relation_use: &RelationUse,
     left: TypedFormRef,
     right: TypedFormRef,
@@ -480,6 +494,13 @@ pub enum DepartureWitnessCheckError {
     },
     #[error("relation use {0} does not match the departure witness context")]
     RelationUseContextMismatch(RelationUseRef),
+    #[error(
+        "{claim} relation use {relation_use} declares Generate, which proposes rather than supports"
+    )]
+    GeneratedEvidenceRoute {
+        claim: &'static str,
+        relation_use: RelationUseRef,
+    },
     #[error("{claim} relation use {relation_use} does not bind its claimed pair")]
     ClaimedPairNotBound {
         claim: &'static str,

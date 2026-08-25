@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# ic-stop -- Stop gate.  A turn may not end on an open cycle.
+#
+# An open cycle is a sealed prediction whose return was never interpreted.
+# Ending there is the exact failure the seal exists to prevent: the action
+# happened, and nothing on record says whether it did what was predicted.
+#
+# `stop_hook_active` is honoured.  A gate that cannot be satisfied is a hang,
+# not a discipline, so the second pass always yields.
+
+set -uo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PAYLOAD="$(cat)"
+
+case "$PAYLOAD" in
+    *'"stop_hook_active":true'*) exit 0 ;;
+esac
+
+bash "$HERE/ic-trace" open >/dev/null 2>&1 || exit 0
+
+REASON='A cycle is still open: you sealed a prediction and never closed it.
+
+Close it against what actually returned, not against what you meant:
+
+  .claude/hooks/ic-trace raw      cmd=... file=...      (preserve it first)
+  .claude/hooks/ic-trace check    verdict=... coverage=...
+  .claude/hooks/ic-trace residual class=<none|persists|regression|wrong_locus|
+                                        missing_dep|weak_discriminator|
+                                        env_failure|unknown|resource>
+
+Then name the stop state -- Satisfied requires a warrant, and Unknown is a
+lawful result:
+
+  .claude/hooks/ic-trace stop state=<Satisfied|Equivalent|Impossible|Blocked|
+                                     Unknown|ResourceBounded>'
+
+printf '{"decision":"block","reason":"%s"}\n' \
+    "$(printf '%s' "$REASON" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
+         | awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }')"

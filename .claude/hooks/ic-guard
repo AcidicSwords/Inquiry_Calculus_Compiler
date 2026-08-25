@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# ic-guard -- PreToolUse gate.  Reads the hook payload on stdin.
+#
+# Two rules, in order:
+#
+#   1. SELF-PROTECTION.  The harness may never edit itself.  Denied always,
+#      sealed or not.  This is the whole difference between a discipline and a
+#      suggestion: an agent that can switch off its own gate has no gate.
+#      Only a human editing .claude/settings.json can change the policy.
+#
+#   2. SEAL REQUIRED.  Any other actuality-changing call needs an open cycle --
+#      a sealed prediction with no residual yet.  Reads, searches, builds, and
+#      tests are never gated: probing is supposed to be free, and the seal is
+#      about predicting an actual change before making it.
+#
+# Silence means no opinion: the normal permission flow proceeds untouched.  The
+# hook only ever speaks to deny, so it can never widen the user's permissions.
+
+set -uo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$HERE/../.." && pwd)"
+PAYLOAD="$(cat)"
+
+field() { printf '%s' "$PAYLOAD" | awk -v want="$1" -f "$HERE/ic-json.awk"; }
+
+deny() {
+    printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"%s"}}\n' \
+        "$(printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
+             | awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }')"
+    exit 0
+}
+
+allow() { exit 0; }
+
+# Compare paths case-insensitively with separators normalised.
+norm() { printf '%s' "$1" | tr 'A-Z\\' 'a-z/'; }
+
+# Matched as bare substrings, with no trailing separator required: `rm -rf
+# .claude/hooks` names the directory without ever writing `.claude/hooks/`.
+SELF_PATTERNS='.claude/hooks .claude/settings .claude/skills/inquire'
+
+touches_self() {
+    local p pat
+    p="$(norm "$1")"
+    for pat in $SELF_PATTERNS; do
+        case "$p" in *"$pat"*) return 0 ;; esac
+    done
+    return 1
+}
+
+cycle_open() { bash "$HERE/ic-trace" open >/dev/null 2>&1; }
+
+SEAL_MSG='No open cycle.  This call would change actuality against no sealed prediction.
+
+Seal first -- and seal what you actually expect, because the ledger is
+append-only and a prediction written after the return is not a prediction:
+
+  .claude/hooks/ic-trace seal \
+    should_change=... invariants=... discriminator=... wrong_impl=...
+
+Close it when the return is in:  ic-trace raw ... ; ic-trace check ... ;
+ic-trace residual class=...   (ic-trace init first, if no trace is open.)'
+
+SELF_MSG='Refused: this path is the harness itself.
+
+An agent that can edit its own gate does not have one.  .claude/hooks/**,
+.claude/settings*.json, and the inquire skill are closed to me by construction,
+sealed or not.  If the policy is wrong, that is a human decision: edit
+.claude/settings.json directly, or set "disableAllHooks": true to lift it.'
+
+TOOL="$(field tool_name)"
+
+case "$TOOL" in
+Edit|Write|NotebookEdit)
+    TARGET="$(field tool_input.file_path)"
+    [ -n "$TARGET" ] || TARGET="$(field tool_input.notebook_path)"
+    touches_self "$TARGET" && deny "$SELF_MSG"
+    cycle_open || deny "$SEAL_MSG"
+    allow
+    ;;
+
+Bash)
+    CMD="$(field tool_input.command)"
+
+    # The ledger's own append must always be reachable, or sealing deadlocks
+    # against the gate that requires a seal.
+    case "$CMD" in
+        *ic-trace*) allow ;;
+    esac
+
+    # Redirections, minus file-descriptor duplication (2>&1, >&2, &>).
+    STRIPPED="$(printf '%s' "$CMD" | sed -e 's/[0-9]*>&[0-9-]*//g' -e 's/&>>*//g')"
+    REDIRECTS=0
+    case "$STRIPPED" in *'>'*) REDIRECTS=1 ;; esac
+
+    # An array, not a delimiter-joined string: a missing separator in a joined
+    # list fuses two patterns into one that matches nothing, and a gate that
+    # silently matches nothing is worse than no gate.
+    MUTATORS=(
+        'rm ' 'rmdir ' 'mv ' 'cp ' 'dd ' 'truncate ' 'touch ' 'mkdir '
+        'chmod ' 'chown ' 'ln ' 'tee ' 'patch ' 'install '
+        'sed -i' 'perl -i' 'python -c' 'awk -i'
+        'git add' 'git commit' 'git apply' 'git checkout' 'git restore'
+        'git reset' 'git rm' 'git mv' 'git clean' 'git stash' 'git merge'
+        'git rebase' 'git revert' 'git push' 'git cherry-pick'
+        'cargo fix' 'cargo add' 'cargo remove' 'npm install' 'pip install'
+    )
+
+    MUTATES=0
+    for pat in "${MUTATORS[@]}"; do
+        case " $CMD" in *" $pat"*) MUTATES=1; break ;; esac
+    done
+
+    if [ "$REDIRECTS" -eq 1 ] || [ "$MUTATES" -eq 1 ]; then
+        touches_self "$CMD" && deny "$SELF_MSG"
+        cycle_open || deny "$SEAL_MSG"
+    fi
+    allow
+    ;;
+
+*)
+    allow
+    ;;
+esac
