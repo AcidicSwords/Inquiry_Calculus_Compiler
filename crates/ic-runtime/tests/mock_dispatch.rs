@@ -6,8 +6,9 @@ use ic_core::{
     SurfacePlan, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypedForm, TypedFormRef,
 };
 use ic_runtime::{
-    BasicBlock, BlockTarget, MachineStep, ProbeDispatchContext, ProbeDispatchError, ProbeProvider,
-    ProgramIR, ProviderReturn, RuntimeCatalog, Terminator, dispatch_probe,
+    BasicBlock, BlockTarget, MachineStep, OpenAiHttpResponse, OpenAiResponsesProvider,
+    ProbeDispatchContext, ProbeDispatchError, ProbeProvider, ProgramIR, ProviderReturn,
+    RuntimeCatalog, Terminator, dispatch_probe,
 };
 use ic_store::{ArtifactStore, DispatchToken, ExternalEffectState};
 use thiserror::Error;
@@ -85,6 +86,10 @@ struct Fixture {
 }
 
 async fn fixture() -> Fixture {
+    fixture_with_request_body(b"request-body").await
+}
+
+async fn fixture_with_request_body(request_bytes: &[u8]) -> Fixture {
     let store = ArtifactStore::open("sqlite::memory:")
         .await
         .expect("in-memory store must open");
@@ -211,7 +216,7 @@ async fn fixture() -> Fixture {
             .expect("plan must persist"),
     );
     let backend_version = stored_ref(&store, b"backend-version").await;
-    let request_body = stored_ref(&store, b"request-body").await;
+    let request_body = stored_ref(&store, request_bytes).await;
     let request_value = BackendRequest::new(
         operator,
         plan,
@@ -267,6 +272,65 @@ async fn fixture() -> Fixture {
         context,
         request_body,
     }
+}
+
+#[tokio::test]
+#[ignore = "requires OPENAI_API_KEY and live OpenAI Responses API access"]
+async fn live_openai_response_is_committed_before_json_interpretation() {
+    let request_json = serde_json::to_vec(&serde_json::json!({
+        "model": "gpt-5.6-luna",
+        "input": "Return exactly two distinct one-word candidate completions as a JSON array of strings, with no markdown or explanation.",
+        "max_output_tokens": 128,
+        "store": false
+    }))
+    .expect("live Responses request must encode");
+    let fixture = fixture_with_request_body(&request_json).await;
+    let MachineStep::Suspended(suspension) = fixture
+        .runtime
+        .step(fixture.runtime.start())
+        .expect("live runtime must step to its probe")
+    else {
+        panic!("live runtime entry must suspend")
+    };
+    let mut provider = OpenAiResponsesProvider::from_env(fixture.request_body, request_json)
+        .expect("OPENAI_API_KEY must configure the live provider");
+    let actual = dispatch_probe(
+        &fixture.store,
+        suspension,
+        DispatchToken::from_bytes([0xd1; 32]),
+        fixture.request,
+        fixture.context,
+        &mut provider,
+    )
+    .await
+    .expect("live Responses return must commit as ordinary actuality");
+
+    assert!(
+        fixture
+            .store
+            .get(actual.raw_return_ref().as_artifact_ref())
+            .await
+            .expect("committed live raw return must reload")
+            .is_some()
+    );
+    assert_eq!(actual.event().raw_return(), actual.raw_return_ref());
+    let transport = OpenAiHttpResponse::decode(actual.raw_return().bytes())
+        .expect("committed provider transport return must decode after actuality");
+    assert_eq!(
+        transport.status(),
+        200,
+        "live provider must authorize the request"
+    );
+    let response: serde_json::Value = serde_json::from_slice(transport.body())
+        .expect("interpretation occurs only after dispatch returned committed bytes");
+    assert_eq!(response["status"], "completed");
+    assert_eq!(response["model"], "gpt-5.6-luna");
+    assert!(
+        response["output"]
+            .as_array()
+            .is_some_and(|output| !output.is_empty()),
+        "completed live response must carry at least one output item"
+    );
 }
 
 #[tokio::test]

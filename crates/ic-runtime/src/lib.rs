@@ -7,6 +7,7 @@
 //! standing, or warrant.
 
 mod dispatch;
+mod openai;
 mod replay;
 mod trace;
 
@@ -20,6 +21,10 @@ pub use ic_core::ProbeOperatorRef;
 use ic_core::{
     BoundFiniteAskContinuation, EventRef, IProgRef, RawReturnRef, TypeCatalog, TypeCheckError,
     TypeError, TypeRef, TypedForm, TypedFormRef,
+};
+pub use openai::{
+    OPENAI_RESPONSES_ENDPOINT, OpenAiHttpResponse, OpenAiHttpResponseError, OpenAiProviderError,
+    OpenAiResponsesProvider,
 };
 pub use replay::{
     ColdReplayedProbe, FiniteProbeReplayError, ReplayObservation, replay_completed_finite_probe,

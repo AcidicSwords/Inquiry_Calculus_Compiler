@@ -9,8 +9,10 @@ publish.workspace = true
 ic-core = { path = "../ic-core" }
 ic-store = { path = "../ic-store" }
 thiserror.workspace = true
+ureq.workspace = true
 
 [dev-dependencies]
+serde_json.workspace = true
 tokio.workspace = true
 
 [lints]

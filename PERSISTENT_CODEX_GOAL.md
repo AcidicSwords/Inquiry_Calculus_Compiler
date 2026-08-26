@@ -73,90 +73,48 @@ Continue from the strongest current executable residual until this target is dem
 
 ---
 
-# 2. Current starting point
+# 2. Current implementation coordinate
 
-The post-research implementation state used to reorient this standing goal was verified directly on `main` at:
+This goal has one moving coordinate: the current clean `main` head after its required gates and
+both CI jobs pass. Never encode an old commit as the live starting point. Reconstruct the exact
+head from Git, then read `IMPLEMENTATION_FRONTIER.md` for the single current obligation.
 
-```text
-b7613699a06a9b2fc9b5c20e44020c5fbd15f1cd
-feat: execute prepared mock probes
-```
-
-The CI run for that exact head passed both the Rust and canonical-specification jobs. Treat this as a historical coordinate only; verify the current head and gates every time this goal is resumed.
-
-Already demonstrated at that checkpoint included:
+The post-research baseline at `b761369` is historical ancestry. Since that baseline, the following
+ratchets have been demonstrated and pushed:
 
 ```text
-canonical typed artifacts and identities
-Rust type/form/formula/relation kernel
-OpenQuery / partial binding / canonical completion candidates
-first-order Return | Ask source IProg
-verified Return | Branch | Probe runtime skeleton
-immutable SQLite artifact storage and parent-linked ordinary event ledger
-raw-return preservation and event-linked finite decoding
-DeterminationPresentation
-structural DepartureWitness checking
-claim-targeted support -> declared least-fixed-point standing link
-three distinct relation-targeted evidence-support resolutions for departure
-NegationUse and semantic-coverage identities
-tagged exterior and frontier views
-finite incompatibility/orientation evidence machinery
-finite reverse-return fiber and protected-recovery mathematics
-positive-negation query and dependent seed/sixfold groundwork
-least-fixed-point standing engine
-separator / finite generator regime / generated inquiry groundwork
-exact factorization and family factorization
-finite cue-basis/resource-frontier machinery
-finite binding bridges
-compression-licence identity
-typed method-contract registry boundary
-event-derived operator occurrences
-typed `SurfacePlan` and `BackendRequest` compiler boundaries
-durable request-before-dispatch with explicit dispatch authority
-one injected mock provider call with raw-return/event completion before exposure
+RPL-001 completed-effect reload
+RPL-002--005 finite decode, support, source binding, lowering regeneration, and failure separation
+CYCLE-001 complete Ask -> actual return -> admitted resumption -> Return with zero-redispatch cold replay
+TRACE-001 paired question/return actuality with path-sensitive provenance
+PRESENT-001 exact finite sufficient-present factorization and positive reopening witness
 ```
 
-The accepted support partition remains important. A determination presentation and the three
-departure evidence uses retain their exact, separately targeted support environments:
+The current Phase 10 ratchet is a real-provider vertical slice. A narrow OpenAI Responses adapter
+now preserves a versioned `HTTP status + exact body` frame through the existing `ProbeProvider`
+boundary; deterministic local tests distinguish success, non-success actuality, malformed framing,
+request mismatch, and secret-free failures. The first live probe reached the provider and committed
+HTTP 401 before interpretation. `F-0001` therefore leaves successful live actualization pending
+without blocking offline implementation.
+
+The next dependency chain is:
 
 ```text
-source DeterminationPresentation
-  -> its own claim-targeted SupportEnvironment
-  -> target Claim in declared Standing
-
-source observation RelationUse
-  -> its own relation-targeted SupportEnvironment
-
-candidate observation RelationUse
-  -> its own relation-targeted SupportEnvironment
-
-incompatibility RelationUse
-  -> its own relation-targeted SupportEnvironment
+authorized successful provider return
+-> post-actuality Responses decoding that preserves every completion
+-> independently supported answer admission
+-> capture-safe continuation binding and runtime resumption
+-> the same protected result after restart with zero redispatch
 ```
 
-The finite implementation now joins those routes through positive event-linked departure admission,
-pointwise finite negation incidence, same-use fibers, recovery, seed/reorientation, and one derived
-reciprocal occurrence vertical slice. Those finite results remain route-relative and do not establish
-global coverage, warrant, reconciliation, or authoritative sixfold storage.
+Do not let the credential residual collapse transport actuality into semantic `Unknown`, and do
+not predeclare support for an unpredictable content-addressed return. If the existing support
+contract creates such a cycle, make that exact cycle the breaker and implement only the smallest
+authority-preserving successor justified by the canonical specification and standing plan.
 
-The strongest executable gap at the post-research checkpoint is cold replay:
-
-```text
-completed durable provider event
--> fresh-process event and raw-return reload
--> finite decode with Decoded / Undefined / Unknown preserved
--> exact supported-answer reconstruction without singleton forcing
--> capture-safe source Ask binding
--> deterministic source/runtime lowering regeneration
--> admitted resumption
--> next Ask or Return
-```
-
-Pass `RPL-001` through `RPL-005` before adding a real provider or broader agent framework. Try
-deterministic lowering regeneration first; add a canonical replay recipe only if the fresh-process
-breaker proves that exact recovery cannot otherwise be performed.
-
-Do not assume this is still the frontier. On every invocation read `IMPLEMENTATION_FRONTIER.md`, `DECISIONS.jsonl`, `CONFORMANCE_STATUS.md`, the current code/tests, and Git actuality. If the frontier has advanced, continue from the strongest newly demonstrated residual rather than recreating an already settled bridge.
+On every invocation, inspect Git actuality, `IMPLEMENTATION_FRONTIER.md`, `DECISIONS.jsonl`, and
+`CONFORMANCE_STATUS.md`. Continue from the strongest newly demonstrated residual rather than
+recreating a settled bridge.
 
 ---
 

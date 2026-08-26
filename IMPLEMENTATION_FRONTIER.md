@@ -76,9 +76,8 @@ inferring them from opaque payload bytes.
 ## Strongest live obligation
 
 The finite reciprocal semantic slice, typed compiler/request boundary, crash-safe mock execution,
-`RPL-001` through `RPL-005`, and the first whole live-to-cold-replay question cycle now pass. The
-next obligation is the smallest Phase 8/9 paired-actuality and sufficient-present fixture over the
-same authoritative event spine.
+`RPL-001` through `RPL-005`, the first complete live-to-cold-replay question cycle, paired actuality,
+and exact finite sufficient-present/reopening fixtures now pass.
 
 The post-research `RPL-001` through `RPL-005` suite now passes:
 
@@ -118,17 +117,34 @@ compile/replay recipe.
 > exact protected continuation equivalence, regenerate the view after restart, and reopen the fold
 > when one newly protected continuation separates the previously equivalent histories.
 
-The strongest live obligation is now `PROVIDER-001`:
+`PROVIDER-001A`, the provider transport boundary, is locally demonstrated:
 
-> Place one real LLM provider behind the existing checked `ProbeProvider` boundary, preserve the
-> exact HTTP/provider return before interpretation, and drive one typed question to a
-> multi-completion supported answer without singleton forcing. Provider configuration and failure
-> remain operational; neither generation nor transport success supplies support or warrant.
+> One narrow OpenAI Responses adapter sends the exact content-addressed request and preserves a
+> versioned HTTP-status-plus-body frame through `ProbeProvider`. Both successful and non-success
+> HTTP responses are provider actuality, and `dispatch_probe` commits them before JSON decoding.
 
-Implement the smallest provider-specific adapter and versioned request contract that a real return
-requires. Do not add a provider framework, scheduler, model policy, credential store, or semantic
-opcode. Keep the existing offline mock/replay suite deterministic; gate a live network fixture on
-explicitly available credentials and preserve its raw return without committing secrets.
+The deterministic fixture proves exact request bytes, authorization-header presence without secret
+disclosure, exact response bytes, request-reference mismatch rejection, malformed-frame rejection,
+and HTTP 401 preservation. The opt-in live fixture reached the official endpoint and committed a
+401 response before interpretation; `F-0001` records that the currently available credential does
+not authorize a successful request. Therefore live success remains `PENDING`, not falsely passed.
+
+The strongest executable obligation is now `PROVIDER-001B`:
+
+> Decode a successful OpenAI Responses body only after raw actuality, preserve every supported
+> completion without assuming the first output item, and drive the existing typed question through
+> answer admission, capture-safe binding, resumption, and cold replay. Keep HTTP failure, malformed
+> transport frame, malformed JSON, incomplete response, semantic `Undefined`, semantic `Unknown`,
+> unsupported completion, and credential failure as distinct exits.
+
+First construct the smallest offline valid-shaped Responses fixture and an explicit decoder contract.
+Then test whether supported observation admission can be formed after an unpredictable
+content-addressed raw return. If exact support currently requires the future return reference in the
+pre-dispatch question context, preserve that positive circularity as the decisive breaker and change
+only the smallest support boundary authorized by the standing semantics. Do not weaken support,
+pre-warrant generated output, choose a singleton implicitly, or add a provider framework, scheduler,
+model policy, credential store, semantic opcode, table, or crate. Re-run the live acceptance fixture
+only after `F-0001`'s reopen condition changes.
 
 The protected difference is visible in the accepted sources:
 

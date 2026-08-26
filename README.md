@@ -2,12 +2,15 @@
 
 This repository contains the Rust reference implementation of Inquiry Calculus v1.1,
 including the adopted **Successor Reciprocal-Boundary / Positive-Negation Edition**.
-The semantic authority has advanced. The executable implementation now includes verified semantic
-increments across Phases 3--7, typed standing and reciprocal slices, crash-safe external-effect
-preparation, checked Phase 10 compiler/request boundaries, and one injected mock-provider
-actualization. Fresh-process semantic replay remains incomplete, so this is not yet a complete
-runtime. The accepted and demonstrated boundary is recorded precisely in `CONFORMANCE_STATUS.md`
-and `IMPLEMENTATION_FRONTIER.md`.
+The executable implementation now includes verified semantic increments across Phases 1--11,
+the finite positive-negation reciprocal slice, crash-safe external-effect actuality, a complete
+finite question cycle with cold replay, paired question/return traces, and an exact finite
+sufficient-present/reopening witness. Phase 10 now also contains a narrow OpenAI Responses
+transport adapter whose offline contract preserves both success and non-success HTTP returns
+before interpretation. A successful live provider return is still pending because the currently
+available credential returned HTTP 401 (`F-0001`). This is not yet the complete reference
+runtime. The exact demonstrated boundary and next executable obligation are recorded in
+`CONFORMANCE_STATUS.md` and `IMPLEMENTATION_FRONTIER.md`.
 
 ## Authority by question
 
@@ -65,7 +68,9 @@ evidence; they are not coequal forward authority.
 binding-native relation schemas, canonical identity, and structural checking.
 - `ic-store`: SQLite migrations, verified immutable artifact storage, transactional insertion of
   explicitly declared artifact dependencies, and an append-only ordinary event ledger.
-- `ic-runtime`: reserved package boundary; no runtime semantics yet.
+- `ic-runtime`: verified first-order `Return | Branch | Probe` execution, crash-safe provider
+  dispatch, finite semantic admission/resumption, cold replay, paired traces, and provider
+  adapters. Transport actuality remains separate from decoding, support, standing, and warrant.
 - `ic-cli`: reserved binary boundary; no command surface yet.
 
 The initial implementation is single-process and uses one authoritative SQLite writer.

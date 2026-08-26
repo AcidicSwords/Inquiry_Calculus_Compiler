@@ -4062,13 +4062,13 @@ Classify its surviving implementation pressure as follows:
 | Class | Forward consequence |
 |---|---|
 | `ALREADY_DEMONSTRATED` | Typed semantic kernel, finite departure and reciprocal slice, immutable artifacts/events, typed request-before-dispatch, exact backend-request checking, and one crash-safe injected provider call remain established by current tests. |
-| `CURRENT_FIXTURE` | Pass `RPL-001` through `RPL-005`, then close one cold-replayable `Ask -> actual return -> supported binding -> resumed continuation` cycle. |
+| `CURRENT_FIXTURE` | `RPL-001`--`RPL-005`, `CYCLE-001`, `TRACE-001`, and `PRESENT-001` are demonstrated. The current fixture is `PROVIDER-001`: one real-provider return decoded only after actuality, admitted without singleton forcing, resumed, and cold-replayed. |
 | `PHASE_LOCAL_CONSTRAINT` | Apply research breakers only at their responsible Phase 6--18 boundary: actuality, resolution, paired provenance, sufficient presents, provider separation, shared standing, transparent separator/method/fold/bridge compositions, conservative lift, and predecessor-judged revision. |
 | `FUTURE_OPTIMIZATION` | Learned routing, latent masks, vectors, parallelism, distribution, and other breadth remain Phase 19 experiments requiring measured protected gain. |
 | `SEMANTIC_REOPEN_CANDIDATE` | General transition authority and protected-erasure bindings require explicit semantic or binding authority before implementation. |
 | `REJECTED_OVERCLAIM` | Research names do not authorize new opcodes, semantic crash attempts, a universal parallel/composition operator, a memory database, an `M001..M066` hierarchy, separate authority/sixfold engines, or an immediate `ic-machine` crate. |
 
-The immediate cold-replay sequence is:
+The demonstrated cold-replay sequence is:
 
 ```text
 completed effect token
@@ -4086,6 +4086,24 @@ completed effect token
 No pre-crash derived object or provider redispatch may supply the replay. Regenerate lowering from
 accepted source/compiler identities and versions first. A persistable compile/replay recipe is
 authorized only if a fresh-process breaker proves that an exact mapping is otherwise unrecoverable.
+
+The current provider sequence is:
+
+```text
+checked content-addressed OpenAI Responses request
+-> narrow ProbeProvider transport
+-> versioned HTTP status + exact body RawReturn
+-> ordinary ActualEvent committed before interpretation
+-> response decoder preserving every completion
+-> exact independent support routes and standing reconstruction
+-> complete supported answer, source binding, and admitted resumption
+-> file-backed restart and zero-redispatch regeneration
+```
+
+The transport prefix is demonstrated offline for both HTTP 200 and HTTP 401. A live 401 was
+preserved as `F-0001`; successful live acceptance remains pending until its credential reopen
+condition changes. The credential constraint does not authorize transport/semantic conflation or
+block construction of deterministic decoder, support, resumption, and replay breakers.
 
 Later phase constraints are deliberately local:
 
@@ -4348,44 +4366,52 @@ No step may be supplied by:
 
 ---
 
-# 89. Immediate coding order
+# 89. Remaining implementation order from the current state
 
-For implementation beginning now:
+The phase definitions in Section 75 remain the single build map. Repository actuality has already
+demonstrated the Phase 0 foundation, substantial typed kernels across Phases 1--7 and 11--16, one
+finite reciprocal vertical slice, complete finite cold replay, paired actuality, and an exact finite
+sufficient-present/reopening witness. Do not replay that chronology merely because the plan retains
+its full specification.
+
+Advance the current implementation in this order:
 
 ```text
-1. repository + canonical artifacts
-2. types + binding versions
-3. relation schemas + RelationUse
-4. OpenQuery + partial binding/fibers
-5. first-order IProg
-6. DeterminationPresentation
-7. DepartureWitness
-8. NegationUse + semantic coverage
-9. tagged NegationFrontier
-10. positive-negation query
-11. reverse return fiber
-12. protected RecoveryCheck
-13. family return signatures/schema recovery
-14. seed/reorientation
-15. SixfoldOccurrenceView + residuals + Gamma
-16. Return/Branch/Probe runtime
-17. event store + raw actuality
-18. resolution + general holes/fibers
-19. paired history
-20. active memory crawl
-21. LLM/backend compiler
-22. standing
-23. generic separator engine
-24. cue planning
-25. representation-gap detection
-26. binding extension/bridges
-27. folds/method learning/reopening
-28. cross-binding standing lift
-29. predecessor-judged self-revision
-30. only measured optimization/breadth
+1. PROVIDER-001B
+   successful Responses body -> post-actuality multi-completion decode
+   -> independent support -> binding/resumption -> zero-redispatch cold replay
+
+2. Phase 8/9 generalization
+   multi-event causal inquiry traces -> derived active/access/reserve views
+   -> recurrent fold/reopen with exact provenance and recovery boundaries
+
+3. Phase 11/12 executable standing and separator recurrence
+   supported residual -> deterministic transparent inquiry policy
+   -> bounded Unknown or next executable question
+
+4. Phases 13--16 regenerative learning
+   minimal cue basis -> materialization/representation gap
+   -> lawful probe/binding extension -> reusable method/fold with reopening witness
+
+5. Phase 17
+   conservative cross-binding standing lift with history locality
+
+6. Phase 18
+   replayable predecessor-judged self-revision and cold reconstruction
+
+7. Phase 19
+   only measured optimizations that demonstrate protected strict gain
+
+8. completion closure
+   run every canonical fixture, complete successor chain, and full cold replay;
+   subtract unnecessary architecture and reconcile all state documents
 ```
 
-The unsettled determination-presentation minimization rule should be isolated behind explicit provenance/status rather than delaying the rest of implementation.
+At every step, `IMPLEMENTATION_FRONTIER.md` names exactly one strongest executable obligation and
+`CONFORMANCE_STATUS.md` marks only demonstrated behavior. The unsettled determination-presentation
+minimization rule remains isolated behind explicit provenance/status rather than delaying unrelated
+work. `ic-machine`, new authoritative storage, new opcodes, and provider frameworks remain deferred
+until an executable breaker establishes their necessity.
 
 ---
 
