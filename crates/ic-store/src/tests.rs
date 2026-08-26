@@ -152,6 +152,165 @@ async fn migrations_apply_and_repeat_without_schema_changes() {
     .await
     .expect("journal schema must be queryable");
     assert_eq!(journal_count, 1);
+
+    let effect_journal_count: i64 = sqlx::query_scalar(
+        "SELECT COUNT(*) FROM sqlite_schema WHERE type = 'table' AND name = 'external_effect_journal'",
+    )
+    .fetch_one(&store.pool)
+    .await
+    .expect("external-effect recovery schema must be queryable");
+    assert_eq!(effect_journal_count, 1);
+}
+
+#[tokio::test]
+async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_event() {
+    let nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system clock must be after Unix epoch")
+        .as_nanos();
+    let path = env::temp_dir().join(format!(
+        "inquiry-calculus-effect-restart-{}-{nonce}.sqlite",
+        std::process::id()
+    ));
+    let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
+
+    let store = ArtifactStore::open(&url)
+        .await
+        .expect("file-backed store must open");
+    store.migrate().await.expect("migrations must apply");
+    let event = event_fixture(&store, None, b"effect-backend").await;
+    let request = stored_ref(&store, b"rendered-backend-request").await;
+    let token = DispatchToken::from_bytes([0xa1; 32]);
+    let pending = store
+        .prepare_external_effect(token, request, event.operator(), None)
+        .await
+        .expect("intent must be durable before dispatch");
+    assert!(matches!(pending, ExternalEffectState::Pending { .. }));
+    assert_eq!(
+        store
+            .prepare_external_effect(token, request, event.operator(), None)
+            .await
+            .expect("exact preparation must be idempotent"),
+        pending
+    );
+    let conflicting_request = stored_ref(&store, b"other-request").await;
+    assert!(matches!(
+        store
+            .prepare_external_effect(token, conflicting_request, event.operator(), None)
+            .await,
+        Err(StoreError::DispatchTokenConflict(conflict)) if conflict == token
+    ));
+    let other_token = DispatchToken::from_bytes([0xa2; 32]);
+    assert!(matches!(
+        store
+            .prepare_external_effect(other_token, request, event.operator(), None)
+            .await,
+        Err(StoreError::ExternalEffectAlreadyPending(conflict)) if conflict == token
+    ));
+
+    sqlx::query("DELETE FROM artifacts WHERE artifact_ref = ?")
+        .bind(event.raw_return().as_artifact_ref().as_bytes().as_slice())
+        .execute(&store.pool)
+        .await
+        .expect("fixture must remove the preinserted raw return before simulated dispatch");
+    store.close().await;
+
+    let restarted = ArtifactStore::open(&url)
+        .await
+        .expect("prepared-effect store must reopen");
+    restarted
+        .migrate()
+        .await
+        .expect("embedded migrations must reapply harmlessly");
+    assert_eq!(
+        restarted
+            .external_effect_state(token)
+            .await
+            .expect("prepared state must load"),
+        Some(pending)
+    );
+    assert_eq!(
+        restarted
+            .unresolved_external_effects()
+            .await
+            .expect("pending effects must be enumerable"),
+        vec![pending]
+    );
+
+    let wrong_raw = RawReturn::new(vec![0xff]);
+    assert!(matches!(
+        restarted
+            .complete_external_effect(token, &wrong_raw, &event)
+            .await,
+        Err(StoreError::ExternalEffectRawReturnMismatch { .. })
+    ));
+    assert_eq!(
+        restarted
+            .external_effect_state(token)
+            .await
+            .expect("failed completion must leave recovery state readable"),
+        Some(pending)
+    );
+
+    let raw = RawReturn::new(vec![0, 0xff, b'{', 0]);
+    let event_ref = restarted
+        .complete_external_effect(token, &raw, &event)
+        .await
+        .expect("raw preservation, event append, and completion must commit atomically");
+    assert_eq!(
+        restarted
+            .complete_external_effect(token, &raw, &event)
+            .await
+            .expect("exact completion must be idempotent"),
+        event_ref
+    );
+    let completed = restarted
+        .external_effect_state(token)
+        .await
+        .expect("completed state must load")
+        .expect("completed token must remain recoverable");
+    assert_eq!(completed.completed_event(), Some(event_ref));
+    assert!(
+        restarted
+            .unresolved_external_effects()
+            .await
+            .expect("completion must clear unresolved recovery work")
+            .is_empty()
+    );
+    assert_eq!(
+        restarted
+            .get_actual_event(event_ref)
+            .await
+            .expect("completed event must verify"),
+        Some(event)
+    );
+    restarted
+        .verify_event_ledger()
+        .await
+        .expect("completed ordinary ledger must verify");
+    restarted.close().await;
+
+    let replay = ArtifactStore::open(&url)
+        .await
+        .expect("completed store must reopen");
+    replay
+        .migrate()
+        .await
+        .expect("migrations must remain repeatable");
+    assert_eq!(
+        replay
+            .external_effect_state(token)
+            .await
+            .expect("completion linkage must replay")
+            .and_then(ExternalEffectState::completed_event),
+        Some(event_ref)
+    );
+    replay
+        .verify_event_ledger()
+        .await
+        .expect("cold-replayed event ledger must verify");
+    replay.close().await;
+    std::fs::remove_file(path).expect("temporary effect database must be removable");
 }
 
 #[tokio::test]

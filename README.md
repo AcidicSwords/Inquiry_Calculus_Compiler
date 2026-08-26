@@ -231,10 +231,22 @@ to agree; these are occurrence identity links, not semantic evaluation. It does 
 probe, validate opaque state/boundary/operator contracts, decode the result, resolve an answer,
 or prove a semantic interpretation.
 
-The event ledger has a file-backed restart witness: closing its single connection and reopening the
-database preserves canonical event identity and parent-linked order after embedded migrations are
-reapplied. This is a persistence and integrity check only; state-transition replay, dispatch, raw
-return resolution, and accepted-state reconstruction remain later contracts.
+The Phase 6 crash breaker now has a separate operational `external_effect_journal`, introduced by
+`0003_create_external_effect_journal.sql`. `prepare_external_effect` durably records an opaque
+idempotency token, already-stored request reference, verified compiled operator, and expected
+ledger parent before a caller may dispatch. A restart with an unresolved row reports `Pending`—an
+unknown outcome that is never safe to retry automatically. `complete_external_effect` accepts the
+exact operator/parent and raw return, then atomically inserts the immutable raw artifact, checked
+ordinary event, ledger edge, and completion link. The operational row is not a semantic attempt,
+actuality claim, second event history, decoded answer, or warrant; this deliberately leaves the
+canonical/plan attempt-record shape open.
+
+The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
+the single connection and reopening the database preserves pending/complete operational state,
+canonical event identity, immutable raw bytes, and parent-linked order after embedded migrations
+are reapplied. This is a persistence and integrity check only; provider dispatch, typed request
+lowering, state-transition semantics, general resolution, and accepted-state reconstruction remain
+later contracts.
 
 Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and
 program routes each preserve their input/output types and referenced route identity. A complete
