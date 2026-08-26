@@ -7,6 +7,7 @@
 //! standing, or warrant.
 
 mod dispatch;
+mod replay;
 
 use std::collections::BTreeMap;
 
@@ -18,6 +19,9 @@ pub use ic_core::ProbeOperatorRef;
 use ic_core::{
     BoundFiniteAskContinuation, EventRef, IProgRef, RawReturnRef, TypeCatalog, TypeCheckError,
     TypeError, TypeRef, TypedForm, TypedFormRef,
+};
+pub use replay::{
+    ColdReplayedProbe, FiniteProbeReplayError, ReplayObservation, replay_completed_finite_probe,
 };
 use thiserror::Error;
 

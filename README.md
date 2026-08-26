@@ -287,8 +287,16 @@ a verified suspension's exact checked backend request, dispatches only after a f
 authorization, converts the provider's opaque bytes into `RawReturn`, and atomically completes the
 ordinary event before returning anything to a decoder. The fixture proves one call on success,
 zero redispatches for completed or recovered-pending rows, and a separate operational provider
-failure path. This is a mock-provider boundary, not method admission, semantic resolution, or a
-real-provider integration.
+failure path. This is a mock-provider boundary, not method admission, semantic resolution, a
+standing decision, or real-provider integration.
+
+`ic-runtime::replay_completed_finite_probe` now composes the durable actuality spine with the
+existing finite decoder, exact relation-support standing, complete answer-set admission,
+capture-safe source binding, and verified runtime resumption. A file-backed fixture drops all
+pre-restart objects, reloads canonical artifacts, regenerates the runtime mapping, retains two
+supported completions, and distinguishes every RPL-005 failure family. The first finite slice needs
+no persisted lowering recipe or new opcode; the next frontier is one complete execute-then-replay
+question cycle.
 
 The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
 the single connection and reopening the database preserves pending/complete operational state,

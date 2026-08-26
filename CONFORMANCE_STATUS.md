@@ -200,10 +200,10 @@ itself. The immediate replay suite is therefore pending until demonstrated:
 | Fixture | Status | Required discriminator |
 |---|---|---|
 | RPL-001 completed effect reload | PASS | `ic-store::tests::external_effect_preparation_survives_restart_and_completes_as_one_raw_event` reopens a file-backed store, rechecks the exact request/event/raw bytes without provider access, and rejects pending, unknown, corrupt, version-mismatched, and provenance-mismatched states. |
-| RPL-002 finite semantic answer replay | PENDING | Persisted identities reproduce `Decoded`, `Undefined`, or `Unknown`; decoded multi-completion answers retain every supported completion. |
-| RPL-003 source continuation replay | PENDING | A freshly decoded source `Ask` binds the complete answer set without pre-crash binding or answer-slot capture. |
-| RPL-004 runtime continuation replay | PENDING | Fresh deterministic lowering regenerates the exact operator, continuation, target, and admitted resumption, or witnesses the need for a minimal replay recipe. |
-| RPL-005 replay failure matrix | PENDING | Operational, actuality, decoding, support, source, capture, operator, continuation, and target failures remain distinct. |
+| RPL-002 finite semantic answer replay | PASS | `ic-runtime::completed_probe_cold_replays_from_persisted_identities_with_distinct_residuals` reloads canonical types, forms, relation/query, candidates, uses, decoder/path, event, support, and programs; `Decoded`, `Undefined`, and `Unknown` remain distinct and both decoded completions survive admission. |
+| RPL-003 source continuation replay | PASS | The same fresh-process fixture decodes the persisted source `Ask`, reconstructs standing and the complete answer set, and creates a new capture-safe `BoundFiniteAskContinuation`; mismatched and capturing sources reject. |
+| RPL-004 runtime continuation replay | PASS | The fixture regenerates and verifies `ProgramIR`, `ProbeSuspension`, and `ContinuationLowering` from reloaded source/operator/version identities and reaches the same admitted resumption without a persisted lowering recipe. |
+| RPL-005 replay failure matrix | PASS | `ic-store` restart tests, `ic-runtime::mock_dispatch_requires_fresh_preparation_and_commits_raw_event_before_return`, and the cold-replay fixture keep provider failure, pending/unknown actuality, `Undefined`, `Unknown`, unsupported/no-standing answers, source mismatch, capture, operator mismatch, continuation mismatch, and target mismatch distinct. |
 | CYCLE-001 cold-replayable inquiry cycle | PENDING | One `Ask -> provider return -> supported binding -> next Ask/Return` cycle replays after restart with zero redispatch. |
 
 All 70 successor reciprocal-boundary fixtures are pending. Every unaffected predecessor

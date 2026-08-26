@@ -63,34 +63,34 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-After the finite reciprocal semantic slice, event-to-runtime continuation bridge, typed backend
-request identity, crash-safe journal, and one injected mock-provider execution, resolve the first
-complete cold-replay gap:
+After the finite reciprocal semantic slice, typed compiler/request boundary, crash-safe mock
+provider execution, and the complete RPL suffix-replay suite, close the first whole executable
+question cycle across both live execution and cold replay.
 
-> Given a committed `ActualizedProbe` and a restarted file-backed store, what is the smallest
-> replay adapter that reconstructs the exact raw return, event, finite decode, supported answer,
-> capture-safe binding, and admitted runtime resumption without consulting pre-crash in-memory
-> values? Provider failure, decoder `Undefined`, decoder `Unknown`, unsupported answers, and
-> lowering mismatch must remain distinct residuals.
-
-This is the post-research replay frontier. `RPL-001` now passes; `RPL-002` through `RPL-005`
-remain live:
+The post-research `RPL-001` through `RPL-005` suite now passes:
 
 1. **demonstrated:** reload one completed effect, exact event, and exact raw return after a
    file-backed restart, rejecting pending/unknown state, corrupt bytes, backend-version drift,
    and preparation-provenance mismatch;
-2. reconstruct finite `Decoded | Undefined | Unknown` resolution and the complete supported answer;
-3. reload the exact source `Ask` and produce a fresh capture-safe answer binding;
-4. regenerate `ProgramIR`, `ProbeSuspension`, and `ContinuationLowering`, then derive the same
-   admitted resumption; and
-5. preserve distinct failure exits for provider failure, pending actuality, decode status, support
-   failure, source mismatch, capture, and lowering mismatches.
+2. **demonstrated:** reconstruct finite `Decoded | Undefined | Unknown` resolution and the complete
+   multi-completion supported answer;
+3. **demonstrated:** reload the exact source `Ask` and produce a fresh capture-safe answer binding;
+4. **demonstrated:** regenerate `ProgramIR`, `ProbeSuspension`, and `ContinuationLowering`, then
+   derive the same admitted resumption without a persisted recipe; and
+5. **demonstrated:** preserve distinct failure exits for provider failure, pending actuality,
+   decode status, support failure, source mismatch, capture, and lowering mismatches.
 
-The decisive ablation is whether the lowering remains exactly regenerable from accepted source,
-operator/compiler identities, and versions. Try regeneration first. Only a fresh-process failure to
-recover the exact mapping may authorize the smallest persistable compile/replay recipe. No provider
-call, pre-crash derived object, new runtime opcode, new table, or immediate `ic-machine` crate may
-stand in for replay.
+For the first finite slice, lowering remains exactly regenerable from reloaded source,
+operator/compiler identities, and versions. Its general reopen condition remains: only a later
+fresh-process failure to recover an exact mapping may authorize the smallest persistable
+compile/replay recipe.
+
+The strongest live obligation is now `CYCLE-001`:
+
+> Execute one source `Ask` through operator/plan/request compilation, fresh durable dispatch, one
+> provider return, raw/event commitment, finite decode/support, source binding, admitted resumption,
+> and the next `Ask` or `Return`; then close the process and reproduce the same protected
+> continuation from serialized root references with zero redispatch.
 
 The protected difference is visible in the accepted sources:
 
