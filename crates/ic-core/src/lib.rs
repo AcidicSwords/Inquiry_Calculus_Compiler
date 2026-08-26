@@ -3,6 +3,7 @@
 //! Every persisted semantic artifact uses the versioned canonical envelope to assign a stable
 //! content identity. Individual modules state their phase and semantic limits explicitly.
 
+mod adjunction;
 mod artifact;
 mod backend;
 mod boundary;
@@ -45,6 +46,11 @@ mod sufficient_present;
 mod supported_answer;
 mod ty;
 
+pub use adjunction::{
+    AdmittedFiniteAdjunction, ExactFinitePreorder, FiniteAdjunctionCandidate,
+    FiniteAdjunctionCatalog, FiniteAdjunctionError, FiniteAdjunctionLawCounterexample,
+    admit_finite_adjunction,
+};
 pub use artifact::{
     ARTIFACT_DOMAIN, ARTIFACT_WIRE_VERSION, ArtifactEnvelope, ArtifactError, ArtifactKind,
     ArtifactRef,

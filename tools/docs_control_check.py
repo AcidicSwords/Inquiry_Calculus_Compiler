@@ -119,6 +119,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/fiber.rs",
         "many_to_one_converse_preserves_the_whole_reverse_fiber_without_an_inverse",
     ),
+    "QADJOINT-001": (
+        "crates/ic-core/tests/adjunction.rs",
+        "finite_adjoint_requires_its_binding_supplied_law_at_every_pair",
+    ),
 }
 
 ERRORS: list[str] = []
