@@ -17,11 +17,12 @@ without selecting a singleton. A derived capture-safe binding now supplies that 
 checked `IProg::Ask` answer slot while retaining the explicit environment and continuation
 identity. An explicit finite source-continuation lowering now resumes a matching suspended probe
 while retaining the bound event/raw-return provenance; operator, continuation, and target
-  mismatches reject. One injected mock-provider dispatch now durably prepares, calls once,
-  preserves exact returned bytes, and completes the ordinary event before exposing it; durable
-  completed-effect replay now reloads and rechecks the exact request, ledger event, and raw bytes
-  after file-backed restart without provider access. Cold replay through decode/admission/resumption
-  remains open at the Phase 5/6/7 boundary.
+mismatches reject. One injected mock-provider dispatch now durably prepares, calls once,
+preserves exact returned bytes, and completes the ordinary event before exposing it. A complete
+finite `Ask -> Probe -> actual return -> supported binding -> Return` cycle now runs live and then
+cold replays after file-backed restart: it reloads the exact request, ledger event, raw bytes,
+semantic inputs, source `Ask`, and compiler identities; regenerates the runtime lowering; and
+reaches the same protected continuation without redispatch.
 The Phase 6 crash breaker now has a separate operational external-effect journal: durable
 preparation precedes any caller dispatch; unresolved restart state remains unknown and is never
 auto-retried; completion atomically installs the raw artifact, checked ordinary event, ledger edge,
@@ -63,9 +64,10 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-After the finite reciprocal semantic slice, typed compiler/request boundary, crash-safe mock
-provider execution, and the complete RPL suffix-replay suite, close the first whole executable
-question cycle across both live execution and cold replay.
+The finite reciprocal semantic slice, typed compiler/request boundary, crash-safe mock execution,
+`RPL-001` through `RPL-005`, and the first whole live-to-cold-replay question cycle now pass. The
+next obligation is the smallest Phase 8/9 paired-actuality and sufficient-present fixture over the
+same authoritative event spine.
 
 The post-research `RPL-001` through `RPL-005` suite now passes:
 
@@ -85,12 +87,26 @@ operator/compiler identities, and versions. Its general reopen condition remains
 fresh-process failure to recover an exact mapping may authorize the smallest persistable
 compile/replay recipe.
 
-The strongest live obligation is now `CYCLE-001`:
+`CYCLE-001` is demonstrated:
 
 > Execute one source `Ask` through operator/plan/request compilation, fresh durable dispatch, one
 > provider return, raw/event commitment, finite decode/support, source binding, admitted resumption,
 > and the next `Ask` or `Return`; then close the process and reproduce the same protected
 > continuation from serialized root references with zero redispatch.
+
+The strongest live obligation is now `TRACE-001`:
+
+> From a verified finite event spine containing a resumed successor occurrence, derive separate
+> question and return trace projections with exact event/path provenance. Reject the same terminal
+> state reached through a different event or resolution path as the same trace. Then use only
+> those authoritative roots to derive the smallest question-conditioned sufficient present,
+> demonstrate exact regeneration after restart, and reopen it when one new protected continuation
+> separates a previously folded class.
+
+The first implementation should remain a derived finite view. It must not add a second mutable
+memory, conflate ledger order with causal or inquiry order, persist a derived trace merely for
+convenience, or claim universal bounded memory. If the fixture cannot regenerate from the event
+spine and accepted artifacts, record the exact missing basis before proposing storage.
 
 The protected difference is visible in the accepted sources:
 
@@ -149,7 +165,7 @@ The protected difference is visible in the accepted sources:
   requires the event to name the supplied raw return, and commits raw artifact, event artifact,
   ledger edge, and completion link together. Restart verifies the completed event spine. The table
   is operational recovery state, not a canonical semantic attempt or second authoritative event
-  history; actual provider execution remains open.
+  history; integration with a real external provider remains open.
 - Preparation returns a separate operational disposition. Only a freshly inserted durable intent
   returns `DispatchAuthorized`; an exact existing pending or completed row returns `Existing`.
   Thus idempotent lookup and crash recovery cannot be mistaken for permission to invoke the
@@ -536,16 +552,15 @@ These are recorded now but do not outrank the Phase 4 determination boundary:
   characterization is a derived view, not an authoritative object or self-warranting
   horizon.
 - **Phase 6:** typed request-before-dispatch, unknown pending restart state, one injected mock
-  dispatch, atomic raw/event completion, and file-backed recovery now pass. A typed semantic
-  attempt boundary remains open;
-  do not collapse the completed event into a proposed request or promote the recovery journal into
-  semantic history. Next validate request, boundary, operator, state, route, backend, and provenance
-  contracts and extend cold replay through admitted resolution and resumed state.
-- **Phase 10/12 method boundary:** canonical method, surface-plan, and backend-request identities
-  now pass exact structural checks. Next inject the smallest mock provider after durable
-  preparation, preserve its raw actual return before interpretation, keep backend failure distinct
-  from semantic non-discharge, and route admitted handlers/reentry through first-order `IProg`
-  without a new runtime opcode.
+  dispatch, atomic raw/event completion, file-backed recovery, and the first finite cold replay
+  through admitted resolution and resumed state now pass. A typed semantic attempt boundary
+  remains open; do not collapse the completed event into a proposed request or promote the
+  recovery journal into semantic history. Phase 8 must next preserve question/return path
+  provenance without inventing a second history.
+- **Phase 10/12 method boundary:** canonical method, surface-plan, and backend-request identities,
+  injected mock dispatch, raw-return-before-interpretation, and first-order finite reentry now pass.
+  Next add a real provider only after the Phase 8/9 trace and sufficient-present fixture, while
+  keeping backend failure distinct from semantic non-discharge and adding no runtime opcode.
 - **Phases 15-16 extension and approximation:** claim question-language monotonicity
   only for conservative extensions with an explicit old-question embedding, and retain
   directional approximation soundness plus extension-sensitive reopening.

@@ -294,16 +294,19 @@ standing decision, or real-provider integration.
 existing finite decoder, exact relation-support standing, complete answer-set admission,
 capture-safe source binding, and verified runtime resumption. A file-backed fixture drops all
 pre-restart objects, reloads canonical artifacts, regenerates the runtime mapping, retains two
-supported completions, and distinguishes every RPL-005 failure family. The first finite slice needs
-no persisted lowering recipe or new opcode; the next frontier is one complete execute-then-replay
-question cycle.
+supported completions, and distinguishes every RPL-005 failure family. The fixture now also runs
+the live side through `dispatch_probe`: exactly one provider call commits the raw return and event,
+the answer is admitted and resumed to `Return`, and the same result is regenerated after restart
+with the provider-call counter unchanged. The first finite slice needs no persisted lowering recipe
+or new opcode; the next frontier is a derived paired question/return trace and the first exact
+question-conditioned sufficient-present/fold/reopen witness over the same event spine.
 
 The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
 the single connection and reopening the database preserves pending/complete operational state,
 canonical event identity, immutable raw bytes, and parent-linked order after embedded migrations
-are reapplied. This is a persistence and integrity check only; provider dispatch, typed request
-lowering, state-transition semantics, general resolution, and accepted-state reconstruction remain
-later contracts.
+are reapplied. This proves persistence, integrity, and the first finite execute/replay path only;
+general state-transition semantics, resolution, paired actuality, sufficient-present derivation,
+and accepted-state reconstruction remain later contracts.
 
 Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and
 program routes each preserve their input/output types and referenced route identity. A complete

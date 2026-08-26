@@ -1,7 +1,12 @@
 use std::{
     collections::BTreeMap,
+    convert::Infallible,
     env,
     path::PathBuf,
+    sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+    },
     time::{SystemTime, UNIX_EPOCH},
 };
 
@@ -26,8 +31,8 @@ use ic_core::{
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, ProgramIR, ReplayObservation, RuntimeCatalog, Terminator,
-    replay_completed_finite_probe,
+    MachineStep, ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
+    RuntimeCatalog, Terminator, dispatch_probe, replay_completed_finite_probe,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -318,7 +323,22 @@ struct ColdReplayRoots {
     compiler_version: ArtifactRef,
 }
 
-async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots) {
+struct CountingProvider {
+    calls: Arc<AtomicUsize>,
+    expected_body: ArtifactRef,
+}
+
+impl ProbeProvider for CountingProvider {
+    type Error = Infallible;
+
+    fn dispatch(&mut self, request: &BackendRequest) -> Result<ProviderReturn, Self::Error> {
+        self.calls.fetch_add(1, Ordering::SeqCst);
+        assert_eq!(request.request_body(), self.expected_body);
+        Ok(ProviderReturn::new(vec![0x41, 0x00, 0xff]))
+    }
+}
+
+async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots, Arc<AtomicUsize>) {
     let nonce = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("system clock must be after Unix epoch")
@@ -774,6 +794,7 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots) {
         .await,
     );
     let backend_version = stored_ref(&store, b"backend-version").await;
+    let request_body = stored_ref(&store, b"request-body").await;
     let request_value = BackendRequest::new(
         operator,
         plan,
@@ -783,7 +804,7 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots) {
         executable_code,
         compiler_version,
         backend_version,
-        stored_ref(&store, b"request-body").await,
+        request_body,
     );
     let request = ic_core::BackendRequestRef::from_artifact_ref(
         persist(
@@ -866,31 +887,110 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots) {
     );
     assert_eq!(catalog.insert_program(capture_source_value), capture_source);
 
-    let event_value = ActualEvent::new(
+    let state_before = StateRef::from_artifact_ref(stored_ref(&store, b"state-before").await);
+    let state_after = StateRef::from_artifact_ref(stored_ref(&store, b"state-after").await);
+    let route = RouteRef::from_artifact_ref(stored_ref(&store, b"route").await);
+    let provenance = ProvenanceRef::from_artifact_ref(stored_ref(&store, b"provenance").await);
+    let runtime = ProgramIR::new(
+        unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(BlockTarget::new(1), Terminator::Return { value: answer_a }),
+        ],
+    );
+    runtime
+        .verify(&catalog)
+        .expect("live runtime lowering must verify");
+    let MachineStep::Suspended(suspension) = runtime
+        .step(runtime.start())
+        .expect("source Ask lowering must reach the probe")
+    else {
+        panic!("source Ask lowering must suspend at its Probe")
+    };
+    let dispatch_context = ProbeDispatchContext::new(
         None,
-        StateRef::from_artifact_ref(stored_ref(&store, b"state-before").await),
-        query,
-        boundary,
+        state_before,
         None,
-        operator,
-        raw_return,
-        StateRef::from_artifact_ref(stored_ref(&store, b"state-after").await),
+        state_after,
         grain,
-        RouteRef::from_artifact_ref(stored_ref(&store, b"route").await),
+        route,
         binding,
-        backend_version,
-        ProvenanceRef::from_artifact_ref(stored_ref(&store, b"provenance").await),
+        provenance,
     );
     let token = DispatchToken::from_bytes([0xc1; 32]);
-    let prepared = store
-        .prepare_backend_request(token, request, operator, None)
-        .await
-        .expect("replay fixture must prepare exact backend request");
-    assert!(prepared.dispatch_authorized());
-    let event = store
-        .complete_external_effect(token, &raw, &event_value)
-        .await
-        .expect("replay fixture must commit exact raw/event actuality");
+    let provider_calls = Arc::new(AtomicUsize::new(0));
+    let mut provider = CountingProvider {
+        calls: Arc::clone(&provider_calls),
+        expected_body: request_body,
+    };
+    let actual = dispatch_probe(
+        &store,
+        suspension,
+        token,
+        request,
+        dispatch_context,
+        &mut provider,
+    )
+    .await
+    .expect("live cycle must dispatch and preserve one actual return");
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 1);
+    assert_eq!(actual.raw_return(), &raw);
+    assert_eq!(actual.raw_return_ref(), raw_return);
+    let event = actual.event_ref();
+    catalog.events.insert(event, actual.event().clone());
+
+    let standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &catalog,
+    )
+    .expect("live exact support closure must reconstruct standing");
+    let decoded_decoder_value = catalog
+        .resolve_finite_decoder(decoded_decoder)
+        .expect("live finite decoder must remain available");
+    let source_value = catalog
+        .resolve_iprog(source)
+        .expect("live source Ask must remain available");
+    let observations = [
+        ReplayObservation::new(candidate_a, observation_a),
+        ReplayObservation::new(candidate_b, observation_b),
+    ];
+    let live = replay_completed_finite_probe(
+        &store,
+        token,
+        &decoded_decoder_value,
+        decoded_path,
+        &observations,
+        &standing,
+        &source_value,
+        suspension,
+        ContinuationLowering::new(continuation, BlockTarget::new(1)),
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("live actual return must admit and resume the source continuation");
+    assert_eq!(live.actuality().event_ref(), event);
+    assert!(matches!(
+        runtime
+            .step(live.resumption().state())
+            .expect("live admitted continuation must execute"),
+        MachineStep::Returned(value) if value == answer_a
+    ));
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 1);
     store.close().await;
 
     (
@@ -926,6 +1026,7 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots) {
             raw_return,
             compiler_version,
         },
+        provider_calls,
     )
 }
 
@@ -1254,8 +1355,8 @@ fn admitted_answer_resumption_preserves_cold_replay_provenance_and_exact_lowerin
 }
 
 #[tokio::test]
-async fn completed_probe_cold_replays_from_persisted_identities_with_distinct_residuals() {
-    let (path, roots) = persisted_cold_replay_fixture().await;
+async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
+    let (path, roots, provider_calls) = persisted_cold_replay_fixture().await;
     let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
     let store = ArtifactStore::open(&url)
         .await
@@ -1384,6 +1485,11 @@ async fn completed_probe_cold_replays_from_persisted_identities_with_distinct_re
             .expect("replayed continuation must execute"),
         MachineStep::Returned(value) if value == roots.answer_a
     ));
+    assert_eq!(
+        provider_calls.load(Ordering::SeqCst),
+        1,
+        "cold replay must not redispatch the provider"
+    );
 
     assert!(matches!(
         replay_completed_finite_probe(
