@@ -8,9 +8,10 @@
 use ic_core::{
     ActualDecodeError, ActualDecodeResult, CompletionCandidateRef, DecodedObservationError,
     FiniteAnswerBindingError, FiniteDecoder, FiniteSupportedAnswerCatalog,
-    FiniteSupportedAnswerError, IProgArtifact, IProgCatalog, RelationUseRef, ResolutionPathRef,
-    Standing, admit_finite_supported_answers, bind_finite_ask_continuation, decode_actual_event,
-    match_decoded_observation_use,
+    FiniteSupportedAnswerError, GeneratedInquiry, GeneratedInquiryBindingError,
+    GeneratedInquiryCatalog, IProgArtifact, IProgCatalog, RelationUseRef, ResolutionPathRef,
+    Standing, admit_finite_supported_answers, bind_finite_ask_continuation,
+    bind_generated_inquiry_continuation, decode_actual_event, match_decoded_observation_use,
 };
 use ic_store::{ArtifactStore, DispatchToken, ReplayedExternalEffect, StoreError};
 use thiserror::Error;
@@ -42,6 +43,26 @@ impl ReplayObservation {
 pub struct ColdReplayedProbe {
     actuality: ReplayedExternalEffect,
     resumption: AdmittedResumption,
+}
+
+/// A cold-replayed supported continuation retaining the generic separator problem and route that
+/// generated its source question.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ColdReplayedSeparatorInquiry {
+    replay: ColdReplayedProbe,
+    separator: ic_core::BoundGeneratedInquiryContinuation,
+}
+
+impl ColdReplayedSeparatorInquiry {
+    #[must_use]
+    pub const fn replay(&self) -> &ColdReplayedProbe {
+        &self.replay
+    }
+
+    #[must_use]
+    pub const fn separator(&self) -> &ic_core::BoundGeneratedInquiryContinuation {
+        &self.separator
+    }
 }
 
 impl ColdReplayedProbe {
@@ -122,6 +143,54 @@ where
     })
 }
 
+/// Replays one finite probe and retains the checked generic separator inquiry through its
+/// supported, answer-dependent source continuation.
+///
+/// The provider remains absent. The ordinary replay path reconstructs actuality, decoding,
+/// standing, binding, and lowering first; the generated-inquiry bridge then independently
+/// rechecks the separator problem and exact question before retaining its problem and route.
+#[allow(clippy::too_many_arguments)]
+pub async fn replay_completed_finite_separator_inquiry<C>(
+    store: &ArtifactStore,
+    token: DispatchToken,
+    inquiry: GeneratedInquiry,
+    decoder: &FiniteDecoder,
+    path: ResolutionPathRef,
+    observations: &[ReplayObservation],
+    standing: &Standing,
+    source: &IProgArtifact,
+    suspension: ProbeSuspension,
+    lowering: ContinuationLowering,
+    program: &ProgramIR,
+    catalog: &C,
+) -> Result<ColdReplayedSeparatorInquiry, FiniteSeparatorReplayError>
+where
+    C: FiniteSupportedAnswerCatalog + GeneratedInquiryCatalog + IProgCatalog + RuntimeCatalog,
+{
+    let replay = replay_completed_finite_probe(
+        store,
+        token,
+        decoder,
+        path,
+        observations,
+        standing,
+        source,
+        suspension,
+        lowering,
+        program,
+        catalog,
+    )
+    .await?;
+    let separator = bind_generated_inquiry_continuation(
+        inquiry,
+        source,
+        replay.resumption().binding().answer().clone(),
+        catalog,
+    )?;
+    debug_assert_eq!(separator.binding(), replay.resumption().binding());
+    Ok(ColdReplayedSeparatorInquiry { replay, separator })
+}
+
 /// Distinct replay exits; operational, resolution, support, source, and lowering failures never
 /// collapse to a Boolean or one generic "no answer" result.
 #[derive(Debug, Error)]
@@ -152,4 +221,13 @@ pub enum FiniteProbeReplayError {
     SourceBinding(#[from] FiniteAnswerBindingError),
     #[error(transparent)]
     Resumption(#[from] AdmittedResumeError),
+}
+
+/// Distinct failures while cold replaying a generated separator inquiry.
+#[derive(Debug, Error)]
+pub enum FiniteSeparatorReplayError {
+    #[error(transparent)]
+    Replay(#[from] FiniteProbeReplayError),
+    #[error(transparent)]
+    Binding(#[from] GeneratedInquiryBindingError),
 }

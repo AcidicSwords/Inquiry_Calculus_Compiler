@@ -1,8 +1,10 @@
 use ic_core::{
-    ApplicabilityRef, ArtifactRef, BindingVersionRef, ExactDeterminationError,
-    ExactFinitePresentChallenge, ExactFinitePresentUpdate, ExactFinitePresentUpdateError,
+    ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
+    ExactDeterminationError, ExactFinitePresentChallenge, ExactFinitePresentReopenError,
+    ExactFinitePresentReopenWitness, ExactFinitePresentUpdate, ExactFinitePresentUpdateError,
     ExactFiniteSignature, ExactFiniteSufficientPresentError, ExactFiniteSufficientPresentResult,
-    ExactProtectedContinuation, GrainRef, HorizonRef, ProtectedContinuationRef, ScopeRef,
+    ExactProtectedContinuation, FINITE_PRESENT_REOPEN_ARTIFACT_KIND,
+    FINITE_PRESENT_REOPEN_SCHEMA_VERSION, GrainRef, HorizonRef, ProtectedContinuationRef, ScopeRef,
     SignatureContext, TypeRef, challenge_exact_finite_sufficient_present,
     derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
 };
@@ -77,6 +79,70 @@ fn one_class_present_is_exactly_sufficient_then_reopens_on_a_new_continuation() 
         separator.first_target_value(),
         separator.second_target_value()
     );
+
+    let envelope = witness.envelope().expect("reopen witness must encode");
+    assert_eq!(
+        ExactFinitePresentReopenWitness::from_envelope(&envelope)
+            .expect("reopen witness must decode"),
+        witness
+    );
+    assert_eq!(
+        witness.reopen_ref().expect("reopen witness must hash"),
+        envelope.artifact_ref().expect("envelope must hash")
+    );
+    assert_eq!(
+        witness.referenced_artifacts(),
+        vec![
+            artifact(0x51),
+            artifact(1),
+            artifact(2),
+            artifact(0x40),
+            separator.first_target_value(),
+            separator.second_target_value(),
+        ]
+    );
+
+    let payload = witness.canonical_payload();
+    assert!(matches!(
+        ExactFinitePresentReopenWitness::decode_payload(&payload[..payload.len() - 1]),
+        Err(ExactFinitePresentReopenError::TruncatedPayload)
+    ));
+    let mut trailing = payload;
+    trailing.push(0);
+    assert!(matches!(
+        ExactFinitePresentReopenWitness::decode_payload(&trailing),
+        Err(ExactFinitePresentReopenError::TrailingPayloadBytes(1))
+    ));
+    let mut repeated_domain = witness.canonical_payload();
+    repeated_domain.copy_within(32..64, 64);
+    assert!(matches!(
+        ExactFinitePresentReopenWitness::decode_payload(&repeated_domain),
+        Err(ExactFinitePresentReopenError::IdenticalDomains(_))
+    ));
+    let mut equal_targets = witness.canonical_payload();
+    equal_targets.copy_within(128..160, 160);
+    assert!(matches!(
+        ExactFinitePresentReopenWitness::decode_payload(&equal_targets),
+        Err(ExactFinitePresentReopenError::UndifferentiatedTargets(_))
+    ));
+    let wrong_kind = ArtifactEnvelope::from_canonical_payload(
+        ArtifactKind::new("fixture").expect("kind must be valid"),
+        FINITE_PRESENT_REOPEN_SCHEMA_VERSION,
+        witness.canonical_payload(),
+    );
+    assert!(matches!(
+        ExactFinitePresentReopenWitness::from_envelope(&wrong_kind),
+        Err(ExactFinitePresentReopenError::UnexpectedArtifactKind { .. })
+    ));
+    let wrong_schema = ArtifactEnvelope::from_canonical_payload(
+        ArtifactKind::new(FINITE_PRESENT_REOPEN_ARTIFACT_KIND).expect("kind must be valid"),
+        FINITE_PRESENT_REOPEN_SCHEMA_VERSION + 1,
+        witness.canonical_payload(),
+    );
+    assert!(matches!(
+        ExactFinitePresentReopenWitness::from_envelope(&wrong_schema),
+        Err(ExactFinitePresentReopenError::UnsupportedSchemaVersion(_))
+    ));
 }
 
 #[test]

@@ -201,16 +201,16 @@ pub use resolution::{
 };
 pub use seed::{SeedReorientation, SeedReorientationError};
 pub use separator::{
-    DeclaredFiniteGeneratorRegime, DeclaredFiniteGeneratorRegimeError,
-    DeclaredRouteMaterialization, EffectivityRef, ExactFiniteRegimeRoute,
-    ExactFiniteRegimeSeparatorError, ExactFiniteRegimeSeparatorResult,
+    BoundGeneratedInquiryContinuation, DeclaredFiniteGeneratorRegime,
+    DeclaredFiniteGeneratorRegimeError, DeclaredRouteMaterialization, EffectivityRef,
+    ExactFiniteRegimeRoute, ExactFiniteRegimeSeparatorError, ExactFiniteRegimeSeparatorResult,
     GENERATED_INQUIRY_ARTIFACT_KIND, GENERATED_INQUIRY_SCHEMA_VERSION, GeneratedInquiry,
-    GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratedInquiryError, GeneratorRegimeRef,
-    MaterializationGap, MaterializationGapError, ProposedRegimeExtension,
-    ProposedRegimeExtensionError, ProtectedClassRef, ProtectedCompletionFieldRef,
-    SEPARATOR_PROBLEM_ARTIFACT_KIND, SEPARATOR_PROBLEM_SCHEMA_VERSION, SeparatorProblem,
-    SeparatorProblemError, SeparatorProblemRef, StructureViewRef,
-    check_exact_no_separator_within_declared_regime,
+    GeneratedInquiryBindingError, GeneratedInquiryCatalog, GeneratedInquiryCheckError,
+    GeneratedInquiryError, GeneratorRegimeRef, MaterializationGap, MaterializationGapError,
+    ProposedRegimeExtension, ProposedRegimeExtensionError, ProtectedClassRef,
+    ProtectedCompletionFieldRef, SEPARATOR_PROBLEM_ARTIFACT_KIND, SEPARATOR_PROBLEM_SCHEMA_VERSION,
+    SeparatorProblem, SeparatorProblemError, SeparatorProblemRef, StructureViewRef,
+    bind_generated_inquiry_continuation, check_exact_no_separator_within_declared_regime,
 };
 pub use sixfold::{GammaError, ReciprocalOccurrence, ReciprocalOccurrenceError, RoleComparison};
 pub use standing::{
@@ -225,11 +225,12 @@ pub use standing::{
     standing_from_declared_support, standing_relation_use_support,
 };
 pub use sufficient_present::{
-    ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFinitePresentUpdate,
-    ExactFinitePresentUpdateError, ExactFiniteSufficientPresent, ExactFiniteSufficientPresentError,
-    ExactFiniteSufficientPresentResult, ExactProtectedContinuation,
-    challenge_exact_finite_sufficient_present, derive_exact_finite_sufficient_present,
-    extend_exact_finite_sufficient_present,
+    ExactFinitePresentChallenge, ExactFinitePresentReopenError, ExactFinitePresentReopenWitness,
+    ExactFinitePresentUpdate, ExactFinitePresentUpdateError, ExactFiniteSufficientPresent,
+    ExactFiniteSufficientPresentError, ExactFiniteSufficientPresentResult,
+    ExactProtectedContinuation, FINITE_PRESENT_REOPEN_ARTIFACT_KIND,
+    FINITE_PRESENT_REOPEN_SCHEMA_VERSION, challenge_exact_finite_sufficient_present,
+    derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
 };
 pub use supported_answer::{
     AdmittedFiniteAnswerSet, BoundFiniteAskContinuation, FiniteAnswerBindingError,

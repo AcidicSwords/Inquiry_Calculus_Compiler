@@ -128,6 +128,23 @@ pub struct KernelSeparator {
 
 impl KernelSeparator {
     #[must_use]
+    pub(crate) const fn new(
+        first_domain: ArtifactRef,
+        second_domain: ArtifactRef,
+        available_value: ArtifactRef,
+        first_target_value: ArtifactRef,
+        second_target_value: ArtifactRef,
+    ) -> Self {
+        Self {
+            first_domain,
+            second_domain,
+            available_value,
+            first_target_value,
+            second_target_value,
+        }
+    }
+
+    #[must_use]
     pub const fn first_domain(self) -> ArtifactRef {
         self.first_domain
     }
@@ -284,15 +301,15 @@ pub fn determine_through_exact(
         if let Some(previous_target) = factor.insert(*available_value, *target_value) {
             if previous_target != *target_value {
                 return Ok(ExactDeterminationResult::NotDetermined {
-                    separator: KernelSeparator {
-                        first_domain: *first_domain
+                    separator: KernelSeparator::new(
+                        *first_domain
                             .get(available_value)
                             .expect("factor entry has its first domain"),
-                        second_domain: *domain,
-                        available_value: *available_value,
-                        first_target_value: previous_target,
-                        second_target_value: *target_value,
-                    },
+                        *domain,
+                        *available_value,
+                        previous_target,
+                        *target_value,
+                    ),
                 });
             }
         } else {

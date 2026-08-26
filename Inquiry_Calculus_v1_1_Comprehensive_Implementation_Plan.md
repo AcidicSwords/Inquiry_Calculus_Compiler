@@ -4133,9 +4133,14 @@ update/recovery view over an explicit new ledger event, with no mutable memory o
 
 That Phase 8/9 update/recovery view now passes. It preserves every old presentation and protected
 observation row under a strict history extension, regenerates an updated present when possible,
-and returns a positive reopen separator when the appended history splits it. The next executable
-step is `SEPARATOR-001`: one admitted/replayed residual must select a typed answer-dependent
-continuation using the existing generic separator boundary rather than a method-name switch.
+and returns a positive reopen separator when the appended history splits it. `SEPARATOR-001` now
+passes: the complete positive reopen witness has derived canonical identity, supplies the residual
+of the existing generic `SeparatorProblem`, retains a checked generated inquiry route and the whole
+admitted answer set, and regenerates the same first-order continuation after restart without
+redispatch. The next executable step is `METHOD-BRIDGE-001`: one transparent `MethodContract`
+residual-handler/reentry bridge must consume that generic continuation through first-order `IProg`
+data and then reopen the reusable path under a new protected separator. Method names remain
+provenance, not dispatch policy.
 
 Later phase constraints are deliberately local:
 

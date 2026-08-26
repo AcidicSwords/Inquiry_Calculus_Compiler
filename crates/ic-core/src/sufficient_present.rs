@@ -10,9 +10,15 @@ use std::collections::BTreeSet;
 use thiserror::Error;
 
 use crate::{
-    ArtifactRef, ExactDeterminationError, ExactDeterminationResult, ExactFactorization,
-    ExactFiniteSignature, KernelSeparator, ProtectedContinuationRef, determine_through_exact,
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, ExactDeterminationError,
+    ExactDeterminationResult, ExactFactorization, ExactFiniteSignature, KernelSeparator,
+    ProtectedContinuationRef, determine_through_exact,
 };
+
+/// Canonical artifact kind for a positive finite sufficient-present reopening witness.
+pub const FINITE_PRESENT_REOPEN_ARTIFACT_KIND: &str = "ic.finite-present-reopen";
+/// Payload schema version for positive finite sufficient-present reopening witnesses.
+pub const FINITE_PRESENT_REOPEN_SCHEMA_VERSION: u32 = 1;
 
 /// One protected continuation and its exact observation over the declared finite history domain.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -107,6 +113,130 @@ impl ExactFinitePresentReopenWitness {
     pub const fn separator(&self) -> KernelSeparator {
         self.separator
     }
+
+    /// Canonically encodes the protected continuation and the complete positive kernel separator.
+    #[must_use]
+    pub fn canonical_payload(&self) -> Vec<u8> {
+        let separator = self.separator;
+        let mut encoded = Vec::with_capacity(32 * 6);
+        for reference in [
+            self.continuation.as_artifact_ref(),
+            separator.first_domain(),
+            separator.second_domain(),
+            separator.available_value(),
+            separator.first_target_value(),
+            separator.second_target_value(),
+        ] {
+            encoded.extend_from_slice(reference.as_bytes());
+        }
+        encoded
+    }
+
+    pub fn decode_payload(payload: &[u8]) -> Result<Self, ExactFinitePresentReopenError> {
+        const PAYLOAD_LENGTH: usize = 32 * 6;
+        if payload.len() < PAYLOAD_LENGTH {
+            return Err(ExactFinitePresentReopenError::TruncatedPayload);
+        }
+        if payload.len() > PAYLOAD_LENGTH {
+            return Err(ExactFinitePresentReopenError::TrailingPayloadBytes(
+                payload.len() - PAYLOAD_LENGTH,
+            ));
+        }
+        let reference = |offset: usize| {
+            let bytes: [u8; 32] = payload[offset..offset + 32]
+                .try_into()
+                .expect("fixed reopen-witness payload range must contain 32 bytes");
+            ArtifactRef::from_bytes(bytes)
+        };
+        let first_domain = reference(32);
+        let second_domain = reference(64);
+        if first_domain == second_domain {
+            return Err(ExactFinitePresentReopenError::IdenticalDomains(
+                first_domain,
+            ));
+        }
+        let first_target_value = reference(128);
+        let second_target_value = reference(160);
+        if first_target_value == second_target_value {
+            return Err(ExactFinitePresentReopenError::UndifferentiatedTargets(
+                first_target_value,
+            ));
+        }
+        Ok(Self {
+            continuation: ProtectedContinuationRef::from_artifact_ref(reference(0)),
+            separator: KernelSeparator::new(
+                first_domain,
+                second_domain,
+                reference(96),
+                first_target_value,
+                second_target_value,
+            ),
+        })
+    }
+
+    pub fn envelope(&self) -> Result<ArtifactEnvelope, ExactFinitePresentReopenError> {
+        Ok(ArtifactEnvelope::from_canonical_payload(
+            ArtifactKind::new(FINITE_PRESENT_REOPEN_ARTIFACT_KIND)?,
+            FINITE_PRESENT_REOPEN_SCHEMA_VERSION,
+            self.canonical_payload(),
+        ))
+    }
+
+    pub fn reopen_ref(&self) -> Result<ArtifactRef, ExactFinitePresentReopenError> {
+        Ok(self.envelope()?.artifact_ref()?)
+    }
+
+    pub fn from_envelope(
+        envelope: &ArtifactEnvelope,
+    ) -> Result<Self, ExactFinitePresentReopenError> {
+        if envelope.kind().as_str() != FINITE_PRESENT_REOPEN_ARTIFACT_KIND {
+            return Err(ExactFinitePresentReopenError::UnexpectedArtifactKind {
+                expected: FINITE_PRESENT_REOPEN_ARTIFACT_KIND,
+                actual: envelope.kind().as_str().to_owned(),
+            });
+        }
+        if envelope.schema_version() != FINITE_PRESENT_REOPEN_SCHEMA_VERSION {
+            return Err(ExactFinitePresentReopenError::UnsupportedSchemaVersion(
+                envelope.schema_version(),
+            ));
+        }
+        Self::decode_payload(envelope.canonical_payload())
+    }
+
+    #[must_use]
+    pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
+        let separator = self.separator;
+        vec![
+            self.continuation.as_artifact_ref(),
+            separator.first_domain(),
+            separator.second_domain(),
+            separator.available_value(),
+            separator.first_target_value(),
+            separator.second_target_value(),
+        ]
+    }
+}
+
+/// Canonical encoding failures for a derived positive reopening witness.
+#[derive(Debug, Error)]
+pub enum ExactFinitePresentReopenError {
+    #[error(transparent)]
+    Artifact(#[from] ArtifactError),
+    #[error("finite present reopen payload is truncated")]
+    TruncatedPayload,
+    #[error("finite present reopen payload contains {0} trailing bytes")]
+    TrailingPayloadBytes(usize),
+    #[error("finite present reopen payload repeats history domain {0}")]
+    IdenticalDomains(ArtifactRef),
+    #[error("finite present reopen payload does not separate protected result {0}")]
+    UndifferentiatedTargets(ArtifactRef),
+    #[error("expected artifact kind {expected:?}, got {actual:?}")]
+    UnexpectedArtifactKind {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("unsupported finite present reopen schema version {0}")]
+    UnsupportedSchemaVersion(u32),
 }
 
 /// Result of extending the protected horizon of an already sufficient present.

@@ -38,7 +38,9 @@ pub use openai::{
     materialize_openai_decoded_texts,
 };
 pub use replay::{
-    ColdReplayedProbe, FiniteProbeReplayError, ReplayObservation, replay_completed_finite_probe,
+    ColdReplayedProbe, ColdReplayedSeparatorInquiry, FiniteProbeReplayError,
+    FiniteSeparatorReplayError, ReplayObservation, replay_completed_finite_probe,
+    replay_completed_finite_separator_inquiry,
 };
 use thiserror::Error;
 pub use trace::{

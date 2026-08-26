@@ -10,10 +10,12 @@ use std::{collections::BTreeSet, fmt, str::FromStr};
 use thiserror::Error;
 
 use crate::{
-    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef,
-    ExactFiniteCueBasisError, ExactFiniteCueBasisResult, ExactFiniteSignature, FiniteCueSeparator,
-    GrainRef, HorizonRef, OpenQueryCatalog, OpenQueryCheckError, OpenQueryError, QueryRef,
-    RelationRef, check_exact_finite_cue_basis,
+    AdmittedFiniteAnswerSet, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
+    BindingVersionRef, BoundFiniteAskContinuation, ExactFiniteCueBasisError,
+    ExactFiniteCueBasisResult, ExactFiniteSignature, FiniteAnswerBindingError, FiniteCueSeparator,
+    GrainRef, HorizonRef, IProgArtifact, IProgCatalog, OpenQueryCatalog, OpenQueryCheckError,
+    OpenQueryError, QueryRef, RelationRef, bind_finite_ask_continuation,
+    check_exact_finite_cue_basis,
 };
 
 /// Canonical artifact kind for generic protected residual/separator problems.
@@ -229,6 +231,65 @@ pub trait GeneratedInquiryCatalog: OpenQueryCatalog {
     -> Option<SeparatorProblem>;
 }
 
+/// One supported answer-dependent continuation retaining the generic separator route that asked it.
+///
+/// This is derived first-order control data. It does not select an inquiry, execute a provider,
+/// make the answer actual, or warrant the continuation. The admitted answer inside `binding`
+/// retains its exact event, raw-return, decoder, observation, support, and standing provenance.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BoundGeneratedInquiryContinuation {
+    inquiry: GeneratedInquiry,
+    binding: BoundFiniteAskContinuation,
+}
+
+impl BoundGeneratedInquiryContinuation {
+    #[must_use]
+    pub const fn inquiry(&self) -> GeneratedInquiry {
+        self.inquiry
+    }
+
+    #[must_use]
+    pub const fn problem(&self) -> SeparatorProblemRef {
+        self.inquiry.problem()
+    }
+
+    #[must_use]
+    pub const fn generation_route(&self) -> ArtifactRef {
+        self.inquiry.generation_route()
+    }
+
+    #[must_use]
+    pub const fn binding(&self) -> &BoundFiniteAskContinuation {
+        &self.binding
+    }
+}
+
+/// Binds an already admitted answer to the inspectable source continuation selected by one
+/// generated separator inquiry.
+///
+/// The generated inquiry must revalidate its problem and question context. The source `Ask` and
+/// admitted answer must then name that exact question. No method-name switch or singleton
+/// candidate selection participates in this bridge.
+pub fn bind_generated_inquiry_continuation<C>(
+    inquiry: GeneratedInquiry,
+    source: &IProgArtifact,
+    answer: AdmittedFiniteAnswerSet,
+    catalog: &C,
+) -> Result<BoundGeneratedInquiryContinuation, GeneratedInquiryBindingError>
+where
+    C: GeneratedInquiryCatalog + IProgCatalog,
+{
+    inquiry.check(catalog)?;
+    let binding = bind_finite_ask_continuation(source, answer, catalog)?;
+    if binding.question() != inquiry.question() {
+        return Err(GeneratedInquiryBindingError::QuestionMismatch {
+            generated: inquiry.question(),
+            source_question: binding.question(),
+        });
+    }
+    Ok(BoundGeneratedInquiryContinuation { inquiry, binding })
+}
+
 #[derive(Debug, Error)]
 pub enum GeneratedInquiryError {
     #[error(transparent)]
@@ -284,6 +345,22 @@ pub enum GeneratedInquiryCheckError {
     HorizonMismatch {
         expected: HorizonRef,
         actual: HorizonRef,
+    },
+}
+
+/// Failures while retaining a generated separator inquiry through supported answer binding.
+#[derive(Debug, Error)]
+pub enum GeneratedInquiryBindingError {
+    #[error(transparent)]
+    Inquiry(#[from] GeneratedInquiryCheckError),
+    #[error(transparent)]
+    Binding(#[from] FiniteAnswerBindingError),
+    #[error(
+        "generated inquiry question {generated} differs from source Ask question {source_question}"
+    )]
+    QuestionMismatch {
+        generated: QueryRef,
+        source_question: QueryRef,
     },
 }
 

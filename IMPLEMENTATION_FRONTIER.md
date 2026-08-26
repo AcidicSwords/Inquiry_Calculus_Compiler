@@ -168,7 +168,7 @@ call has yet traversed every semantic step in one fixture.
 > decoder/path, standing closure, binding, and resumption. A restart regenerates and replays the
 > complete answer set with the provider-call counter still exactly one.
 
-The strongest executable obligation is now `TRACE-002`:
+The preceding executable obligation was `TRACE-002`:
 
 > Extend the derived paired-actuality/sufficient-present vertical slice from one finite synthetic
 > event to a finite multi-event inquiry traversal. Preserve event versus causal order, source versus
@@ -195,10 +195,18 @@ It either regenerates the updated present or returns a positive separator when t
 event splits the old fold. The two-event cold-replay traversal drives this update directly; it adds
 no mutable memory, causal storage, or second authoritative history.
 
-The strongest executable obligation is now `SEPARATOR-001`: route one live residual from an
-admitted/replayed inquiry occurrence into the existing generic `SeparatorProblem`, obtain a
-typed answer-dependent continuation without a hard-coded method switch, and preserve/replay the
-resulting residual provenance.
+`SEPARATOR-001` is now demonstrated. The positive exact-present reopen witness has canonical
+derived identity over its protected continuation and complete kernel separator. The two-event
+fixture stores that witness as the generic `SeparatorProblem` residual, retains the generated
+question and generation route, binds the complete admitted answer set to its inspectable source
+continuation, and regenerates the entire chain after restart without redispatch. The bridge adds
+no method-name switch, singleton selection, policy authority, opcode, table, or second history.
+
+The strongest executable obligation is now `METHOD-BRIDGE-001`: route the demonstrated generic
+separator continuation through one transparent `MethodContract` residual-handler/reentry bridge
+compiled as first-order `IProg` data, then reopen the reusable path with a new protected separator.
+Method identity and provenance may constrain dispatch, but a method name must not become runtime
+policy or warrant.
 
 Do not weaken support, pre-warrant generated output, choose a singleton implicitly, or add a
 provider framework, scheduler, model policy, credential store, semantic opcode, table, or crate.

@@ -136,8 +136,12 @@ it must preserve loss/reopening evidence without becoming mutable memory or caus
 That update/recovery view now passes: it accepts only an extended exact history that preserves every
 prior presentation/protected row, returns an updated derived present when the new event is
 consequence-equivalent, and returns a positive reopen witness when it is not. The next residual is
-to feed an admitted/replayed residual into the existing generic `SeparatorProblem` and an
-inspectable answer-dependent continuation, with no hard-coded method policy.
+now also closed at `SEPARATOR-001`: the exact positive reopen witness has a derived canonical
+identity, enters the existing generic `SeparatorProblem`, retains its generated inquiry route and
+complete admitted answer, and regenerates the same inspectable continuation after restart without
+redispatch or a hard-coded method policy. The next residual is `METHOD-BRIDGE-001`: compile this
+generic residual-handler/reentry path through one transparent `MethodContract` and first-order
+`IProg`, then reopen the reusable path under a new protected separator.
 
 Do not let a provider or credential residual collapse transport actuality into semantic `Unknown`,
 and do not predeclare support for an unpredictable content-addressed return. If the existing support

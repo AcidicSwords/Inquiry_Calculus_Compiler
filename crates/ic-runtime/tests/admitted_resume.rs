@@ -14,22 +14,24 @@ use ic_core::{
     ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef, ArtifactEnvelope,
     ArtifactKind, ArtifactRef, BackendRequest, BindingVersionRef, BoundaryChart, BoundaryRef,
     CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    DeclaredSupportClosure, DischargeMode, EventRef, ExactFinitePresentChallenge,
+    DeclaredSupportClosure, DischargeMode, EffectivityRef, EventRef, ExactFinitePresentChallenge,
     ExactFinitePresentReopenWitness, ExactFinitePresentUpdate, ExactFiniteSignature,
     ExactFiniteSufficientPresent, ExactFiniteSufficientPresentResult, ExactProtectedContinuation,
     FiniteAnswerBindingError, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
     FiniteDecoderRef, FiniteSupportedAnswerError, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef,
-    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrenceCatalog,
-    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding,
+    GeneratedInquiry, GeneratedInquiryCatalog, GeneratorRegimeRef, GrainRef, HorizonRef,
+    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, ObservationResultCatalog,
+    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrenceCatalog, PortBinding,
+    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
     ProtectedContinuationRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
     RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
     RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog, ResolutionCatalog,
-    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SignatureContext,
-    StateRef, SupportEnvironmentArtifact, SupportEnvironmentCatalog, SupportEnvironmentRef,
-    SupportSubjectRef, SurfacePlan, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef,
-    TypeSymbol, TypedForm, TypedFormRef, admit_finite_supported_answers,
-    bind_finite_ask_continuation, challenge_exact_finite_sufficient_present, decode_actual_event,
+    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem,
+    SeparatorProblemRef, SignatureContext, StateRef, StructureViewRef, SupportEnvironmentArtifact,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportSubjectRef, SurfacePlan, TyIR,
+    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    admit_finite_supported_answers, bind_finite_ask_continuation,
+    challenge_exact_finite_sufficient_present, decode_actual_event,
     derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
     match_decoded_observation_use, standing_from_declared_support,
 };
@@ -40,6 +42,7 @@ use ic_runtime::{
     ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
     RuntimeCatalog, Terminator, TraversalCausalOrder, dispatch_probe,
     materialize_ollama_decoded_texts, replay_completed_finite_probe,
+    replay_completed_finite_separator_inquiry,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -60,6 +63,7 @@ struct Catalog {
     events: BTreeMap<EventRef, ActualEvent>,
     support: BTreeMap<SupportEnvironmentRef, SupportEnvironmentArtifact>,
     programs: BTreeMap<IProgRef, IProgArtifact>,
+    separator_problems: BTreeMap<SeparatorProblemRef, SeparatorProblem>,
 }
 
 impl Catalog {
@@ -256,6 +260,15 @@ impl IProgCatalog for Catalog {
 impl RuntimeCatalog for Catalog {
     fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm> {
         self.forms.get(&reference).copied()
+    }
+}
+
+impl GeneratedInquiryCatalog for Catalog {
+    fn resolve_separator_problem(
+        &self,
+        reference: SeparatorProblemRef,
+    ) -> Option<SeparatorProblem> {
+        self.separator_problems.get(&reference).copied()
     }
 }
 
@@ -2521,6 +2534,87 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
     );
     assert_eq!(live_present.class_count(), 1);
 
+    let reopen_envelope = live_reopen
+        .envelope()
+        .expect("positive reopen witness must encode");
+    let reopen_ref = persist(
+        &store,
+        &reopen_envelope,
+        &live_reopen.referenced_artifacts(),
+    )
+    .await;
+    let structure = StructureViewRef::from_artifact_ref(
+        stored_ref(&store, b"multi-event-separator-structure").await,
+    );
+    let regime = GeneratorRegimeRef::from_artifact_ref(
+        stored_ref(&store, b"multi-event-separator-regime").await,
+    );
+    let effectivity = EffectivityRef::from_artifact_ref(
+        stored_ref(&store, b"multi-event-separator-effectivity").await,
+    );
+    let generation_route = stored_ref(&store, b"multi-event-separator-route").await;
+    let problem = SeparatorProblem::new(
+        ProtectedCompletionFieldRef::from_artifact_ref(reopen_ref),
+        None,
+        query.context().grain(),
+        query.context().horizon(),
+        catalog
+            .schemas
+            .get(&query.relation())
+            .expect("separator query relation must remain loaded")
+            .binding(),
+        structure,
+        regime,
+        effectivity,
+    );
+    let problem_envelope = problem.envelope().expect("separator problem must encode");
+    let problem_ref = SeparatorProblemRef::from_artifact_ref(
+        persist(&store, &problem_envelope, &problem.referenced_artifacts()).await,
+    );
+    catalog.separator_problems.insert(problem_ref, problem);
+    let generated = GeneratedInquiry::new(problem_ref, generation_route, roots.query);
+    let generated_envelope = generated
+        .envelope()
+        .expect("generated separator inquiry must encode");
+    let generated_ref = persist(
+        &store,
+        &generated_envelope,
+        &generated.referenced_artifacts(),
+    )
+    .await;
+    let live_separator = replay_completed_finite_separator_inquiry(
+        &store,
+        second_token,
+        generated,
+        &decoder,
+        roots.decoded_path,
+        &observations,
+        &standing,
+        &source,
+        suspension,
+        ContinuationLowering::new(roots.continuation, BlockTarget::new(1)),
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("the live reopen residual must drive one generic separator continuation");
+    assert_eq!(live_separator.separator().problem(), problem_ref);
+    assert_eq!(
+        live_separator.separator().generation_route(),
+        generation_route
+    );
+    assert_eq!(
+        live_separator.separator().binding().answer().event(),
+        second_event
+    );
+    let mut expected_candidates = vec![roots.candidate_a, roots.candidate_b];
+    expected_candidates.sort_unstable();
+    assert_eq!(
+        live_separator.separator().binding().answer().candidates(),
+        expected_candidates,
+        "generic separator continuation must retain the entire admitted answer set"
+    );
+
     store.close().await;
     let reopened = ArtifactStore::open(&url)
         .await
@@ -2536,6 +2630,27 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
         .expect("second ledger event must revalidate after restart")
         .expect("second ledger event must remain present after restart");
     cold_catalog.events.insert(second_event, second_event_value);
+    let cold_reopen =
+        ExactFinitePresentReopenWitness::from_envelope(&load_envelope(&reopened, reopen_ref).await)
+            .expect("reopen witness must decode after restart");
+    assert_eq!(cold_reopen, live_reopen);
+    let cold_problem = SeparatorProblem::from_envelope(
+        &load_envelope(&reopened, problem_ref.as_artifact_ref()).await,
+    )
+    .expect("separator problem must decode after restart");
+    assert_eq!(cold_problem, problem);
+    cold_catalog
+        .separator_problems
+        .insert(problem_ref, cold_problem);
+    let cold_generated =
+        GeneratedInquiry::from_envelope(&load_envelope(&reopened, generated_ref).await)
+            .expect("generated separator inquiry must decode after restart");
+    assert_eq!(
+        cold_generated
+            .generated_inquiry_ref()
+            .expect("cold generated inquiry must hash"),
+        generated_ref
+    );
     let cold_source = cold_catalog
         .resolve_iprog(roots.source)
         .expect("source must reload after restart");
@@ -2614,6 +2729,23 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
     )
     .await
     .expect("second event must cold replay without redispatch");
+    let cold_separator = replay_completed_finite_separator_inquiry(
+        &reopened,
+        second_token,
+        cold_generated,
+        &cold_decoder,
+        roots.decoded_path,
+        &observations,
+        &cold_standing,
+        &cold_source,
+        cold_suspension,
+        ContinuationLowering::new(roots.continuation, BlockTarget::new(1)),
+        &cold_runtime,
+        &cold_catalog,
+    )
+    .await
+    .expect("separator inquiry must cold replay without redispatch or a method switch");
+    assert_eq!(cold_separator, live_separator);
     let cold_first_trace =
         PairedActualityTrace::derive(cold_first.actuality().event(), cold_first.resumption())
             .expect("first cold trace must derive");
