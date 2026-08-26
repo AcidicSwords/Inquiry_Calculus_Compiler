@@ -75,7 +75,9 @@ pub use decoder::{
 };
 pub use departure::{
     DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureCatalog,
-    DepartureWitness, DepartureWitnessCheckError, DepartureWitnessError, DepartureWitnessRef,
+    DepartureStandingCatalog, DepartureStandingCheckError, DepartureWitness,
+    DepartureWitnessCheckError, DepartureWitnessError, DepartureWitnessRef,
+    check_departure_witness_standing_support,
 };
 pub use determination::{
     DETERMINATION_PRESENTATION_ARTIFACT_KIND, DETERMINATION_PRESENTATION_SCHEMA_VERSION,

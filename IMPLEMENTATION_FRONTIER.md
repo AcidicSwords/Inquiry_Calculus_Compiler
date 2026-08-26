@@ -82,7 +82,10 @@ The protected difference is visible in the accepted sources:
   source and candidate observation uses, their typed fillings, incompatibility use, support,
   scope, applicability, and grain. Its checker rehashes every resolved identity, type-checks its
   forms, requires the presentation's source and indexed context, and rejects relation uses with
-  different scope/applicability/grain/horizon. Each source/candidate observation use must also
+  different scope/applicability/grain/horizon or support. The witness support must match its
+  presentation support. A separate derived check resolves that shared presentation support as an
+  exact claim-targeted environment and requires its target claim in a declared least-fixed-point
+  `Standing` result. Each source/candidate observation use must also
   bind its declared form and answer, and the incompatibility use must bind the two declared
   answers. Each of the three evidence uses must additionally declare an evidence route other than
   `Generate`: a generator proposes a provisional filling and can never supply positive departure
@@ -90,8 +93,9 @@ The protected difference is visible in the accepted sources:
   remains lawful and the rule rejects generation rather than everything that is not a probe.
   This is a check on the *declared* route only. A use that declares `Probe` while nothing was
   probed still passes, so the discharge mode is not yet evidence that the route was taken.
-  Constructing or checking it evaluates no relation and proves neither incompatibility
-  nor exteriority.
+  Constructing or checking it evaluates no relation and proves neither claim/source-form
+  denotation, web relevance, non-circularity, incompatibility, nor exteriority. The standing link
+  remains relative to declared closure inputs and does not turn them into actuality or warrant.
 - The derived `compare_finite_observation_cells` checker now supplies the exact finite
   cell-exclusion discriminator: an observed unequal coordinate gives a separator; no separator
   with any unknown coordinate remains `Unknown`; a completely observed equal table is only a

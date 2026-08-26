@@ -5,23 +5,24 @@ use ic_core::{
     ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
     ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecoderRef,
-    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
-    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef,
-    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
-    FormulaArtifact, FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
-    GeneratedInquiryCheckError, GeneratorRegimeRef, GrainRef, HorizonRef, ObservationResultCatalog,
-    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
-    OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
-    ProtectedCompletionFieldRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog,
-    RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema,
-    RelationSignature, RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
-    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
-    ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem, SeparatorProblemRef, StateRef,
-    StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
-    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
-    SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
-    TypedForm, TypedFormRef, decode_actual_event, match_decoded_observation_use,
+    DepartureCatalog, DepartureStandingCheckError, DepartureWitness, DeterminationCatalog,
+    DeterminationPresentation, DeterminationPresentationRef, DeterminationSupportError,
+    DischargeMode, EffectivityRef, EventRef, FINITE_DECODER_ARTIFACT_KIND,
+    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
+    FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorRegimeRef,
+    GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
+    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef, ProvenanceRef,
+    QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog,
+    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog,
+    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem,
+    SeparatorProblemRef, StateRef, StructureViewRef, SupportEnvironmentArtifact,
+    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef, TyIR,
+    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    check_departure_witness_standing_support, decode_actual_event, match_decoded_observation_use,
     resolve_determination_presentation_support, resolve_relation_use_support,
     standing_determination_presentation_support, standing_from_declared_support,
 };
@@ -267,6 +268,12 @@ impl DeterminationCatalog for Catalog {
         reference: DeterminationPresentationRef,
     ) -> Option<DeterminationPresentation> {
         self.presentations.get(&reference).cloned()
+    }
+}
+
+impl DepartureCatalog for Catalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
+        self.relation_uses.get(&reference).cloned()
     }
 }
 
@@ -971,6 +978,158 @@ fn determination_support_requires_one_checked_claim_targeted_standing_environmen
         ),
         Err(DeterminationSupportError::RelationTargetIsNotDeterminationSupport)
     ));
+}
+
+#[test]
+fn departure_witness_requires_its_shared_source_presentation_support_to_stand() {
+    let mut fixture = fixture();
+    let binding = BindingVersionRef::from_artifact_ref(artifact(0x10));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x16));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0x17));
+    let grain = GrainRef::from_artifact_ref(artifact(0x14));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0x15));
+    let source =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0x91)));
+    let candidate =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0x92)));
+    let source_answer =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0x93)));
+    let candidate_answer =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0x94)));
+    let claim = fixture.catalog.insert_claim(
+        ClaimArtifact::new(
+            source.as_artifact_ref(),
+            fixture.query,
+            Vec::new(),
+            Vec::new(),
+            scope,
+            applicability,
+            ClaimStatus::Checked,
+        )
+        .expect("claim must canonicalize"),
+    );
+    let environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Claim(claim),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("claim-targeted environment must canonicalize"),
+    );
+    let presentation = fixture
+        .catalog
+        .insert_presentation(DeterminationPresentation::new(
+            ic_core::DistinctionRef::from_artifact_ref(artifact(0x95)),
+            ic_core::Orientation::X,
+            source,
+            ic_core::RelationalWebRef::from_artifact_ref(artifact(0x96)),
+            binding,
+            scope,
+            applicability,
+            grain,
+            horizon,
+            environment.as_support_ref(),
+            None,
+        ));
+    let context = |mode| {
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            mode,
+            environment.as_support_ref(),
+            None,
+        )
+    };
+    let source_observation = fixture.catalog.insert_relation_use(RelationUse::new(
+        fixture.relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port must be valid"),
+                source,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port must be valid"),
+                source_answer,
+            ),
+        ],
+        context(DischargeMode::Probe),
+    ));
+    let candidate_observation = fixture.catalog.insert_relation_use(RelationUse::new(
+        fixture.relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port must be valid"),
+                candidate,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port must be valid"),
+                candidate_answer,
+            ),
+        ],
+        context(DischargeMode::Check),
+    ));
+    let incompatibility = fixture.catalog.insert_relation_use(RelationUse::new(
+        fixture.relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port must be valid"),
+                source_answer,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port must be valid"),
+                candidate_answer,
+            ),
+        ],
+        context(DischargeMode::Warrant),
+    ));
+    let witness = DepartureWitness::new(
+        ic_core::DistinctionRef::from_artifact_ref(artifact(0x95)),
+        source,
+        candidate,
+        presentation,
+        source_observation,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        environment.as_support_ref(),
+        scope,
+        applicability,
+        grain,
+    );
+
+    let ungrounded = standing_from_declared_support(Vec::new(), &[], &fixture.catalog)
+        .expect("an empty standing problem is well defined");
+    assert!(matches!(
+        check_departure_witness_standing_support(&witness, &ungrounded, &fixture.catalog),
+        Err(DepartureStandingCheckError::DeterminationSupport(
+            DeterminationSupportError::ClaimIsNotStanding(reference)
+        )) if reference == claim
+    ));
+
+    let closure = DeclaredSupportClosure::new(environment, Vec::new(), true, true, false);
+    let standing = standing_from_declared_support(Vec::new(), &[closure], &fixture.catalog)
+        .expect("the declared closed route reaches its claim in the least fixed point");
+    let resolved = check_departure_witness_standing_support(&witness, &standing, &fixture.catalog)
+        .expect("a checked witness must retain the source presentation's standing support link");
+    assert_eq!(resolved.presentation(), presentation);
+    assert_eq!(resolved.environment(), environment);
+    assert_eq!(resolved.claim(), claim);
 }
 
 #[test]

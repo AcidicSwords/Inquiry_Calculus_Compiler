@@ -5,9 +5,10 @@ use thiserror::Error;
 use crate::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
     DeterminationCatalog, DeterminationPresentationCheckError, DeterminationPresentationError,
-    DeterminationPresentationRef, DischargeMode, DistinctionRef, GrainRef, RelationCatalog,
-    RelationUse, RelationUseCheckError, RelationUseError, RelationUseRef, ScopeRef, SupportRef,
-    TypeCheckError, TypeError, TypedFormRef,
+    DeterminationPresentationRef, DeterminationSupportCatalog, DeterminationSupportError,
+    DischargeMode, DistinctionRef, GrainRef, RelationCatalog, RelationUse, RelationUseCheckError,
+    RelationUseError, RelationUseRef, ResolvedDeterminationSupport, ScopeRef, Standing, SupportRef,
+    TypeCheckError, TypeError, TypedFormRef, standing_determination_presentation_support,
 };
 
 /// Canonical artifact kind for positive determination-relative departure witnesses.
@@ -70,6 +71,11 @@ pub trait DepartureCatalog: DeterminationCatalog + RelationCatalog {
     /// Resolves a relation use by its claimed stable identity.
     fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse>;
 }
+
+/// The checked source needed to connect a departure witness to declared standing support.
+pub trait DepartureStandingCatalog: DepartureCatalog + DeterminationSupportCatalog {}
+
+impl<T> DepartureStandingCatalog for T where T: DepartureCatalog + DeterminationSupportCatalog {}
 
 impl DepartureWitness {
     #[allow(clippy::too_many_arguments)]
@@ -265,6 +271,9 @@ impl DepartureWitness {
         if self.grain != presentation.grain() {
             return Err(DepartureWitnessCheckError::PresentationMismatch("grain"));
         }
+        if self.support != presentation.support() {
+            return Err(DepartureWitnessCheckError::PresentationMismatch("support"));
+        }
         for form in [
             self.source,
             self.candidate,
@@ -333,6 +342,11 @@ impl DepartureWitness {
                     use_ref,
                 ));
             }
+            if relation_use.support() != self.support {
+                return Err(DepartureWitnessCheckError::RelationUseSupportMismatch(
+                    use_ref,
+                ));
+            }
             // A generator proposes a provisional filling; it never supports one.
             // Admitting a `Generate` route here would let a merely generated
             // answer stand as positive departure evidence, which is the exact
@@ -375,6 +389,25 @@ impl DepartureWitness {
             self.grain.as_artifact_ref(),
         ]
     }
+}
+
+/// Revalidates a positive-departure witness and requires its shared source presentation support
+/// to target a claim in one declared least-fixed-point standing result.
+///
+/// This is intentionally a narrow association. It does not evaluate observations or
+/// incompatibility, interpret the target claim as the source form, prove web relevance or
+/// non-circularity, or turn declared closure inputs into actuality or warrant.
+pub fn check_departure_witness_standing_support<C: DepartureStandingCatalog>(
+    witness: &DepartureWitness,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<ResolvedDeterminationSupport, DepartureStandingCheckError> {
+    witness.check(catalog)?;
+    Ok(standing_determination_presentation_support(
+        witness.source_presentation(),
+        standing,
+        catalog,
+    )?)
 }
 
 pub(crate) fn relation_use_binds_pair(
@@ -494,6 +527,8 @@ pub enum DepartureWitnessCheckError {
     },
     #[error("relation use {0} does not match the departure witness context")]
     RelationUseContextMismatch(RelationUseRef),
+    #[error("relation use {0} does not name the departure witness's shared support")]
+    RelationUseSupportMismatch(RelationUseRef),
     #[error(
         "{claim} relation use {relation_use} declares Generate, which proposes rather than supports"
     )]
@@ -506,4 +541,13 @@ pub enum DepartureWitnessCheckError {
         claim: &'static str,
         relation_use: RelationUseRef,
     },
+}
+
+/// Errors from checking a departure witness against declared standing support.
+#[derive(Debug, Error)]
+pub enum DepartureStandingCheckError {
+    #[error(transparent)]
+    Witness(#[from] DepartureWitnessCheckError),
+    #[error(transparent)]
+    DeterminationSupport(#[from] DeterminationSupportError),
 }
