@@ -24,6 +24,7 @@ mod iprog;
 mod method;
 mod negation;
 mod negation_query;
+mod occurrence;
 mod probe;
 mod probe_contract;
 mod query;
@@ -138,6 +139,11 @@ pub use negation::{
 };
 pub use negation_query::{
     PositiveNegationQuery, PositiveNegationQueryError, positive_negation_query,
+};
+pub use occurrence::{
+    OPERATOR_OCCURRENCE_ARTIFACT_KIND, OPERATOR_OCCURRENCE_SCHEMA_VERSION, OperatorOccurrence,
+    OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, OperatorOccurrenceError,
+    OperatorOccurrenceRef,
 };
 pub use probe::{
     PROBE_OPERATOR_ARTIFACT_KIND, PROBE_OPERATOR_SCHEMA_VERSION, ProbeOperator, ProbeOperatorError,

@@ -309,6 +309,10 @@ authority, extension domain, backend, optional checker/cost, failure schemas, an
 This is neither standing acceptance nor a statement that the backend is available, applicable,
 executed, or semantically warranted.
 
+Phase 16 now also has a derived `OperatorOccurrence` identity. It is constructed from, and
+rechecked against, one ordinary `ActualEvent`; its event, operator, states, raw return, and boundary
+must all match exactly. It adds no second history, dispatch assertion, or return interpretation.
+
 `BoundaryChart` is now a derived, content-addressed local chart record. It retains the query,
 `X`/`Y`/boundary type references, projections, determination references, oriented use frontiers,
 seed, compatibility formula, optional traversal, grain, and horizon. It preserves missing fields

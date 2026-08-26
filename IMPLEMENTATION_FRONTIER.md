@@ -377,6 +377,10 @@ preserved authority/coverage/backend/failure/provenance declarations. Contract r
 not admission, runnable availability, `usable(q)`, backend execution, a raw return, semantic
 resolution, or warrant.
 
+Phase 16 now has a derived `OperatorOccurrence` view whose six stored links must agree exactly
+with one rechecked ordinary `ActualEvent`. It does not create an event, infer dispatch, decode the
+raw return, or supply method-fold recovery.
+
 ## Known later questions
 
 These are recorded now but do not outrank the Phase 4 determination boundary:

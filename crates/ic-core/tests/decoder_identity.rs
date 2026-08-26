@@ -6,23 +6,24 @@ use ic_core::{
     ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecoderRef,
     DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
-    DeterminationSupportError, DischargeMode, EffectivityRef, FINITE_DECODER_ARTIFACT_KIND,
-    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
-    FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorRegimeRef,
-    GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
-    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef,
-    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
-    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
-    RelationUseContext, RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError,
-    ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef,
-    SeparatorProblem, SeparatorProblemRef, StateRef, StructureViewRef, SupportEnvironmentArtifact,
-    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
-    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef, TyIR,
-    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
-    decode_actual_event, match_decoded_observation_use, resolve_determination_presentation_support,
-    resolve_relation_use_support, standing_determination_presentation_support,
-    standing_from_declared_support,
+    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef,
+    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
+    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
+    FormulaArtifact, FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
+    GeneratedInquiryCheckError, GeneratorRegimeRef, GrainRef, HorizonRef, ObservationResultCatalog,
+    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
+    OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
+    ProtectedCompletionFieldRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog,
+    RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema,
+    RelationSignature, RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
+    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
+    ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem, SeparatorProblemRef, StateRef,
+    StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
+    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
+    SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
+    TypedForm, TypedFormRef, decode_actual_event, match_decoded_observation_use,
+    resolve_determination_presentation_support, resolve_relation_use_support,
+    standing_determination_presentation_support, standing_from_declared_support,
 };
 
 #[derive(Clone, Default)]
@@ -39,6 +40,7 @@ struct Catalog {
     paths: BTreeMap<ResolutionPathRef, ResolutionPath>,
     charts: BTreeMap<BoundaryRef, BoundaryChart>,
     operators: BTreeMap<ProbeOperatorRef, ProbeOperator>,
+    events: BTreeMap<EventRef, ActualEvent>,
     claims: BTreeMap<ClaimRef, ClaimArtifact>,
     support_environments: BTreeMap<SupportEnvironmentRef, SupportEnvironmentArtifact>,
     presentations: BTreeMap<DeterminationPresentationRef, DeterminationPresentation>,
@@ -141,6 +143,12 @@ impl Catalog {
             .separator_problem_ref()
             .expect("separator problem must encode");
         self.separator_problems.insert(reference, problem);
+        reference
+    }
+
+    fn insert_event(&mut self, event: ActualEvent) -> EventRef {
+        let reference = event.event_ref().expect("event must encode");
+        self.events.insert(reference, event);
         reference
     }
 }
@@ -268,6 +276,12 @@ impl GeneratedInquiryCatalog for Catalog {
         reference: SeparatorProblemRef,
     ) -> Option<SeparatorProblem> {
         self.separator_problems.get(&reference).copied()
+    }
+}
+
+impl OperatorOccurrenceCatalog for Catalog {
+    fn resolve_actual_event(&self, reference: EventRef) -> Option<ActualEvent> {
+        self.events.get(&reference).cloned()
     }
 }
 
@@ -552,6 +566,38 @@ fn generated_inquiry_is_a_checked_problem_relative_candidate_not_a_policy_choice
     assert!(matches!(
         GeneratedInquiry::new(other_problem, artifact(0x85), fixture.query).check(&fixture.catalog),
         Err(GeneratedInquiryCheckError::GrainMismatch { .. })
+    ));
+}
+
+#[test]
+fn operator_occurrence_is_derived_from_one_exact_ordinary_event() {
+    let mut fixture = fixture();
+    let event = fixture.catalog.insert_event(fixture.event.clone());
+    let occurrence = OperatorOccurrence::from_actual_event(event, &fixture.catalog)
+        .expect("a checked actual event determines its occurrence view");
+    occurrence
+        .check(&fixture.catalog)
+        .expect("derived occurrence must exactly match the ordinary event");
+    assert_eq!(occurrence.event(), event);
+    assert_eq!(
+        OperatorOccurrence::from_envelope(&occurrence.envelope().expect("occurrence must encode"))
+            .expect("occurrence must decode"),
+        occurrence
+    );
+    let mismatched = OperatorOccurrence::new(
+        event,
+        occurrence.operator(),
+        occurrence.state_before(),
+        RawReturnRef::from_artifact_ref(artifact(0x91)),
+        occurrence.state_after(),
+        occurrence.boundary(),
+    );
+    assert!(matches!(
+        mismatched.check(&fixture.catalog),
+        Err(OperatorOccurrenceCheckError::EventFieldMismatch {
+            field: "raw_return",
+            ..
+        })
     ));
 }
 
