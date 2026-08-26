@@ -2641,6 +2641,179 @@ fn finite_supported_answers_require_exact_decoded_probe_and_standing_route_cover
 }
 
 #[test]
+// Test boundary QSUCC-PARTIAL-001:
+// F = a successor silently replaces a two-member admitted answer with one candidate.
+// C = whole AdmittedFiniteAnswerSet reaches the checked occurrence and successor unchanged.
+// Omega/M = one finite Probe event, two exact decoded candidates, and a Return continuation.
+// P/V/E/U = finite decoder plus standing support and source re-walk; coverage is exactly the
+// two listed candidates and reopens for partial/intensional answer representations or lifting.
+fn occurrence_indexed_successor_retains_every_member_of_a_supported_answer() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite probe fixture must admit");
+    let decoded = scenario.source_observation.decoded().clone();
+    let query = scenario
+        .catalog
+        .queries
+        .get(&decoded.query())
+        .expect("decoded query must remain available")
+        .clone();
+    let alternate_answer = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x67),
+    ));
+    let alternate_candidate = query
+        .plug(
+            vec![PortBinding::new(
+                query.open_ports()[0].port().clone(),
+                alternate_answer,
+            )],
+            &scenario.catalog,
+        )
+        .expect("alternate completion must fill the same question");
+    let alternate_candidate_ref = scenario
+        .catalog
+        .insert_candidate(alternate_candidate.clone());
+    let alternate_use = scenario.catalog.insert_relation_use(RelationUse::new(
+        query.relation(),
+        alternate_candidate.bindings().to_vec(),
+        *query.context(),
+    ));
+    let decoder = FiniteDecoder::new(
+        decoded.query(),
+        scenario.raw_type,
+        vec![FiniteDecoderEntry::Decoded {
+            raw_return: scenario.admitted.source_raw_return(),
+            candidates: vec![
+                scenario.source_observation.candidate(),
+                alternate_candidate_ref,
+            ],
+        }],
+    )
+    .expect("two decoded candidates must remain one supported answer");
+    let decoder_ref = scenario.catalog.insert_decoder(decoder.clone());
+    let path = scenario.catalog.insert_path(ResolutionPath::new(
+        scenario.raw_type,
+        scenario.answer_type,
+        ResolutionPathIR::Decode {
+            decoder: decoder_ref.as_decoder_ref(),
+        },
+    ));
+    let event = scenario
+        .catalog
+        .events
+        .get(&decoded.event())
+        .expect("decoded event must remain available")
+        .clone();
+    let expected_operator = event.operator();
+    let ActualDecodeResult::Decoded(two_candidates) =
+        decode_actual_event(&event, &decoder, path, &scenario.catalog)
+            .expect("the same actual return must decode to both candidates")
+    else {
+        panic!("listed candidates must decode")
+    };
+    let first_observation = match_decoded_observation_use(
+        &two_candidates,
+        scenario.source_observation.candidate(),
+        scenario.source_observation.observation(),
+        &scenario.catalog,
+    )
+    .expect("the original observation remains one completion");
+    let alternate_observation = match_decoded_observation_use(
+        &two_candidates,
+        alternate_candidate_ref,
+        alternate_use,
+        &scenario.catalog,
+    )
+    .expect("the alternate completion has its own matching observation");
+    let answer = admit_finite_supported_answers(
+        two_candidates.clone(),
+        vec![first_observation, alternate_observation],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("the entire decoded field must admit together");
+    assert_eq!(
+        answer.candidates(),
+        two_candidates.candidates(),
+        "admission must preserve every decoded completion"
+    );
+    assert_eq!(answer.candidates().len(), 2);
+    assert_eq!(answer.observations().len(), 2);
+    assert_eq!(answer.support().len(), 2);
+    assert_eq!(answer.event(), decoded.event());
+    assert_eq!(answer.operator(), expected_operator);
+    assert_eq!(answer.raw_return(), scenario.admitted.source_raw_return());
+
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: alternate_answer,
+        },
+    ));
+    let root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: answer.decoded().query(),
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let source = SourceConfig::new(
+        scenario.answer_type,
+        root,
+        Vec::new(),
+        scenario.binding,
+        artifact(0x68),
+        ProvenanceRef::from_artifact_ref(artifact(0x69)),
+    )
+    .expect("source configuration must canonicalize");
+    scenario.catalog.insert_source_config(source.clone());
+    let occurrence = source
+        .ask_occurrences(&scenario.catalog)
+        .expect("source must derive its only Ask occurrence")
+        .into_iter()
+        .next()
+        .expect("root must be Ask");
+    let successor =
+        derive_question_successor(occurrence.clone(), answer.clone(), &scenario.catalog)
+            .expect("a whole admitted answer must reach the checked Return continuation");
+    let QuestionSuccessor::Return {
+        occurrence: retained_occurrence,
+        answer: retained_answer,
+        value,
+    } = successor
+    else {
+        panic!("the one-step continuation must return")
+    };
+    assert_eq!(retained_occurrence, occurrence);
+    assert_eq!(retained_answer, answer);
+    assert_eq!(retained_answer.candidates(), two_candidates.candidates());
+    assert_eq!(retained_answer.observations().len(), 2);
+    assert_eq!(retained_answer.support().len(), 2);
+    assert_eq!(retained_answer.event(), decoded.event());
+    assert_eq!(retained_answer.operator(), expected_operator);
+    assert_eq!(
+        retained_answer.raw_return(),
+        scenario.admitted.source_raw_return()
+    );
+    assert_eq!(value, alternate_answer);
+
+    let projected_member = retained_answer.candidates()[0];
+    assert!(
+        retained_answer.candidates().contains(&projected_member),
+        "a member remains an inspectable projection only after whole-answer succession"
+    );
+    let _: fn(
+        AskOccurrence,
+        ic_core::AdmittedFiniteAnswerSet,
+        &Catalog,
+    ) -> Result<QuestionSuccessor, ic_core::QuestionSuccessorError> =
+        derive_question_successor::<Catalog>;
+}
+
+#[test]
 // Test boundary QSUCC-OCC-001:
 // F = successor identity collapses equal semantic questions and equal whole answers.
 // C = checked source configuration, source position, Ask fields, and first-order continuation.

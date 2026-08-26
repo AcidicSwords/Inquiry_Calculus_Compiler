@@ -99,6 +99,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "occurrence_indexed_successors_keep_equal_questions_and_answers_distinct",
     ),
+    "QSUCC-PARTIAL-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "occurrence_indexed_successor_retains_every_member_of_a_supported_answer",
+    ),
 }
 
 ERRORS: list[str] = []
