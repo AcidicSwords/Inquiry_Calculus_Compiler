@@ -4100,10 +4100,13 @@ checked content-addressed OpenAI Responses request
 -> file-backed restart and zero-redispatch regeneration
 ```
 
-The transport prefix is demonstrated offline for both HTTP 200 and HTTP 401. A live 401 was
-preserved as `F-0001`; successful live acceptance remains pending until its credential reopen
-condition changes. The credential constraint does not authorize transport/semantic conflation or
-block construction of deterministic decoder, support, resumption, and replay breakers.
+The transport prefix is demonstrated offline for both HTTP 200 and HTTP 401. The post-actuality
+decoder scans the heterogeneous output list and preserves every exact JSON-array candidate without
+claiming support. Post-return observation support is now separated from pre-dispatch query support,
+while exact standing closure and raw-return coverage remain mandatory. A live 401 was preserved as
+`F-0001`; successful live acceptance remains pending until its credential reopen condition changes.
+The credential constraint does not authorize transport/semantic conflation or block construction of
+deterministic typed materialization, resumption, and replay breakers.
 
 Later phase constraints are deliberately local:
 

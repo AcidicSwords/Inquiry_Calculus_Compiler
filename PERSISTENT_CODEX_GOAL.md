@@ -97,12 +97,17 @@ request mismatch, and secret-free failures. The first live probe reached the pro
 HTTP 401 before interpretation. `F-0001` therefore leaves successful live actualization pending
 without blocking offline implementation.
 
+The transport and post-actuality JSON-array decoding prefixes now pass offline. The decoder scans
+all output items and preserves all candidates without claiming support. The positive identity-cycle
+breaker was also resolved: observation support may be formed after the raw return while every other
+occurrence-context field remains fixed, and exact standing/raw-return admission still applies.
+
 The next dependency chain is:
 
 ```text
-authorized successful provider return
--> post-actuality Responses decoding that preserves every completion
--> independently supported answer admission
+stored successful provider return
+-> deterministic typed completion materialization from every decoded string
+-> independently supported answer admission using post-return environments
 -> capture-safe continuation binding and runtime resumption
 -> the same protected result after restart with zero redispatch
 ```

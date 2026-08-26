@@ -129,22 +129,30 @@ and HTTP 401 preservation. The opt-in live fixture reached the official endpoint
 401 response before interpretation; `F-0001` records that the currently available credential does
 not authorize a successful request. Therefore live success remains `PENDING`, not falsely passed.
 
-The strongest executable obligation is now `PROVIDER-001B`:
+`PROVIDER-001B`, the post-actuality response decoder and support-cycle breaker, is demonstrated:
 
-> Decode a successful OpenAI Responses body only after raw actuality, preserve every supported
-> completion without assuming the first output item, and drive the existing typed question through
-> answer admission, capture-safe binding, resumption, and cold replay. Keep HTTP failure, malformed
-> transport frame, malformed JSON, incomplete response, semantic `Undefined`, semantic `Unknown`,
-> unsupported completion, and credential failure as distinct exits.
+> The decoder scans the complete heterogeneous Responses output array, preserves every exact
+> candidate from every message `output_text` JSON array, and keeps transport, parse, completion,
+> and candidate failures distinct. It establishes no support by parsing alone. A decoded
+> observation may attach an independently formed post-return support environment while every
+> other occurrence-context field remains fixed; admission still requires that exact environment
+> to close in standing and name the committed raw return.
 
-First construct the smallest offline valid-shaped Responses fixture and an explicit decoder contract.
-Then test whether supported observation admission can be formed after an unpredictable
-content-addressed raw return. If exact support currently requires the future return reference in the
-pre-dispatch question context, preserve that positive circularity as the decisive breaker and change
-only the smallest support boundary authorized by the standing semantics. Do not weaken support,
-pre-warrant generated output, choose a singleton implicitly, or add a provider framework, scheduler,
-model policy, credential store, semantic opcode, table, or crate. Re-run the live acceptance fixture
-only after `F-0001`'s reopen condition changes.
+The strongest executable obligation is now `PROVIDER-001C`:
+
+> Convert every decoded provider string into a deterministic, typed completion for the already
+> addressed source question; persist only the irreducible value/form/candidate, decoder/path, and
+> post-return support artifacts needed for exact restart; then drive the whole set through support,
+> capture-safe binding, admitted resumption, and zero-redispatch cold replay.
+
+Use one deterministic offline valid-shaped provider return first. Regenerate every post-return
+artifact from the stored raw frame after restart; do not reuse pre-crash candidates, decoder,
+support, standing, binding, suspension, or lowering. If exact typed value identity cannot be
+regenerated from raw return plus declared decoder version, preserve that as a named replay-recipe
+breaker before adding canonical structure. Do not weaken support, pre-warrant generated output,
+choose a singleton implicitly, or add a provider framework, scheduler, model policy, credential
+store, semantic opcode, table, or crate. Re-run the live acceptance fixture only after `F-0001`'s
+reopen condition changes.
 
 The protected difference is visible in the accepted sources:
 
@@ -225,8 +233,10 @@ The protected difference is visible in the accepted sources:
 - `match_decoded_observation_use` supplies the next derived structural boundary. It requires a
   preserved candidate from that decoded result and a declared relation use to rehash and agree
   exactly on query relation, complete named bindings, and the query's scope, applicability,
-  grain, horizon, discharge mode, support, and warrant. It rejects an unlisted candidate or any
-  binding/context mismatch. It does not evaluate the use, establish that a probe dispatched,
+  grain, horizon, discharge mode, and warrant. Observation support is independently formed after
+  return and may differ from the pre-dispatch query support; answer/departure admission rechecks
+  that exact route, standing closure, and raw-return coverage. It rejects an unlisted candidate or
+  any binding/remaining-context mismatch. It does not evaluate the use, establish that a probe dispatched,
   admit support, prove incompatibility/relevance/non-circularity, or establish departure.
 - `admit_probed_finite_departure` is the first derived positive finite admission boundary. It
   rechecks the exact source/candidate `DecodedObservationUse` events, requires both declared uses

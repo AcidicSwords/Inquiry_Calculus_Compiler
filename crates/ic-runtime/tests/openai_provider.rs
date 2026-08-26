@@ -9,8 +9,8 @@ use ic_core::{
     ArtifactRef, BackendRequest, BoundaryRef, ProbeOperatorRef, QueryRef, SurfacePlanRef,
 };
 use ic_runtime::{
-    OpenAiHttpResponse, OpenAiHttpResponseError, OpenAiProviderError, OpenAiResponsesProvider,
-    ProbeProvider,
+    OpenAiHttpResponse, OpenAiHttpResponseError, OpenAiProviderError, OpenAiResponseDecodeError,
+    OpenAiResponsesProvider, ProbeProvider, decode_openai_json_array_response,
 };
 
 fn artifact(byte: u8) -> ArtifactRef {
@@ -177,4 +177,123 @@ fn openai_adapter_preserves_non_success_status_and_body_as_actual_return() {
     assert_eq!(framed.status(), 401);
     assert_eq!(framed.body(), response_body);
     server.join().expect("local provider server must finish");
+}
+
+fn framed(status: u16, body: serde_json::Value) -> Vec<u8> {
+    OpenAiHttpResponse::new(
+        status,
+        serde_json::to_vec(&body).expect("fixture JSON must encode"),
+    )
+    .encode()
+    .expect("fixture transport return must encode")
+}
+
+#[test]
+fn responses_decoder_scans_heterogeneous_output_and_preserves_every_candidate() {
+    let bytes = framed(
+        200,
+        serde_json::json!({
+            "id": "resp_fixture",
+            "model": "fixture-model-2026-08-01",
+            "status": "completed",
+            "output": [
+                {"type": "reasoning", "id": "reasoning_fixture", "summary": []},
+                {
+                    "type": "message",
+                    "id": "message_one",
+                    "content": [
+                        {"type": "output_text", "text": "[\"alpha\",\"beta\"]"}
+                    ]
+                },
+                {
+                    "type": "message",
+                    "id": "message_two",
+                    "content": [
+                        {"type": "output_text", "text": "[\"gamma\"]"}
+                    ]
+                }
+            ]
+        }),
+    );
+    let decoded = decode_openai_json_array_response(&bytes)
+        .expect("every message output_text array must be decoded");
+    assert_eq!(decoded.response_id(), "resp_fixture");
+    assert_eq!(decoded.model(), "fixture-model-2026-08-01");
+    assert_eq!(decoded.candidates(), ["alpha", "beta", "gamma"]);
+}
+
+#[test]
+fn responses_decoder_keeps_transport_parse_completion_and_candidate_failures_distinct() {
+    assert!(matches!(
+        decode_openai_json_array_response(b"not-a-frame"),
+        Err(OpenAiResponseDecodeError::TransportFrame(
+            OpenAiHttpResponseError::WrongDomain
+        ))
+    ));
+    assert!(matches!(
+        decode_openai_json_array_response(&framed(401, serde_json::json!({"error": {}}))),
+        Err(OpenAiResponseDecodeError::HttpStatus(401))
+    ));
+
+    let invalid_json = OpenAiHttpResponse::new(200, b"not-json".to_vec())
+        .encode()
+        .expect("fixture transport return must encode");
+    assert!(matches!(
+        decode_openai_json_array_response(&invalid_json),
+        Err(OpenAiResponseDecodeError::Json(_))
+    ));
+    assert!(matches!(
+        decode_openai_json_array_response(&framed(
+            200,
+            serde_json::json!({
+                "id": "resp_pending",
+                "model": "fixture-model",
+                "status": "in_progress",
+                "output": []
+            })
+        )),
+        Err(OpenAiResponseDecodeError::ResponseNotCompleted(status)) if status == "in_progress"
+    ));
+    assert!(matches!(
+        decode_openai_json_array_response(&framed(
+            200,
+            serde_json::json!({
+                "id": "resp_no_text",
+                "model": "fixture-model",
+                "status": "completed",
+                "output": [{"type": "reasoning", "summary": []}]
+            })
+        )),
+        Err(OpenAiResponseDecodeError::NoCandidateOutputText)
+    ));
+    assert!(matches!(
+        decode_openai_json_array_response(&framed(
+            200,
+            serde_json::json!({
+                "id": "resp_bad_array",
+                "model": "fixture-model",
+                "status": "completed",
+                "output": [{
+                    "type": "message",
+                    "content": [{"type": "output_text", "text": "not-json"}]
+                }]
+            })
+        )),
+        Err(OpenAiResponseDecodeError::InvalidCandidateArray(_))
+    ));
+    assert!(matches!(
+        decode_openai_json_array_response(&framed(
+            200,
+            serde_json::json!({
+                "id": "resp_duplicate",
+                "model": "fixture-model",
+                "status": "completed",
+                "output": [{
+                    "type": "message",
+                    "content": [{"type": "output_text", "text": "[\"same\",\"same\"]"}]
+                }]
+            })
+        )),
+        Err(OpenAiResponseDecodeError::DuplicateCandidate(candidate)) if candidate == "same"
+    ));
 }

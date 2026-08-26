@@ -7,7 +7,9 @@ the finite positive-negation reciprocal slice, crash-safe external-effect actual
 finite question cycle with cold replay, paired question/return traces, and an exact finite
 sufficient-present/reopening witness. Phase 10 now also contains a narrow OpenAI Responses
 transport adapter whose offline contract preserves both success and non-success HTTP returns
-before interpretation. A successful live provider return is still pending because the currently
+before interpretation. Its post-actuality decoder scans heterogeneous output and preserves every
+JSON-array completion, and observation support can now be formed after an unpredictable return
+without rewriting the source question. A successful live provider return is still pending because the currently
 available credential returned HTTP 401 (`F-0001`). This is not yet the complete reference
 runtime. The exact demonstrated boundary and next executable obligation are recorded in
 `CONFORMANCE_STATUS.md` and `IMPLEMENTATION_FRONTIER.md`.

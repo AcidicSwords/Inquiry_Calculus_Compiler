@@ -5,7 +5,7 @@
 //! warrant. `dispatch_probe` remains responsible for durable preparation and for committing those
 //! bytes as ordinary actuality before any caller can interpret them.
 
-use std::{env, time::Duration};
+use std::{collections::BTreeSet, env, time::Duration};
 
 use ic_core::{ArtifactRef, BackendRequest};
 use thiserror::Error;
@@ -98,6 +98,121 @@ impl OpenAiHttpResponse {
         }
         Ok(Self::new(status, body.to_vec()))
     }
+}
+
+/// A decoded, but not yet semantically supported, Responses API JSON-array return.
+///
+/// Candidate order and exact UTF-8 text are retained. Construction proves only that the committed
+/// HTTP response matches this narrow decoder contract; it does not construct typed forms, relation
+/// uses, support, standing, a continuation binding, or warrant.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DecodedOpenAiJsonArray {
+    response_id: String,
+    model: String,
+    candidates: Vec<String>,
+}
+
+impl DecodedOpenAiJsonArray {
+    #[must_use]
+    pub fn response_id(&self) -> &str {
+        &self.response_id
+    }
+
+    #[must_use]
+    pub fn model(&self) -> &str {
+        &self.model
+    }
+
+    #[must_use]
+    pub fn candidates(&self) -> &[String] {
+        &self.candidates
+    }
+}
+
+/// Decodes every `output_text` content item whose exact text is a JSON array of strings.
+///
+/// Responses output is heterogeneous, so this scans the complete output array rather than
+/// assuming the first item is a message. Every decoded string survives in provider order.
+pub fn decode_openai_json_array_response(
+    bytes: &[u8],
+) -> Result<DecodedOpenAiJsonArray, OpenAiResponseDecodeError> {
+    let response = OpenAiHttpResponse::decode(bytes)?;
+    if !(200..300).contains(&response.status()) {
+        return Err(OpenAiResponseDecodeError::HttpStatus(response.status()));
+    }
+    let value: serde_json::Value = serde_json::from_slice(response.body())?;
+    let object = value
+        .as_object()
+        .ok_or(OpenAiResponseDecodeError::ResponseIsNotObject)?;
+    let status = object
+        .get("status")
+        .and_then(serde_json::Value::as_str)
+        .ok_or(OpenAiResponseDecodeError::MissingStatus)?;
+    if status != "completed" {
+        return Err(OpenAiResponseDecodeError::ResponseNotCompleted(
+            status.to_owned(),
+        ));
+    }
+    let response_id = required_string(object, "id")?;
+    let model = required_string(object, "model")?;
+    let output = object
+        .get("output")
+        .and_then(serde_json::Value::as_array)
+        .ok_or(OpenAiResponseDecodeError::MissingOutput)?;
+
+    let mut candidates = Vec::new();
+    let mut seen = BTreeSet::new();
+    for item in output {
+        if item.get("type").and_then(serde_json::Value::as_str) != Some("message") {
+            continue;
+        }
+        let content = item
+            .get("content")
+            .and_then(serde_json::Value::as_array)
+            .ok_or(OpenAiResponseDecodeError::MessageMissingContent)?;
+        for part in content {
+            if part.get("type").and_then(serde_json::Value::as_str) != Some("output_text") {
+                continue;
+            }
+            let text = part
+                .get("text")
+                .and_then(serde_json::Value::as_str)
+                .ok_or(OpenAiResponseDecodeError::OutputTextMissingText)?;
+            let decoded: Vec<String> = serde_json::from_str(text)
+                .map_err(OpenAiResponseDecodeError::InvalidCandidateArray)?;
+            if decoded.is_empty() {
+                return Err(OpenAiResponseDecodeError::EmptyCandidateArray);
+            }
+            for candidate in decoded {
+                if candidate.is_empty() {
+                    return Err(OpenAiResponseDecodeError::EmptyCandidate);
+                }
+                if !seen.insert(candidate.clone()) {
+                    return Err(OpenAiResponseDecodeError::DuplicateCandidate(candidate));
+                }
+                candidates.push(candidate);
+            }
+        }
+    }
+    if candidates.is_empty() {
+        return Err(OpenAiResponseDecodeError::NoCandidateOutputText);
+    }
+    Ok(DecodedOpenAiJsonArray {
+        response_id,
+        model,
+        candidates,
+    })
+}
+
+fn required_string(
+    object: &serde_json::Map<String, serde_json::Value>,
+    field: &'static str,
+) -> Result<String, OpenAiResponseDecodeError> {
+    object
+        .get(field)
+        .and_then(serde_json::Value::as_str)
+        .map(str::to_owned)
+        .ok_or(OpenAiResponseDecodeError::MissingString(field))
 }
 
 /// One narrow synchronous Responses API provider.
@@ -224,4 +339,38 @@ pub enum OpenAiHttpResponseError {
     BodyLengthOverflow,
     #[error("OpenAI HTTP response declares body length {declared}, but carries {actual} bytes")]
     BodyLengthMismatch { declared: usize, actual: usize },
+}
+
+#[derive(Debug, Error)]
+pub enum OpenAiResponseDecodeError {
+    #[error(transparent)]
+    TransportFrame(#[from] OpenAiHttpResponseError),
+    #[error("OpenAI returned HTTP status {0}")]
+    HttpStatus(u16),
+    #[error("OpenAI response body is not valid JSON")]
+    Json(#[from] serde_json::Error),
+    #[error("OpenAI response body is not a JSON object")]
+    ResponseIsNotObject,
+    #[error("OpenAI response has no string status")]
+    MissingStatus,
+    #[error("OpenAI response status is {0:?}, not completed")]
+    ResponseNotCompleted(String),
+    #[error("OpenAI response has no output array")]
+    MissingOutput,
+    #[error("OpenAI response message has no content array")]
+    MessageMissingContent,
+    #[error("OpenAI output_text content has no string text")]
+    OutputTextMissingText,
+    #[error("OpenAI response has no JSON-array output_text completion")]
+    NoCandidateOutputText,
+    #[error("OpenAI output_text is not a JSON array of strings")]
+    InvalidCandidateArray(serde_json::Error),
+    #[error("OpenAI output_text candidate array is empty")]
+    EmptyCandidateArray,
+    #[error("OpenAI output_text contains an empty candidate")]
+    EmptyCandidate,
+    #[error("OpenAI output_text repeats candidate {0:?}")]
+    DuplicateCandidate(String),
+    #[error("OpenAI response has no string field {0:?}")]
+    MissingString(&'static str),
 }

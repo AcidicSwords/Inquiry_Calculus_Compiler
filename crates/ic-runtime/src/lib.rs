@@ -23,8 +23,9 @@ use ic_core::{
     TypeError, TypeRef, TypedForm, TypedFormRef,
 };
 pub use openai::{
-    OPENAI_RESPONSES_ENDPOINT, OpenAiHttpResponse, OpenAiHttpResponseError, OpenAiProviderError,
-    OpenAiResponsesProvider,
+    DecodedOpenAiJsonArray, OPENAI_RESPONSES_ENDPOINT, OpenAiHttpResponse, OpenAiHttpResponseError,
+    OpenAiProviderError, OpenAiResponseDecodeError, OpenAiResponsesProvider,
+    decode_openai_json_array_response,
 };
 pub use replay::{
     ColdReplayedProbe, FiniteProbeReplayError, ReplayObservation, replay_completed_finite_probe,

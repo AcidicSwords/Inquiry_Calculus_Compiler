@@ -1489,6 +1489,65 @@ fn finite_decode_links_an_event_record_to_its_direct_decoder_route() {
     ));
 }
 
+#[test]
+fn decoded_observation_can_attach_post_return_support_without_rewriting_the_question() {
+    let mut fixture = fixture();
+    let decoder = FiniteDecoder::new(
+        fixture.query,
+        fixture.raw_type,
+        vec![FiniteDecoderEntry::Decoded {
+            raw_return: fixture.decoded_raw,
+            candidates: vec![fixture.candidate],
+        }],
+    )
+    .expect("finite row must be valid");
+    let decoder_ref = fixture.catalog.insert_decoder(decoder.clone());
+    let path = fixture.catalog.insert_path(ResolutionPath::new(
+        fixture.raw_type,
+        fixture.answer_type,
+        ResolutionPathIR::Decode {
+            decoder: decoder_ref.as_decoder_ref(),
+        },
+    ));
+    let ActualDecodeResult::Decoded(decoded) =
+        decode_actual_event(&fixture.event, &decoder, path, &fixture.catalog)
+            .expect("actual return must decode")
+    else {
+        panic!("listed row must decode")
+    };
+    let query = fixture
+        .catalog
+        .queries
+        .get(&fixture.query)
+        .expect("query must remain available")
+        .clone();
+    let candidate = fixture
+        .catalog
+        .candidates
+        .get(&fixture.candidate)
+        .expect("candidate must remain available")
+        .clone();
+    let query_context = *query.context();
+    let post_return_support = SupportRef::from_artifact_ref(artifact(0xce));
+    assert_ne!(post_return_support, query_context.support());
+    let observation = fixture.catalog.insert_relation_use(RelationUse::new(
+        query.relation(),
+        candidate.bindings().to_vec(),
+        RelationUseContext::new(
+            query_context.scope(),
+            query_context.applicability(),
+            query_context.grain(),
+            query_context.horizon(),
+            query_context.mode(),
+            post_return_support,
+            query_context.warrant(),
+        ),
+    ));
+
+    match_decoded_observation_use(&decoded, fixture.candidate, observation, &fixture.catalog)
+        .expect("post-return support must not rewrite the already-addressed source question");
+}
+
 #[allow(clippy::too_many_arguments)]
 fn decoded_probe_observation(
     catalog: &mut Catalog,
@@ -2292,6 +2351,73 @@ fn finite_supported_answers_require_exact_decoded_probe_and_standing_route_cover
         .get(&decoded.query())
         .expect("decoded query must remain available")
         .clone();
+    let post_return_environment = scenario.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(query.relation()),
+            Vec::new(),
+            vec![scenario.admitted.source_raw_return()],
+            vec![artifact(0xcf)],
+            Vec::new(),
+            Vec::new(),
+            query.context().applicability(),
+            query.context().scope(),
+        )
+        .expect("post-return support must canonicalize"),
+    );
+    assert_ne!(
+        post_return_environment.as_support_ref(),
+        query.context().support()
+    );
+    let original_candidate = scenario
+        .catalog
+        .candidates
+        .get(&scenario.source_observation.candidate())
+        .expect("source candidate must remain available")
+        .clone();
+    let post_return_observation = scenario.catalog.insert_relation_use(RelationUse::new(
+        query.relation(),
+        original_candidate.bindings().to_vec(),
+        RelationUseContext::new(
+            query.context().scope(),
+            query.context().applicability(),
+            query.context().grain(),
+            query.context().horizon(),
+            query.context().mode(),
+            post_return_environment.as_support_ref(),
+            query.context().warrant(),
+        ),
+    ));
+    let post_return_match = match_decoded_observation_use(
+        &decoded,
+        scenario.source_observation.candidate(),
+        post_return_observation,
+        &scenario.catalog,
+    )
+    .expect("decoded observation may use independently formed post-return support");
+    let post_return_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            post_return_environment,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &scenario.catalog,
+    )
+    .expect("post-return support may independently close");
+    let post_return_admitted = admit_finite_supported_answers(
+        decoded.clone(),
+        vec![post_return_match],
+        &post_return_standing,
+        &scenario.catalog,
+    )
+    .expect("post-return support that closes and names the actual return must admit");
+    assert_eq!(
+        post_return_admitted.support()[0].environment(),
+        post_return_environment
+    );
+
     let alternate_answer = scenario.catalog.insert_form(TypedForm::new(
         scenario.binding,
         scenario.answer_type,

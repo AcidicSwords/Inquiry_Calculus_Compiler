@@ -207,9 +207,12 @@ pub trait ObservationResultCatalog: ActualDecodeCatalog {
 /// Checks the exact structural correspondence between one decoded candidate and one relation use.
 ///
 /// The candidate must be among `decoded`'s preserved alternatives. Its complete binding assignment
-/// and the use's binding assignment must agree exactly, as must the source query's relation and
-/// contextual support record. The result is a checked derived view, never a new artifact or a
-/// claim that the relation was observed, true, accepted, or a departure witness.
+/// and the use's binding assignment must agree exactly, as must the source query's relation,
+/// scope, applicability, grain, horizon, discharge mode, and warrant. The observation's support
+/// route may be constructed after the raw return and is checked independently by answer/departure
+/// admission; requiring it to equal the pre-dispatch query support would create a content-address
+/// cycle. The result is a checked derived view, never a new artifact or a claim that the relation
+/// was observed, true, accepted, or a departure witness.
 pub fn match_decoded_observation_use<C: ObservationResultCatalog>(
     decoded: &DecodedCandidateSet,
     candidate_ref: CompletionCandidateRef,
@@ -276,7 +279,6 @@ pub fn match_decoded_observation_use<C: ObservationResultCatalog>(
         || observation.grain() != query.context().grain()
         || observation.horizon() != query.context().horizon()
         || observation.mode() != query.context().mode()
-        || observation.support() != query.context().support()
         || observation.warrant() != query.context().warrant()
     {
         return Err(DecodedObservationError::ContextMismatch);
