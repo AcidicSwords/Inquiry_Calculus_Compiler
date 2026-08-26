@@ -139,9 +139,14 @@ consequence-equivalent, and returns a positive reopen witness when it is not. Th
 now also closed at `SEPARATOR-001`: the exact positive reopen witness has a derived canonical
 identity, enters the existing generic `SeparatorProblem`, retains its generated inquiry route and
 complete admitted answer, and regenerates the same inspectable continuation after restart without
-redispatch or a hard-coded method policy. The next residual is `METHOD-BRIDGE-001`: compile this
-generic residual-handler/reentry path through one transparent `MethodContract` and first-order
-`IProg`, then reopen the reusable path under a new protected separator.
+redispatch or a hard-coded method policy. `METHOD-BRIDGE-001` is also closed: one oriented,
+content-addressed `MethodBridge` rechecks both `MethodContract`s, the declared residual, exact
+answer-selected transport, guard, and reconstruction program; cold replay regenerates equal
+reentry and a new protected reopen witness while rejecting undeclared residuals and rival
+transports. The next residual is `CUE-PLANNING-001`: admit support, applicability, coverage, and
+answer provenance for each exact finite cue before using the existing sufficient-basis/frontier
+checker, preserving incomplete admission as `Unknown` and routing concrete ambiguity back through
+the generic separator.
 
 Do not let a provider or credential residual collapse transport actuality into semantic `Unknown`,
 and do not predeclare support for an unpredictable content-addressed return. If the existing support

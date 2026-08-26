@@ -3,10 +3,12 @@ use std::collections::BTreeMap;
 use ic_core::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BackendRef, BindingVersionRef,
     CheckerRef, CostModelRef, CoverageRef, DischargeMode, ExtensionDomainRef, FormulaArtifact,
-    FormulaCatalog, FormulaRef, METHOD_CONTRACT_ARTIFACT_KIND, METHOD_CONTRACT_SCHEMA_VERSION,
-    MethodContract, MethodContractCheckError, MethodContractError, RelationBodyIR, RelationCatalog,
-    RelationPort, RelationRef, RelationSchema, RelationSignature, ResidualSchemaRef, TyIR,
-    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    FormulaCatalog, FormulaRef, IProgRef, METHOD_BRIDGE_ARTIFACT_KIND,
+    METHOD_BRIDGE_SCHEMA_VERSION, METHOD_CONTRACT_ARTIFACT_KIND, METHOD_CONTRACT_SCHEMA_VERSION,
+    MethodBridge, MethodBridgeError, MethodContract, MethodContractCheckError, MethodContractError,
+    MethodRef, RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema,
+    RelationSignature, ResidualSchemaRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef,
+    TypeSymbol, TypedForm, TypedFormRef,
 };
 
 #[derive(Default)]
@@ -184,5 +186,66 @@ fn method_contract_rejects_duplicate_and_malformed_registry_data() {
     assert!(matches!(
         MethodContract::from_envelope(&wrong_schema),
         Err(MethodContractError::UnsupportedSchemaVersion(_))
+    ));
+}
+
+#[test]
+fn method_bridge_identity_is_oriented_and_malformed_payloads_are_rejected() {
+    let bridge = MethodBridge::new(
+        MethodRef::from_artifact_ref(artifact(0x40)),
+        ResidualSchemaRef::from_artifact_ref(artifact(0x41)),
+        MethodRef::from_artifact_ref(artifact(0x42)),
+        IProgRef::from_artifact_ref(artifact(0x43)),
+        FormulaRef::from_artifact_ref(artifact(0x44)),
+        IProgRef::from_artifact_ref(artifact(0x45)),
+    );
+    let envelope = bridge.envelope().expect("method bridge must encode");
+    assert_eq!(
+        MethodBridge::from_envelope(&envelope).expect("method bridge must decode"),
+        bridge
+    );
+    let reversed = MethodBridge::new(
+        bridge.to_method(),
+        bridge.residual_schema(),
+        bridge.from_method(),
+        bridge.transport(),
+        bridge.reentry_guard(),
+        bridge.reconstruct_input(),
+    );
+    assert_ne!(
+        bridge.method_bridge_ref().expect("bridge must hash"),
+        reversed
+            .method_bridge_ref()
+            .expect("reversed bridge must hash")
+    );
+
+    let payload = bridge.canonical_payload();
+    assert!(matches!(
+        MethodBridge::decode_payload(&payload[..payload.len() - 1]),
+        Err(MethodBridgeError::TruncatedPayload)
+    ));
+    let mut trailing = payload.clone();
+    trailing.push(0);
+    assert!(matches!(
+        MethodBridge::decode_payload(&trailing),
+        Err(MethodBridgeError::TrailingPayloadBytes(1))
+    ));
+    let wrong_kind = ArtifactEnvelope::from_canonical_payload(
+        ArtifactKind::new("ic.method-contract").expect("kind must be valid"),
+        METHOD_BRIDGE_SCHEMA_VERSION,
+        payload.clone(),
+    );
+    assert!(matches!(
+        MethodBridge::from_envelope(&wrong_kind),
+        Err(MethodBridgeError::UnexpectedArtifactKind { .. })
+    ));
+    let wrong_schema = ArtifactEnvelope::from_canonical_payload(
+        ArtifactKind::new(METHOD_BRIDGE_ARTIFACT_KIND).expect("kind must be valid"),
+        METHOD_BRIDGE_SCHEMA_VERSION + 1,
+        payload,
+    );
+    assert!(matches!(
+        MethodBridge::from_envelope(&wrong_schema),
+        Err(MethodBridgeError::UnsupportedSchemaVersion(_))
     ));
 }

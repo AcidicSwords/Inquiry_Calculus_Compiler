@@ -9,8 +9,9 @@ use ic_core::{
     ActualDecodeError, ActualDecodeResult, CompletionCandidateRef, DecodedObservationError,
     FiniteAnswerBindingError, FiniteDecoder, FiniteSupportedAnswerCatalog,
     FiniteSupportedAnswerError, GeneratedInquiry, GeneratedInquiryBindingError,
-    GeneratedInquiryCatalog, IProgArtifact, IProgCatalog, RelationUseRef, ResolutionPathRef,
-    Standing, admit_finite_supported_answers, bind_finite_ask_continuation,
+    GeneratedInquiryCatalog, IProgArtifact, IProgCatalog, IProgRef, MethodBridge,
+    MethodBridgeCatalog, MethodBridgeCheckError, RelationUseRef, ResolutionPathRef, Standing,
+    admit_finite_supported_answers, bind_finite_ask_continuation,
     bind_generated_inquiry_continuation, decode_actual_event, match_decoded_observation_use,
 };
 use ic_store::{ArtifactStore, DispatchToken, ReplayedExternalEffect, StoreError};
@@ -51,6 +52,29 @@ pub struct ColdReplayedProbe {
 pub struct ColdReplayedSeparatorInquiry {
     replay: ColdReplayedProbe,
     separator: ic_core::BoundGeneratedInquiryContinuation,
+}
+
+/// A checked transparent method reentry retaining the separator return that selected it.
+///
+/// This derived view does not execute a method or evaluate its guard. It proves that reentry is
+/// represented by a checked first-order bridge whose transport is the exact continuation already
+/// selected by the admitted answer, rather than by a method-name switch.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MethodBridgeReentry {
+    separator: ColdReplayedSeparatorInquiry,
+    bridge: MethodBridge,
+}
+
+impl MethodBridgeReentry {
+    #[must_use]
+    pub const fn separator(&self) -> &ColdReplayedSeparatorInquiry {
+        &self.separator
+    }
+
+    #[must_use]
+    pub const fn bridge(&self) -> MethodBridge {
+        self.bridge
+    }
 }
 
 impl ColdReplayedSeparatorInquiry {
@@ -191,6 +215,30 @@ where
     Ok(ColdReplayedSeparatorInquiry { replay, separator })
 }
 
+/// Routes an admitted separator return through one checked, inspectable method bridge.
+///
+/// Both method contracts and all bridge dependencies are revalidated by `MethodBridge::check`.
+/// The transport must be the answer-bound source continuation itself. Consequently a catalog
+/// entry, method name, or generated proposal cannot silently choose a different continuation.
+pub fn route_separator_through_method_bridge<C>(
+    separator: ColdReplayedSeparatorInquiry,
+    bridge: MethodBridge,
+    catalog: &C,
+) -> Result<MethodBridgeReentry, MethodBridgeReentryError>
+where
+    C: MethodBridgeCatalog,
+{
+    bridge.check(catalog)?;
+    let selected = separator.separator().binding().continuation();
+    if bridge.transport() != selected {
+        return Err(MethodBridgeReentryError::TransportMismatch {
+            selected,
+            bridge: bridge.transport(),
+        });
+    }
+    Ok(MethodBridgeReentry { separator, bridge })
+}
+
 /// Distinct replay exits; operational, resolution, support, source, and lowering failures never
 /// collapse to a Boolean or one generic "no answer" result.
 #[derive(Debug, Error)]
@@ -230,4 +278,18 @@ pub enum FiniteSeparatorReplayError {
     Replay(#[from] FiniteProbeReplayError),
     #[error(transparent)]
     Binding(#[from] GeneratedInquiryBindingError),
+}
+
+/// Distinct failures while routing a replayed separator through a transparent method bridge.
+#[derive(Debug, Error)]
+pub enum MethodBridgeReentryError {
+    #[error(transparent)]
+    Bridge(#[from] MethodBridgeCheckError),
+    #[error(
+        "method bridge transport {bridge} does not match answer-selected continuation {selected}"
+    )]
+    TransportMismatch {
+        selected: IProgRef,
+        bridge: IProgRef,
+    },
 }

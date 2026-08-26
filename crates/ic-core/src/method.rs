@@ -8,14 +8,20 @@ use std::{fmt, str::FromStr};
 use thiserror::Error;
 
 use crate::{
-    ApplicabilityRef, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, DischargeMode,
-    RelationCatalog, RelationCheckError, RelationError, RelationRef,
+    ApplicabilityRef, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
+    BindingVersionRef, DischargeMode, FormulaCatalog, FormulaCheckError, FormulaError, FormulaRef,
+    IProgCatalog, IProgCheckError, IProgError, IProgRef, RelationCatalog, RelationCheckError,
+    RelationError, RelationRef,
 };
 
 /// Canonical artifact kind for method contracts.
 pub const METHOD_CONTRACT_ARTIFACT_KIND: &str = "ic.method-contract";
 /// Payload schema version for method contracts.
 pub const METHOD_CONTRACT_SCHEMA_VERSION: u32 = 1;
+/// Canonical artifact kind for typed residual-handler/reentry bridges between methods.
+pub const METHOD_BRIDGE_ARTIFACT_KIND: &str = "ic.method-bridge";
+/// Payload schema version for typed residual-handler/reentry bridges.
+pub const METHOD_BRIDGE_SCHEMA_VERSION: u32 = 1;
 
 macro_rules! artifact_reference {
     ($name:ident) => {
@@ -63,6 +69,7 @@ artifact_reference!(BackendRef);
 artifact_reference!(CheckerRef);
 artifact_reference!(CostModelRef);
 artifact_reference!(ResidualSchemaRef);
+artifact_reference!(MethodBridgeRef);
 
 /// A canonical registry contract for a native or learned method.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -78,6 +85,245 @@ pub struct MethodContract {
     cost: Option<CostModelRef>,
     failure_schemas: Vec<ResidualSchemaRef>,
     provenance: Vec<ArtifactRef>,
+}
+
+/// A typed, first-order residual-handler/reentry bridge between two method contracts.
+///
+/// This record names transparent program and guard data. It does not establish standing
+/// admission, select a method, execute either program, evaluate the guard, or warrant reentry.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct MethodBridge {
+    from_method: MethodRef,
+    residual_schema: ResidualSchemaRef,
+    to_method: MethodRef,
+    transport: IProgRef,
+    reentry_guard: FormulaRef,
+    reconstruct_input: IProgRef,
+}
+
+impl MethodBridge {
+    #[must_use]
+    pub const fn new(
+        from_method: MethodRef,
+        residual_schema: ResidualSchemaRef,
+        to_method: MethodRef,
+        transport: IProgRef,
+        reentry_guard: FormulaRef,
+        reconstruct_input: IProgRef,
+    ) -> Self {
+        Self {
+            from_method,
+            residual_schema,
+            to_method,
+            transport,
+            reentry_guard,
+            reconstruct_input,
+        }
+    }
+
+    #[must_use]
+    pub const fn from_method(self) -> MethodRef {
+        self.from_method
+    }
+
+    #[must_use]
+    pub const fn residual_schema(self) -> ResidualSchemaRef {
+        self.residual_schema
+    }
+
+    #[must_use]
+    pub const fn to_method(self) -> MethodRef {
+        self.to_method
+    }
+
+    #[must_use]
+    pub const fn transport(self) -> IProgRef {
+        self.transport
+    }
+
+    #[must_use]
+    pub const fn reentry_guard(self) -> FormulaRef {
+        self.reentry_guard
+    }
+
+    #[must_use]
+    pub const fn reconstruct_input(self) -> IProgRef {
+        self.reconstruct_input
+    }
+
+    #[must_use]
+    pub fn canonical_payload(self) -> Vec<u8> {
+        let mut encoded = Vec::with_capacity(32 * 6);
+        for dependency in self.referenced_artifacts() {
+            reference(&mut encoded, dependency);
+        }
+        encoded
+    }
+
+    pub fn decode_payload(payload: &[u8]) -> Result<Self, MethodBridgeError> {
+        const PAYLOAD_LENGTH: usize = 32 * 6;
+        if payload.len() < PAYLOAD_LENGTH {
+            return Err(MethodBridgeError::TruncatedPayload);
+        }
+        if payload.len() > PAYLOAD_LENGTH {
+            return Err(MethodBridgeError::TrailingPayloadBytes(
+                payload.len() - PAYLOAD_LENGTH,
+            ));
+        }
+        let reference_at = |offset: usize| {
+            let bytes: [u8; 32] = payload[offset..offset + 32]
+                .try_into()
+                .expect("fixed method-bridge payload range must contain 32 bytes");
+            ArtifactRef::from_bytes(bytes)
+        };
+        Ok(Self::new(
+            MethodRef::from_artifact_ref(reference_at(0)),
+            ResidualSchemaRef::from_artifact_ref(reference_at(32)),
+            MethodRef::from_artifact_ref(reference_at(64)),
+            IProgRef::from_artifact_ref(reference_at(96)),
+            FormulaRef::from_artifact_ref(reference_at(128)),
+            IProgRef::from_artifact_ref(reference_at(160)),
+        ))
+    }
+
+    pub fn envelope(self) -> Result<ArtifactEnvelope, MethodBridgeError> {
+        Ok(ArtifactEnvelope::from_canonical_payload(
+            ArtifactKind::new(METHOD_BRIDGE_ARTIFACT_KIND)?,
+            METHOD_BRIDGE_SCHEMA_VERSION,
+            self.canonical_payload(),
+        ))
+    }
+
+    pub fn method_bridge_ref(self) -> Result<MethodBridgeRef, MethodBridgeError> {
+        Ok(MethodBridgeRef::from_artifact_ref(
+            self.envelope()?.artifact_ref()?,
+        ))
+    }
+
+    pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, MethodBridgeError> {
+        if envelope.kind().as_str() != METHOD_BRIDGE_ARTIFACT_KIND {
+            return Err(MethodBridgeError::UnexpectedArtifactKind {
+                expected: METHOD_BRIDGE_ARTIFACT_KIND,
+                actual: envelope.kind().as_str().to_owned(),
+            });
+        }
+        if envelope.schema_version() != METHOD_BRIDGE_SCHEMA_VERSION {
+            return Err(MethodBridgeError::UnsupportedSchemaVersion(
+                envelope.schema_version(),
+            ));
+        }
+        Self::decode_payload(envelope.canonical_payload())
+    }
+
+    #[must_use]
+    pub fn referenced_artifacts(self) -> Vec<ArtifactRef> {
+        vec![
+            self.from_method.as_artifact_ref(),
+            self.residual_schema.as_artifact_ref(),
+            self.to_method.as_artifact_ref(),
+            self.transport.as_artifact_ref(),
+            self.reentry_guard.as_artifact_ref(),
+            self.reconstruct_input.as_artifact_ref(),
+        ]
+    }
+
+    /// Rechecks both methods, failure-schema incidence, first-order programs, formula guard, and
+    /// the current same-binding boundary. It evaluates none of them.
+    pub fn check<C: MethodBridgeCatalog>(self, catalog: &C) -> Result<(), MethodBridgeCheckError> {
+        let from = checked_method(self.from_method, catalog)?;
+        if !from.failure_schemas().contains(&self.residual_schema) {
+            return Err(MethodBridgeCheckError::ResidualSchemaNotDeclared {
+                method: self.from_method,
+                residual: self.residual_schema,
+            });
+        }
+        let to = checked_method(self.to_method, catalog)?;
+        let from_relation = catalog.resolve_relation_schema(from.relation()).ok_or(
+            MethodContractCheckError::UnresolvedRelation(from.relation()),
+        )?;
+        let to_relation = catalog
+            .resolve_relation_schema(to.relation())
+            .ok_or(MethodContractCheckError::UnresolvedRelation(to.relation()))?;
+        let binding = from_relation.binding();
+        if to_relation.binding() != binding {
+            return Err(MethodBridgeCheckError::MethodBindingMismatch {
+                from: binding,
+                to: to_relation.binding(),
+            });
+        }
+        check_program_binding(self.transport, binding, catalog)?;
+        check_program_binding(self.reconstruct_input, binding, catalog)?;
+        let guard = catalog
+            .resolve_formula(self.reentry_guard)
+            .ok_or(MethodBridgeCheckError::UnresolvedGuard(self.reentry_guard))?;
+        let calculated_guard = guard.formula_ref()?;
+        if calculated_guard != self.reentry_guard {
+            return Err(MethodBridgeCheckError::GuardIdentityMismatch {
+                reference: self.reentry_guard,
+                calculated: calculated_guard,
+            });
+        }
+        guard.check(catalog)?;
+        if guard.binding() != binding {
+            return Err(MethodBridgeCheckError::GuardBindingMismatch {
+                expected: binding,
+                actual: guard.binding(),
+            });
+        }
+        Ok(())
+    }
+}
+
+/// Catalog boundary for structural method-bridge validation.
+pub trait MethodBridgeCatalog: IProgCatalog + FormulaCatalog {
+    fn resolve_method(&self, reference: MethodRef) -> Option<MethodContract>;
+}
+
+fn checked_method<C: MethodBridgeCatalog>(
+    reference: MethodRef,
+    catalog: &C,
+) -> Result<MethodContract, MethodBridgeCheckError> {
+    let method = catalog
+        .resolve_method(reference)
+        .ok_or(MethodBridgeCheckError::UnresolvedMethod(reference))?;
+    let calculated = method.method_ref()?;
+    if calculated != reference {
+        return Err(MethodBridgeCheckError::MethodIdentityMismatch {
+            reference,
+            calculated,
+        });
+    }
+    method.check(catalog)?;
+    Ok(method)
+}
+
+fn check_program_binding<C: MethodBridgeCatalog>(
+    reference: IProgRef,
+    expected: BindingVersionRef,
+    catalog: &C,
+) -> Result<(), MethodBridgeCheckError> {
+    let program = catalog
+        .resolve_iprog(reference)
+        .ok_or(MethodBridgeCheckError::UnresolvedProgram(reference))?;
+    let calculated = program.iprog_ref()?;
+    if calculated != reference {
+        return Err(MethodBridgeCheckError::ProgramIdentityMismatch {
+            reference,
+            calculated,
+        });
+    }
+    program.check(catalog)?;
+    let result_type = catalog
+        .resolve_type(program.result())
+        .ok_or(IProgCheckError::UnresolvedResultType(program.result()))?;
+    if result_type.binding() != expected {
+        return Err(MethodBridgeCheckError::ProgramBindingMismatch {
+            program: reference,
+            expected,
+            actual: result_type.binding(),
+        });
+    }
+    Ok(())
 }
 
 impl MethodContract {
@@ -437,5 +683,82 @@ pub enum MethodContractCheckError {
     RelationIdentityMismatch {
         reference: RelationRef,
         calculated: RelationRef,
+    },
+}
+
+/// Canonical encoding failures for typed method bridges.
+#[derive(Debug, Error)]
+pub enum MethodBridgeError {
+    #[error(transparent)]
+    Artifact(#[from] ArtifactError),
+    #[error("method-bridge payload is truncated")]
+    TruncatedPayload,
+    #[error("method-bridge payload has {0} trailing bytes")]
+    TrailingPayloadBytes(usize),
+    #[error("expected artifact kind {expected:?}, got {actual:?}")]
+    UnexpectedArtifactKind {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("unsupported method-bridge schema version {0}")]
+    UnsupportedSchemaVersion(u32),
+}
+
+/// Structural validation failures for typed method bridges.
+#[derive(Debug, Error)]
+pub enum MethodBridgeCheckError {
+    #[error(transparent)]
+    Method(#[from] MethodContractError),
+    #[error(transparent)]
+    MethodCheck(#[from] MethodContractCheckError),
+    #[error(transparent)]
+    Program(#[from] IProgError),
+    #[error(transparent)]
+    ProgramCheck(#[from] IProgCheckError),
+    #[error(transparent)]
+    Formula(#[from] FormulaError),
+    #[error(transparent)]
+    FormulaCheck(#[from] FormulaCheckError),
+    #[error("method {0} is unavailable")]
+    UnresolvedMethod(MethodRef),
+    #[error("method {reference} hashes to {calculated}, not its claimed identity")]
+    MethodIdentityMismatch {
+        reference: MethodRef,
+        calculated: MethodRef,
+    },
+    #[error("method {method} does not declare residual schema {residual}")]
+    ResidualSchemaNotDeclared {
+        method: MethodRef,
+        residual: ResidualSchemaRef,
+    },
+    #[error("method bridge crosses bindings {from} and {to} without a binding bridge")]
+    MethodBindingMismatch {
+        from: BindingVersionRef,
+        to: BindingVersionRef,
+    },
+    #[error("first-order program {0} is unavailable")]
+    UnresolvedProgram(IProgRef),
+    #[error("first-order program {reference} hashes to {calculated}, not its claimed identity")]
+    ProgramIdentityMismatch {
+        reference: IProgRef,
+        calculated: IProgRef,
+    },
+    #[error("program {program} has binding {actual}, expected {expected}")]
+    ProgramBindingMismatch {
+        program: IProgRef,
+        expected: BindingVersionRef,
+        actual: BindingVersionRef,
+    },
+    #[error("reentry guard {0} is unavailable")]
+    UnresolvedGuard(FormulaRef),
+    #[error("reentry guard {reference} hashes to {calculated}, not its claimed identity")]
+    GuardIdentityMismatch {
+        reference: FormulaRef,
+        calculated: FormulaRef,
+    },
+    #[error("reentry guard has binding {actual}, expected {expected}")]
+    GuardBindingMismatch {
+        expected: BindingVersionRef,
+        actual: BindingVersionRef,
     },
 }

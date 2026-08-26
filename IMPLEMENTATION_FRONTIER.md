@@ -202,11 +202,22 @@ question and generation route, binds the complete admitted answer set to its ins
 continuation, and regenerates the entire chain after restart without redispatch. The bridge adds
 no method-name switch, singleton selection, policy authority, opcode, table, or second history.
 
-The strongest executable obligation is now `METHOD-BRIDGE-001`: route the demonstrated generic
-separator continuation through one transparent `MethodContract` residual-handler/reentry bridge
-compiled as first-order `IProg` data, then reopen the reusable path with a new protected separator.
-Method identity and provenance may constrain dispatch, but a method name must not become runtime
-policy or warrant.
+`METHOD-BRIDGE-001` is now demonstrated. A canonical oriented `MethodBridge` names the source and
+target `MethodContract`, a residual schema declared by the source method, the exact answer-selected
+transport `IProg`, a typed reentry guard, and an input-reconstruction `IProg`. Structural checking
+rehashes both methods and every first-order dependency under one binding. The two-event fixture
+persists and cold reloads this chain, rejects an undeclared residual and a valid but non-selected
+transport, reconstructs equal reentry with zero redispatch, and then regenerates a new protected
+reopen witness. Method names remain provenance; no method dispatch policy, execution, guard
+evaluation, semantic warrant, opcode, table, or suspension authority is added.
+
+The strongest executable obligation is now `CUE-PLANNING-001`: connect the demonstrated generic
+separator residual to Phase 13's existing exact finite cue-basis/frontier mathematics through a
+typed admission boundary for each cue's support, applicability, coverage, and answer provenance.
+Incomplete cue admission must remain `Unknown`; a positively witnessed unseparated pair must
+retain its concrete separator and re-enter the generic separator path. The caller-supplied finite
+resource preorder may select nondominated admitted bases but cannot establish global minimality or
+exhaustiveness.
 
 Do not weaken support, pre-warrant generated output, choose a singleton implicitly, or add a
 provider framework, scheduler, model policy, credential store, semantic opcode, table, or crate.

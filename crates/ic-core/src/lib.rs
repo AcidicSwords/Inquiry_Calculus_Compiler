@@ -144,8 +144,10 @@ pub use iprog::{
 };
 pub use method::{
     BackendRef, CheckerRef, CostModelRef, CoverageRef, ExtensionDomainRef,
-    METHOD_CONTRACT_ARTIFACT_KIND, METHOD_CONTRACT_SCHEMA_VERSION, MethodContract,
-    MethodContractCheckError, MethodContractError, MethodRef, ResidualSchemaRef,
+    METHOD_BRIDGE_ARTIFACT_KIND, METHOD_BRIDGE_SCHEMA_VERSION, METHOD_CONTRACT_ARTIFACT_KIND,
+    METHOD_CONTRACT_SCHEMA_VERSION, MethodBridge, MethodBridgeCatalog, MethodBridgeCheckError,
+    MethodBridgeError, MethodBridgeRef, MethodContract, MethodContractCheckError,
+    MethodContractError, MethodRef, ResidualSchemaRef,
 };
 pub use negation::{
     NEGATION_USE_ARTIFACT_KIND, NEGATION_USE_SCHEMA_VERSION, NegationCatalog, NegationCoverage,

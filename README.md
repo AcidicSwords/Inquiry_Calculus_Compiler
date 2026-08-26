@@ -5,7 +5,9 @@ including the adopted **Successor Reciprocal-Boundary / Positive-Negation Editio
 The executable implementation now includes verified semantic increments across Phases 1--11,
 the finite positive-negation reciprocal slice, crash-safe external-effect actuality, a complete
 finite question cycle with cold replay, paired question/return traces, and an exact finite
-sufficient-present/reopening witness. Phase 10 now also contains narrow OpenAI Responses and local
+sufficient-present/reopening witness. The generic separator continuation now also enters a
+canonical, checked, cold-replayable `MethodBridge` through exact first-order continuation data and
+can be reopened by a new protected separator without method-name dispatch. Phase 10 also contains narrow OpenAI Responses and local
 Ollama transport adapters. Both preserve exact HTTP actuality before interpretation. The installed
 `qwen3.5:9b` model has completed a live schema-constrained probe through the ordinary durable
 dispatch path; its exact response and event were committed before all generated candidates were
@@ -14,11 +16,11 @@ decoded. OpenAI remains an optional secondary adapter whose current credential r
 next executable obligation are recorded in `CONFORMANCE_STATUS.md` and
 `IMPLEMENTATION_FRONTIER.md`.
 
-The deterministic continuation fixture now carries an Ollama-shaped committed return through typed
-candidate creation, post-return support, admission, binding, and cold replay. The remaining local
-provider fixture now also originates that full chain from a fresh local-model call. The next
-frontier generalizes paired actuality and sufficient-present/reopening across a finite multi-event
-ordinary history.
+The deterministic continuation fixture carries an Ollama-shaped committed return through typed
+candidate creation, post-return support, admission, binding, and cold replay. A separate local
+provider fixture originates that full chain from a fresh local-model call. The current frontier is
+Phase 13 cue planning: checked support, applicability, coverage, and answer provenance must be
+attached to each cue before the existing exact finite sufficient-basis mathematics can use it.
 
 ## Authority by question
 

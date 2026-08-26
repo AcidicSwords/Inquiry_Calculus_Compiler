@@ -39,8 +39,9 @@ pub use openai::{
 };
 pub use replay::{
     ColdReplayedProbe, ColdReplayedSeparatorInquiry, FiniteProbeReplayError,
-    FiniteSeparatorReplayError, ReplayObservation, replay_completed_finite_probe,
-    replay_completed_finite_separator_inquiry,
+    FiniteSeparatorReplayError, MethodBridgeReentry, MethodBridgeReentryError, ReplayObservation,
+    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
+    route_separator_through_method_bridge,
 };
 use thiserror::Error;
 pub use trace::{

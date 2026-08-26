@@ -4137,10 +4137,15 @@ and returns a positive reopen separator when the appended history splits it. `SE
 passes: the complete positive reopen witness has derived canonical identity, supplies the residual
 of the existing generic `SeparatorProblem`, retains a checked generated inquiry route and the whole
 admitted answer set, and regenerates the same first-order continuation after restart without
-redispatch. The next executable step is `METHOD-BRIDGE-001`: one transparent `MethodContract`
-residual-handler/reentry bridge must consume that generic continuation through first-order `IProg`
-data and then reopen the reusable path under a new protected separator. Method names remain
-provenance, not dispatch policy.
+redispatch. `METHOD-BRIDGE-001` now also passes: one canonical oriented `MethodBridge` rechecks both
+`MethodContract`s, the source-declared residual schema, exact answer-selected transport `IProg`,
+typed guard, and input-reconstruction `IProg`; the two-event fixture cold reloads equal reentry,
+rejects undeclared residuals and rival transports, and regenerates a new protected reopen witness.
+The next executable step is `CUE-PLANNING-001`: admit each exact finite cue's support,
+applicability, coverage, and answer provenance before applying the existing sufficient-basis and
+nondominated-frontier checks. Incomplete admission remains `Unknown`, while a concrete
+unseparated pair re-enters the generic separator. The finite declared resource order does not
+establish global minimality or exhaustiveness.
 
 Later phase constraints are deliberately local:
 

@@ -12,20 +12,22 @@ use std::{
 
 use ic_core::{
     ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef, ArtifactEnvelope,
-    ArtifactKind, ArtifactRef, BackendRequest, BindingVersionRef, BoundaryChart, BoundaryRef,
-    CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    DeclaredSupportClosure, DischargeMode, EffectivityRef, EventRef, ExactFinitePresentChallenge,
-    ExactFinitePresentReopenWitness, ExactFinitePresentUpdate, ExactFiniteSignature,
-    ExactFiniteSufficientPresent, ExactFiniteSufficientPresentResult, ExactProtectedContinuation,
-    FiniteAnswerBindingError, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
-    FiniteDecoderRef, FiniteSupportedAnswerError, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GeneratedInquiry, GeneratedInquiryCatalog, GeneratorRegimeRef, GrainRef, HorizonRef,
-    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, ObservationResultCatalog,
-    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrenceCatalog, PortBinding,
-    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
-    ProtectedContinuationRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
-    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
-    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog, ResolutionCatalog,
+    ArtifactKind, ArtifactRef, BackendRef, BackendRequest, BindingVersionRef, BoundaryChart,
+    BoundaryRef, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
+    CoverageRef, DeclaredSupportClosure, DischargeMode, EffectivityRef, EventRef,
+    ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFinitePresentUpdate,
+    ExactFiniteSignature, ExactFiniteSufficientPresent, ExactFiniteSufficientPresentResult,
+    ExactProtectedContinuation, ExtensionDomainRef, FiniteAnswerBindingError, FiniteDecoder,
+    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderRef, FiniteSupportedAnswerError,
+    FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GeneratedInquiry,
+    GeneratedInquiryCatalog, GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog,
+    IProgCheckError, IProgIR, IProgRef, MethodBridge, MethodBridgeCatalog, MethodBridgeCheckError,
+    MethodContract, MethodRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    OperatorOccurrenceCatalog, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
+    ProgramBinding, ProtectedCompletionFieldRef, ProtectedContinuationRef, ProvenanceRef, QueryRef,
+    RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort,
+    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, RelationUseSupportCatalog, ResidualSchemaRef, ResolutionCatalog,
     ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem,
     SeparatorProblemRef, SignatureContext, StateRef, StructureViewRef, SupportEnvironmentArtifact,
     SupportEnvironmentCatalog, SupportEnvironmentRef, SupportSubjectRef, SurfacePlan, TyIR,
@@ -37,12 +39,12 @@ use ic_core::{
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaGenerateProvider,
-    OllamaHttpResponse, OllamaProviderError, PairedActualityTrace, PairedActualityTraversal,
-    ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
-    RuntimeCatalog, Terminator, TraversalCausalOrder, dispatch_probe,
+    MachineStep, MethodBridgeReentryError, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText,
+    OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError, PairedActualityTrace,
+    PairedActualityTraversal, ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn,
+    ReplayObservation, RuntimeCatalog, Terminator, TraversalCausalOrder, dispatch_probe,
     materialize_ollama_decoded_texts, replay_completed_finite_probe,
-    replay_completed_finite_separator_inquiry,
+    replay_completed_finite_separator_inquiry, route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -64,6 +66,8 @@ struct Catalog {
     support: BTreeMap<SupportEnvironmentRef, SupportEnvironmentArtifact>,
     programs: BTreeMap<IProgRef, IProgArtifact>,
     separator_problems: BTreeMap<SeparatorProblemRef, SeparatorProblem>,
+    formulas: BTreeMap<FormulaRef, FormulaArtifact>,
+    methods: BTreeMap<MethodRef, MethodContract>,
 }
 
 impl Catalog {
@@ -138,6 +142,18 @@ impl Catalog {
         self.programs.insert(reference, value);
         reference
     }
+
+    fn insert_formula(&mut self, value: FormulaArtifact) -> FormulaRef {
+        let reference = value.formula_ref().expect("formula must encode");
+        self.formulas.insert(reference, value);
+        reference
+    }
+
+    fn insert_method(&mut self, value: MethodContract) -> MethodRef {
+        let reference = value.method_ref().expect("method must encode");
+        self.methods.insert(reference, value);
+        reference
+    }
 }
 
 impl TypeCatalog for Catalog {
@@ -154,8 +170,8 @@ impl TypeCatalog for Catalog {
 }
 
 impl FormulaCatalog for Catalog {
-    fn resolve_formula(&self, _reference: FormulaRef) -> Option<FormulaArtifact> {
-        None
+    fn resolve_formula(&self, reference: FormulaRef) -> Option<FormulaArtifact> {
+        self.formulas.get(&reference).cloned()
     }
 
     fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm> {
@@ -269,6 +285,12 @@ impl GeneratedInquiryCatalog for Catalog {
         reference: SeparatorProblemRef,
     ) -> Option<SeparatorProblem> {
         self.separator_problems.get(&reference).copied()
+    }
+}
+
+impl MethodBridgeCatalog for Catalog {
+    fn resolve_method(&self, reference: MethodRef) -> Option<MethodContract> {
+        self.methods.get(&reference).cloned()
     }
 }
 
@@ -2615,6 +2637,208 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
         "generic separator continuation must retain the entire admitted answer set"
     );
 
+    let residual_schema = ResidualSchemaRef::from_artifact_ref(reopen_ref);
+    let method_coverage =
+        CoverageRef::from_artifact_ref(stored_ref(&store, b"multi-event-method-coverage").await);
+    let method_extension = ExtensionDomainRef::from_artifact_ref(
+        stored_ref(&store, b"multi-event-method-extension").await,
+    );
+    let method_backend =
+        BackendRef::from_artifact_ref(stored_ref(&store, b"multi-event-method-backend").await);
+    let from_method = MethodContract::new(
+        roots.relation,
+        query.context().applicability(),
+        stored_ref(&store, b"multi-event-from-method-law").await,
+        method_coverage,
+        DischargeMode::Pure,
+        method_extension,
+        method_backend,
+        None,
+        None,
+        vec![residual_schema],
+        vec![problem_ref.as_artifact_ref(), generated_ref],
+    )
+    .expect("source method contract must canonicalize");
+    let from_method_envelope = from_method.envelope().expect("source method must encode");
+    let from_method_ref = MethodRef::from_artifact_ref(
+        persist(
+            &store,
+            &from_method_envelope,
+            &from_method.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_method(from_method.clone()), from_method_ref);
+    let to_method = MethodContract::new(
+        roots.relation,
+        query.context().applicability(),
+        stored_ref(&store, b"multi-event-to-method-law").await,
+        method_coverage,
+        DischargeMode::Pure,
+        method_extension,
+        method_backend,
+        None,
+        None,
+        Vec::new(),
+        vec![problem_ref.as_artifact_ref(), generated_ref],
+    )
+    .expect("target method contract must canonicalize");
+    let to_method_envelope = to_method.envelope().expect("target method must encode");
+    let to_method_ref = MethodRef::from_artifact_ref(
+        persist(
+            &store,
+            &to_method_envelope,
+            &to_method.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_method(to_method.clone()), to_method_ref);
+    assert_ne!(from_method_ref, to_method_ref);
+
+    let guard = FormulaArtifact::new(
+        catalog
+            .schemas
+            .get(&roots.relation)
+            .expect("method relation must remain loaded")
+            .binding(),
+        Vec::new(),
+        FormulaIR::Top,
+    );
+    let guard_envelope = guard.envelope().expect("reentry guard must encode");
+    let guard_ref = FormulaRef::from_artifact_ref(
+        persist(&store, &guard_envelope, &guard.referenced_artifacts()).await,
+    );
+    assert_eq!(catalog.insert_formula(guard.clone()), guard_ref);
+    let reconstruct = IProgArtifact::new(
+        roots.unit,
+        IProgIR::Return {
+            value: roots.answer_b,
+        },
+    );
+    let reconstruct_envelope = reconstruct
+        .envelope()
+        .expect("input reconstruction must encode");
+    let reconstruct_ref = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &reconstruct_envelope,
+            &reconstruct.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_program(reconstruct.clone()), reconstruct_ref);
+    let bridge = MethodBridge::new(
+        from_method_ref,
+        residual_schema,
+        to_method_ref,
+        roots.continuation,
+        guard_ref,
+        reconstruct_ref,
+    );
+    bridge
+        .check(&catalog)
+        .expect("all transparent method-bridge dependencies must revalidate");
+    let bridge_envelope = bridge.envelope().expect("method bridge must encode");
+    let bridge_ref = persist(&store, &bridge_envelope, &bridge.referenced_artifacts()).await;
+    assert_eq!(
+        MethodBridge::from_envelope(&bridge_envelope).expect("method bridge must decode"),
+        bridge
+    );
+    assert_ne!(
+        bridge
+            .method_bridge_ref()
+            .expect("method bridge must hash")
+            .as_artifact_ref(),
+        MethodBridge::new(
+            to_method_ref,
+            residual_schema,
+            from_method_ref,
+            roots.continuation,
+            guard_ref,
+            reconstruct_ref,
+        )
+        .method_bridge_ref()
+        .expect("oriented rival bridge must hash")
+        .as_artifact_ref(),
+        "method-bridge orientation must be identity-bearing"
+    );
+    let rival_transport = MethodBridge::new(
+        from_method_ref,
+        residual_schema,
+        to_method_ref,
+        roots.source,
+        guard_ref,
+        reconstruct_ref,
+    );
+    assert!(matches!(
+        route_separator_through_method_bridge(live_separator.clone(), rival_transport, &catalog),
+        Err(MethodBridgeReentryError::TransportMismatch { selected, bridge })
+            if selected == roots.continuation && bridge == roots.source
+    ));
+    let undeclared_residual = MethodBridge::new(
+        to_method_ref,
+        residual_schema,
+        from_method_ref,
+        roots.continuation,
+        guard_ref,
+        reconstruct_ref,
+    );
+    assert!(matches!(
+        route_separator_through_method_bridge(
+            live_separator.clone(),
+            undeclared_residual,
+            &catalog,
+        ),
+        Err(MethodBridgeReentryError::Bridge(
+            MethodBridgeCheckError::ResidualSchemaNotDeclared { method, residual }
+        )) if method == to_method_ref && residual == residual_schema
+    ));
+    let live_method_reentry =
+        route_separator_through_method_bridge(live_separator, bridge, &catalog)
+            .expect("the checked bridge must reenter the exact answer-selected continuation");
+
+    let next_protected = ProtectedContinuationRef::from_artifact_ref(
+        stored_ref(&store, b"multi-event-next-protected").await,
+    );
+    let event_context = SignatureContext::new(
+        first_trace.question().binding(),
+        query.context().scope(),
+        query.context().applicability(),
+        query.context().grain(),
+        query.context().horizon(),
+        roots.raw_type,
+    );
+    let next_observation = ExactFiniteSignature::new(
+        event_context,
+        vec![
+            (roots.event.as_artifact_ref(), roots.event.as_artifact_ref()),
+            (
+                second_event.as_artifact_ref(),
+                second_event.as_artifact_ref(),
+            ),
+        ],
+    )
+    .expect("next protected separator must cover the complete live history domain");
+    let ExactFinitePresentChallenge::Reopened(next_reopen) =
+        challenge_exact_finite_sufficient_present(
+            &live_present,
+            ExactProtectedContinuation::new(next_protected, next_observation),
+        )
+        .expect("the reusable method path must remain reopenable by a new protected distinction")
+    else {
+        panic!("the event-sensitive successor must reopen the reusable method path")
+    };
+    assert_ne!(next_reopen.continuation(), live_reopen.continuation());
+    let next_reopen_envelope = next_reopen
+        .envelope()
+        .expect("next reopen witness must encode");
+    let next_reopen_ref = persist(
+        &store,
+        &next_reopen_envelope,
+        &next_reopen.referenced_artifacts(),
+    )
+    .await;
+
     store.close().await;
     let reopened = ArtifactStore::open(&url)
         .await
@@ -2651,6 +2875,40 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
             .expect("cold generated inquiry must hash"),
         generated_ref
     );
+    let cold_from_method = MethodContract::from_envelope(
+        &load_envelope(&reopened, from_method_ref.as_artifact_ref()).await,
+    )
+    .expect("source method must decode after restart");
+    let cold_to_method = MethodContract::from_envelope(
+        &load_envelope(&reopened, to_method_ref.as_artifact_ref()).await,
+    )
+    .expect("target method must decode after restart");
+    assert_eq!(
+        cold_catalog.insert_method(cold_from_method),
+        from_method_ref
+    );
+    assert_eq!(cold_catalog.insert_method(cold_to_method), to_method_ref);
+    let cold_guard = FormulaArtifact::from_envelope(
+        &load_envelope(&reopened, guard_ref.as_artifact_ref()).await,
+    )
+    .expect("reentry guard must decode after restart");
+    assert_eq!(cold_catalog.insert_formula(cold_guard), guard_ref);
+    let cold_reconstruct = IProgArtifact::from_envelope(
+        &load_envelope(&reopened, reconstruct_ref.as_artifact_ref()).await,
+    )
+    .expect("input reconstruction must decode after restart");
+    assert_eq!(
+        cold_catalog.insert_program(cold_reconstruct),
+        reconstruct_ref
+    );
+    let cold_bridge = MethodBridge::from_envelope(&load_envelope(&reopened, bridge_ref).await)
+        .expect("method bridge must decode after restart");
+    assert_eq!(cold_bridge, bridge);
+    let decoded_next_reopen = ExactFinitePresentReopenWitness::from_envelope(
+        &load_envelope(&reopened, next_reopen_ref).await,
+    )
+    .expect("successor reopen witness must decode after restart");
+    assert_eq!(decoded_next_reopen, next_reopen);
     let cold_source = cold_catalog
         .resolve_iprog(roots.source)
         .expect("source must reload after restart");
@@ -2745,7 +3003,11 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
     )
     .await
     .expect("separator inquiry must cold replay without redispatch or a method switch");
-    assert_eq!(cold_separator, live_separator);
+    assert_eq!(&cold_separator, live_method_reentry.separator());
+    let cold_method_reentry =
+        route_separator_through_method_bridge(cold_separator, cold_bridge, &cold_catalog)
+            .expect("cold replay must reenter through the decoded transparent method bridge");
+    assert_eq!(cold_method_reentry, live_method_reentry);
     let cold_first_trace =
         PairedActualityTrace::derive(cold_first.actuality().event(), cold_first.resumption())
             .expect("first cold trace must derive");
@@ -2771,6 +3033,27 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
     assert_eq!(cold_traversal, unknown_traversal);
     assert_eq!(cold_present, live_present);
     assert_eq!(cold_reopen, live_reopen);
+    let cold_next_observation = ExactFiniteSignature::new(
+        event_context,
+        vec![
+            (roots.event.as_artifact_ref(), roots.event.as_artifact_ref()),
+            (
+                second_event.as_artifact_ref(),
+                second_event.as_artifact_ref(),
+            ),
+        ],
+    )
+    .expect("cold successor separator must cover the complete history domain");
+    let ExactFinitePresentChallenge::Reopened(cold_next_reopen) =
+        challenge_exact_finite_sufficient_present(
+            &cold_present,
+            ExactProtectedContinuation::new(next_protected, cold_next_observation),
+        )
+        .expect("cold method path must regenerate its reopening discriminator")
+    else {
+        panic!("cold reusable path must remain reopenable")
+    };
+    assert_eq!(cold_next_reopen, next_reopen);
     assert_eq!(
         provider_calls.load(Ordering::SeqCst),
         2,
