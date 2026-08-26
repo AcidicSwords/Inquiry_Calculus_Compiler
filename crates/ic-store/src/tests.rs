@@ -4,11 +4,12 @@ use std::{
 };
 
 use ic_core::{
-    ActualEvent, ApplicabilityRef, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart,
-    BoundaryRef, DeterminationPresentationRef, DischargeMode, EventRef, FormulaRef, GrainRef,
-    HorizonRef, OpenQuery, OperatorRef, ProbeContractRef, ProbeOperator, ProvenanceRef, QueryRef,
-    RawReturn, RawReturnError, RawReturnRef, RelationRef, RelationUseContext, RelationUseRef,
-    RouteRef, ScopeRef, StateRef, SupportRef, TyIR, TypeArtifact, TypeRef,
+    ActualEvent, ApplicabilityRef, ArtifactKind, ArtifactRef, BackendRequest, BindingVersionRef,
+    BoundaryChart, BoundaryRef, DeterminationPresentationRef, DischargeMode, EventRef, FormulaRef,
+    GrainRef, HorizonRef, OpenQuery, OperatorRef, ProbeContractRef, ProbeOperator, ProvenanceRef,
+    QueryRef, RawReturn, RawReturnError, RawReturnRef, RelationRef, RelationUseContext,
+    RelationUseRef, RouteRef, ScopeRef, StateRef, SupportRef, SurfacePlan, TyIR, TypeArtifact,
+    TypeRef,
 };
 
 use super::*;
@@ -179,16 +180,64 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
         .expect("file-backed store must open");
     store.migrate().await.expect("migrations must apply");
     let event = event_fixture(&store, None, b"effect-backend").await;
-    let request = stored_ref(&store, b"rendered-backend-request").await;
+    let operator = store
+        .verify_probe_operator(event.operator())
+        .await
+        .expect("event operator must remain available");
+    let renderer_version = stored_ref(&store, b"renderer-version").await;
+    let rendered_body = stored_ref(&store, b"rendered-surface-body").await;
+    let plan = SurfacePlan::new(
+        event.operator(),
+        operator.query(),
+        operator.boundary(),
+        operator.active_view(),
+        operator.executable_code(),
+        operator.probe_contract(),
+        renderer_version,
+        rendered_body,
+    );
+    let plan_ref = ic_core::SurfacePlanRef::from_artifact_ref(
+        store
+            .insert_referencing(
+                &plan.envelope().expect("surface plan must encode"),
+                &plan.referenced_artifacts(),
+            )
+            .await
+            .expect("surface plan dependencies must exist"),
+    );
+    let request_body = stored_ref(&store, b"provider-request-body").await;
+    let backend_version = stored_ref(&store, b"provider-backend-version").await;
+    let request_value = BackendRequest::new(
+        event.operator(),
+        plan_ref,
+        operator.query(),
+        operator.boundary(),
+        operator.backend(),
+        operator.executable_code(),
+        operator.compiler_version(),
+        backend_version,
+        request_body,
+    );
+    let request = ic_core::BackendRequestRef::from_artifact_ref(
+        store
+            .insert_referencing(
+                &request_value
+                    .envelope()
+                    .expect("backend request must encode"),
+                &request_value.referenced_artifacts(),
+            )
+            .await
+            .expect("backend request dependencies must exist"),
+    );
     let token = DispatchToken::from_bytes([0xa1; 32]);
     let pending = store
-        .prepare_external_effect(token, request, event.operator(), None)
+        .prepare_backend_request(token, request, event.operator(), None)
         .await
         .expect("intent must be durable before dispatch");
     assert!(matches!(pending, ExternalEffectState::Pending { .. }));
     assert_eq!(
         store
-            .prepare_external_effect(token, request, event.operator(), None)
+            .prepare_backend_request(token, request, event.operator(), None)
             .await
             .expect("exact preparation must be idempotent"),
         pending
@@ -203,7 +252,7 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
     let other_token = DispatchToken::from_bytes([0xa2; 32]);
     assert!(matches!(
         store
-            .prepare_external_effect(other_token, request, event.operator(), None)
+            .prepare_backend_request(other_token, request, event.operator(), None)
             .await,
         Err(StoreError::ExternalEffectAlreadyPending(conflict)) if conflict == token
     ));

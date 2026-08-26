@@ -123,6 +123,15 @@ version, and bridge policy. `ProbeOperator` references that typed identity. This
 identity only: neither `SameContract`/`Bridge` comparability nor bridge-policy evaluation,
 request construction, rendering, dispatch, decoding, or actuality is implemented.
 
+The compiler/backend boundary now also has distinct canonical `SurfacePlan` and
+`BackendRequest` identities. A surface plan rechecks its exact operator and repeats the query,
+boundary, active view, executable code, and probe contract before adding renderer-version and
+rendered-body references. A backend request rechecks that plan/operator pair and repeats query,
+boundary, backend, executable code, and compiler version before adding backend-version and exact
+request-body references. Different bodies or versions therefore remain different requests, while
+borrowed operator fields reject. These artifacts are rendered/request data only: they do not
+dispatch, establish actuality, interpret a return, or warrant semantics.
+
 Phase 4 has begun with canonical `DeterminationPresentation` artifacts. A presentation records
 one distinction orientation, typed source, claim-local relational-web reference, binding, scope,
 applicability, grain, horizon, support, and optional predecessor presentation. It is neither a
@@ -232,7 +241,8 @@ probe, validate opaque state/boundary/operator contracts, decode the result, res
 or prove a semantic interpretation.
 
 The Phase 6 crash breaker now has a separate operational `external_effect_journal`, introduced by
-`0003_create_external_effect_journal.sql`. `prepare_external_effect` durably records an opaque
+`0003_create_external_effect_journal.sql`. The typed `prepare_backend_request` path rechecks a
+canonical surface-plan/backend-request/operator chain before durably recording an opaque
 idempotency token, already-stored request reference, verified compiled operator, and expected
 ledger parent before a caller may dispatch. A restart with an unresolved row reports `Pending`—an
 unknown outcome that is never safe to retry automatically. `complete_external_effect` accepts the

@@ -35,6 +35,13 @@ or standing mutation. A pointwise finite negation admission now requires an admi
 for every declared incidence, retains semantic and execution coverage separately, and exposes
 same-use fibers only over the fully matched finite set. Two independently admitted opposite sides
 now pass one seed/recovery/residual/`Gamma` vertical slice; a same-orientation second side rejects.
+The compiler/backend boundary now has distinct canonical `SurfacePlan` and `BackendRequest`
+identities. A surface plan rechecks the exact compiled operator and its query, boundary, active
+view, executable code, and probe contract before retaining renderer version and rendered-body
+identity. A backend request rechecks that plan/operator chain and its query, boundary, backend,
+executable code, and compiler version before retaining backend version and exact request-body
+identity. The store prepares an effect only through this checked request/operator correspondence.
+These identities do not render, dispatch, establish actuality, decode a return, or warrant meaning.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -52,15 +59,16 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-After the finite reciprocal semantic slice, event-to-runtime continuation bridge, and operational
-crash-safe preparation/completion journal, resolve the earliest typed dispatch gap:
+After the finite reciprocal semantic slice, event-to-runtime continuation bridge, typed backend
+request identity, and operational crash-safe preparation/completion journal, resolve the earliest
+actual dispatch gap:
 
-> Given a verified `ProbeSuspension`, canonical `ProbeOperator`, and the operational preparation
-> journal, what is the smallest typed, content-addressed `BackendRequest`/rendering boundary that
-> proves the prepared request was produced for that exact operator, question, boundary, backend,
-> code, and version before a mock provider can be dispatched? It must preserve the distinction
-> among surface plan, backend request, operator, preparation, actual return, event, and decoded
-> answer, and it must not add provider machinery beyond the decisive mock boundary.
+> Given a verified `ProbeSuspension`, checked `BackendRequest`, and durable preparation journal,
+> what is the smallest injected mock-provider coordinator that dispatches only a newly prepared
+> request, captures the returned bytes exactly once, completes the ordinary event before decode,
+> and then reaches the existing admitted-answer/resumption path? An already-pending token after a
+> restart must never auto-dispatch, and backend failure must remain distinct from undefined or
+> unknown semantic decoding.
 
 The protected difference is visible in the accepted sources:
 
@@ -112,14 +120,22 @@ The protected difference is visible in the accepted sources:
   dispatches the operator nor writes history, and a generated lowering is not self-warranting
   canonical identity.
 - `external_effect_journal` is the first crash-safe operational effect boundary. Preparation
-  requires an already-stored request artifact, a verified compiled operator, the current ledger
+  requires an already-stored and checked backend request for its exact compiled operator, the current ledger
   head, a unique opaque token, and no other unresolved single-writer preparation. An exact repeat
   is idempotent; a token rebound to different data rejects. Restart preserves pending state as
   unknown rather than evidence of no dispatch. Completion requires the same operator and parent,
   requires the event to name the supplied raw return, and commits raw artifact, event artifact,
   ledger edge, and completion link together. Restart verifies the completed event spine. The table
   is operational recovery state, not a canonical semantic attempt or second authoritative event
-  history; typed request-to-operator correspondence and actual provider execution remain open.
+  history; actual provider execution remains open.
+- `SurfacePlan` and `BackendRequest` supply the first typed compiler/backend request boundary.
+  Both are canonical, content-addressed, and non-actual. The plan repeats and rechecks the exact
+  operator's query, boundary, active view, executable code, and probe contract before adding its
+  renderer version and rendered body. The request repeats and rechecks that plan/operator chain's
+  query, boundary, backend, executable code, and compiler version before adding backend version
+  and exact request body. Borrowed fields, bodies, versions, plans, or operators reject, and the
+  typed store preparation path accepts only the exact checked chain. No renderer or provider has
+  yet run.
 - `match_decoded_observation_use` supplies the next derived structural boundary. It requires a
   preserved candidate from that decoded result and a declared relation use to rehash and agree
   exactly on query relation, complete named bindings, and the query's scope, applicability,
@@ -487,15 +503,16 @@ These are recorded now but do not outrank the Phase 4 determination boundary:
   exteriority. Recovery checks remain three-valued; a coverage-indexed constitutive
   characterization is a derived view, not an authoritative object or self-warranting
   horizon.
-- **Phase 6:** operational request-before-dispatch, unknown pending restart state, atomic raw/event
+- **Phase 6:** typed request-before-dispatch, unknown pending restart state, atomic raw/event
   completion, and file-backed recovery now pass. A typed semantic attempt boundary remains open;
   do not collapse the completed event into a proposed request or promote the recovery journal into
   semantic history. Next validate request, boundary, operator, state, route, backend, and provenance
   contracts and extend replay through admitted resolution and resumed state.
-- **Phase 10/12 method boundary:** register typed, law-carrying method contracts;
-  preserve raw actual returns; separate certified semantic non-discharge from backend
-  failure; and route typed residual handlers/reentry through first-order `IProg` without
-  a new runtime opcode.
+- **Phase 10/12 method boundary:** canonical method, surface-plan, and backend-request identities
+  now pass exact structural checks. Next inject the smallest mock provider after durable
+  preparation, preserve its raw actual return before interpretation, keep backend failure distinct
+  from semantic non-discharge, and route admitted handlers/reentry through first-order `IProg`
+  without a new runtime opcode.
 - **Phases 15-16 extension and approximation:** claim question-language monotonicity
   only for conservative extensions with an explicit old-question embedding, and retain
   directional approximation soundness plus extension-sensitive reopening.

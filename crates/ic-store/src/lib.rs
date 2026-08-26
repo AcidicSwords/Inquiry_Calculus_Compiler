@@ -8,9 +8,10 @@ use std::{collections::BTreeSet, str::FromStr};
 
 use ic_core::{
     ActualEvent, ActualEventCheckError, ActualEventError, ArtifactEnvelope, ArtifactError,
-    ArtifactRef, BoundaryChart, BoundaryChartError, BoundaryRef, EventRef, OpenQuery,
-    OpenQueryError, ProbeOperator, ProbeOperatorError, ProbeOperatorRef, QueryRef, RawReturn,
-    RawReturnError, RawReturnRef, check_event_context,
+    ArtifactRef, BackendBoundaryCatalog, BackendBoundaryCheckError, BackendBoundaryError,
+    BackendRequest, BackendRequestRef, BoundaryChart, BoundaryChartError, BoundaryRef, EventRef,
+    OpenQuery, OpenQueryError, ProbeOperator, ProbeOperatorError, ProbeOperatorRef, QueryRef,
+    RawReturn, RawReturnError, RawReturnRef, SurfacePlan, SurfacePlanRef, check_event_context,
 };
 use sqlx::{
     SqlitePool,
@@ -209,6 +210,25 @@ impl ArtifactStore {
             operator,
             ledger_parent,
         })
+    }
+
+    /// Typed preparation path for a checked backend request derived from the exact operator.
+    pub async fn prepare_backend_request(
+        &self,
+        token: DispatchToken,
+        request: BackendRequestRef,
+        operator: ProbeOperatorRef,
+        ledger_parent: Option<EventRef>,
+    ) -> Result<ExternalEffectState, StoreError> {
+        let request_value = self.verify_backend_request(request).await?;
+        if request_value.operator() != operator {
+            return Err(StoreError::BackendRequestOperatorMismatch {
+                request: request_value.operator(),
+                prepared: operator,
+            });
+        }
+        self.prepare_external_effect(token, request.as_artifact_ref(), operator, ledger_parent)
+            .await
     }
 
     /// Returns the operational recovery state for one dispatch token.
@@ -705,6 +725,56 @@ impl ArtifactStore {
         }
         Ok(operator_value)
     }
+
+    async fn verify_backend_request(
+        &self,
+        request: BackendRequestRef,
+    ) -> Result<BackendRequest, StoreError> {
+        let envelope = self.get(request.as_artifact_ref()).await?.ok_or(
+            StoreError::MissingReferencedArtifact(request.as_artifact_ref()),
+        )?;
+        let request_value = BackendRequest::from_envelope(&envelope)?;
+        let calculated = request_value.backend_request_ref()?;
+        if calculated != request {
+            return Err(StoreError::CorruptReference {
+                stored: request.as_artifact_ref(),
+                calculated: calculated.as_artifact_ref(),
+            });
+        }
+        let operator = self.verify_probe_operator(request_value.operator()).await?;
+        let plan_envelope = self
+            .get(request_value.surface_plan().as_artifact_ref())
+            .await?
+            .ok_or(StoreError::MissingReferencedArtifact(
+                request_value.surface_plan().as_artifact_ref(),
+            ))?;
+        let plan = SurfacePlan::from_envelope(&plan_envelope)?;
+        let resolved = ResolvedBackendBoundary {
+            operator_ref: request_value.operator(),
+            operator,
+            plan_ref: request_value.surface_plan(),
+            plan,
+        };
+        request_value.check(&resolved)?;
+        Ok(request_value)
+    }
+}
+
+struct ResolvedBackendBoundary {
+    operator_ref: ProbeOperatorRef,
+    operator: ProbeOperator,
+    plan_ref: SurfacePlanRef,
+    plan: SurfacePlan,
+}
+
+impl BackendBoundaryCatalog for ResolvedBackendBoundary {
+    fn resolve_probe_operator(&self, reference: ProbeOperatorRef) -> Option<ProbeOperator> {
+        (reference == self.operator_ref).then(|| self.operator.clone())
+    }
+
+    fn resolve_surface_plan(&self, reference: SurfacePlanRef) -> Option<SurfacePlan> {
+        (reference == self.plan_ref).then(|| self.plan.clone())
+    }
 }
 
 fn parse_artifact_ref(bytes: Vec<u8>) -> Result<ArtifactRef, StoreError> {
@@ -800,6 +870,12 @@ pub enum StoreError {
     #[error("open-query encoding failed")]
     OpenQuery(#[from] OpenQueryError),
 
+    #[error("backend boundary encoding failed")]
+    BackendBoundary(#[from] BackendBoundaryError),
+
+    #[error("backend boundary identity check failed")]
+    BackendBoundaryCheck(#[from] BackendBoundaryCheckError),
+
     #[error("expected artifact reference {expected}, but envelope calculated {calculated}")]
     ReferenceMismatch {
         expected: ArtifactRef,
@@ -868,5 +944,11 @@ pub enum StoreError {
     ExternalEffectRawReturnMismatch {
         event: RawReturnRef,
         supplied: RawReturnRef,
+    },
+
+    #[error("backend request names operator {request}, but preparation names {prepared}")]
+    BackendRequestOperatorMismatch {
+        request: ProbeOperatorRef,
+        prepared: ProbeOperatorRef,
     },
 }

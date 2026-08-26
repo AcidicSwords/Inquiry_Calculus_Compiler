@@ -4,6 +4,7 @@
 //! content identity. Individual modules state their phase and semantic limits explicitly.
 
 mod artifact;
+mod backend;
 mod boundary;
 mod bridge;
 mod claim;
@@ -44,6 +45,11 @@ mod ty;
 pub use artifact::{
     ARTIFACT_DOMAIN, ARTIFACT_WIRE_VERSION, ArtifactEnvelope, ArtifactError, ArtifactKind,
     ArtifactRef,
+};
+pub use backend::{
+    BACKEND_REQUEST_ARTIFACT_KIND, BACKEND_REQUEST_SCHEMA_VERSION, BackendBoundaryCatalog,
+    BackendBoundaryCheckError, BackendBoundaryError, BackendRequest, BackendRequestRef,
+    SURFACE_PLAN_ARTIFACT_KIND, SURFACE_PLAN_SCHEMA_VERSION, SurfacePlan, SurfacePlanRef,
 };
 pub use boundary::{
     BOUNDARY_CHART_ARTIFACT_KIND, BOUNDARY_CHART_SCHEMA_VERSION, BoundaryChart, BoundaryChartError,
