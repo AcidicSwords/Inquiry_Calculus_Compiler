@@ -51,13 +51,14 @@ until the governing authority is established; do not code through the conflict.
 
 When no narrower user task is active:
 
-> Advance the strongest live executable residual in `IMPLEMENTATION_FRONTIER.md` toward the
-> comprehensive plan's project completion contract.
+> Autonomously advance the strongest live residual in `IMPLEMENTATION_FRONTIER.md` toward the
+> plan's smallest complete, executable, cold-replayable v2.0 reference implementation. For each
+> ratchet: inspect actuality, construct the smallest decisive breaker, make the smallest reversible
+> change, verify, challenge, minimize, update project state, deliver when authorized, and recur.
+> Stop only at demonstrated completion or a lawful stop state.
 
-After every warranted ratchet, derive the next obligation from the actual residual and continue
-until the relevant completion contract is demonstrated or a lawful stop state is reached. A
-narrower user task supersedes the Frontier only for that task. When it closes, resume from the
-then-current Frontier unless the user changed or revoked the standing objective.
+A narrower user task temporarily supersedes the Frontier. Resume from the then-current Frontier
+when it closes unless the user changed or revoked this objective.
 
 `Ask` means discharge a typed question through its declared route. It does not mean ask the user
 by default. Ask the user only when repository sources, lawful probes, and standing authority
@@ -371,6 +372,55 @@ separately before claiming `F <=> C`. A green runner result is an occurrence, no
 boundary theorem. For a repair, test the changed reachability relation or an invariant excluding
 the admitted failure region, rather than only re-running the original sample. Promote discovered
 conditions into ordinary objects for variation, ablation, control, composition, and reopening.
+
+### Failure-formation testing specialization
+
+When a test concerns failure, treat it as a recursively constructed inquiry into how the failure
+forms, not merely a predicate expected to pass. Bind the investigation as:
+
+```text
+FailureFormation = (failure, succession, scope, horizon, grain, effectivity, binding)
+```
+
+Use only binding-supplied succession/reachability semantics. Never silently manufacture temporal
+or transitive closure. Preserve these distinctions:
+
+```text
+failure manifestation != failure formation
+CanFail != MustFail != manifested failure
+condition first appears != condition causes failure != condition is necessary
+path-local necessity != global necessity
+earliest demonstrated formation != absolutely earliest formation
+```
+
+For each proposed failure-forming edge `C -R-> D`, represent and discharge the productive or
+required questions for actual path support, guards/preconditions, bypass (`D without C`), escape
+(`C without D`), alternate routes, and independent grounding. A bypass witness defeats global
+necessity; an escape witness defeats sufficiency. One actual trace may support occurrence-local
+dependence but cannot establish a global path theorem without admitted route coverage.
+
+When grain and evidence allow it, retain a derived formation profile identifying when each
+surviving consequential condition first became actual and through which transition. Prefer the
+first protected divergence from a comparable acceptable occurrence over the usually trivial
+question of first failure reachability along an already failing trace. Derive a commitment frontier
+only when the binding supplies universal continuation semantics; otherwise it remains `Unknown`.
+
+Any failure-path family, formation profile, divergence/commitment frontier, escape set, coverage,
+and residual bundle is a rebuildable view over ordinary relations, questions, events, answers, and
+provenance. Do not add an authoritative failure graph, controller, opcode, history, or discharge
+mode. Recur through:
+
+```text
+BIND -> OPEN -> VARY -> RETURN -> DETERMINE -> REFACTOR
+```
+
+Before a test occurrence, bind its target relation, expected distinction, scope, applicability,
+grain, coverage claim, and evidence route, then seal the prediction. Interpret the return only at
+its demonstrated level: one failure witnesses realizability for that occurrence; an ablation that
+changes it witnesses occurrence-level relevance; a bypass witnesses non-necessity; and absence of
+a bypass licenses necessity only under independently admitted exhaustive coverage. Turn every
+surviving condition, relation, alternate path, and unknown region into an ordinary object available
+for subsequent inquiry, control, repair, folding, and reopening.
 
 `CONFORMANCE_STATUS.md` is the durable boundary ledger: a `PASS` row must name its executable
 breaker and state its protected difference and declared coverage/reopen condition. The control

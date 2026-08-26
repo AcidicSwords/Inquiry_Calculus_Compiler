@@ -3839,6 +3839,51 @@ repair fixture must establish the changed reachability relation or an excluding 
 only re-run a historical example. `CONFORMANCE_STATUS.md` records the resulting scope-limited
 claim, and its evidence name must resolve to an explicitly registered executable breaker.
 
+## 74.0 Derived failure-formation testing protocol
+
+Failure-oriented fixtures shall specialize the ordinary v2.0 inquiry program at implementation
+level; this adds no semantic primitive, question root, opcode, controller, discharge mode, or
+authoritative history. Bind each investigation by protected failure, binding-native succession,
+scope, horizon, grain, effectivity, and binding. Do not infer reachability or temporal closure when
+the binding does not supply it.
+
+Keep manifestation, formation, possibility, commitment, and necessity distinct. An actual failing
+trace demonstrates manifestation. `CanFail` requires existential reachability; `MustFail` requires
+universal continuation semantics. A condition's first actual occurrence is neither automatically a
+cause nor a necessity result. Occurrence-local dependence and global necessity require different
+coverage.
+
+For every proposed failure-forming step `C -R-> D`, fixtures shall challenge and ground, when
+productive or required:
+
+```text
+actual path support
+guard / precondition
+bypass: D without C
+escape: C without D
+alternate protected route
+independent evidence for R(C,D)
+```
+
+Where evidence permits, derive a coverage-indexed formation profile and the earliest protected
+divergence from a comparable acceptable trace. Derive a commitment frontier only under admitted
+universal continuation semantics. Missing alternate routes, separators, or predecessors remain
+`Unknown` outside exhaustive coverage.
+
+Failure-path families, formation profiles, divergence/commitment frontiers, escape sets, coverage,
+and residuals remain reconstructible views over ordinary relations, questions, occurrences,
+events, supported answers, and provenance. They shall not become a second `FailureGraph` history.
+The implementation recurrence is the transparent specialization:
+
+```text
+BIND -> OPEN -> VARY -> RETURN -> DETERMINE -> REFACTOR
+```
+
+Each surviving condition or relation becomes an ordinary represented inquiry object, allowing
+later variation, ablation, repair, control, folding, and reopening. A local testing inquiry may stop
+when its engineering horizon has a sufficiently supported formation account and every remaining
+consequential ambiguity is explicitly classified, but only `Satisfied` closes its declared task.
+
 ## 74.1 Determination and departure
 
 1. A source determination presentation is explicit and versioned.
