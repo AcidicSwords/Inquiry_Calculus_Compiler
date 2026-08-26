@@ -4050,6 +4050,64 @@ Question/negation-route policy is optimization only.
 
 Add vectors only after measured protected miss.
 
+## 86.6 Final post-research integration
+
+The research crawl closed at a local fixed point on 25 August 2026. Its final corpus is preserved
+under `research/final-2026-08-25/` and compacted for implementation by
+`PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md`. It is derived breaker and regression ancestry, not
+semantic authority, a competing plan, or a chronology to implement.
+
+Classify its surviving implementation pressure as follows:
+
+| Class | Forward consequence |
+|---|---|
+| `ALREADY_DEMONSTRATED` | Typed semantic kernel, finite departure and reciprocal slice, immutable artifacts/events, typed request-before-dispatch, exact backend-request checking, and one crash-safe injected provider call remain established by current tests. |
+| `CURRENT_FIXTURE` | Pass `RPL-001` through `RPL-005`, then close one cold-replayable `Ask -> actual return -> supported binding -> resumed continuation` cycle. |
+| `PHASE_LOCAL_CONSTRAINT` | Apply research breakers only at their responsible Phase 6--18 boundary: actuality, resolution, paired provenance, sufficient presents, provider separation, shared standing, transparent separator/method/fold/bridge compositions, conservative lift, and predecessor-judged revision. |
+| `FUTURE_OPTIMIZATION` | Learned routing, latent masks, vectors, parallelism, distribution, and other breadth remain Phase 19 experiments requiring measured protected gain. |
+| `SEMANTIC_REOPEN_CANDIDATE` | General transition authority and protected-erasure bindings require explicit semantic or binding authority before implementation. |
+| `REJECTED_OVERCLAIM` | Research names do not authorize new opcodes, semantic crash attempts, a universal parallel/composition operator, a memory database, an `M001..M066` hierarchy, separate authority/sixfold engines, or an immediate `ic-machine` crate. |
+
+The immediate cold-replay sequence is:
+
+```text
+completed effect token
+-> rechecked BackendRequest / ActualEvent / RawReturn after restart
+-> ResolutionPath / FiniteDecoder
+-> Decoded | Undefined | Unknown
+-> exact Probe observation support and least-fixed-point standing
+-> complete AdmittedFiniteAnswerSet
+-> reloaded source Ask and capture-safe binding
+-> regenerated ProgramIR / ProbeSuspension / ContinuationLowering
+-> admitted resumption
+-> next Ask or Return
+```
+
+No pre-crash derived object or provider redispatch may supply the replay. Regenerate lowering from
+accepted source/compiler identities and versions first. A persistable compile/replay recipe is
+authorized only if a fresh-process breaker proves that an exact mapping is otherwise unrecoverable.
+
+Later phase constraints are deliberately local:
+
+- Phase 8 preserves ledger order versus causal order, resume versus replay, and endpoint versus
+  event/path provenance.
+- Phase 9 derives question-conditioned sufficient presents without adding a second mutable memory;
+  consequence sufficiency, recursive update, recoverability, bounded active size, loss, and standing
+  remain distinct.
+- Phase 10 keeps question, surface plan, backend request, provider return, decoded answer, and
+  standing claim separate; an LLM remains a provider/generator and cannot self-warrant.
+- Phase 11 keeps one typed least-fixed-point standing engine; authority admission is an ordinary
+  typed standing problem, not a second authority subsystem.
+- Phases 12--16 compile transparent `OpenQuery`/`IProg` methods and supported residual-to-method
+  relations; method names are provenance, not dispatch, and no research macro becomes an opcode.
+- Phase 15 distinguishes inquiry-control composition from binding-native semantic composition; no
+  universal `Parallel` is introduced.
+- Phase 17 retains the conservative cross-binding lift already stated by this plan.
+- Phase 18 remains predecessor-judged and restart/reconstructive until accepted semantic authority
+  promotes a broader transition-authority rule.
+- Phase 19 alone hosts measured learned routing, vector, parallel, distributed, and latent-mask
+  experiments.
+
 ---
 
 # 87. Current relative fixed point

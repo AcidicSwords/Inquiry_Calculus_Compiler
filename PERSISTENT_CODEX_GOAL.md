@@ -20,7 +20,7 @@ Research-derived context and later-phase deltas are explained in:
 
 `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md`
 
-That handoff is a self-contained snapshot of a separate research process that is still running. Do not assume the underlying research documents or conversation are present in this repository. Do not wait for them. Use the checkpoint that exists, and let a later handoff revision reopen only the implementation questions it actually changes.
+That handoff is the final self-contained checkpoint of the research crawl closed for the 25 August 2026 integration. Its supporting corpus is present under `research/final-2026-08-25/`. Use it only as derived breaker, compression, and phase-local guidance; it is not a second implementation plan and cannot silently amend semantics.
 
 When a narrower user instruction is active, satisfy it first. Unless that instruction changes or revokes this standing goal, resume this program afterward.
 
@@ -75,14 +75,14 @@ Continue from the strongest current executable residual until this target is dem
 
 # 2. Current starting point
 
-The repository state used to seed this standing goal was verified directly on `main` at:
+The post-research implementation state used to reorient this standing goal was verified directly on `main` at:
 
 ```text
-27833d7771a35eaa2914869658c1079d9ea22f6e
-feat: resolve departure evidence support routes
+b7613699a06a9b2fc9b5c20e44020c5fbd15f1cd
+feat: execute prepared mock probes
 ```
 
-The CI run for that exact head passed formatting, workspace checking, Clippy with warnings denied, the full Rust test suite, and canonical TeX compilation. The workspace had **119 passing executable tests**. Treat those numbers as historical coordinates only; verify the current head and current gates every time this goal is resumed.
+The CI run for that exact head passed both the Rust and canonical-specification jobs. Treat this as a historical coordinate only; verify the current head and gates every time this goal is resumed.
 
 Already demonstrated at that checkpoint included:
 
@@ -111,9 +111,13 @@ finite binding bridges
 compression-licence identity
 typed method-contract registry boundary
 event-derived operator occurrences
+typed `SurfacePlan` and `BackendRequest` compiler boundaries
+durable request-before-dispatch with explicit dispatch authority
+one injected mock provider call with raw-return/event completion before exposure
 ```
 
-The latest ratchet at that checkpoint is important. A prior attempt to force one shared support identity across a determination presentation and all departure evidence uses was rejected by the implemented type structure. The accepted result keeps:
+The accepted support partition remains important. A determination presentation and the three
+departure evidence uses retain their exact, separately targeted support environments:
 
 ```text
 source DeterminationPresentation
@@ -130,24 +134,27 @@ incompatibility RelationUse
   -> its own relation-targeted SupportEnvironment
 ```
 
-Those four resolved routes are not yet the admission theorem. In particular, the relation-targeted evidence routes are not thereby standing, the relations are not thereby evaluated, and determination relevance / non-circularity / warrant are not thereby established.
+The finite implementation now joins those routes through positive event-linked departure admission,
+pointwise finite negation incidence, same-use fibers, recovery, seed/reorientation, and one derived
+reciprocal occurrence vertical slice. Those finite results remain route-relative and do not establish
+global coverage, warrant, reconciliation, or authoritative sixfold storage.
 
-The strongest executable gap at that checkpoint was therefore narrower than an undifferentiated “evidence to standing” gap:
+The strongest executable gap at the post-research checkpoint is cold replay:
 
 ```text
-resolved relation-targeted evidence support
--> independently discharged/closed positive evidence
--> standing incompatibility / observation support as required
--> determination relevance
--> support-ancestry non-circularity
--> admitted positive DepartureWitness
--> admitted NegationUse
--> positive exterior
--> same-use reciprocal return fiber
--> protected recovery
--> seed/reorientation
--> reciprocal second side
+completed durable provider event
+-> fresh-process event and raw-return reload
+-> finite decode with Decoded / Undefined / Unknown preserved
+-> exact supported-answer reconstruction without singleton forcing
+-> capture-safe source Ask binding
+-> deterministic source/runtime lowering regeneration
+-> admitted resumption
+-> next Ask or Return
 ```
+
+Pass `RPL-001` through `RPL-005` before adding a real provider or broader agent framework. Try
+deterministic lowering regeneration first; add a canonical replay recipe only if the fresh-process
+breaker proves that exact recovery cannot otherwise be performed.
 
 Do not assume this is still the frontier. On every invocation read `IMPLEMENTATION_FRONTIER.md`, `DECISIONS.jsonl`, `CONFORMANCE_STATUS.md`, the current code/tests, and Git actuality. If the frontier has advanced, continue from the strongest newly demonstrated residual rather than recreating an already settled bridge.
 

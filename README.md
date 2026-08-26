@@ -2,10 +2,12 @@
 
 This repository contains the Rust reference implementation of Inquiry Calculus v1.1,
 including the adopted **Successor Reciprocal-Boundary / Positive-Negation Edition**.
-The semantic authority has advanced. The executable implementation has verified structural
-increments through Phases 3--7 and a limited Phase 10 compiled-operator boundary; it is not a
-completed semantic runtime. The accepted and demonstrated boundary is recorded precisely in
-`CONFORMANCE_STATUS.md` and `IMPLEMENTATION_FRONTIER.md`.
+The semantic authority has advanced. The executable implementation now includes verified semantic
+increments across Phases 3--7, typed standing and reciprocal slices, crash-safe external-effect
+preparation, checked Phase 10 compiler/request boundaries, and one injected mock-provider
+actualization. Fresh-process semantic replay remains incomplete, so this is not yet a complete
+runtime. The accepted and demonstrated boundary is recorded precisely in `CONFORMANCE_STATUS.md`
+and `IMPLEMENTATION_FRONTIER.md`.
 
 ## Authority by question
 
@@ -19,7 +21,7 @@ priority list.
 | Architecture and phase order | `Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md` |
 | Standing autonomous implementation objective | `PERSISTENT_CODEX_GOAL.md`, constrained by standing semantics and architecture |
 | Strongest live implementation question | `IMPLEMENTATION_FRONTIER.md` |
-| Research-derived implementation guidance | `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md`, as a revisable checkpoint rather than semantic authority |
+| Final research-derived breakers and phase constraints | `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` and `research/final-2026-08-25/`, as derived ancestry rather than semantic authority |
 | Accepted local choices | `DECISIONS.jsonl` |
 | Repository actuality | Code, Git state, builds, tests, and tool returns |
 | Demonstrated conformance | Tests and `CONFORMANCE_STATUS.md` |
@@ -28,10 +30,29 @@ priority list.
 The repository uses three separate control documents. `AGENTS.md` compiles consequential
 work into an inspectable, answer-dependent inquiry program; `PERSISTENT_CODEX_GOAL.md`
 supplies the long-horizon autonomous objective; and
-`PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` carries self-contained, revisable research
-constraints into the live implementation frontier. A still-supported instruction is a cached
-answer, not a reason to reopen a settled question. The paired-actuality addition remains an
-explanatory, derived addition and does not introduce a second history ontology.
+`PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` compacts the closed final research corpus into
+phase-local constraints and breaker candidates. It is not a competing plan. A still-supported
+instruction is a cached answer, not a reason to reopen a settled question. The paired-actuality
+addition remains an explanatory, derived addition and does not introduce a second history ontology.
+
+## One forward implementation path
+
+The project deliberately separates one objective, one build map, and one moving cursor:
+
+```text
+PERSISTENT_CODEX_GOAL.md
+    -> why and how far autonomous implementation continues
+
+Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md
+    -> the single ordered implementation plan
+
+IMPLEMENTATION_FRONTIER.md
+    -> the strongest executable obligation at the current repository head
+```
+
+`CONFORMANCE_STATUS.md` records only demonstrated checks, and `DECISIONS.jsonl` records accepted
+local choices. The final research bundle supplies breakers when a live residual reaches the phase
+it constrains; its chronology is not replayed and its names are not an alternative architecture.
 
 The predecessor implementation plan and canonical specification remain retrievable at
 Git commit `49dc381ac230326aa28be6c157ece0d21a31eaa2` as ancestry and regression

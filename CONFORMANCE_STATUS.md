@@ -192,6 +192,20 @@ or passing.
 | Predecessor-judged self-revision | PENDING | Phase 18 |
 | Measured breadth and optimization only after semantic closure | PENDING | Phase 19 |
 
+## Post-research replay fixtures
+
+The final research corpus is derived breaker ancestry. Its adoption changes no executable status by
+itself. The immediate replay suite is therefore pending until demonstrated:
+
+| Fixture | Status | Required discriminator |
+|---|---|---|
+| RPL-001 completed effect reload | PENDING | A reopened file-backed store rechecks the exact request, event, and raw bytes without provider invocation. |
+| RPL-002 finite semantic answer replay | PENDING | Persisted identities reproduce `Decoded`, `Undefined`, or `Unknown`; decoded multi-completion answers retain every supported completion. |
+| RPL-003 source continuation replay | PENDING | A freshly decoded source `Ask` binds the complete answer set without pre-crash binding or answer-slot capture. |
+| RPL-004 runtime continuation replay | PENDING | Fresh deterministic lowering regenerates the exact operator, continuation, target, and admitted resumption, or witnesses the need for a minimal replay recipe. |
+| RPL-005 replay failure matrix | PENDING | Operational, actuality, decoding, support, source, capture, operator, continuation, and target failures remain distinct. |
+| CYCLE-001 cold-replayable inquiry cycle | PENDING | One `Ask -> provider return -> supported binding -> next Ask/Return` cycle replays after restart with zero redispatch. |
+
 All 70 successor reciprocal-boundary fixtures are pending. Every unaffected predecessor
 typing, compiler, actuality, history, standing, fold, binding, and self-revision fixture
 also remains required. The former independent-round-trip reciprocal fixture survives

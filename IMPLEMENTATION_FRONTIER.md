@@ -71,6 +71,22 @@ complete cold-replay gap:
 > values? Provider failure, decoder `Undefined`, decoder `Unknown`, unsupported answers, and
 > lowering mismatch must remain distinct residuals.
 
+This is the post-research `RPL-001` through `RPL-005` frontier:
+
+1. reload one completed effect, exact event, and exact raw return after a file-backed restart;
+2. reconstruct finite `Decoded | Undefined | Unknown` resolution and the complete supported answer;
+3. reload the exact source `Ask` and produce a fresh capture-safe answer binding;
+4. regenerate `ProgramIR`, `ProbeSuspension`, and `ContinuationLowering`, then derive the same
+   admitted resumption; and
+5. preserve distinct failure exits for provider failure, pending actuality, decode status, support
+   failure, source mismatch, capture, and lowering mismatches.
+
+The decisive ablation is whether the lowering remains exactly regenerable from accepted source,
+operator/compiler identities, and versions. Try regeneration first. Only a fresh-process failure to
+recover the exact mapping may authorize the smallest persistable compile/replay recipe. No provider
+call, pre-crash derived object, new runtime opcode, new table, or immediate `ic-machine` crate may
+stand in for replay.
+
 The protected difference is visible in the accepted sources:
 
 - `DeterminationPresentation` now has a canonical artifact identity for distinction, `X`/`Y`

@@ -65,9 +65,9 @@ A new user request may narrow or temporarily redirect the active task. When that
 
 ### `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` — research context and implementation deltas
 
-This file is a **self-contained checkpoint of what the separate, still-running research/domain-crawl recursion has established so far** and how those results bear on implementation. The implementation agent is not expected to possess the research conversation, its working ledgers, or its in-progress documents. Do not search for missing research files before using the handoff; everything currently required from research is restated there.
+This file is the **final self-contained checkpoint of the closed research/domain-crawl recursion for the 25 August 2026 handoff**. Its supporting corpus is present under `research/final-2026-08-25/`. Use the handoff first; consult only the relevant corpus material when a live implementation residual needs its breaker or ancestry.
 
-It is not independent semantic authority, and it is intentionally revisable as the separate research process advances.
+It is not independent semantic authority or a second implementation plan. The comprehensive implementation plan remains the single forward build map, and `IMPLEMENTATION_FRONTIER.md` remains its current executable cursor.
 
 Use it to distinguish:
 
@@ -80,7 +80,7 @@ Use it to distinguish:
 
 If this handoff conflicts with the canonical specification, the canonical specification governs meaning. If it conflicts with an accepted implementation decision in the decision's recorded scope, reopen the decision only through its recorded reopen condition or a newly witnessed protected breaker.
 
-A later handoff revision may supersede an earlier research conclusion without implying a semantic-authority change. Treat the changed research statement as a new candidate constraint: map it to the canonical calculus, locate the earliest implementation boundary it could affect, and require an executable breaker before changing accepted implementation behavior.
+Any future research revision is a new candidate constraint, not an automatic authority change. Map it to the canonical calculus, locate the earliest implementation boundary it could affect, and require an executable breaker before changing accepted implementation behavior.
 
 ### Default autonomous invocation
 

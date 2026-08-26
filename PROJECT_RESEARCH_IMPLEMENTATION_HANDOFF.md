@@ -1,445 +1,444 @@
 # PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md
 
-## Purpose
+## Status
 
-This file gives the implementation agent the research context it otherwise does not have.
+**FINAL RESEARCH-TO-IMPLEMENTATION HANDOFF — 25 August 2026**
 
-The research is being produced by a separate, still-running domain-crawling / recursive inquiry process. The implementation agent has **not** seen that research conversation, its working ledgers, or the documents being assembled there. This file therefore restates the implementation-relevant results directly. It has no prerequisite research files.
+The separate domain-crawl / recursive research program is now treated as **closed at a local research fixed point for this implementation handoff**.
 
-Treat this as a **research checkpoint**:
+This file supersedes the earlier repository handoff that described the research as “still running.” The five final research artifacts supplied with this handoff are now available as derived research ancestry and regression pressure.
 
-```text
-current research result
--> mapped into the canonical calculus
--> translated into implementation consequences / breakers
--> revised later if the continuing research produces a stronger result
-```
+This document does **not** amend Inquiry Calculus semantics.
 
-It is a handoff and implementation-delta document, not a new semantic authority and not a claim that the research process is finished.
-
-Use it together with the repository sources that actually exist:
+Authority remains indexed by question:
 
 ```text
-Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex
-Inquiry_Calculus_v1_1_Paired_Actuality_Spine_Addition.tex
-Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md
-IMPLEMENTATION_FRONTIER.md
-CONFORMANCE_STATUS.md
-DECISIONS.jsonl
-FAILURES.jsonl
-AGENTS.md
-PERSISTENT_CODEX_GOAL.md
+semantic meaning
+    -> Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex
+
+implementation architecture / phase obligations
+    -> Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md
+
+strongest live executable obligation
+    -> IMPLEMENTATION_FRONTIER.md
+
+implementation actuality
+    -> current Git/code/tests/migrations/tool returns
+
+accepted local choices
+    -> DECISIONS.jsonl
+
+demonstrated fixture coverage
+    -> CONFORMANCE_STATUS.md
+
+research-derived constraints / breakers / later-phase guidance
+    -> this handoff + research/final-2026-08-25/*
 ```
 
-When a later version of this handoff changes a research conclusion, do not treat that as an automatic semantic or implementation authority change. Determine what protected distinction changed, map it against the canonical calculus, and require the normal implementation breaker/check/warrant path before altering accepted behavior.
+If a final research document contains an older repository head, an older “current frontier,” or the historical filename `Inquiry_Calculus_Unified_Canonical_Specification_v1_1_REVISED_AGAIN.tex`, treat that detail as ancestry. The repository's current accepted file names, current `main`, `IMPLEMENTATION_FRONTIER.md`, accepted decisions, and executable returns govern those questions.
+
+Do not replay the research chronology. Compile its surviving distinctions into the current implementation only where they constrain an executable phase, fixture, or accepted architecture decision.
 
 ---
 
-# 1. Authority status
+# 1. Final research bundle and role of each file
 
-## 1.1 Current semantic authority
-
-The current forward semantic authority in the repository is:
+The final derived research corpus is:
 
 ```text
-Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex
-Successor Reciprocal-Boundary / Positive-Negation Edition
-25 August 2026
+research/final-2026-08-25/
+    REGENERATIVE_CONTEXT_LEDGER.md
+    REGENERATIVE_QUESTION_PROGRAM_NETWORK.md
+    M001_M066_REGENERATION_INDEX.md
+    COHESIVE_MACHINE_IMPLEMENTATION_MAP.md
+    SELF_MODIFICATION_DOMAIN_MAP.md
 ```
 
-The filename is retained for repository continuity; the document contents are the adopted successor edition. The paired actuality spine remains an accepted derived addition, not a second semantic history ontology.
+## 1.1 `REGENERATIVE_CONTEXT_LEDGER.md`
 
-It already integrates the successor reciprocal-boundary correction.
+Use as research ancestry, a protected-distinction ledger, breaker/reopening source, and reasoning-state regeneration aid.
 
-Core current semantics include:
+Do not treat it as semantic authority, a second implementation plan, a second database/history, or a guarantee that its embedded historical repository coordinates are still current.
+
+Its durable implementation value is primarily the retained laws:
 
 ```text
-relations as semantic substrate
-typed recursive forms/reification
-questions as partially bound typed relations
-answer-dependent Return | Ask source IProg
-Return | Branch | Probe runtime effects
-raw return != resolution != check != warrant != standing
-supported DeterminationPresentation
-positive determination-relative DepartureWitness
-coverage-indexed oriented NegationUse
-positive exterior through an admitted use
-same-use reverse-section return
-fiber-level protected recovery
-dependent reciprocal sixfold as derived view
-Gamma as downstream compatibility
-generic separator residuals
-representation/probe/binding extension
-append-only actuality
-least-fixed-point standing
-fold / recovery / reopening
-binding bridges
-predecessor-judged self-revision
+Conditional standing
+Aggressive countermodel search
+Maximal contrast -> subtraction
+CENTER -> CROSS -> RETURN -> DETERMINE -> RECENTER
+Unknown != Negative
+No self-warrant
+Objects are not transported across domain bridges
+History -> regeneratively sufficient checkpoint -> current inquiry
 ```
 
-The recent research has **not** produced evidence requiring a replacement semantic kernel.
+## 1.2 `REGENERATIVE_QUESTION_PROGRAM_NETWORK.md`
 
-## 1.2 Current implementation-facing authority
+Use as the final research compression of the domain catalogue into the existing question language.
 
-The current implementation architecture/order is:
+The important result is not “eight new question types.” The surviving architecture is:
 
 ```text
-Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md
+Q0 = typed open-role completion
 ```
 
-`IMPLEMENTATION_FRONTIER.md` controls which executable obligation is live now.
+with ordinary relation-contract refinements for separator/discriminator, variation/stress, grounding/support/authority, bridge/transport/commutation, repair/successor, compression/recovery/reopen, and native composition/local-to-global guarantee.
 
-## 1.3 Status of the separate research process
-
-The implementation agent should assume the research source material is **external to this checkout and still evolving**. The relevant streams currently include:
-
-```text
-regenerative context/history compression
-question-program compression and ablation
-perceptual-aperture / sufficient-present domain crawling
-frame-first relational discovery
-cross-domain correspondence and breaker construction
-method-network / residual-driven continuation
-self-application of the calculus to its own representation
-```
-
-The names of working research documents are not implementation dependencies. Do not block on locating them. This handoff is the current compiled interface from that research process into implementation.
-
-Research may produce:
-
-```text
-reasoning discipline usable immediately
-fixture-ready breaker
-architecture constraint
-compiled-macro candidate
-implementation-ready derived relation
-new open question
-retraction or weakening of an earlier research overclaim
-```
-
-None of those silently adds a constitutional primitive.
-
----
-
-# 2. Current repository state when this handoff was written
-
-This checkpoint was verified directly against repository `main` at:
-
-```text
-27833d7771a35eaa2914869658c1079d9ea22f6e
-feat: resolve departure evidence support routes
-```
-
-The corresponding CI run passed formatting, `cargo check`, Clippy with warnings denied, all workspace tests, and compilation of the canonical TeX. The test run contained **119 passing tests**.
-
-The implementation is structurally substantial but is not yet a complete semantic runtime. Implemented/demonstrated structure includes:
-
-```text
-canonical content-addressed artifacts and dependency checking
-binding-scoped types and typed forms
-formula and relation schemas / relation uses
-OpenQuery, completion candidate identity, first-order IProg
-Return | Branch | Probe structural runtime with suspension/resumption
-RawReturn and ordinary ActualEvent identity
-SQLite immutable artifact store and parent-linked event ledger with restart revalidation
-finite decoder + event-linked decode + decoded-observation-use matching
-ClaimArtifact and SupportEnvironmentArtifact
-least-fixed-point Standing and declared-support linkage
-DeterminationPresentation
-DepartureWitness structural checks
-claim-targeted determination support -> Standing association
-separate relation-targeted support resolution for source observation, candidate observation, incompatibility
-positive finite incompatibility/orientation checkers
-NegationUse / semantic coverage / tagged frontiers
-positive-negation query
-tagged exterior / incidence checks
-reverse return fiber / selected return / recovery checks
-seed reorientation / dependent sixfold / downstream Gamma
-separator problems, finite generator regimes, generated inquiry candidates
-exact factorization / family factorization
-finite cue-basis and resource-frontier checks
-finite binding bridges
-compression-licence canonical identity
-typed method-contract canonical identity
-operator occurrence derived from one ordinary event
-```
-
-The latest local reasoning ratchet is itself implementation evidence. The repository briefly attempted to require one shared support identity across a claim-targeted source presentation and relation-targeted evidence uses. The type structure exposed that as a false identification. The accepted sequence now preserves four distinct routes:
-
-```text
-DeterminationPresentation
-  -> exact claim-targeted SupportEnvironment
-  -> target Claim that may be required in declared Standing
-
-source observation RelationUse
-  -> exact relation-targeted SupportEnvironment
-
-candidate observation RelationUse
-  -> exact relation-targeted SupportEnvironment
-
-incompatibility RelationUse
-  -> exact relation-targeted SupportEnvironment
-```
-
-This resolves provenance/context identity for those routes. It does **not** evaluate the three evidence relations, close those support environments, make them standing, prove incompatibility relevance, prove support-ancestry non-circularity, create actuality, or confer warrant.
-
-The strongest live semantic implementation question at this checkpoint is therefore approximately:
-
-```text
-resolved evidence-support routes
--> independently discharged/closed positive evidence
--> standing evidence/incompatibility association required by the departure contract
--> determination relevance
--> support-ancestry non-circularity
--> admitted positive departure
-```
-
-Then close the first complete admitted reciprocal occurrence through the already-existing downstream structures.
-
-The research in this handoff does **not** justify skipping that vertical slice. It changes how the implementation agent perceives, searches, folds, and later composes the system; it does not convert future architecture into current semantic actuality.
-
----
-
-# 3. What the question-program recursion discovered
-
-The research began with a large catalogue of methods/distinctions and recursively compressed it.
-
-The main result is:
-
-```text
-the catalogue is provenance/regression ancestry;
-the active executable representation is a much smaller
-relation-schema / question-program network.
-```
-
-## 3.1 One source question language remains sufficient so far
-
-The research repeatedly tried to create new question species and then ablated them.
-
-The surviving normal form is still based on ordinary typed open relations and answer-dependent continuation:
-
-```text
-typed relation
-+ open ports / partial binding
-+ Ask(q, continuation)
-+ Return
-+ explicit discharge authority
-```
-
-No new universal scheduler/controller primitive was forced.
-
-## 3.2 Reusable relational contracts
-
-The research found useful reusable contract families:
-
-```text
-OpenRoleCompletion
-Separator / discriminator contract
-Variation / Stress contract
-Grounding / Support / Warrant contract
-Bridge / Transport / Commutation contract
-Residual Repair / Successor contract
-Compression / Recovery / Reopen licence
-Native Composition / local-to-global guarantee contract
-```
-
-Important: these are **ordinary reified relation schemas/contracts**, not new constitutional question constructors.
-
-A separator was successfully reduced to open-role completion over a discriminator-shaped relation plus its protected discharge contract.
-
-Other folds were rejected because their protected consequences differ:
-
-```text
-Stress != Separator
-Bridge != Stress
-Repair != Bridge
-Recovery != Repair
-Applicability != Grounding
-Inquiry orchestration != native semantic composition
-```
-
-## 3.3 Transparent compiled macros
-
-The research derived several useful recurrent macros:
+Transparent recurrent macros include:
 
 ```text
 Q_Recip
 ResolveIngress
 ResolveOpenWeb
-ResolveFrameFamily
 PrepareMethod
 ScrutinizeOccurrence
 RunMethodAgainstHole
-RefineFoldByQuestion
-ManageActiveAperture       [resource-policy level only]
 ```
 
-These macros are useful implementation targets **only as transparent compositions** of the existing calculus.
+These are library/program patterns over canonical typed relations and first-order `IProg`. They are **not** new runtime opcodes or semantic species.
 
-Do not add runtime opcodes named after them.
+The proposed opaque universal `InquiryCycle` was rejected. If transparent, it expands to ordinary `Ask(q, continuation) | Return`; if opaque, it only hides the method graph.
 
-A proposed universal `InquiryCycle` was ablated: when transparent it expands back into ordinary `IProg`; when opaque it merely hides the old controller.
+## 1.3 `M001_M066_REGENERATION_INDEX.md`
 
-## 3.4 Residual-generated method graph
+Use as a regression/breaker index, source of fixture candidates, source of “do not collapse X with Y” laws, and source of foreign-domain witnesses when a local abstraction is challenged.
 
-The method graph should not be a fixed scheduler.
+Do not create an `M001 ... M066` semantic enum/type hierarchy. The research result is the opposite: diverse domains continued to regenerate through the smaller existing network without requiring M067.
 
-The desired relation is:
+The index should increasingly become executable regression coverage around the relevant phase rather than active ontology.
+
+## 1.4 `COHESIVE_MACHINE_IMPLEMENTATION_MAP.md`
+
+Use as implementation-oriented research guidance.
+
+Important caution: it is chronological research. Some sections intentionally propose an architecture and later retract it after repository evidence. Always select the surviving relation using current repository actuality, not the latest-looking heading in isolation.
+
+Its strongest durable conclusion is:
 
 ```text
-method occurrence
--> typed semantic residual
--> question over residual
--> supported bridge/refinement
--> role filling for another method
--> applicability
--> native method discharge
+the repository is mainly missing verified vertical composition,
+not a larger taxonomy of semantic nouns.
 ```
 
-A matching input/output Rust type is not enough to establish method adjacency.
+## 1.5 `SELF_MODIFICATION_DOMAIN_MAP.md`
 
-Use scope, horizon, authority, approximation direction, comparator semantics, information timing, binding, and guarantee kind where consequential.
+Use primarily for Phase 18 and later self-revision fixtures.
 
-This strengthens the intended use of `MethodBridgeIR`.
+Major surviving distinctions include:
+
+```text
+SelfRegeneration != ImplementationIntegrity
+ColdReplayEquality != SemanticCorrectness
+SelfModifyingSearch != TrustedAcceptance
+CodeRevision != RuntimeStateMigration
+PolicyRevision != ProtectionRevision
+CredentialRecovery != AuthorityConstitution
+ValidOldConfiguration + ValidNewConfiguration != SafeTransition
+CausalSelfChange != SpecificationRootedAdaptation != WarrantedJudgeRevision
+```
+
+Several results are transparent implementations of existing support/bridge/revision machinery rather than new semantics.
+
+Where this document proposes transition authority broader than predecessor identity, see §11: that is a research pressure on the current canonical predecessor-judged rule and must not silently amend it.
 
 ---
 
-# 4. The perceptual-aperture result
+# 2. Repository coordinate used for this final handoff
 
-The research developed the general reasoning rhythm as a **perceptual aperture**.
-
-The idea is not to begin with an assumed object/method decomposition.
-
-Instead:
+This handoff was reconciled against repository `main` at:
 
 ```text
-FRAME
--> POSSIBLE OCCUPANTS
--> ACTUAL OCCUPANTS
--> ARRANGEMENT
--> TYPED RELATIONAL PATHS
--> CONSEQUENTIAL DISTINCTION
--> OBJECT-FREE RELATION
--> FOREIGN/NATIVE BINDING
--> METHOD HOLE
--> METHOD
--> BREAK
--> RETURN
--> FOLD
+b7613699a06a9b2fc9b5c20e44020c5fbd15f1cd
+feat: execute prepared mock probes
 ```
 
-For the implementation agent this is immediately usable as a software-engineering reasoning discipline.
+This is an observation coordinate only. Every future invocation must re-read current Git actuality and `IMPLEMENTATION_FRONTIER.md`.
 
-It is **not** currently a new semantic object in the calculus.
+At this coordinate, recent accepted ratchets are:
+
+```text
+57b27da  prove reciprocal occurrence vertical slice
+3dd7cef  admit finite supported answers
+38cfd2c  bind finite inquiry answers
+7eee9ee  resume admitted inquiry continuations
+0c55aff  journal external effect preparation
+35cc5e3  type backend request boundary
+2826371  distinguish effect dispatch authority
+b761369  execute prepared mock probes
+```
+
+The repository has moved beyond the older research and control-document seed at `27833d7`. Do not recreate already demonstrated bridges merely because a research section once described them as open.
 
 ---
 
-# 5. Frame discovery result
+# 3. What is already demonstrated and should move to ancestry
 
-The research attacked the assumption that the frame is supplied correctly.
-
-Result:
+The current code/test surface already demonstrates enough of the research that these are no longer future architecture proposals:
 
 ```text
-candidate frame discovery can be represented as higher-order
-open relation completion over reified presentations/bindings.
+typed forms / formulas / relations / RelationUse
+OpenQuery and canonical complete candidate identity
+first-order IProg with explicit environment and continuation
+Return | Branch | Probe runtime skeleton
+DeterminationPresentation
+positive finite departure admission
+pointwise finite NegationUse admission
+tagged exteriors / same-use return fibers
+finite protected recovery
+two-sided reciprocal occurrence + downstream Gamma
+Claim and relation subjects in one least-fixed-point Standing engine
+generic SeparatorProblem / finite generator-regime distinctions
+finite cue bases and nondominated frontier
+finite binding bridges
+CompressionLicense identity
+MethodContract identity
+OperatorOccurrence derived from ActualEvent
+finite supported-answer admission retaining a whole non-singleton set
+capture-safe binding of that set into one source Ask continuation
+explicit source-continuation -> runtime resume lowering
+canonical SurfacePlan and BackendRequest
+request-before-dispatch durable operational journal
+fresh dispatch authority != recovered pending state
+injected mock ProbeProvider
+opaque RawReturn + ActualEvent local completion before return to decoder
 ```
 
-No new `Frame` semantic primitive was forced.
-
-Multiple observationally adequate frames may remain protected-different.
-
-A causal-domain breaker established:
-
-```text
-observational frame equivalence
-!= interventional/protected frame equivalence
-```
-
-Therefore a frame family may need a separator/intervention before one frame is selected.
-
-### Implementation consequence
-
-When later runtime work must discover a frame:
-
-- do not make the initial frame an unquestionable caller boolean/object;
-- represent competing candidate relational presentations where needed;
-- use existing separator/stress/ground/bridge machinery;
-- do not add `FrameIR` until an actual representation breaker requires it.
-
-For the implementation agent's own reasoning, use frame discovery immediately as described in `PERSISTENT_CODEX_GOAL.md`.
+These facts should constrain future work, not be reimplemented under research-derived names.
 
 ---
 
-# 6. Object / arrangement result
+# 4. Current strongest implementation obligation
 
-The research adopted:
+At the observed head, the live obligation is the first complete **fresh-process cold replay of a committed actualized probe**.
 
-```text
-object <-> arrangement
-```
-
-as grain-relative, but then attacked the naive version.
-
-A hostile joint-state domain demonstrated:
+Target relation:
 
 ```text
-same component states
-does not imply
-same joint arrangement
+committed ActualizedProbe ancestry
+-> restart with no pre-crash in-memory values
+-> recover exact BackendRequest / ProbeOperator / event / RawReturn
+-> rerun exact finite resolution
+-> reconstruct the exact supported answer set
+-> reconstruct capture-safe source answer binding
+-> reconstruct/verify the source-continuation -> runtime-target lowering
+-> produce the same AdmittedResumption
 ```
 
-Therefore unfolding an object into a list of components is insufficient whenever protected external behavior depends on joint/contextual relations.
-
-### Implementation consequence
-
-Do not encode grain refinement as:
+Required non-collapses:
 
 ```text
-object -> bag/list of parts
+provider failure
+!= decoder Undefined
+!= decoder Unknown
+!= unsupported decoded candidate
+!= support/warrant gap
+!= source-binding failure
+!= lowering mismatch
 ```
 
-unless the binding proves that decomposition sufficient.
+A completed or recovered preparation must never imply permission to dispatch again.
 
-A lawful grain bridge must preserve:
-
-```text
-occupants
-+ consequential joint relations
-+ composition/dependency structure
-+ external protected continuations
-```
-
-The current recursive-form/reification and binding machinery appears sufficient; no new object ontology is required.
+This should be the next coding center unless the repository frontier has advanced before this handoff is consumed.
 
 ---
 
-# 7. The sufficient-present result
+# 5. The next fixture sequence
 
-The research formalized the user's intended temporal/perceptual model:
+## RPL-001 — completed external effect reconstructs raw actuality after restart
+
+1. Complete one mock provider effect.
+2. Close the store/process.
+3. Reopen from the file-backed database.
+4. Load the completed external-effect state by token.
+5. Recover the exact `EventRef`.
+6. Recheck and load the exact `ActualEvent`.
+7. Recheck and load its exact `RawReturn`.
+
+No provider invocation is allowed during replay.
+
+## RPL-002 — committed event replays finite semantic answer
+
+From only persisted/canonical identities:
 
 ```text
-history grows linearly;
-the present carries the consequences of that history as state;
-questions selectively reopen historical distinctions when they become consequential.
+EventRef
+-> ActualEvent
+-> RawReturn
+-> ResolutionPath / FiniteDecoder
+-> ActualDecodeResult
+-> DecodedObservationUse(s)
+-> standing relation support
+-> AdmittedFiniteAnswerSet
 ```
 
-The early strong claim that the active present could always stay strictly bounded was broken.
+The exact multi-completion set must be preserved.
 
-The surviving decomposition is:
+## RPL-003 — replay reconstructs the source continuation boundary
+
+Reconstruct:
 
 ```text
-1. Protected semantic sufficiency
-2. Recursive state update
-3. Regenerative ancestry/recovery
-4. Resource/aperture policy
+source IProg Ask
++ exact question
++ explicit source environment
++ answer slot
++ admitted finite answer set
+-> BoundFiniteAskContinuation
 ```
 
-These must remain distinct.
+No pre-crash bound object may be reused.
 
-## 7.1 Protected distinctions
+## RPL-004 — replay reconstructs the runtime continuation boundary
 
-Preserve:
+Attempt deterministic fresh reconstruction of:
+
+```text
+ProgramIR
+ProbeSuspension
+ContinuationLowering
+```
+
+from accepted source/compiler artifacts and versions.
+
+Then require:
+
+```text
+bound continuation source == lowering source
+suspension operator == admitted answer operator
+suspension resume target == lowering target
+```
+
+and derive the same `AdmittedResumption`.
+
+### Critical ablation question
+
+Current `ContinuationLowering` is deliberately derived and noncanonical. Its recorded reopen condition is now live:
+
+```text
+Does cold replay require a canonical or persisted source-to-runtime
+lowering/compile recipe, or can the same mapping be deterministically
+regenerated from source IProg + compiler version + checked artifacts?
+```
+
+Try regeneration first.
+
+Only add persisted lowering/compile identity if the fresh-process fixture proves it cannot otherwise be recovered exactly.
+
+## RPL-005 — replay failure matrix
+
+Lock distinct exits for:
+
+```text
+provider failed before durable completion
+pending/unknown actuality after crash
+decoder Undefined
+decoder Unknown
+unsupported completion
+support route no longer closes
+source Ask/question mismatch
+answer-slot capture
+operator mismatch
+continuation mismatch
+resume-target mismatch
+```
+
+Do not normalize these to `false`, “no answer,” or one generic runtime error.
+
+---
+
+# 6. First decisive post-research milestone
+
+After RPL-001..005, build the first genuinely end-to-end question/actuality/continuation cycle:
+
+```text
+typed open relation
+-> source Ask
+-> compile ProbeOperator
+-> SurfacePlan
+-> BackendRequest
+-> durable request intent
+-> actual provider call
+-> RawReturn
+-> ActualEvent
+-> resolution/decode
+-> supported answer set
+-> capture-safe source binding
+-> verified continuation lowering
+-> admitted runtime resumption
+-> next Ask or Return
+```
+
+This is the first executable proof of the project's central programming-language thesis:
+
+```text
+QUESTION
+-> ACTUAL RETURN
+-> ANSWER-CONDITIONED QUESTION
+```
+
+rather than:
+
+```text
+instruction
+-> model output
+-> next hard-coded instruction
+```
+
+Do not jump to a sophisticated autonomous LLM agent before this cycle is cold-replayable.
+
+---
+
+# 7. Phase-local research integration map
+
+Research should be woven through the existing implementation plan at the earliest phase where it changes an executable obligation. Do not append another parallel phase system.
+
+## Phase 6 — persistence / actuality
+
+Integrate now:
+
+```text
+Prepared/recovery state != ActualEvent
+ExactlyOneCommittedEvent != ExactlyOneExternalEffect
+No durable response after dispatch window != proof no effect occurred
+Recovered pending != fresh dispatch authority
+Idempotent retry is binding/provider supplied
+RawReturn + ActualEvent local completion precedes decode
+journal order is storage integrity, not universal causal order
+```
+
+Current repository has already implemented most of this. Remaining work: full fresh-process suffix replay and explicit unresolved-actuality behavior.
+
+Do not add a semantic `Attempt` merely to name operational recovery state.
+
+## Phase 7 — resolution / general fibers
+
+Near-term:
+
+- generalize beyond the current exact finite decoder only when a fixture requires it;
+- preserve `Decoded != Undefined != Unknown`;
+- preserve partial answer sets;
+- retain resolution-path provenance;
+- keep `ResolveIngress` as a transparent implementation pattern, not an opcode.
+
+## Phase 8 — paired actuality
+
+Integrate research distinctions:
+
+```text
+recorded ledger order != native causal order
+resume != replay
+same endpoint != same event/path provenance
+question trace and return trace are derived views over one authoritative actuality spine
+```
+
+For concurrent bindings, a sufficient present may be a causally consistent cut rather than a journal prefix. Keep the ledger linear if convenient; carry causal order in explicit binding relations.
+
+## Phase 9 — active views / regenerative memory
+
+Implement a derived question-conditioned sufficient-present view, not a second mutable semantic memory.
+
+Protect:
 
 ```text
 ConsequenceSufficiency
@@ -447,1123 +446,567 @@ ConsequenceSufficiency
 != RegenerativeRecoverability
 != BoundedActiveSize
 
-ExactSufficientPresentExistsAbstractly
-does not imply
-FiniteOrBoundedPresentExists
-
-PresentDeterminesQuery
-!= ArchiveCanRecoverQuery
-
-SemanticallyDetermined
-!= ExecutablyRewritable
-```
-
-A Myhill–Nerode/predictive-state-style breaker shows that exact continuation equivalence may have unbounded/infinite index.
-
-Therefore the safe target is:
-
-```text
-active size tracks irreducible protected width, not raw history length alone
-```
-
-not:
-
-```text
-active state is always constant-size
-```
-
-## 7.2 RegenerativeInformationState
-
-The research derived a useful **contract**, not primitive:
-
-```text
-RegenerativeInformationState
-=
-protected consequence sufficiency
-+ recursive successor update
-+ regenerative recovery/reacquisition
-+ unlock/reopening
-+ explicit resource complexity if boundedness is claimed
-```
-
-If implemented later, compile this through existing folds, active views, recovery, event history, and question programs.
-
-Do not create a constitutional `RegenerativeInformationStateIR` merely because the concept is useful.
-
----
-
-# 8. Path dependence and state
-
-A hysteresis/state-machine crawl established:
-
-```text
-same visible present
-does not imply
-same dynamical state
-```
-
-but also:
-
-```text
-path dependence
-does not imply
-full raw history must remain active
-```
-
-The correct implementation question is:
-
-```text
-Does there exist a recursively updateable state representation
-that retains exactly the historically consequential distinction?
-```
-
-A question that separates two histories currently folded to one state creates representation pressure:
-
-```text
-same current state representation
-+ different protected answer
--> state/fold separator
--> reopen/reacquire missing ancestry
--> refine state
--> verify recursive update
--> refold
-```
-
-This is a direct later-phase application of `RefineFoldByQuestion`.
-
----
-
-# 9. Regenerative fiber refinement result
-
-For a fold/representation `c` and question/discriminator `q`, the research derived the exact deterministic special case:
-
-```text
-q adds no needed discrimination
-iff
-q factors through c
-iff
-q is constant on every c-fiber
-```
-
-A productive question supplies a witness:
-
-```text
-c(x) = c(y)
-but
-protected_q(x) != protected_q(y)
-```
-
-Then only the semantically implicated fold class must be refined.
-
-However:
-
-```text
-semantic localization
-!= provenance/recovery localization
-```
-
-Knowing which equivalence class is too coarse does not prove that stored ancestry can reconstruct only the minimal implicated historical region.
-
-### Implementation consequence
-
-Later Phase 16 should support:
-
-```text
-question-conditioned fold test
--> separator
--> unlock
--> semantic class localization
--> recovery/provenance lookup
--> reopen supported ancestry
--> refine representation
--> regression-test old protected capabilities
--> successor fold licence
-```
-
-If minimal historical reopening cannot be justified, use an explicit recovery/provenance localization residual and reopen a larger safe recoverable region.
-
-Do not claim minimal reopening without evidence.
-
----
-
-# 10. Recovery-resource result
-
-The research attacked the assumption that recoverability implies cheap local retrieval.
-
-Result:
-
-```text
 ExactRecoverability
 != CheapLocalRecoverability
 
-SmallestSemanticResidue
-!= CheapestRecoveryRoute
+Active
+!= FoldedButRegenerable
+!= Lost
+!= Standing
 ```
 
-Coding/data-structure lower-bound domains supplied the breaker.
-
-### Implementation consequence
-
-Semantic fold/recovery correctness must not be mixed with performance policy.
-
-If later implementation promises local/cheap reopening, add an explicit resource contract and measure it.
-
-A semantically correct fold can remain expensive to reopen.
-
----
-
-# 11. Active aperture / cache result
-
-Paging/online-algorithm analysis supplied another breaker:
+The exact target is protected continuation equivalence:
 
 ```text
-SemanticallySufficientPresent
-!= FutureRecoveryCostOptimalAperture
+h1 ~ h2
+iff
+every currently protected continuation gives the same protected observation
 ```
 
-A bounded active context may thrash under adversarial or unexpected future question sequences.
+A new protected continuation that separates an old class is an unlock/reopen witness.
 
-The research derived:
+Do not claim universal constant-size exact memory.
+
+`RegenerativeInformationState` is a conformance target / derived state contract, not a required semantic primitive.
+
+## Phase 10 — LLM/backend compiler
+
+Use an LLM as a `ProbeProvider` / generator behind the existing semantic boundary.
+
+Keep:
 
 ```text
-ManageActiveAperture
+semantic question
+!= SurfacePlan
+!= BackendRequest
+!= provider raw response
+!= decoded answer
+!= standing claim
 ```
 
-as a **resource-policy macro only**, over:
+Renderer/provider fixtures must ensure natural language does not silently strengthen cardinality, completeness, semantic coverage, execution coverage, applicability, authority, certainty, or exclusivity.
+
+The LLM may generate multiple candidates, questions, representations, counterexamples, or methods. It may not promote its own output.
+
+The “question over instruction” thesis should first be tested here as executable behavior, not added to core as a slogan-specific type.
+
+## Phase 11 — standing / support admission
+
+Keep the one shared least-fixed-point standing engine over typed subjects.
+
+Do not create a separate authority-standing engine.
+
+Research supports:
 
 ```text
-fold/reopen licences
-current/live dependencies
-recovery cost
-active capacity
-binding-supplied request model or competitive objective
+authority constitution at calculus level
+= ordinary standing/admission of an authority-typed relation
 ```
 
-### Implementation consequence
+while the binding supplies what `Authorizes(...)` means.
 
-Phase 9 active memory may aim for an economical active window, but:
-
-- do not make active cache policy semantic authority;
-- do not claim global future-optimal retrieval without a future/request model;
-- distinguish semantic sufficiency from resource optimality;
-- permit nondominated/competitive policies when the future is unknown.
-
-Do not build this optimization before measured need.
-
----
-
-# 12. Domain selection result
-
-The research originally selected domains manually, then folded domain selection itself.
-
-The surviving relation is roughly:
+Occurrence-local validation is a method:
 
 ```text
-? domain, method, bridge [
-    method is native to domain
-    and
-    method can address current residual through a lawful bridge
-]
+untrusted/mutable producer
+-> candidate artifact
+-> independently admitted checker/certificate
+-> admitted occurrence/result
 ```
 
-Therefore:
+not global producer trust.
+
+## Phases 12–14 — separator / residual / representation growth
+
+This is where the final question-program network should become executable.
+
+Implement as transparent macros/contracts over existing `OpenQuery` + `IProg`, for example:
 
 ```text
-domain similarity
-!= discriminatory method leverage
+ResolveOpenWeb
+ContractAttack
+ResidualApplicabilityLink
 ```
 
-A domain should be selected because its native method can distinguish a current residual, not merely because its vocabulary looks similar.
-
-### Implementation consequence
-
-This is research-agent control logic, not a required runtime subsystem now.
-
-The implementation-side analogue is simply:
+Do not add:
 
 ```text
-choose the native software method that most directly constrains the live hole
+InquiryCycle opcode
+ResolveOpenWeb opcode
+ResolveIngress opcode
+universal scheduler
+method-name driven dispatch
 ```
 
-as encoded in `PERSISTENT_CODEX_GOAL.md`.
+A residual-to-method edge is itself a supported relation:
 
----
+```text
+residual
+-> method requirement web
+-> bridge/refinement
+-> applicability
+```
 
-# 13. Native composition result
+Type compatibility alone is insufficient.
 
-A hostile concurrency crawl broke the idea that answer-dependent `IProg` bind itself supplies every composition law.
+Make the LLM “irritating with itself” here operationally:
 
-Preserve:
+```text
+candidate
+-> sufficiency breaker
+-> necessity breaker
+-> maximal contrast
+-> subtract
+-> separator
+-> residual
+-> repair
+```
+
+but route those operations through typed questions and declared coverage rather than one prose “critic” pass.
+
+## Phase 15 — bridges / composition
+
+Preserve the major research correction:
 
 ```text
 InquiryOrchestrationComposition
 != NativeSemanticComposition
 ```
 
-The surviving parent contract is:
+`Ask/Return` composes inquiry control.
+
+A binding supplies native semantic composition when protected: sequential, parallel/concurrent, resource-sensitive, feedback/circular with a closure theorem, causal/independence-sensitive, transactional, or another native law.
+
+Do not add a universal `Parallel` opcode.
+
+A bridge requires typed role correspondence and protected commuting consequence, not merely similar outcomes.
+
+## Phase 16 — methods / folds / learning
+
+The existing `MethodContract` and `CompressionLicense` are already the correct structural boundaries. Implement their evaluation rather than replacing their shapes.
+
+Method learning target:
 
 ```text
-local component guarantees
-+ explicit interface/wiring/dependency relation
-+ binding-supplied native composition law
-+ local-to-global preservation/closure theorem
--> global protected guarantee
+recurrent checked inquiry path
+-> transparent compiled IProg/method
+-> preserved applicability
+-> guarantee
+-> failure exits
+-> provenance
+-> reopening
 ```
 
-This covers refinements such as:
+A method name is provenance, not dispatch semantics.
+
+Compression target:
 
 ```text
-sequential
-true concurrent/independence-sensitive
-feedback/circular
-resource-sensitive
-transactional
-other binding-native composition
+protected factorization
++ continuation descent
++ recovery/reacquisition
++ provenance/residual
++ unlock
++ admitted evidence
 ```
 
-without flattening them.
+The M001–M066 index is especially useful here as an ablation/regression suite.
 
-### Implementation consequence
+## Phase 17 — cross-binding standing lift
 
-Do not add a universal semantic `Parallel`/`Feedback` merely for orchestration.
+Keep the implementation plan's conservative rule unless a stronger theorem is separately promoted:
 
-When a protected feature needs concurrency/resource/feedback semantics, require the binding/native method to supply and check the actual law.
+```text
+transport only at old scope/applicability/grain/horizon
+reuse unaffected evidence
+open liabilities for new distinctions
+recompute before broader promotion
+```
+
+## Phase 18 — self-revision
+
+Implement only after the earlier machine is replayable.
+
+Default operational pattern:
+
+```text
+accepted V_t
+-> reify residual
+-> construct candidate successor separately
+-> build
+-> predecessor/current-authority checks
+-> independent occurrence-local validation where available
+-> accept/reject
+-> immutable accepted successor
+-> restart/reconstruct from authoritative ancestry
+-> protected regression
+```
+
+Prefer restart/reconstruction over live in-place replacement until availability itself becomes protected.
+
+Research-derived self-modification macros such as `GovernedJudgeMigration`, `TransitionAuthorityRoute`, `OccurrenceLocalValidation`, and `RebuildDerivedMachineState` remain transparent compositions / fixture families.
+
+See §11 before generalizing predecessor authority.
+
+## Phase 19 — measured breadth only
+
+Keep deferred until executable evidence requires it:
+
+```text
+learned question policy
+fair open-ended generation
+parallel semantic scheduling
+vector retrieval
+distributed effects
+routing/activation optimization
+large-scale latent routing masks
+```
+
+The long-run idea of a rearrangeable relational routing mask over an LLM's latent capacity belongs here as an experimental backend/learning architecture unless an earlier executable breaker forces representation in the core.
+
+Do not prematurely turn attention/routing into a semantic primitive.
 
 ---
 
-# 14. Fairness / liveness result
+# 8. What the final research says NOT to add
 
-The later hostile crawl into distributed/asynchronous systems sharpened another distinction:
-
-```text
-ProgramTransitionStructure
-!= ExecutionFairness/Coverage
-```
-
-Representing lawful local transitions does not establish a liveness theorem.
-
-Likewise:
-
-```text
-representable protocol
-+ locally admissible steps
-does not imply
-guaranteed global progress
-```
-
-without the required execution/fairness/fault assumptions.
-
-### Implementation consequence
-
-Keep execution/fairness/resource assumptions explicit in any future method/composition contract whose guarantee is liveness-like.
-
-Do not infer runtime liveness from `IProg` structure alone.
-
-This is a binding-supplied native discipline, not a new inquiry primitive.
-
----
-
-# 15. Intensional/resource-sensitive method result
-
-The research later attacked extensional method equivalence using proof complexity / resource behavior.
-
-The important surviving pressure is:
-
-```text
-same extensional input-output/correctness relation
-does not necessarily imply
-same protected complexity/proof-size/resource consequence
-```
-
-The current calculus can represent this using reified procedure/method structure plus binding-supplied cost/effectivity relations; no procedural semantic primitive has yet been forced.
-
-### Implementation consequence
-
-When method cost/resource behavior is protected:
-
-- do not fold methods merely because extensional semantic outputs agree;
-- include the protected cost/effectivity signature in the fold horizon;
-- preserve method provenance/derivation when resource consequences depend on it.
-
-This strengthens existing:
-
-```text
-MethodContractIR.cost
-extension_domain
-coverage
-provenance
-fold licence
-```
-
-rather than replacing them.
-
----
-
-# 16. What the ledger changes
-
-The Regenerative Context Ledger is not just a summary.
-
-Its main implementation lesson is:
-
-```text
-history
--> regeneratively sufficient checkpoint
--> active inquiry
-```
-
-rather than:
-
-```text
-history
--> lossy narrative summary
-```
-
-The ledger retains for protected conclusions:
-
-```text
-question that generated the conclusion
-support/authority route
-strongest breakers
-dependencies
-reopening conditions
-regeneration route
-```
-
-### Implementation-agent use now
-
-For development work, the repository already has appropriate authoritative ancestry:
-
-```text
-Git
-DECISIONS.jsonl
-FAILURES.jsonl
-tests
-conformance
-current code
-```
-
-Use:
-
-```text
-IMPLEMENTATION_FRONTIER.md
-CONFORMANCE_STATUS.md
-applicable decisions/failures
-relevant code/tests
-```
-
-as the active development checkpoint.
-
-Do **not** add a second authoritative “research ledger” database to the implementation repository just because the research agent uses one.
-
-### Runtime use later
-
-The ledger strengthens Phase 9/16 requirements:
-
-```text
-Retained != Accessible != Active != Standing
-Folded != Lost
-active view is derived
-authoritative event history remains append-only
-folds retain recovery/reacquisition/unlock
-new question may reopen old fold
-```
-
-These are already largely compatible with Revised Again.
-
----
-
-# 17. What Revised Again already contains that supports the new work
-
-The recent research should not be treated as an alien architecture grafted onto the calculus.
-
-Revised Again already contains key enabling structure:
-
-```text
-recursive form closure / grain-relative opaque forms
-active question-conditioned views
-occlusion and unlock
-residual question generation
-answer-dependent IProg
-dependent reciprocal program
-factorization/determination
-regenerative sufficiency
-method/operator-path folding
-append-only actuality
-recovery/reopening contracts
-```
-
-Therefore the current implementation strategy is:
-
-```text
-compile new research insights through existing structures first;
-add a new primitive only after a protected breaker shows the existing
-calculus cannot regenerate the required behavior.
-```
-
----
-
-# 18. Implementation-plan deltas
-
-The following are the concrete changes/reinterpretations to carry into future implementation work.
-
-## 18.1 NOW — current reciprocal admission frontier
-
-Do not restart the older undifferentiated “support to standing” problem. The repository has already established the following structural links:
-
-```text
-source presentation
--> exact claim-targeted support environment
--> target claim in a declared least-fixed-point Standing result
-
-source observation use
--> exact relation-targeted support environment
-
-candidate observation use
--> exact relation-targeted support environment
-
-incompatibility use
--> exact relation-targeted support environment
-```
-
-The immediate priority is to determine the **smallest additional admission relation** that can lawfully move from those resolved routes to a positive departure without converting declarations into evidence. The live obligations include, as required by the canonical contract:
-
-```text
-actual/derived positive observation occurrence provenance
-independent support closure / checker discharge
-standing incompatibility rather than merely named incompatibility support
-determination-web relevance
-non-circular support ancestry
-positive departure admission
-```
-
-The next complete milestone is not another record type. It is an end-to-end executable theorem/path in which a departure is admitted because every required relation closes under explicit evidence and checks.
-
-Once that boundary closes, immediately exercise the existing downstream reciprocal machinery as one vertical slice:
-
-```text
-standing determination
--> admitted departure
--> admitted/usable NegationUse incidence
--> tagged positive exterior
--> same-use return fiber
--> protected recovery
--> seed/reorientation
--> reciprocal second-side departure/exterior/return/recovery
--> residual and downstream Gamma
-```
-
-Use the perceptual aperture to localize the missing relation and to generate breakers. Do not create `Frame`, `Aperture`, `ReciprocalCycle`, `SupportAdmission`, or other new opcodes merely to name the workflow. Prefer transparent composition of existing typed relations, support records, checkers, and `IProg` unless a breaker proves insufficiency.
-
-## 18.2 Phase 7 — resolution
-
-Research-derived target:
-
-```text
-ResolveIngress(question, ingress, explicit_resolution_path, horizon)
-```
-
-This is a candidate shared lower resolver for:
-
-```text
-represented completion fields
-actual raw event returns
-```
-
-while preserving:
-
-```text
-represented possibility
-!= actual ingress
-!= decoding
-!= checking
-!= warrant
-```
-
-Implement only if/when it reduces actual duplication and its transparent expansion is clear.
-
-## 18.3 Phase 8 — paired actuality/reconstruction
-
-Add pressure for:
-
-```text
-reciprocal replay
-history-sensitive reconstruction
-traceable reason for answer drift
-```
-
-If an old question regenerated from accepted ancestry gives a protected-different answer, require a traceable intervening distinction or classify unresolved drift/reopen the relevant fold.
-
-## 18.4 Phase 9 — active views and recurrent memory
-
-Interpret `ActiveView` / `CrawlState` as part of the sufficient-present architecture.
-
-The active state should be:
-
-```text
-current semantic present
-+ current frame/binding
-+ current question/residual
-+ live relational dependencies
-+ relevant reopening/recovery pointers
-```
-
-Do not require all history to stay active.
-
-Do not claim constant bounded size.
-
-Keep semantic sufficiency distinct from cache/retrieval optimization.
-
-## 18.5 Phase 12 — separator engine and method residuals
-
-Research-derived transparent macro:
-
-```text
-ResolveOpenWeb
-```
-
-may unify recurrent:
-
-```text
-complete roles
--> detect ambiguity
--> separate
--> expose representation gap
--> repair
--> retry
-```
-
-Separator inquiry remains ordinary open-role completion over discriminator-shaped relations.
-
-Method residuals should become query-generated adjacency rather than hard-coded method switches.
-
-## 18.6 Phase 13 — cue/discriminator planning
-
-The sufficient-present work strengthens the need for **protected discriminator signatures** rather than whole raw answer-profile equality when possible.
-
-Do not assume one unique minimal cue basis.
-
-Retain incomparable nondominated bases where exact coverage permits several.
-
-## 18.7 Phase 15 — binding bridges
-
-Cross-domain transport should preserve:
-
-```text
-open relational roles
-+ typed bridge/interface
-+ protected commuting consequence
-```
-
-not source object names or ontology.
-
-The target binding supplies its own occupants and native discipline:
-
-```text
-typing/use
-composition
-scheduling/fairness
-resource/effectivity
-domain theorem/checker
-```
-
-as required.
-
-## 18.8 Phase 16 — method learning and folds
-
-Add explicit support for the later compiled path:
-
-```text
-RefineFoldByQuestion
-```
-
-and preserve:
-
-```text
-semantic localization
-!= provenance/recovery localization
-```
-
-Method/fold promotion must retain:
-
-```text
-expansion route
-failure exits
-applicability
-coverage
-authority
-provenance
-recovery
-unlock/reopening
-protected resource signatures when relevant
-```
-
-Do not fold methods solely by extensional output equivalence when derivation/resource behavior is protected.
-
-## 18.9 Later resource optimization
-
-Only after semantic active-view/fold correctness exists and measured pressure appears:
-
-```text
-recovery cost
-active capacity
-locality
-future-request assumptions
-competitive/nondominated aperture policies
-```
-
-may justify a `ManageActiveAperture`-style implementation policy.
-
-This is not required for semantic correctness.
-
----
-
-# 19. New fixture candidates produced by research
-
-These are useful future conformance breakers.
-
-Classify each as `FIXTURE_READY` only when it can be expressed against the live implementation phase.
-
-## 19.1 Frame breaker
-
-Two candidate frames agree observationally under current reads but differ under an admitted intervention/probe.
-
-Expected result:
-
-```text
-do not fold the frames under observation-only equality
-```
-
-## 19.2 Joint arrangement breaker
-
-Two decompositions have identical component-local states but protected-different joint relation.
-
-Expected result:
-
-```text
-grain/object unfolding must preserve required joint relation
-```
-
-## 19.3 Path-dependent-state breaker
-
-Two histories have the same visible state but different future protected response.
-
-Expected result:
-
-```text
-current state representation is too coarse
-```
-
-Then demonstrate that adding a finite/recurrent history summary can restore sufficiency without retaining full history.
-
-## 19.4 Question-conditioned fold breaker
-
-```text
-c(x) = c(y)
-but
-q(x) != q(y)
-```
-
-Expected result:
-
-```text
-Unlock -> Reopen -> refine
-```
-
-## 19.5 Provenance localization breaker
-
-Semantic fold class is known to be too coarse, but provenance cannot identify the minimal historical region.
-
-Expected result:
-
-```text
-explicit localization/recovery residual
-```
-
-not fabricated minimal reopening.
-
-## 19.6 Recovery-cost breaker
-
-Two valid recovery layouts reconstruct the same semantic distinction but with protected-different cost/locality.
-
-Expected result:
-
-```text
-semantic fold equality does not erase resource distinction when resource is protected
-```
-
-## 19.7 Aperture-policy breaker
-
-Same semantically sufficient active set, different future request sequence, different total reopening cost.
-
-Expected result:
-
-```text
-semantic sufficiency does not imply future-cost optimality
-```
-
-## 19.8 Fairness/liveness breaker
-
-Same local transition structure under different scheduler/fairness assumptions produces protected-different liveness guarantee.
-
-Expected result:
-
-```text
-transition/program structure alone cannot warrant liveness
-```
-
-## 19.9 Intensional method breaker
-
-Two methods have the same extensional correct outputs but protected-different proof/runtime/resource consequence.
-
-Expected result:
-
-```text
-do not fold when method horizon protects derivation/effectivity/resource
-```
-
----
-
-# 20. New types/opcodes that are NOT currently justified
-
-Do not add these as constitutional/runtime primitives merely because the research uses the names:
+Do not introduce any of these merely because the research used the name:
 
 ```text
 FrameIR
 PerceptualApertureIR
 RegenerativeInformationStateIR
 InquiryCycle opcode
-QAQ opcode
-AQA opcode
-Sixfold opcode
-RegenerativeFiberRefinement opcode
-ResolveOpenWeb opcode
 ResolveIngress opcode
+ResolveOpenWeb opcode
+RefineFoldByQuestion opcode
 ManageActiveAperture semantic primitive
-global native Parallel opcode
+global Parallel opcode
+semantic Attempt artifact solely for crash recovery
+separate authority constitution engine
+separate sixfold history
+new Memory database
+M001..M066 enum/type hierarchy
+routing-mask primitive in ic-core
+global self-modification engine
+universal native composition operator
 ```
 
-They may exist as:
-
-```text
-derived view
-library helper
-transparent source-program macro
-implementation-only struct
-binding-specific method
-```
-
-if actual code benefits and the expansion is preserved.
+Promote a new semantic artifact/operator only when an executable protected behavior cannot be regenerated from the existing typed relations/programs/contracts.
 
 ---
 
-# 21. Research outputs that change reasoning immediately
+# 9. Research conclusions that should become fixtures, not core types
 
-The implementation agent should use these **now**, even before the later runtime supports them as explicit objects.
+High-value fixture families:
 
-## 21.1 Frame before patch
+```text
+same endpoint != same derivation/provenance
+same present behavior != support robustness
+same support robustness != recovery topology
+same recovery != authority topology
 
-Do not infer the relevant subsystem from the task nouns.
+local compatibility != global completion
+same components != same native composition/global guarantee
 
-Find the semantic/runtime/persistence/authority frame first.
+current-task sufficiency != future-task sufficiency
+same current observation != decision-sufficient state
+new continuation can reopen old quotient
+generated replay != historical actuality
 
-## 21.2 Arrangement before isolated symbol
+abstract breaker != concrete realizable breaker
+under-approx search failure != universal absence
+over-approx witness != concrete counterexample without feasibility
 
-Map how relevant forms interact.
+producer trust != produced artifact validity
+self-regeneration != implementation integrity
+cold replay equality != semantic correctness
+code revision != runtime state migration
+candidate-added checks != sole acceptance route
 
-A bug may be an arrangement defect even when every individual object is valid.
+credential realization != semantic authority
+valid endpoint configurations != safe transition
+```
 
-## 21.3 Relational path before file distance
-
-Trace responsibility to the protected observable through typed relations.
-
-## 21.4 Maximal contrast before minimal patch
-
-Construct an obvious breaker/success extreme, then subtract.
-
-## 21.5 Method after hole
-
-Derive the required relation before retrieving a named pattern/library.
-
-## 21.6 Success remains challengeable
-
-Passing returns attack necessity and excess assumptions.
-
-## 21.7 Fold after regeneration
-
-Do not retain unnecessary implementation structure merely because it made one fixture pass.
-
-A successful ratchet includes subtraction/ablation.
+Implement each only when its responsible phase is active. Do not dump the complete research fixture corpus into Phase 6.
 
 ---
 
-# 22. Research results that constrain architecture later but should not be implemented now
+# 10. `ic-machine` crate decision
+
+The final research contains both an argument for and a later argument against immediately creating `ic-machine`.
+
+Current repository actuality is decisive.
+
+At the observed head, `ic-runtime` now depends on `ic-store` and owns a narrow `dispatch` module that consumes an exact `ProbeSuspension`, checks `BackendRequest`, obtains fresh durable dispatch authority, invokes one injected provider, and completes `RawReturn + ActualEvent` before return.
+
+This is currently coherent and fixture-backed.
+
+Therefore:
 
 ```text
-full frame-family runtime discovery
-resource-aware active aperture policy
-question-conditioned historical fold refinement
-general RegenerativeInformationState helper layer
-cross-domain method acquisition
-automatic method-network discovery
-proof/resource-sensitive method folding
+ic-machine = DEFERRED, NOT REJECTED.
 ```
 
-Preserve extension points and do not make current architecture incompatible with them.
+Do not refactor only to match an earlier research diagram.
 
-Do not build them ahead of the implementation frontier.
+Open the crate question when the next vertical coordinator must simultaneously own substantial runtime stepping + store recovery + decode/resolution + standing/admission + next-question orchestration, and keeping that choreography inside `ic-runtime` would make runtime own semantic/application responsibilities.
+
+At that point the smallest composition crate should depend on `ic-core`, `ic-runtime`, and `ic-store` and own sequence/transactions only, no new semantic truth.
 
 ---
 
-# 23. Research results explicitly rejected or weakened
+# 11. Research results that are potential semantic reopen candidates
 
-The implementation agent must not inherit these overclaims.
+Most final research is compatible derived guidance. A small subset presses beyond the current accepted semantic wording and must **not** be silently implemented.
 
-## Rejected
+## 11.1 General transition authority vs predecessor-judged successor
+
+Current accepted semantics/plan say self-revision is predecessor-judged.
+
+Final self-modification research found domains where lawful transition authority need not be identical to predecessor authority and proposed `TransitionAuthorityRoute`, whose standing source might be predecessor overlap, stable meta authority, an independent validator, institutional/external authority, or bootstrap/recovery authority.
+
+This is a legitimate research breaker against an over-literal “predecessor identity is the only possible transition authority” reading.
+
+But until semantic authority is explicitly revised:
 
 ```text
-a universally bounded exact sufficient present always exists
+DO NOT implement non-predecessor self-promotion as accepted Phase 18 semantics.
 ```
 
-## Replaced by
+Retain the research result as:
 
 ```text
-active state may avoid growth with raw history length,
-but exact size tracks irreducible protected state complexity
-and may itself grow without bound.
+SEMANTIC_REOPEN_CANDIDATE:
+    generalized non-candidate-only standing transition authority
 ```
+
+The invariant already safe to implement is:
+
+```text
+candidate-introduced claims alone cannot authorize the candidate.
+```
+
+## 11.2 Protected erasure / non-recoverability
+
+Research correctly shows that some future bindings may protect erasure or restricted recovery.
+
+The current reference implementation's immutable artifact/event architecture remains the current binding.
+
+Do not redesign current persistence for universal erasure.
+
+Retain this as a future binding/bridge constraint:
+
+```text
+immutable identity/history
+does not imply universally recoverable plaintext payload
+```
+
+if a protected erasure/privacy binding is later introduced.
+
+## 11.3 Routing mask / latent reorganization
+
+A question-conditioned rearrangeable routing mask over LLM latent capacity is a plausible long-run implementation hypothesis.
+
+It is not currently established as canonical semantics.
+
+Treat it as:
+
+```text
+Phase 19 experimental backend/learning realization
+```
+
+whose admissibility depends on demonstrating protected gain relative to simpler exact relational routing.
 
 ---
 
-## Rejected
+# 12. Control-document cleanup after research closure
 
-```text
-exact recoverability implies cheap/selective local reopening
-```
+The current repository control documents still contain historical statements that the research is “still running” and that the implementation agent should assume research files are unavailable.
 
-## Replaced by
+First documentation ratchet after receiving this bundle:
 
-```text
-semantic recovery and recovery-resource complexity are separate contracts.
-```
+1. replace the old `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` with this final handoff;
+2. patch `PERSISTENT_CODEX_GOAL.md` to state that the final research bundle is present and closed for this handoff;
+3. patch only the companion-document paragraphs in `AGENTS.md` and `README.md` that say the research is still running/revisable;
+4. preserve all execution rules in `AGENTS.md`;
+5. do **not** rewrite canonical semantics or the comprehensive implementation plan merely to mention research completion;
+6. let `IMPLEMENTATION_FRONTIER.md` continue to move from executable evidence.
 
----
-
-## Rejected
-
-```text
-semantic sufficiency implies optimal active-memory policy
-```
-
-## Replaced by
-
-```text
-future recovery cost depends on request sequence/model/resource policy.
-```
+The comprehensive plan is already broad enough. The research should sharpen phase meanings and add phase-local fixtures, not expand the phase count.
 
 ---
 
-## Rejected
+# 13. Recommended implementation-plan integration method
+
+Do not paste the research corpus into the implementation plan.
+
+For each research result:
 
 ```text
-an object can always be unfolded into independent component states
+research statement
+-> identify protected difference
+-> map to existing canonical relation/program
+-> classify:
+      ALREADY_DEMONSTRATED
+      CURRENT_FIXTURE
+      PHASE_LOCAL_CONSTRAINT
+      FUTURE_OPTIMIZATION
+      SEMANTIC_REOPEN_CANDIDATE
+      REJECTED_OVERCLAIM
+-> identify earliest affected phase
+-> add only the smallest plan/fixture note needed
+-> preserve research document as provenance
 ```
 
-## Replaced by
+The research corpus remains regression ancestry.
 
-```text
-lawful unfolding must preserve protected joint/contextual relations.
-```
+The implementation plan remains the build map.
+
+The frontier remains the executable cursor.
 
 ---
 
-## Rejected
+# 14. Post-research project recurrence
+
+After the final research handoff, project development should follow:
 
 ```text
-path dependence requires full history
+RECONSTRUCT CURRENT REPOSITORY ACTUALITY
+-> READ FRONTIER
+-> IDENTIFY ONE EXECUTABLE HOLE
+-> CONSULT FINAL RESEARCH FOR BREAKERS/CONTRACTS AT THAT HOLE
+-> CONSTRUCT MAXIMAL WRONG CASE
+-> SUBTRACT TO SMALLEST DISCRIMINATING FIXTURE
+-> REUSE EXISTING CALCULUS STRUCTURE
+-> IMPLEMENT SMALLEST REVERSIBLE RELATION
+-> PRESERVE RAW RETURN
+-> CHECK
+-> CLASSIFY RESIDUAL
+-> REGRESSION AGAINST RELEVANT RESEARCH BREAKERS
+-> FOLD REDUNDANCY
+-> UPDATE FRONTIER
+-> RECUR
 ```
 
-## Replaced by
+Do not “implement the research.”
 
-```text
-seek a recursively updateable sufficient state; retain full history only
-when no smaller licensed regenerative representation is known.
-```
+Use the research to make each implementation decision harder to get wrong.
 
 ---
 
-## Rejected
+# 15. Milestone sequence going forward
+
+Unless current `main` has advanced when consumed:
+
+## Milestone 1 — durable replay closure
+
+Pass RPL-001..005.
+
+Success means a committed actual provider return can produce the same admitted resumption after a fresh process without redispatch or hidden in-memory values.
+
+## Milestone 2 — one complete executable question cycle
+
+Pass:
 
 ```text
-IProg sequential bind supplies all native composition/liveness semantics
+Ask
+-> compile/render/request
+-> durable actualization
+-> raw/event
+-> decode/support
+-> bind
+-> resume
+-> next Ask/Return
 ```
 
-## Replaced by
+This should be cold replayable.
+
+## Milestone 3 — paired actuality and derived sufficient present
+
+Implement Phase 8/9 question/return trace reconstruction and a first exact active-view/fold/reopen fixture.
+
+## Milestone 4 — one real LLM backend under question semantics
+
+Add one real provider only after mock + replay boundary is stable.
+
+Demonstrate:
 
 ```text
-IProg orchestrates inquiry; the binding supplies protected native
-composition, fairness, resource, and domain theorem structure.
+one typed question
+-> prompt/request
+-> multiple supported candidate completions
+-> no singleton forcing
+-> residual/separator-generated next question
 ```
+
+The LLM remains generator/provider, not warrant authority.
+
+## Milestone 5 — generic residual-driven inquiry
+
+Make the existing separator/generator structures drive at least one answer-dependent residual continuation without a hard-coded method-name switch.
+
+## Milestone 6 — method/fold learning
+
+Compile one recurrent, checked inquiry path into a reusable transparent method/fold; then reopen it with a new protected separator.
+
+## Milestone 7 — cross-binding/native-composition fixture
+
+Demonstrate one bridge whose typed role/consequence commutation matters, and one native composition law that is not reducible to sequential `IProg` bind.
+
+## Milestone 8 — self-revision
+
+Only after cold replay, folds, and authority/support are executable:
+
+```text
+candidate successor
+-> independent/predecessor-authorized validation
+-> immutable accepted version
+-> restart/reconstruct
+-> regression
+```
+
+Keep broader transition-authority research as a semantic reopen candidate unless explicitly promoted.
+
+## Milestone 9 — measured learned routing
+
+Only after instrumentation demonstrates a need:
+
+- learned question policy;
+- active aperture/routing;
+- latent capability routing/masks;
+- parallel/distributed execution;
+- approximate/vector retrieval.
+
+Require strict protected gain over the simpler baseline.
 
 ---
 
-# 24. How the implementation agent should consume continuing research
+# 16. Final implementation criterion
 
-At this checkpoint the implementation agent should **not assume any research ledger/network files are present**. The research process is separate and still building them. This handoff is the current interface.
+The research is complete enough to stop expanding the conceptual surface.
 
-When a future handoff revision or an explicitly supplied research artifact arrives:
-
-1. identify the exact protected behavior or distinction it claims;
-2. map that claim into current canonical machinery before inventing a new type;
-3. determine whether the result is semantic, architectural, methodological, or merely a candidate analogy;
-4. find the earliest implementation boundary it can actually affect;
-5. construct the smallest executable breaker that distinguishes implementing it from not implementing it;
-6. implement it only when the current frontier reaches that boundary or when a present decision would otherwise make the future protected behavior impossible;
-7. preserve the research artifact as provenance/regression evidence rather than silently promoting it to canonical authority;
-8. if later research retracts the claim, reopen only the implementation choices whose accepted warrant depended on it.
-
-The intended relation is:
+The implementation target is now:
 
 ```text
-live research history
--> self-contained handoff checkpoint
--> fixture / implementation consequence
--> ordinary repository decision and test machinery
+MAKE THE EXISTING CALCULUS EXECUTE ITS OWN QUESTION-RETURN-RATCHET
+COLD-REPLAYABLY, THEN LET THE FINISHED RESEARCH ACT AS THE BREAKER
+AND COMPRESSION LIBRARY FOR EACH NEW VERTICAL SLICE.
 ```
 
-not:
+The strongest project-level test is not whether every research term receives a Rust type.
+
+It is whether increasingly rich inquiry behavior is obtained while:
 
 ```text
-live research prose
--> automatic runtime primitive
+canonical semantic basis stays small
+research distinctions remain recoverable
+runtime boundaries remain explicit
+actuality cannot be fabricated
+LLM generation cannot self-warrant
+new questions are generated by live residuals
+recurrent successful structure can be compiled/folded
+new protected distinctions can reopen prior compression
 ```
 
----
-
-# 25. Current implementation priority after all research
-
-The research changes the **shape of later implementation and the agent's reasoning**, but not the current decisive coding order.
-
-The current milestone is:
-
-```text
-resolved claim-targeted source support + three resolved relation-targeted evidence supports
--> independently closed positive evidence
--> standing incompatibility / observation support as required
--> determination relevance
--> non-circular departure admission
--> admitted NegationUse incidence
--> positive exterior
--> same-use return fiber
--> protected recovery
--> seed/reorientation
--> reciprocal second side
--> residual
-```
-
-Then continue through the current implementation plan, carrying the research constraints forward.
-
-Avoid two opposite errors:
-
-```text
-ERROR 1:
-ignore the research and later build a fixed scheduler, lossy memory,
-source-object transport, scalarized path model, or irreversible fold architecture.
-
-ERROR 2:
-stop the current reciprocal-admission work and prematurely implement every
-perceptual-aperture, memory-management, domain-crawl, or method-network idea.
-```
-
-Correct course:
-
-```text
-finish the trustworthy semantic vertical slice;
-use frame/arrangement/path reasoning to find the real missing relation;
-carry the derived architecture constraints forward;
-implement each later structure only when a fixture and live phase require it.
-```
-
----
-
-# 26. Compact implementation handoff
-
-```text
-THE CURRENT CANONICAL CALCULUS IS THE REPOSITORY v1.1 SUCCESSOR / POSITIVE-NEGATION EDITION.
-
-THE POSITIVE-NEGATION RECIPROCAL CORE REMAINS REQUIRED.
-
-THE CURRENT REPOSITORY ALREADY DISTINGUISHES CLAIM-TARGETED SOURCE SUPPORT FROM THREE SEPARATE RELATION-TARGETED EVIDENCE-SUPPORT ROUTES. DO NOT COLLAPSE THEM OR REIMPLEMENT THAT SOLVED BOUNDARY.
-
-THE NEXT MISSING STEP IS ADMISSION/CLOSURE: POSITIVE EVIDENCE, STANDING INCOMPATIBILITY, DETERMINATION RELEVANCE, AND NON-CIRCULARITY MUST BECOME EXECUTABLY ESTABLISHED RATHER THAN CALLER-DECLARED.
-
-THE RESEARCH HAS NOT FORCED A NEW SEMANTIC PRIMITIVE.
-
-IT HAS CLARIFIED HOW THE EXISTING PIECES SHOULD COMPOSE.
-
-QUESTIONS/OPEN RELATIONS ARE THE BASIC EXECUTABLE INTERFACE.
-
-DISTINCTIONS SHOULD REMAIN REGENERABLE AS SEPARATOR QUESTION STRUCTURE.
-
-METHOD APPLICABILITY SHOULD ULTIMATELY BE ESTABLISHED FROM RELATIONAL
-REQUIREMENT WEBS, NOT CALLER DECLARATIONS.
-
-METHOD FAILURES SHOULD YIELD TYPED RESIDUALS THAT GENERATE THE QUESTIONS
-CAPABLE OF ESTABLISHING ANOTHER METHOD'S APPLICABILITY.
-
-NATIVE COMPOSITION, FAIRNESS, RESOURCE, AND EFFECTIVITY LAWS REMAIN
-BINDING-SUPPLIED.
-
-THE ACTIVE STATE SHOULD BE A SUFFICIENT PRESENT, NOT A LOSSY SUMMARY.
-
-BUT:
-
-CONSEQUENCE SUFFICIENCY,
-RECURSIVE UPDATE,
-REGENERATIVE RECOVERY,
-AND BOUNDED/OPTIMAL ACTIVE SIZE
-
-ARE FOUR DIFFERENT OBLIGATIONS.
-
-A FOLD IS VALID ONLY RELATIVE TO ITS PROTECTED HORIZON AND RECOVERY/UNLOCK
-CONTRACT.
-
-A NEW QUESTION THAT SPLITS A FOLD MUST BE ABLE TO REOPEN OR REACQUIRE THE
-MISSING DISTINCTION.
-
-SEMANTIC LOCALIZATION DOES NOT GUARANTEE CHEAP OR MINIMAL PROVENANCE
-LOCALIZATION.
-
-OBJECTS AND ARRANGEMENTS ARE GRAIN-RELATIVE, BUT JOINT RELATIONS MUST SURVIVE
-UNFOLDING WHEN THEY ARE PROTECTED.
-
-THE IMPLEMENTATION AGENT SHOULD REASON THROUGH:
-
-FRAME
--> OCCUPANTS
--> ARRANGEMENT
--> RELATIONAL PATHS
--> MAXIMAL CONTRAST
--> DECISIVE DISTINCTION
--> IMPLEMENTATION HOLE
--> NATIVE METHOD
--> PATCH
--> ACTUAL RETURN
--> BREAK
--> ABLATE
--> REFOLD
--> NEXT RESIDUAL.
-
-USE THIS RHYTHM NOW.
-
-IMPLEMENT THE LATER RUNTIME FORMS ONLY WHEN THEIR EXECUTABLE OBLIGATIONS
-BECOME LIVE.
-
-KEEP THE HISTORY AUTHORITATIVE.
-
-KEEP THE ACTIVE PRESENT ECONOMICAL.
-
-KEEP EVERYTHING FOLDED REOPENABLE OR ADMIT THAT IT WAS LOST.
-
-DO NOT WAIT FOR A HUMAN TO CHOOSE EACH NEXT IMPLEMENTATION STEP WHEN THE
-CURRENT VERIFIED RESIDUAL ALREADY DETERMINES IT.
-```
+That is the intended weave between the finished research corpus and the implementation.
