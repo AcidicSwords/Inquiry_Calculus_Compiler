@@ -122,6 +122,52 @@ pub enum ExternalEffectPreparation {
     Existing(ExternalEffectState),
 }
 
+/// A completed operational effect reconstructed entirely from immutable store records.
+///
+/// Loading this value never invokes a provider. It rechecks the typed backend request, ordinary
+/// event ledger membership, exact raw-return identity, and occurrence/request correspondence.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ReplayedExternalEffect {
+    token: DispatchToken,
+    request_ref: BackendRequestRef,
+    request: BackendRequest,
+    event_ref: EventRef,
+    event: ActualEvent,
+    raw_return_ref: RawReturnRef,
+    raw_return: RawReturn,
+}
+
+impl ReplayedExternalEffect {
+    #[must_use]
+    pub const fn token(&self) -> DispatchToken {
+        self.token
+    }
+    #[must_use]
+    pub const fn request_ref(&self) -> BackendRequestRef {
+        self.request_ref
+    }
+    #[must_use]
+    pub const fn request(&self) -> &BackendRequest {
+        &self.request
+    }
+    #[must_use]
+    pub const fn event_ref(&self) -> EventRef {
+        self.event_ref
+    }
+    #[must_use]
+    pub const fn event(&self) -> &ActualEvent {
+        &self.event
+    }
+    #[must_use]
+    pub const fn raw_return_ref(&self) -> RawReturnRef {
+        self.raw_return_ref
+    }
+    #[must_use]
+    pub const fn raw_return(&self) -> &RawReturn {
+        &self.raw_return
+    }
+}
+
 impl ExternalEffectPreparation {
     #[must_use]
     pub const fn state(self) -> ExternalEffectState {
@@ -284,6 +330,78 @@ impl ArtifactStore {
             .transpose()
     }
 
+    /// Reconstructs a completed external effect after restart without provider access.
+    pub async fn replay_completed_external_effect(
+        &self,
+        token: DispatchToken,
+    ) -> Result<ReplayedExternalEffect, StoreError> {
+        let state = self
+            .external_effect_state(token)
+            .await?
+            .ok_or(StoreError::UnknownDispatchToken(token))?;
+        let ExternalEffectState::Completed {
+            request,
+            operator,
+            ledger_parent,
+            event: event_ref,
+            ..
+        } = state
+        else {
+            return Err(StoreError::ExternalEffectPending(token));
+        };
+        let request_ref = BackendRequestRef::from_artifact_ref(request);
+        let request_value = self.checked_backend_request(request_ref).await?;
+        if request_value.operator() != operator {
+            return Err(StoreError::BackendRequestOperatorMismatch {
+                request: request_value.operator(),
+                prepared: operator,
+            });
+        }
+        let event = self
+            .get_actual_event(event_ref)
+            .await?
+            .ok_or(StoreError::EventLedgerCorrupt(event_ref))?;
+        if event.operator() != operator {
+            return Err(StoreError::ExternalEffectOperatorMismatch {
+                prepared: operator,
+                event: event.operator(),
+            });
+        }
+        if event.ledger_parent() != ledger_parent {
+            return Err(StoreError::ExternalEffectParentMismatch {
+                prepared: ledger_parent,
+                event: event.ledger_parent(),
+            });
+        }
+        if event.backend_version() != request_value.backend_version() {
+            return Err(StoreError::ExternalEffectBackendVersionMismatch {
+                request: request_value.backend_version(),
+                event: event.backend_version(),
+            });
+        }
+        let raw_return_ref = event.raw_return();
+        let envelope = self.get(raw_return_ref.as_artifact_ref()).await?.ok_or(
+            StoreError::MissingReferencedArtifact(raw_return_ref.as_artifact_ref()),
+        )?;
+        let raw_return = RawReturn::from_envelope(&envelope)?;
+        let calculated = raw_return.raw_return_ref()?;
+        if calculated != raw_return_ref {
+            return Err(StoreError::CorruptReference {
+                stored: raw_return_ref.as_artifact_ref(),
+                calculated: calculated.as_artifact_ref(),
+            });
+        }
+        Ok(ReplayedExternalEffect {
+            token,
+            request_ref,
+            request: request_value,
+            event_ref,
+            event,
+            raw_return_ref,
+            raw_return,
+        })
+    }
+
     /// Lists unresolved preparations. Each is `Unknown` with respect to whether dispatch occurred.
     pub async fn unresolved_external_effects(
         &self,
@@ -330,6 +448,19 @@ impl ArtifactStore {
         let chart = self.verify_boundary_chart(event.boundary()).await?;
         let operator = self.verify_probe_operator(event.operator()).await?;
         check_event_context(event, &question, &chart, &operator)?;
+
+        let prepared = self
+            .external_effect_state(token)
+            .await?
+            .ok_or(StoreError::UnknownDispatchToken(token))?;
+        let request_ref = BackendRequestRef::from_artifact_ref(prepared.request());
+        let request = self.checked_backend_request(request_ref).await?;
+        if event.backend_version() != request.backend_version() {
+            return Err(StoreError::ExternalEffectBackendVersionMismatch {
+                request: request.backend_version(),
+                event: event.backend_version(),
+            });
+        }
 
         let mut transaction = self.pool.begin().await?;
         let row: Option<ExternalEffectRow> = sqlx::query_as(
@@ -959,6 +1090,9 @@ pub enum StoreError {
     #[error("dispatch token {0:?} is unknown")]
     UnknownDispatchToken(DispatchToken),
 
+    #[error("dispatch token {0:?} remains pending/unknown and cannot be replayed as an actuality")]
+    ExternalEffectPending(DispatchToken),
+
     #[error("prepared effect {token:?} already completed as event {event}")]
     ExternalEffectAlreadyCompleted {
         token: DispatchToken,
@@ -987,5 +1121,11 @@ pub enum StoreError {
     BackendRequestOperatorMismatch {
         request: ProbeOperatorRef,
         prepared: ProbeOperatorRef,
+    },
+
+    #[error("backend request version {request} differs from completed event version {event}")]
+    ExternalEffectBackendVersionMismatch {
+        request: ArtifactRef,
+        event: ArtifactRef,
     },
 }

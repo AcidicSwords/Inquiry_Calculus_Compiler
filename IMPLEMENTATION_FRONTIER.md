@@ -19,7 +19,9 @@ identity. An explicit finite source-continuation lowering now resumes a matching
 while retaining the bound event/raw-return provenance; operator, continuation, and target
   mismatches reject. One injected mock-provider dispatch now durably prepares, calls once,
   preserves exact returned bytes, and completes the ordinary event before exposing it; durable
-  cold replay through decode/admission/resumption remains open at the Phase 5/6/7 boundary.
+  completed-effect replay now reloads and rechecks the exact request, ledger event, and raw bytes
+  after file-backed restart without provider access. Cold replay through decode/admission/resumption
+  remains open at the Phase 5/6/7 boundary.
 The Phase 6 crash breaker now has a separate operational external-effect journal: durable
 preparation precedes any caller dispatch; unresolved restart state remains unknown and is never
 auto-retried; completion atomically installs the raw artifact, checked ordinary event, ledger edge,
@@ -71,9 +73,12 @@ complete cold-replay gap:
 > values? Provider failure, decoder `Undefined`, decoder `Unknown`, unsupported answers, and
 > lowering mismatch must remain distinct residuals.
 
-This is the post-research `RPL-001` through `RPL-005` frontier:
+This is the post-research replay frontier. `RPL-001` now passes; `RPL-002` through `RPL-005`
+remain live:
 
-1. reload one completed effect, exact event, and exact raw return after a file-backed restart;
+1. **demonstrated:** reload one completed effect, exact event, and exact raw return after a
+   file-backed restart, rejecting pending/unknown state, corrupt bytes, backend-version drift,
+   and preparation-provenance mismatch;
 2. reconstruct finite `Decoded | Undefined | Unknown` resolution and the complete supported answer;
 3. reload the exact source `Ask` and produce a fresh capture-safe answer binding;
 4. regenerate `ProgramIR`, `ProbeSuspension`, and `ContinuationLowering`, then derive the same

@@ -206,7 +206,7 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
             .expect("surface plan dependencies must exist"),
     );
     let request_body = stored_ref(&store, b"provider-request-body").await;
-    let backend_version = stored_ref(&store, b"provider-backend-version").await;
+    let backend_version = event.backend_version();
     let request_value = BackendRequest::new(
         event.operator(),
         plan_ref,
@@ -286,6 +286,17 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
             .expect("pending effects must be enumerable"),
         vec![pending]
     );
+    assert!(matches!(
+        restarted.replay_completed_external_effect(token).await,
+        Err(StoreError::ExternalEffectPending(pending_token)) if pending_token == token
+    ));
+    let unknown_token = DispatchToken::from_bytes([0xee; 32]);
+    assert!(matches!(
+        restarted
+            .replay_completed_external_effect(unknown_token)
+            .await,
+        Err(StoreError::UnknownDispatchToken(missing)) if missing == unknown_token
+    ));
     let recovered = restarted
         .prepare_backend_request(token, request, event.operator(), None)
         .await
@@ -309,6 +320,36 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
     );
 
     let raw = RawReturn::new(vec![0, 0xff, b'{', 0]);
+    let wrong_backend = stored_ref(&restarted, b"wrong-completion-backend-version").await;
+    let wrong_backend_event = ActualEvent::new(
+        event.ledger_parent(),
+        event.state_before(),
+        event.question(),
+        event.boundary(),
+        event.distinction(),
+        event.operator(),
+        event.raw_return(),
+        event.state_after(),
+        event.grain(),
+        event.route(),
+        event.binding(),
+        wrong_backend,
+        event.provenance(),
+    );
+    assert!(matches!(
+        restarted
+            .complete_external_effect(token, &raw, &wrong_backend_event)
+            .await,
+        Err(StoreError::ExternalEffectBackendVersionMismatch { request, event })
+            if request == backend_version && event == wrong_backend
+    ));
+    assert_eq!(
+        restarted
+            .external_effect_state(token)
+            .await
+            .expect("version mismatch must leave recovery state readable"),
+        Some(pending)
+    );
     let event_ref = restarted
         .complete_external_effect(token, &raw, &event)
         .await
@@ -338,7 +379,7 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
             .get_actual_event(event_ref)
             .await
             .expect("completed event must verify"),
-        Some(event)
+        Some(event.clone())
     );
     restarted
         .verify_event_ledger()
@@ -365,6 +406,54 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
         .verify_event_ledger()
         .await
         .expect("cold-replayed event ledger must verify");
+
+    let replayed = replay
+        .replay_completed_external_effect(token)
+        .await
+        .expect("completed actuality must reconstruct without provider access");
+    assert_eq!(replayed.token(), token);
+    assert_eq!(replayed.request_ref(), request);
+    assert_eq!(replayed.request(), &request_value);
+    assert_eq!(replayed.event_ref(), event_ref);
+    assert_eq!(replayed.event(), &event);
+    assert_eq!(replayed.raw_return_ref(), event.raw_return());
+    assert_eq!(replayed.raw_return().bytes(), [0, 0xff, b'{', 0]);
+
+    sqlx::query("UPDATE artifacts SET canonical_envelope = ? WHERE artifact_ref = ?")
+        .bind(vec![0_u8])
+        .bind(event.raw_return().as_artifact_ref().as_bytes().as_slice())
+        .execute(&replay.pool)
+        .await
+        .expect("fixture must be able to corrupt the stored raw envelope");
+    assert!(matches!(
+        replay.replay_completed_external_effect(token).await,
+        Err(StoreError::CorruptArtifact { artifact_ref, .. })
+            if artifact_ref == event.raw_return().as_artifact_ref()
+    ));
+    sqlx::query("UPDATE artifacts SET canonical_envelope = ? WHERE artifact_ref = ?")
+        .bind(
+            raw.envelope()
+                .expect("raw return must re-encode")
+                .encode()
+                .expect("raw envelope must re-encode"),
+        )
+        .bind(event.raw_return().as_artifact_ref().as_bytes().as_slice())
+        .execute(&replay.pool)
+        .await
+        .expect("fixture must restore the exact raw envelope");
+
+    let foreign_operator = stored_ref(&replay, b"foreign-prepared-operator").await;
+    sqlx::query("UPDATE external_effect_journal SET operator_ref = ? WHERE dispatch_token = ?")
+        .bind(foreign_operator.as_bytes().as_slice())
+        .bind(token.as_artifact_ref().as_bytes().as_slice())
+        .execute(&replay.pool)
+        .await
+        .expect("fixture must be able to corrupt preparation provenance");
+    assert!(matches!(
+        replay.replay_completed_external_effect(token).await,
+        Err(StoreError::BackendRequestOperatorMismatch { prepared, .. })
+            if prepared.as_artifact_ref() == foreign_operator
+    ));
     replay.close().await;
     std::fs::remove_file(path).expect("temporary effect database must be removable");
 }

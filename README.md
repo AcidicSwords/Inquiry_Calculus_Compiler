@@ -272,6 +272,11 @@ ordinary event, ledger edge, and completion link. The operational row is not a s
 actuality claim, second event history, decoded answer, or warrant; this deliberately leaves the
 canonical/plan attempt-record shape open.
 
+Completed rows can now be reconstructed after a file-backed restart as a checked
+`ReplayedExternalEffect`. The store revalidates the exact backend request, ledger event,
+raw-return identity and bytes, operator/parent linkage, and backend version without invoking a
+provider. Completion rejects backend-version drift before history is committed.
+
 Preparation also distinguishes a newly committed intent from an exact pre-existing row. Only the
 new `DispatchAuthorized` result permits the current caller to invoke a provider. An exact repeat,
 including one recovered after restart, returns `Existing`; a pending existing row therefore remains

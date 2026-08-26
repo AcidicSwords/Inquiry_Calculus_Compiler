@@ -199,7 +199,7 @@ itself. The immediate replay suite is therefore pending until demonstrated:
 
 | Fixture | Status | Required discriminator |
 |---|---|---|
-| RPL-001 completed effect reload | PENDING | A reopened file-backed store rechecks the exact request, event, and raw bytes without provider invocation. |
+| RPL-001 completed effect reload | PASS | `ic-store::tests::external_effect_preparation_survives_restart_and_completes_as_one_raw_event` reopens a file-backed store, rechecks the exact request/event/raw bytes without provider access, and rejects pending, unknown, corrupt, version-mismatched, and provenance-mismatched states. |
 | RPL-002 finite semantic answer replay | PENDING | Persisted identities reproduce `Decoded`, `Undefined`, or `Unknown`; decoded multi-completion answers retain every supported completion. |
 | RPL-003 source continuation replay | PENDING | A freshly decoded source `Ask` binds the complete answer set without pre-crash binding or answer-slot capture. |
 | RPL-004 runtime continuation replay | PENDING | Fresh deterministic lowering regenerates the exact operator, continuation, target, and admitted resumption, or witnesses the need for a minimal replay recipe. |
