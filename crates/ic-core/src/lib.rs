@@ -74,10 +74,12 @@ pub use decoder::{
     ObservationResultCatalog, decode_actual_event, match_decoded_observation_use,
 };
 pub use departure::{
-    DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION, DepartureCatalog,
-    DepartureEvidenceSupportCatalog, DepartureEvidenceSupportError, DepartureStandingCatalog,
-    DepartureStandingCheckError, DepartureWitness, DepartureWitnessCheckError,
-    DepartureWitnessError, DepartureWitnessRef, ResolvedDepartureEvidenceSupport,
+    AdmittedFiniteDeparture, DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION,
+    DepartureCatalog, DepartureEvidenceSupportCatalog, DepartureEvidenceSupportError,
+    DepartureStandingCatalog, DepartureStandingCheckError, DepartureWitness,
+    DepartureWitnessCheckError, DepartureWitnessError, DepartureWitnessRef,
+    FiniteDepartureAdmissionCatalog, FiniteDepartureAdmissionError, FiniteDepartureEvidence,
+    ResolvedDepartureEvidenceSupport, admit_probed_finite_departure,
     check_departure_witness_standing_support, resolve_departure_witness_evidence_support,
 };
 pub use determination::{

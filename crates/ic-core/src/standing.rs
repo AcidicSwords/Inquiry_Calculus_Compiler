@@ -1289,6 +1289,8 @@ pub struct Standing {
     admitted_by: BTreeMap<ClaimRef, usize>,
     admitted_subject_by: BTreeMap<SupportSubjectRef, usize>,
     closed_environments: BTreeMap<SupportSubjectRef, BTreeSet<SupportEnvironmentRef>>,
+    closed_environment_premises:
+        BTreeMap<(SupportSubjectRef, SupportEnvironmentRef), BTreeSet<SupportSubjectRef>>,
     rounds: usize,
 }
 
@@ -1362,6 +1364,19 @@ impl Standing {
             .is_some_and(|environments| environments.contains(&environment))
     }
 
+    /// Reports whether an exact closed environment names a typed standing premise.
+    #[must_use]
+    pub fn route_requires(
+        &self,
+        subject: SupportSubjectRef,
+        environment: SupportEnvironmentRef,
+        premise: SupportSubjectRef,
+    ) -> bool {
+        self.closed_environment_premises
+            .get(&(subject, environment))
+            .is_some_and(|premises| premises.contains(&premise))
+    }
+
     /// Returns how many iterations the fixed point took to close.
     #[must_use]
     pub const fn rounds(&self) -> usize {
@@ -1423,6 +1438,7 @@ pub fn standing(problem: &StandingProblem) -> Standing {
         })
         .collect();
     let mut closed_environments: BTreeMap<_, BTreeSet<_>> = BTreeMap::new();
+    let mut closed_environment_premises = BTreeMap::new();
     for environment in problem.environments() {
         if subjects.contains(&environment.target())
             && environment.is_closed(&subjects)
@@ -1432,6 +1448,10 @@ pub fn standing(problem: &StandingProblem) -> Standing {
                 .entry(environment.target())
                 .or_default()
                 .insert(reference);
+            closed_environment_premises.insert(
+                (environment.target(), reference),
+                environment.subject_premises().clone(),
+            );
         }
     }
 
@@ -1442,6 +1462,7 @@ pub fn standing(problem: &StandingProblem) -> Standing {
         admitted_by,
         admitted_subject_by,
         closed_environments,
+        closed_environment_premises,
         rounds,
     }
 }

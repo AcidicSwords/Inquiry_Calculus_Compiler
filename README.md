@@ -130,9 +130,15 @@ relation-targeted support environments with matching context. The shared least-f
 can now carry claim and relation subjects without collapsing their kinds, and a derived check can
 require each evidence use's exact environment to be one of the routes that closes for its standing
 relation. This remains relative to declared closure inputs and still does not evaluate an
-observation, establish incompatibility, or certify non-circular positive evidence. Each
-observation use must bind its claimed form/answer pair, and the incompatibility use must bind
-the two claimed answers; those structural links are not relation evaluation.
+observation by itself. For the exact finite route, `admit_probed_finite_departure` now composes
+two event-linked decoded observations, exact standing closure of all three evidence uses, an
+explicit source-presentation dependency on the observation relation, and a positively listed
+oriented incompatibility pair. Both observation routes must be `Probe`, their support records
+must name the preserved raw returns, and the incompatibility support must cover both returns.
+The result is a private-field derived admission, not a canonical artifact, standing mutation,
+warrant, negation incidence, exterior, or reconciliation. Unknown, unlisted, generated,
+unsupported, reversed, projection-derived, and failed-search inputs cannot construct its required
+positive evidence.
 
 For the exact finite special case, a derived cell comparator can expose one observed unequal
 coordinate, retain `Unknown` when the table lacks a positive separator, and distinguish fully

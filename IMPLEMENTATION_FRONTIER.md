@@ -18,8 +18,11 @@ engine now carries claim and relation subjects, rejects mixed rootless cycles, r
 closing-environment provenance, and keeps equal underlying digests separated by subject kind.
 Relation uses can require their exact relation-targeted environment to close for the standing
 relation, and a determination presentation can require its exact claim-targeted environment to
-close for the standing claim. These links remain relative to declared closure inputs and neither
-evaluates opaque closure roles nor admits web relevance.
+close for the standing claim. A derived finite departure checker now joins those exact routes to
+two preserved probe events, decoded observation uses, direct source-presentation relevance, and
+one positively listed oriented incompatibility pair. The admission remains relative to declared
+finite closure and coverage inputs and creates no canonical artifact, warrant, negation incidence,
+or exterior.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -36,13 +39,13 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before admitting a departure witness as evidence for a later negation use, resolve:
+Before treating an admitted departure as incidence under a later negation use, resolve:
 
-> Given event-linked typed observations, exact standing support routes, and an oriented typed
-> finite incompatibility pair, what is the smallest derived admission boundary that can establish
-> determination relevance and non-circular positive departure without turning failed search,
-> projection, incomplete coverage, or caller-declared data into exteriority or silently collapsing
-> semantic and execution coverage?
+> Given one checked `AdmittedFiniteDeparture`, a structurally checked oriented `NegationUse`, and
+> the existing declared finite extension, what is the smallest derived incidence boundary that
+> preserves immutable use identity and separate semantic/execution coverage, rejects an extension
+> row unsupported by the admitted departure, and can feed the tagged exterior/same-use return
+> machinery without making declaration, generation, or projection into actuality?
 
 The protected difference is visible in the accepted sources:
 
@@ -77,6 +80,16 @@ The protected difference is visible in the accepted sources:
   grain, horizon, discharge mode, support, and warrant. It rejects an unlisted candidate or any
   binding/context mismatch. It does not evaluate the use, establish that a probe dispatched,
   admit support, prove incompatibility/relevance/non-circularity, or establish departure.
+- `admit_probed_finite_departure` is the first derived positive finite admission boundary. It
+  rechecks the exact source/candidate `DecodedObservationUse` events, requires both declared uses
+  to be `Probe`, requires their exact standing relation routes to name their preserved raw returns,
+  requires the incompatibility route to stand and name both returns, checks the positively listed
+  ordered typed pair against its explicit source/candidate ports, and requires the source
+  observation relation as a typed premise of the exact source-presentation route. The least fixed
+  point rejects rootless support cycles. Private fields prevent construction from `Unknown`,
+  `NoWitness`, reversed roles, generated routes, projection, or search failure. The result remains
+  ephemeral and finite-route-relative: it is not a warrant, canonical certificate, exhaustive
+  semantic coverage, negation incidence, exterior, return, or reconciliation.
 - Determination checking rehashes and checks the typed source, requires its binding to match the
   presentation, and recursively checks an optional predecessor. An ancestry edge may change the
   web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
@@ -326,14 +339,12 @@ The protected difference is visible in the accepted sources:
   opaque route belongs to or is lawful in the generator regime, materialize the route, choose a
   policy winner, execute the question, or support a return.
 
-Different answers determine whether a positive certificate can distinguish an actual supported
-departure from merely coexisting identifiers, failed work, and incomplete evidence. The decoded
-candidate/observation-use equality and finite-pair/use membership are now checked structurally.
-The same pair is now checked at explicit source/candidate role ports, and claims retain checked
-candidate provenance without self-standing. The next discriminator must reject a purported
-departure whose claim/use lacks separately identified support-environment, least-fixed-point
-standing, relevance, or non-circularity evidence, or has no more than caller-declared finite-table
-support.
+The finite positive-departure discriminator now rejects missing event-return coverage, missing
+source-determination relevance, nonstanding exact routes, generated observations, and every
+finite incompatibility outcome except a positive oriented listed pair. The next discriminator
+must ensure a negation incidence cannot borrow that admission across a different use, candidate,
+source presentation, or coverage contract, and that the derived reciprocal machinery consumes
+only the admitted same-use occurrence.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
 `T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty

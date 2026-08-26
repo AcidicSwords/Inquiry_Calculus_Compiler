@@ -3,14 +3,22 @@ use std::{fmt, str::FromStr};
 use thiserror::Error;
 
 use crate::{
+    ActualDecodeError, ActualDecodeResult, ActualEventCheckError, ActualEventError,
     ApplicabilityRef, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
-    DeterminationCatalog, DeterminationPresentationCheckError, DeterminationPresentationError,
+    DecodedObservationError, DecodedObservationUse, DeterminationCatalog,
+    DeterminationPresentationCheckError, DeterminationPresentationError,
     DeterminationPresentationRef, DeterminationSupportCatalog, DeterminationSupportError,
-    DischargeMode, DistinctionRef, GrainRef, RelationCatalog, RelationUse, RelationUseCheckError,
-    RelationUseError, RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError,
-    ResolvedDeterminationSupport, ResolvedRelationUseSupport, ScopeRef, Standing, SupportRef,
-    TypeCheckError, TypeError, TypedFormRef, resolve_relation_use_support,
-    standing_determination_presentation_support,
+    DischargeMode, DistinctionRef, EventRef, FiniteDecoderCatalog, FiniteDecoderRef, GrainRef,
+    ObservationResultCatalog, OperatorOccurrenceCatalog, RawReturnRef, RelationCatalog,
+    RelationUse, RelationUseCheckError, RelationUseError, RelationUseRef,
+    RelationUseSupportCatalog, RelationUseSupportError, ResolvedDeterminationSupport,
+    ResolvedRelationUseSupport, ScopeRef, Standing, SupportEnvironmentArtifact,
+    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef,
+    TypeCheckError, TypeError, TypedFiniteOrientedIncompatibilityUseWitness, TypedFormRef,
+    check_actual_event, decode_actual_event, match_decoded_observation_use,
+    resolve_relation_use_support, standing_determination_presentation_support,
+    standing_relation_use_support,
 };
 
 /// Canonical artifact kind for positive determination-relative departure witnesses.
@@ -91,6 +99,17 @@ impl<T> DepartureEvidenceSupportCatalog for T where
 {
 }
 
+/// Catalog boundary for the first finite event-linked positive-departure admission route.
+pub trait FiniteDepartureAdmissionCatalog:
+    DepartureEvidenceSupportCatalog + OperatorOccurrenceCatalog + ObservationResultCatalog
+{
+}
+
+impl<T> FiniteDepartureAdmissionCatalog for T where
+    T: DepartureEvidenceSupportCatalog + OperatorOccurrenceCatalog + ObservationResultCatalog
+{
+}
+
 /// Resolved support routes for one structurally checked positive-departure witness.
 ///
 /// The source presentation and relation uses intentionally retain different support roles: the
@@ -119,6 +138,70 @@ impl ResolvedDepartureEvidenceSupport {
     #[must_use]
     pub const fn incompatibility(&self) -> ResolvedRelationUseSupport {
         self.incompatibility
+    }
+}
+
+/// The independently constructed evidence inputs for one finite probed departure check.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct FiniteDepartureEvidence {
+    source_observation: DecodedObservationUse,
+    candidate_observation: DecodedObservationUse,
+    incompatibility: TypedFiniteOrientedIncompatibilityUseWitness,
+}
+
+impl FiniteDepartureEvidence {
+    #[must_use]
+    pub const fn new(
+        source_observation: DecodedObservationUse,
+        candidate_observation: DecodedObservationUse,
+        incompatibility: TypedFiniteOrientedIncompatibilityUseWitness,
+    ) -> Self {
+        Self {
+            source_observation,
+            candidate_observation,
+            incompatibility,
+        }
+    }
+}
+
+/// A derived finite positive-departure result under explicit probe and standing-route coverage.
+///
+/// This value is not a canonical artifact, standing mutation, warrant, negation incidence, or
+/// exterior. Its private fields ensure callers can obtain it only through the admission checker.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct AdmittedFiniteDeparture {
+    witness: DepartureWitnessRef,
+    support: ResolvedDepartureEvidenceSupport,
+    source_event: EventRef,
+    candidate_event: EventRef,
+    source_raw_return: RawReturnRef,
+    candidate_raw_return: RawReturnRef,
+}
+
+impl AdmittedFiniteDeparture {
+    #[must_use]
+    pub const fn witness(&self) -> DepartureWitnessRef {
+        self.witness
+    }
+    #[must_use]
+    pub const fn support(&self) -> ResolvedDepartureEvidenceSupport {
+        self.support
+    }
+    #[must_use]
+    pub const fn source_event(&self) -> EventRef {
+        self.source_event
+    }
+    #[must_use]
+    pub const fn candidate_event(&self) -> EventRef {
+        self.candidate_event
+    }
+    #[must_use]
+    pub const fn source_raw_return(&self) -> RawReturnRef {
+        self.source_raw_return
+    }
+    #[must_use]
+    pub const fn candidate_raw_return(&self) -> RawReturnRef {
+        self.candidate_raw_return
     }
 }
 
@@ -472,6 +555,209 @@ pub fn resolve_departure_witness_evidence_support<C: DepartureEvidenceSupportCat
     })
 }
 
+/// Admits the first exact finite positive-departure route from preserved probe returns.
+///
+/// Both observations must be derived from checked ordinary events and exact decoded candidates,
+/// every use must close through its own standing support environment, the source observation must
+/// be a typed standing premise of the exact source-presentation route, and the ordered answer pair
+/// must have an independently checked finite incompatibility witness. The least fixed point and a
+/// direct support-reference check exclude rootless and self-referential witness support.
+pub fn admit_probed_finite_departure<C: FiniteDepartureAdmissionCatalog>(
+    witness: &DepartureWitness,
+    standing: &Standing,
+    evidence: &FiniteDepartureEvidence,
+    catalog: &C,
+) -> Result<AdmittedFiniteDeparture, FiniteDepartureAdmissionError> {
+    let resolved = resolve_departure_witness_evidence_support(witness, standing, catalog)?;
+    let source_support =
+        standing_relation_use_support(witness.source_observation(), standing, catalog)?;
+    let candidate_support =
+        standing_relation_use_support(witness.candidate_observation(), standing, catalog)?;
+    let incompatibility_support =
+        standing_relation_use_support(witness.incompatibility(), standing, catalog)?;
+    let resolved = ResolvedDepartureEvidenceSupport {
+        source_presentation: resolved.source_presentation(),
+        source_observation: source_support,
+        candidate_observation: candidate_support,
+        incompatibility: incompatibility_support,
+    };
+
+    let source = check_probed_observation(
+        "source",
+        &evidence.source_observation,
+        witness.source_observation(),
+        source_support.environment(),
+        catalog,
+    )?;
+    let candidate = check_probed_observation(
+        "candidate",
+        &evidence.candidate_observation,
+        witness.candidate_observation(),
+        candidate_support.environment(),
+        catalog,
+    )?;
+
+    let finite_use = *evidence.incompatibility.witness();
+    if finite_use.incompatibility_use() != witness.incompatibility() {
+        return Err(FiniteDepartureAdmissionError::IncompatibilityUseMismatch {
+            expected: witness.incompatibility(),
+            actual: finite_use.incompatibility_use(),
+        });
+    }
+    let pair = finite_use.pair();
+    if pair.source_value() != witness.source_answer()
+        || pair.candidate_value() != witness.candidate_answer()
+    {
+        return Err(FiniteDepartureAdmissionError::IncompatibilityPairMismatch);
+    }
+
+    let incompatibility_environment =
+        checked_support_environment(incompatibility_support.environment(), catalog)?;
+    for raw_return in [source.raw_return, candidate.raw_return] {
+        if !incompatibility_environment
+            .actual_returns()
+            .contains(&raw_return)
+        {
+            return Err(
+                FiniteDepartureAdmissionError::IncompatibilitySupportMissingReturn {
+                    environment: incompatibility_support.environment(),
+                    raw_return,
+                },
+            );
+        }
+    }
+
+    let source_use = DepartureCatalog::resolve_relation_use(catalog, witness.source_observation())
+        .ok_or(FiniteDepartureAdmissionError::UnresolvedRelationUse(
+            witness.source_observation(),
+        ))?;
+    let presentation_support = resolved.source_presentation();
+    if !standing.route_requires(
+        SupportSubjectRef::Claim(presentation_support.claim()),
+        presentation_support.environment(),
+        SupportSubjectRef::Relation(source_use.relation()),
+    ) {
+        return Err(
+            FiniteDepartureAdmissionError::SourceObservationNotRelevant {
+                presentation: witness.source_presentation(),
+                relation: source_use.relation(),
+            },
+        );
+    }
+
+    let witness_ref = witness.departure_witness_ref()?;
+    for environment_ref in [
+        presentation_support.environment(),
+        source_support.environment(),
+        candidate_support.environment(),
+        incompatibility_support.environment(),
+    ] {
+        let environment = checked_support_environment(environment_ref, catalog)?;
+        if environment
+            .referenced_artifacts()
+            .contains(&witness_ref.as_artifact_ref())
+        {
+            return Err(FiniteDepartureAdmissionError::CircularSupport {
+                environment: environment_ref,
+                witness: witness_ref,
+            });
+        }
+    }
+
+    Ok(AdmittedFiniteDeparture {
+        witness: witness_ref,
+        support: resolved,
+        source_event: source.event,
+        candidate_event: candidate.event,
+        source_raw_return: source.raw_return,
+        candidate_raw_return: candidate.raw_return,
+    })
+}
+
+#[derive(Clone, Copy)]
+struct CheckedProbedObservation {
+    event: EventRef,
+    raw_return: RawReturnRef,
+}
+
+fn check_probed_observation<C: FiniteDepartureAdmissionCatalog>(
+    role: &'static str,
+    evidence: &DecodedObservationUse,
+    expected_use: RelationUseRef,
+    environment_ref: SupportEnvironmentRef,
+    catalog: &C,
+) -> Result<CheckedProbedObservation, FiniteDepartureAdmissionError> {
+    if evidence.observation() != expected_use {
+        return Err(FiniteDepartureAdmissionError::ObservationUseMismatch {
+            role,
+            expected: expected_use,
+            actual: evidence.observation(),
+        });
+    }
+    let relation_use = DepartureCatalog::resolve_relation_use(catalog, expected_use).ok_or(
+        FiniteDepartureAdmissionError::UnresolvedRelationUse(expected_use),
+    )?;
+    if relation_use.mode() != DischargeMode::Probe {
+        return Err(FiniteDepartureAdmissionError::ObservationIsNotProbe {
+            role,
+            relation_use: expected_use,
+        });
+    }
+    let event_ref = evidence.decoded().event();
+    let event = OperatorOccurrenceCatalog::resolve_actual_event(catalog, event_ref)
+        .ok_or(FiniteDepartureAdmissionError::UnresolvedEvent(event_ref))?;
+    let calculated = event.event_ref()?;
+    if calculated != event_ref {
+        return Err(FiniteDepartureAdmissionError::EventIdentityMismatch {
+            reference: event_ref,
+            calculated,
+        });
+    }
+    check_actual_event(&event, catalog)?;
+    let decoder_ref = evidence.decoded().decoder();
+    let decoder = FiniteDecoderCatalog::resolve_finite_decoder(catalog, decoder_ref).ok_or(
+        FiniteDepartureAdmissionError::UnresolvedDecoder(decoder_ref),
+    )?;
+    let decoded = decode_actual_event(&event, &decoder, evidence.decoded().path(), catalog)?;
+    let ActualDecodeResult::Decoded(decoded) = decoded else {
+        return Err(FiniteDepartureAdmissionError::ObservationNoLongerDecoded {
+            role,
+            event: event_ref,
+        });
+    };
+    match_decoded_observation_use(&decoded, evidence.candidate(), expected_use, catalog)?;
+    let environment = checked_support_environment(environment_ref, catalog)?;
+    if !environment.actual_returns().contains(&event.raw_return()) {
+        return Err(FiniteDepartureAdmissionError::SupportMissingReturn {
+            role,
+            environment: environment_ref,
+            raw_return: event.raw_return(),
+        });
+    }
+    Ok(CheckedProbedObservation {
+        event: event_ref,
+        raw_return: event.raw_return(),
+    })
+}
+
+fn checked_support_environment<C: SupportEnvironmentCatalog>(
+    reference: SupportEnvironmentRef,
+    catalog: &C,
+) -> Result<SupportEnvironmentArtifact, FiniteDepartureAdmissionError> {
+    let environment = catalog.resolve_support_environment(reference).ok_or(
+        FiniteDepartureAdmissionError::UnresolvedEnvironment(reference),
+    )?;
+    let calculated = environment.support_environment_ref()?;
+    if calculated != reference {
+        return Err(FiniteDepartureAdmissionError::EnvironmentIdentityMismatch {
+            reference,
+            calculated,
+        });
+    }
+    environment.check(catalog)?;
+    Ok(environment)
+}
+
 pub(crate) fn relation_use_binds_pair(
     relation_use: &RelationUse,
     left: TypedFormRef,
@@ -619,4 +905,108 @@ pub enum DepartureEvidenceSupportError {
     Standing(#[from] DepartureStandingCheckError),
     #[error(transparent)]
     RelationUse(#[from] RelationUseSupportError),
+}
+
+/// Errors from the exact finite probe-backed departure admission route.
+#[derive(Debug, Error)]
+pub enum FiniteDepartureAdmissionError {
+    #[error(transparent)]
+    EvidenceSupport(Box<DepartureEvidenceSupportError>),
+    #[error(transparent)]
+    RelationSupport(#[from] RelationUseSupportError),
+    #[error(transparent)]
+    Witness(#[from] DepartureWitnessError),
+    #[error(transparent)]
+    EventEncoding(#[from] ActualEventError),
+    #[error(transparent)]
+    EventCheck(#[from] ActualEventCheckError),
+    #[error(transparent)]
+    ActualDecode(Box<ActualDecodeError>),
+    #[error(transparent)]
+    ObservationMatch(Box<DecodedObservationError>),
+    #[error(transparent)]
+    EnvironmentEncoding(#[from] SupportEnvironmentArtifactError),
+    #[error(transparent)]
+    EnvironmentCheck(#[from] SupportEnvironmentArtifactCheckError),
+    #[error("{role} decoded observation names use {actual}, expected {expected}")]
+    ObservationUseMismatch {
+        role: &'static str,
+        expected: RelationUseRef,
+        actual: RelationUseRef,
+    },
+    #[error("{role} observation use {relation_use} is not discharged through Probe")]
+    ObservationIsNotProbe {
+        role: &'static str,
+        relation_use: RelationUseRef,
+    },
+    #[error("relation use {0} is unavailable")]
+    UnresolvedRelationUse(RelationUseRef),
+    #[error("actual event {0} is unavailable")]
+    UnresolvedEvent(EventRef),
+    #[error("finite decoder {0} is unavailable")]
+    UnresolvedDecoder(FiniteDecoderRef),
+    #[error("{role} event {event} no longer has a decoded observation result")]
+    ObservationNoLongerDecoded { role: &'static str, event: EventRef },
+    #[error("actual event {reference} hashes to {calculated}, not its claimed identity")]
+    EventIdentityMismatch {
+        reference: EventRef,
+        calculated: EventRef,
+    },
+    #[error("support environment {0} is unavailable")]
+    UnresolvedEnvironment(SupportEnvironmentRef),
+    #[error("support environment {reference} hashes to {calculated}, not its claimed identity")]
+    EnvironmentIdentityMismatch {
+        reference: SupportEnvironmentRef,
+        calculated: SupportEnvironmentRef,
+    },
+    #[error("{role} support environment {environment} does not name actual return {raw_return}")]
+    SupportMissingReturn {
+        role: &'static str,
+        environment: SupportEnvironmentRef,
+        raw_return: RawReturnRef,
+    },
+    #[error("finite incompatibility evidence names use {actual}, expected {expected}")]
+    IncompatibilityUseMismatch {
+        expected: RelationUseRef,
+        actual: RelationUseRef,
+    },
+    #[error("finite incompatibility evidence does not carry the witness's ordered answer pair")]
+    IncompatibilityPairMismatch,
+    #[error(
+        "incompatibility support environment {environment} does not name observation return {raw_return}"
+    )]
+    IncompatibilitySupportMissingReturn {
+        environment: SupportEnvironmentRef,
+        raw_return: RawReturnRef,
+    },
+    #[error(
+        "source observation relation {relation} is not a standing premise of presentation {presentation}"
+    )]
+    SourceObservationNotRelevant {
+        presentation: DeterminationPresentationRef,
+        relation: crate::RelationRef,
+    },
+    #[error("support environment {environment} circularly references departure witness {witness}")]
+    CircularSupport {
+        environment: SupportEnvironmentRef,
+        witness: DepartureWitnessRef,
+    },
+}
+
+impl From<DepartureEvidenceSupportError> for FiniteDepartureAdmissionError {
+    fn from(error: DepartureEvidenceSupportError) -> Self {
+        Self::EvidenceSupport(Box::new(error))
+    }
+}
+
+impl From<ActualDecodeError> for FiniteDepartureAdmissionError {
+    fn from(error: ActualDecodeError) -> Self {
+        Self::ActualDecode(Box::new(error))
+    }
+}
+
+impl From<DecodedObservationError> for FiniteDepartureAdmissionError {
+    fn from(error: DecodedObservationError) -> Self {
+        Self::ObservationMatch(Box::new(error))
+    }
 }

@@ -4,12 +4,13 @@ use ic_core::{
     ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef,
     ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
     ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecoderRef,
-    DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError, DepartureWitness,
-    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
-    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef,
-    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
+    DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse,
+    DecoderRef, DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError,
+    DepartureWitness, DeterminationCatalog, DeterminationPresentation,
+    DeterminationPresentationRef, DeterminationSupportError, DischargeMode, EffectivityRef,
+    EventRef, FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
     FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
+    FiniteDepartureAdmissionError, FiniteDepartureEvidence, FiniteTypedIncompatibilityUseCatalog,
     FormulaArtifact, FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
     GeneratedInquiryCheckError, GeneratorRegimeRef, GrainRef, HorizonRef, ObservationResultCatalog,
     OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
@@ -22,7 +23,10 @@ use ic_core::{
     StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
     SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
-    TypedForm, TypedFormRef, check_departure_witness_standing_support, decode_actual_event,
+    TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable, TypedFiniteObservation,
+    TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
+    admit_probed_finite_departure, check_departure_witness_standing_support,
+    check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     match_decoded_observation_use, resolve_departure_witness_evidence_support,
     resolve_determination_presentation_support, resolve_relation_use_support,
     standing_determination_presentation_support, standing_from_declared_support,
@@ -274,6 +278,12 @@ impl DeterminationCatalog for Catalog {
 }
 
 impl DepartureCatalog for Catalog {
+    fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
+        self.relation_uses.get(&reference).cloned()
+    }
+}
+
+impl FiniteTypedIncompatibilityUseCatalog for Catalog {
     fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
         self.relation_uses.get(&reference).cloned()
     }
@@ -1425,5 +1435,424 @@ fn finite_decode_links_an_event_record_to_its_direct_decoder_route() {
         decode_actual_event(&fixture.event, &decoder, wrong_output, &fixture.catalog),
         Err(ActualDecodeError::PathOutputMismatch { path, answer })
             if path == fixture.other_type && answer == fixture.answer_type
+    ));
+}
+
+#[allow(clippy::too_many_arguments)]
+fn decoded_probe_observation(
+    catalog: &mut Catalog,
+    relation: RelationRef,
+    known: TypedFormRef,
+    answer: TypedFormRef,
+    answer_type: TypeRef,
+    raw_type: TypeRef,
+    raw_return: RawReturnRef,
+    presentation: DeterminationPresentationRef,
+    support: SupportEnvironmentRef,
+    scope: ScopeRef,
+    applicability: ApplicabilityRef,
+    grain: GrainRef,
+    horizon: HorizonRef,
+    binding: BindingVersionRef,
+    tag: u8,
+) -> DecodedObservationUse {
+    let context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        support.as_support_ref(),
+        None,
+    );
+    let known_port = TypeSymbol::new("known").expect("port must be valid");
+    let answer_port = TypeSymbol::new("answer").expect("port must be valid");
+    let query = OpenQuery::new(
+        relation,
+        vec![PortBinding::new(known_port.clone(), known)],
+        vec![OpenPort::new(answer_port.clone(), DischargeMode::Probe)],
+        context,
+    );
+    let candidate = query
+        .plug(vec![PortBinding::new(answer_port.clone(), answer)], catalog)
+        .expect("observation candidate must be complete");
+    let query_ref = catalog.insert_query(query);
+    let candidate_ref = catalog.insert_candidate(candidate);
+    let observation = catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![
+            PortBinding::new(known_port, known),
+            PortBinding::new(answer_port, answer),
+        ],
+        context,
+    ));
+    let decoder = FiniteDecoder::new(
+        query_ref,
+        raw_type,
+        vec![FiniteDecoderEntry::Decoded {
+            raw_return,
+            candidates: vec![candidate_ref],
+        }],
+    )
+    .expect("one finite decode row must be valid");
+    let decoder_ref = catalog.insert_decoder(decoder.clone());
+    let path = catalog.insert_path(ResolutionPath::new(
+        raw_type,
+        answer_type,
+        ResolutionPathIR::Decode {
+            decoder: decoder_ref.as_decoder_ref(),
+        },
+    ));
+    let chart = BoundaryChart::new(
+        query_ref,
+        answer_type,
+        answer_type,
+        answer_type,
+        relation,
+        relation,
+        presentation,
+        None,
+        Vec::new(),
+        Vec::new(),
+        observation,
+        FormulaRef::from_artifact_ref(artifact(tag.wrapping_add(1))),
+        None,
+        grain,
+        horizon,
+    );
+    let boundary = chart.boundary_ref().expect("chart must encode");
+    catalog.charts.insert(boundary, chart);
+    let operator = ProbeOperator::new(
+        query_ref,
+        boundary,
+        artifact(tag.wrapping_add(2)),
+        artifact(tag.wrapping_add(3)),
+        artifact(tag.wrapping_add(4)),
+        raw_type,
+        artifact(tag.wrapping_add(5)),
+        ProbeContractRef::from_artifact_ref(artifact(tag.wrapping_add(6))),
+        artifact(tag.wrapping_add(7)),
+    );
+    let operator_ref = operator.probe_operator_ref().expect("operator must encode");
+    catalog.operators.insert(operator_ref, operator);
+    let event = ActualEvent::new(
+        None,
+        StateRef::from_artifact_ref(artifact(tag.wrapping_add(8))),
+        query_ref,
+        boundary,
+        None,
+        operator_ref,
+        raw_return,
+        StateRef::from_artifact_ref(artifact(tag.wrapping_add(9))),
+        grain,
+        RouteRef::from_artifact_ref(artifact(tag.wrapping_add(10))),
+        binding,
+        artifact(tag.wrapping_add(11)),
+        ProvenanceRef::from_artifact_ref(artifact(tag.wrapping_add(12))),
+    );
+    catalog.insert_event(event.clone());
+    let decoded = decode_actual_event(&event, &decoder, path, catalog)
+        .expect("preserved event return must decode");
+    let ActualDecodeResult::Decoded(decoded) = decoded else {
+        panic!("declared decode row must return its candidate")
+    };
+    match_decoded_observation_use(&decoded, candidate_ref, observation, catalog)
+        .expect("decoded completion must match its declared observation use")
+}
+
+fn finite_departure_scenario(
+    source_observation_is_relevant: bool,
+    observation_supports_candidate_return: bool,
+) -> Result<ic_core::AdmittedFiniteDeparture, Box<FiniteDepartureAdmissionError>> {
+    let mut fixture = fixture();
+    let binding = BindingVersionRef::from_artifact_ref(artifact(0x10));
+    let scope = ScopeRef::from_artifact_ref(artifact(0xa0));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0xa1));
+    let grain = GrainRef::from_artifact_ref(artifact(0xa2));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0xa3));
+    let source =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0xa4)));
+    let candidate =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0xa5)));
+    let source_answer =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0xa6)));
+    let candidate_answer =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0xa7)));
+    let source_return = fixture
+        .catalog
+        .insert_raw_return(RawReturn::new(vec![0xa8]));
+    let candidate_return = fixture
+        .catalog
+        .insert_raw_return(RawReturn::new(vec![0xa9]));
+
+    let incompatibility_relation = fixture.catalog.insert_schema(RelationSchema::new(
+        binding,
+        vec![
+            port("source", fixture.answer_type),
+            port("candidate", fixture.answer_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0xaa),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let source_observation_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(fixture.relation),
+            Vec::new(),
+            vec![source_return],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("source-observation support must canonicalize"),
+    );
+    let candidate_returns = observation_supports_candidate_return
+        .then_some(candidate_return)
+        .into_iter()
+        .collect();
+    let candidate_observation_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(fixture.relation),
+            Vec::new(),
+            candidate_returns,
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("candidate-observation support must canonicalize"),
+    );
+    let incompatibility_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(incompatibility_relation),
+            vec![fixture.relation.as_artifact_ref()],
+            vec![source_return, candidate_return],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("incompatibility support must canonicalize"),
+    );
+    let claim = fixture.catalog.insert_claim(
+        ClaimArtifact::new(
+            source.as_artifact_ref(),
+            fixture.query,
+            Vec::new(),
+            Vec::new(),
+            scope,
+            applicability,
+            ClaimStatus::Checked,
+        )
+        .expect("source claim must canonicalize"),
+    );
+    let claim_premises = source_observation_is_relevant
+        .then_some(fixture.relation.as_artifact_ref())
+        .into_iter()
+        .collect();
+    let presentation_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Claim(claim),
+            claim_premises,
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("presentation support must canonicalize"),
+    );
+    let distinction = ic_core::DistinctionRef::from_artifact_ref(artifact(0xab));
+    let presentation = fixture
+        .catalog
+        .insert_presentation(DeterminationPresentation::new(
+            distinction,
+            ic_core::Orientation::X,
+            source,
+            ic_core::RelationalWebRef::from_artifact_ref(artifact(0xac)),
+            binding,
+            scope,
+            applicability,
+            grain,
+            horizon,
+            presentation_environment.as_support_ref(),
+            None,
+        ));
+
+    let source_observation = decoded_probe_observation(
+        &mut fixture.catalog,
+        fixture.relation,
+        source,
+        source_answer,
+        fixture.answer_type,
+        fixture.raw_type,
+        source_return,
+        presentation,
+        source_observation_environment,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        binding,
+        0xb0,
+    );
+    let candidate_observation = decoded_probe_observation(
+        &mut fixture.catalog,
+        fixture.relation,
+        candidate,
+        candidate_answer,
+        fixture.answer_type,
+        fixture.raw_type,
+        candidate_return,
+        presentation,
+        candidate_observation_environment,
+        scope,
+        applicability,
+        grain,
+        horizon,
+        binding,
+        0xc0,
+    );
+    let incompatibility = fixture.catalog.insert_relation_use(RelationUse::new(
+        incompatibility_relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("source").expect("port must be valid"),
+                source_answer,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("candidate").expect("port must be valid"),
+                candidate_answer,
+            ),
+        ],
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Check,
+            incompatibility_environment.as_support_ref(),
+            None,
+        ),
+    ));
+    let witness = DepartureWitness::new(
+        distinction,
+        source,
+        candidate,
+        presentation,
+        source_observation.observation(),
+        candidate_observation.observation(),
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        SupportRef::from_artifact_ref(artifact(0xad)),
+        scope,
+        applicability,
+        grain,
+    );
+
+    let source_observation_closure = DeclaredSupportClosure::for_subjects(
+        source_observation_environment,
+        Vec::new(),
+        true,
+        true,
+        false,
+    );
+    let candidate_observation_closure = DeclaredSupportClosure::for_subjects(
+        candidate_observation_environment,
+        Vec::new(),
+        true,
+        true,
+        false,
+    );
+    let incompatibility_closure = DeclaredSupportClosure::for_subjects(
+        incompatibility_environment,
+        vec![SupportSubjectRef::Relation(fixture.relation)],
+        true,
+        true,
+        false,
+    );
+    let presentation_premises = source_observation_is_relevant
+        .then_some(SupportSubjectRef::Relation(fixture.relation))
+        .into_iter()
+        .collect();
+    let presentation_closure = DeclaredSupportClosure::for_subjects(
+        presentation_environment,
+        presentation_premises,
+        true,
+        true,
+        false,
+    );
+    let standing = standing_from_declared_support(
+        Vec::new(),
+        &[
+            source_observation_closure,
+            candidate_observation_closure,
+            incompatibility_closure,
+            presentation_closure,
+        ],
+        &fixture.catalog,
+    )
+    .expect("finite evidence routes must close from their typed premises");
+
+    let table = TypedFiniteIncompatibilityTable::new(vec![(source_answer, candidate_answer)])
+        .expect("one positive pair must be valid");
+    let oriented = check_typed_finite_oriented_incompatibility_use(
+        &table,
+        &fixture.catalog,
+        incompatibility,
+        TypedFiniteIncompatibilityRoles::new(
+            TypeSymbol::new("source").expect("port must be valid"),
+            TypeSymbol::new("candidate").expect("port must be valid"),
+        )
+        .expect("roles must be distinct"),
+        TypedFiniteObservation::Observed(source_answer),
+        TypedFiniteObservation::Observed(candidate_answer),
+    )
+    .expect("typed finite incompatibility must be checkable");
+    let TypedFiniteOrientedIncompatibilityUseResult::Incompatible(oriented) = oriented else {
+        panic!("listed observed pair must produce positive incompatibility")
+    };
+    let evidence =
+        FiniteDepartureEvidence::new(source_observation, candidate_observation, oriented);
+    admit_probed_finite_departure(&witness, &standing, &evidence, &fixture.catalog)
+        .map_err(Box::new)
+}
+
+#[test]
+fn finite_departure_requires_positive_probed_supported_relevant_non_circular_evidence() {
+    let admitted = finite_departure_scenario(true, true)
+        .expect("fully supported finite observations must admit one derived departure");
+    assert_ne!(admitted.source_event(), admitted.candidate_event());
+    assert_ne!(
+        admitted.source_raw_return(),
+        admitted.candidate_raw_return()
+    );
+
+    assert!(matches!(
+        finite_departure_scenario(true, false),
+        Err(error) if matches!(*error, FiniteDepartureAdmissionError::SupportMissingReturn {
+            role: "candidate",
+            ..
+        })
+    ));
+    assert!(matches!(
+        finite_departure_scenario(false, true),
+        Err(error) if matches!(*error, FiniteDepartureAdmissionError::SourceObservationNotRelevant { .. })
     ));
 }
