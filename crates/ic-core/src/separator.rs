@@ -136,6 +136,98 @@ pub enum DeclaredRouteMaterialization {
     OutsideDeclaredRegime,
 }
 
+/// A route available in one declared finite regime but absent from its current materialization.
+///
+/// It is a continuation obligation, not proof that the route is lawful in a broader language or
+/// that policy should select it.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct MaterializationGap {
+    regime: GeneratorRegimeRef,
+    route: ArtifactRef,
+}
+
+impl MaterializationGap {
+    /// Returns a gap only when the route is fresh in the exact declared regime.
+    pub fn new(
+        regime: &DeclaredFiniteGeneratorRegime,
+        route: ArtifactRef,
+    ) -> Result<Self, MaterializationGapError> {
+        match regime.route_status(route) {
+            DeclaredRouteMaterialization::FreshWithinRegime => Ok(Self {
+                regime: regime.regime(),
+                route,
+            }),
+            DeclaredRouteMaterialization::Materialized => {
+                Err(MaterializationGapError::AlreadyMaterialized(route))
+            }
+            DeclaredRouteMaterialization::OutsideDeclaredRegime => {
+                Err(MaterializationGapError::OutsideDeclaredRegime(route))
+            }
+        }
+    }
+    #[must_use]
+    pub const fn regime(&self) -> GeneratorRegimeRef {
+        self.regime
+    }
+    #[must_use]
+    pub const fn route(&self) -> ArtifactRef {
+        self.route
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum MaterializationGapError {
+    #[error("route {0} is already materialized")]
+    AlreadyMaterialized(ArtifactRef),
+    #[error("route {0} is outside the declared generator regime")]
+    OutsideDeclaredRegime(ArtifactRef),
+}
+
+/// A candidate route outside the current finite declared regime, preserved without admission.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ProposedRegimeExtension {
+    problem: SeparatorProblemRef,
+    regime: GeneratorRegimeRef,
+    proposed_route: ArtifactRef,
+}
+
+impl ProposedRegimeExtension {
+    pub fn new(
+        problem: SeparatorProblemRef,
+        regime: &DeclaredFiniteGeneratorRegime,
+        proposed_route: ArtifactRef,
+    ) -> Result<Self, ProposedRegimeExtensionError> {
+        if regime.routes().contains(&proposed_route) {
+            return Err(ProposedRegimeExtensionError::AlreadyInRegime(
+                proposed_route,
+            ));
+        }
+        Ok(Self {
+            problem,
+            regime: regime.regime(),
+            proposed_route,
+        })
+    }
+    #[must_use]
+    pub const fn problem(&self) -> SeparatorProblemRef {
+        self.problem
+    }
+    #[must_use]
+    pub const fn regime(&self) -> GeneratorRegimeRef {
+        self.regime
+    }
+    #[must_use]
+    pub const fn proposed_route(&self) -> ArtifactRef {
+        self.proposed_route
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum ProposedRegimeExtensionError {
+    #[error("proposed route {0} is already in the declared generator regime")]
+    AlreadyInRegime(ArtifactRef),
+}
+
 #[derive(Debug, Error)]
 pub enum DeclaredFiniteGeneratorRegimeError {
     #[error("declared generator regime repeats route {0}")]

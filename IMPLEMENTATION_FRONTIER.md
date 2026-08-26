@@ -351,6 +351,11 @@ exact protected signature. It can retain `ExactNoSeparatorWithinRegime`, never a
 representation gap: regime exhaustiveness and signature exactness are declared scope, not proof
 that no admitted language can express the difference.
 
+`MaterializationGap` and `ProposedRegimeExtension` are now derived candidates: the former is
+limited to a fresh declared route, the latter to a route outside the declared regime and one
+separator problem. Neither selects a route, establishes expressibility failure, or admits a
+binding extension.
+
 ## Known later questions
 
 These are recorded now but do not outrank the Phase 4 determination boundary:

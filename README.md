@@ -234,6 +234,10 @@ declared regime. When every route fails to separate a protected pair, it retains
 `ExactNoSeparatorWithinRegime` witness; it does not claim global inexpressibility or propose a
 representation extension.
 
+`MaterializationGap` is now constructible only for a fresh route already present in the declared
+regime. `ProposedRegimeExtension` instead retains a route outside that regime against a separator
+problem. Both are candidates: neither selects, runs, admits, or changes a binding.
+
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates
 or is explicitly outside the decoder; an unlisted raw return remains `Unknown`. A direct

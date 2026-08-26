@@ -2,10 +2,11 @@ use ic_core::{
     ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef, DeclaredFiniteGeneratorRegime,
     DeclaredFiniteGeneratorRegimeError, DeclaredRouteMaterialization, EffectivityRef,
     ExactFiniteRegimeRoute, ExactFiniteRegimeSeparatorError, ExactFiniteRegimeSeparatorResult,
-    ExactFiniteSignature, GeneratorRegimeRef, GrainRef, HorizonRef, ProtectedClassRef,
-    ProtectedCompletionFieldRef, SEPARATOR_PROBLEM_ARTIFACT_KIND, SEPARATOR_PROBLEM_SCHEMA_VERSION,
-    ScopeRef, SeparatorProblem, SeparatorProblemError, SignatureContext, StructureViewRef, TypeRef,
-    check_exact_no_separator_within_declared_regime,
+    ExactFiniteSignature, GeneratorRegimeRef, GrainRef, HorizonRef, MaterializationGap,
+    MaterializationGapError, ProposedRegimeExtension, ProposedRegimeExtensionError,
+    ProtectedClassRef, ProtectedCompletionFieldRef, SEPARATOR_PROBLEM_ARTIFACT_KIND,
+    SEPARATOR_PROBLEM_SCHEMA_VERSION, ScopeRef, SeparatorProblem, SeparatorProblemError,
+    SignatureContext, StructureViewRef, TypeRef, check_exact_no_separator_within_declared_regime,
 };
 
 fn artifact(byte: u8) -> ArtifactRef {
@@ -186,5 +187,33 @@ fn exact_no_separator_remains_relative_to_one_declared_finite_regime() {
             &protected,
         ),
         Err(ExactFiniteRegimeSeparatorError::MissingRouteSignature(reference)) if reference == route_b
+    ));
+}
+
+#[test]
+fn materialization_gap_and_regime_extension_remain_distinct_candidates() {
+    let regime_ref = GeneratorRegimeRef::from_artifact_ref(artifact(0x81));
+    let present = artifact(0x82);
+    let fresh = artifact(0x83);
+    let regime =
+        DeclaredFiniteGeneratorRegime::new(regime_ref, vec![present, fresh], vec![present])
+            .expect("finite regime must be valid");
+    let gap = MaterializationGap::new(&regime, fresh).expect("fresh route must form gap");
+    assert_eq!(gap.regime(), regime_ref);
+    assert_eq!(gap.route(), fresh);
+    assert!(matches!(
+        MaterializationGap::new(&regime, present),
+        Err(MaterializationGapError::AlreadyMaterialized(reference)) if reference == present
+    ));
+    let separator = problem(None)
+        .separator_problem_ref()
+        .expect("separator problem must hash");
+    let extension = ProposedRegimeExtension::new(separator, &regime, artifact(0x84))
+        .expect("outside route is only a candidate extension");
+    assert_eq!(extension.problem(), separator);
+    assert_eq!(extension.proposed_route(), artifact(0x84));
+    assert!(matches!(
+        ProposedRegimeExtension::new(separator, &regime, fresh),
+        Err(ProposedRegimeExtensionError::AlreadyInRegime(reference)) if reference == fresh
     ));
 }
