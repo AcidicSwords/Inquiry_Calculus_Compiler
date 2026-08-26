@@ -53,3 +53,8 @@ Moving status is intentionally not duplicated here:
 - `DECISIONS.jsonl`, `FAILURES.jsonl`, and Git explain why the repository has its present shape.
 
 Consequential changes follow `AGENTS.md`. Generated proposals, actual returns, decoded results, checks, warrant, and standing remain distinct throughout the implementation.
+
+Test results are recorded as scoped consequence boundaries, not generic proofs of correctness:
+each claim states its protected consequence, proposed condition, scope/semantics, probe, checker,
+coverage, and reopening condition. A missing counterexample remains `Unknown` unless the declared
+breaker field is independently established empty.

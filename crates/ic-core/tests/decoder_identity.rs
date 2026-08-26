@@ -3,29 +3,31 @@ use std::collections::BTreeMap;
 use ic_core::{
     ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog,
     AdmittedFiniteDeparture, AdmittedFiniteNegationExtension, ApplicabilityRef, ArtifactRef,
-    BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError, ClaimRef,
-    ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse,
-    DecoderRef, DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError,
-    DepartureWitness, DeterminationCatalog, DeterminationPresentation,
-    DeterminationPresentationRef, DeterminationSupportError, DischargeMode, EffectivityRef,
-    EventRef, ExactFiniteSignature, FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION,
-    FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError,
-    FiniteDecoderOutcome, FiniteDepartureAdmissionError, FiniteDepartureEvidence,
-    FiniteSupportedAnswerError, FiniteTypedIncompatibilityUseCatalog, FormulaArtifact,
-    FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
-    GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
-    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, NegationCoverage, NegationUse,
-    NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
-    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
-    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
-    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, ReciprocalOccurrence,
-    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
-    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
-    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
-    ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef, SeedReorientation,
-    SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext, Standing, StateRef,
-    StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
+    AskOccurrence, AskOccurrenceCheckError, BindingVersionRef, BoundaryChart, BoundaryRef,
+    ClaimArtifact, ClaimError, ClaimRef, ClaimStatus, CompletionCandidate,
+    CompletionCandidateCatalog, CompletionCandidateRef, DeclaredStandingError,
+    DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse, DecoderRef,
+    DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError, DepartureWitness,
+    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
+    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef, ExactFiniteSignature,
+    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
+    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
+    FiniteDepartureAdmissionError, FiniteDepartureEvidence, FiniteSupportedAnswerError,
+    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
+    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgIR, IProgRef, NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog,
+    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
+    OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
+    ProgramBinding, ProtectedCompletionFieldRef, ProvenanceRef, QueryRef,
+    QuestionSuccessionCatalog, QuestionSuccessor, RawReturn, RawReturnCatalog, RawReturnRef,
+    ReciprocalOccurrence, RelationBodyIR, RelationCatalog, RelationPort, RelationRef,
+    RelationSchema, RelationSignature, RelationUse, RelationUseContext, RelationUseRef,
+    RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog, ResolutionPath,
+    ResolutionPathIR, ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef,
+    SeedReorientation, SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext,
+    SourceConfig, SourceConfigRef, Standing, StateRef, StructureViewRef,
+    SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
     SupportSubjectRef, TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
     TypeRef, TypeSymbol, TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable,
@@ -34,10 +36,10 @@ use ic_core::{
     admit_finite_negation_extension, admit_finite_supported_answers, admit_probed_finite_departure,
     bind_finite_ask_continuation, check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
-    match_decoded_observation_use, resolve_departure_witness_evidence_support,
-    resolve_determination_presentation_support, resolve_relation_use_support,
-    standing_determination_presentation_support, standing_from_declared_support,
-    standing_relation_use_support,
+    derive_question_successor, match_decoded_observation_use,
+    resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
+    resolve_relation_use_support, standing_determination_presentation_support,
+    standing_from_declared_support, standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -61,6 +63,7 @@ struct Catalog {
     departures: BTreeMap<ic_core::DepartureWitnessRef, DepartureWitness>,
     negation_uses: BTreeMap<NegationUseRef, NegationUse>,
     programs: BTreeMap<IProgRef, IProgArtifact>,
+    source_configs: BTreeMap<SourceConfigRef, SourceConfig>,
     separator_problems: BTreeMap<SeparatorProblemRef, SeparatorProblem>,
 }
 
@@ -174,6 +177,14 @@ impl Catalog {
     fn insert_program(&mut self, program: IProgArtifact) -> IProgRef {
         let reference = program.iprog_ref().expect("inquiry program must encode");
         self.programs.insert(reference, program);
+        reference
+    }
+
+    fn insert_source_config(&mut self, source: SourceConfig) -> SourceConfigRef {
+        let reference = source
+            .source_config_ref()
+            .expect("source configuration must encode");
+        self.source_configs.insert(reference, source);
         reference
     }
 
@@ -337,6 +348,12 @@ impl TaggedExteriorCatalog for Catalog {
 impl IProgCatalog for Catalog {
     fn resolve_iprog(&self, reference: IProgRef) -> Option<IProgArtifact> {
         self.programs.get(&reference).cloned()
+    }
+}
+
+impl QuestionSuccessionCatalog for Catalog {
+    fn resolve_source_config(&self, reference: SourceConfigRef) -> Option<SourceConfig> {
+        self.source_configs.get(&reference).cloned()
     }
 }
 
@@ -2620,6 +2637,321 @@ fn finite_supported_answers_require_exact_decoded_probe_and_standing_route_cover
             &scenario.catalog,
         ),
         Err(FiniteSupportedAnswerError::RelationSupport(_))
+    ));
+}
+
+#[test]
+// Test boundary QSUCC-OCC-001:
+// F = successor identity collapses equal semantic questions and equal whole answers.
+// C = checked source configuration, source position, Ask fields, and first-order continuation.
+// Omega/M = two finite linear source programs under the canonical IProg/answer semantics.
+// P/V/E/U = admitted finite answer plus structural re-walk/checker; coverage is one finite
+// answer and two continuations, reopened by generalized substitution or cold-replay need.
+fn occurrence_indexed_successors_keep_equal_questions_and_answers_distinct() {
+    let mut scenario = build_finite_departure_scenario(true, true)
+        .expect("the finite probe fixture must admit one supported answer");
+    let answer = admit_finite_supported_answers(
+        scenario.source_observation.decoded().clone(),
+        vec![scenario.source_observation.clone()],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("the whole event-linked answer must admit before successor reconstruction");
+    let question = answer.decoded().query();
+    let other_question = scenario.candidate_observation.decoded().query();
+    assert_ne!(question, other_question);
+
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.source,
+        },
+    ));
+    let left_next = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("left_next").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let right_next = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: other_question,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("right_next").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let root_slot = TypeSymbol::new("answer").expect("slot must be valid");
+    let local_name = TypeSymbol::new("local").expect("name must be valid");
+    let left_root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question,
+            environment: vec![ProgramBinding::new(local_name.clone(), scenario.source)],
+            answer_slot: root_slot.clone(),
+            continuation: left_next,
+        },
+    ));
+    let right_root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question,
+            environment: vec![ProgramBinding::new(local_name, scenario.source)],
+            answer_slot: root_slot,
+            continuation: right_next,
+        },
+    ));
+    let left_source = SourceConfig::new(
+        scenario.answer_type,
+        left_root,
+        vec![ProgramBinding::new(
+            TypeSymbol::new("left_outer").expect("name must be valid"),
+            scenario.source,
+        )],
+        scenario.binding,
+        artifact(0xe0),
+        ProvenanceRef::from_artifact_ref(artifact(0xe1)),
+    )
+    .expect("left source configuration must canonicalize");
+    let right_source = SourceConfig::new(
+        scenario.answer_type,
+        right_root,
+        vec![ProgramBinding::new(
+            TypeSymbol::new("right_outer").expect("name must be valid"),
+            scenario.candidate,
+        )],
+        scenario.binding,
+        artifact(0xe2),
+        ProvenanceRef::from_artifact_ref(artifact(0xe3)),
+    )
+    .expect("right source configuration must canonicalize");
+    let left_ref = scenario.catalog.insert_source_config(left_source.clone());
+    let right_ref = scenario.catalog.insert_source_config(right_source.clone());
+    assert_eq!(
+        SourceConfig::from_envelope(&left_source.envelope().expect("source must encode"))
+            .expect("source must decode"),
+        left_source
+    );
+
+    let left_occurrences = left_source
+        .ask_occurrences(&scenario.catalog)
+        .expect("left source must derive its Ask positions");
+    let right_occurrences = right_source
+        .ask_occurrences(&scenario.catalog)
+        .expect("right source must derive its Ask positions");
+    assert_eq!(left_occurrences.len(), 2);
+    assert_eq!(right_occurrences.len(), 2);
+    let left = left_occurrences[0].clone();
+    let right = right_occurrences[0].clone();
+    assert_eq!(
+        ic_core::ProgramPosition::from_envelope(
+            &left.position().envelope().expect("position must encode"),
+        )
+        .expect("position must decode"),
+        left.position().clone()
+    );
+    assert_eq!(
+        AskOccurrence::from_envelope(&left.envelope().expect("occurrence must encode"))
+            .expect("occurrence must decode"),
+        left
+    );
+    assert_eq!(left.source_config(), left_ref);
+    assert_eq!(right.source_config(), right_ref);
+    assert_eq!(left.question(), question);
+    assert_eq!(right.question(), question);
+    assert_ne!(
+        left.ask_occurrence_ref()
+            .expect("left occurrence must encode"),
+        right
+            .ask_occurrence_ref()
+            .expect("right occurrence must encode")
+    );
+    left.check(&scenario.catalog)
+        .expect("left occurrence must re-walk");
+    right
+        .check(&scenario.catalog)
+        .expect("right occurrence must re-walk");
+
+    let left_successor = derive_question_successor(left.clone(), answer.clone(), &scenario.catalog)
+        .expect("the whole supported answer must reach the left continuation");
+    let right_successor =
+        derive_question_successor(right.clone(), answer.clone(), &scenario.catalog)
+            .expect("the same whole supported answer must reach the right continuation");
+    assert!(matches!(
+        &left_successor,
+        QuestionSuccessor::Ask {
+            occurrence,
+            answer: retained,
+            successor,
+        } if occurrence == &left
+            && retained.candidates() == answer.candidates()
+            && successor.question() == question
+    ));
+    assert!(matches!(
+        &right_successor,
+        QuestionSuccessor::Ask {
+            occurrence,
+            answer: retained,
+            successor,
+        } if occurrence == &right
+            && retained.candidates() == answer.candidates()
+            && successor.question() == other_question
+    ));
+
+    let forge = |position,
+                 question,
+                 environment,
+                 answer_slot,
+                 continuation,
+                 binding,
+                 compiler,
+                 provenance| {
+        AskOccurrence::new(
+            left_ref,
+            position,
+            question,
+            environment,
+            answer_slot,
+            continuation,
+            binding,
+            compiler,
+            provenance,
+        )
+        .expect("forged occurrence remains serializable so its checker can reject it")
+    };
+    assert!(matches!(
+        forge(
+            right.position().clone(),
+            left.question(),
+            left.environment().to_vec(),
+            left.answer_slot().clone(),
+            left.continuation(),
+            left.binding_version(),
+            left.compiler_version(),
+            left.provenance(),
+        )
+        .check(&scenario.catalog),
+        Err(AskOccurrenceCheckError::PositionSourceMismatch { .. })
+    ));
+    for (field, forged) in [
+        (
+            "question",
+            forge(
+                left.position().clone(),
+                other_question,
+                left.environment().to_vec(),
+                left.answer_slot().clone(),
+                left.continuation(),
+                left.binding_version(),
+                left.compiler_version(),
+                left.provenance(),
+            ),
+        ),
+        (
+            "environment",
+            forge(
+                left.position().clone(),
+                left.question(),
+                right.environment().to_vec(),
+                left.answer_slot().clone(),
+                left.continuation(),
+                left.binding_version(),
+                left.compiler_version(),
+                left.provenance(),
+            ),
+        ),
+        (
+            "answer slot",
+            forge(
+                left.position().clone(),
+                left.question(),
+                left.environment().to_vec(),
+                TypeSymbol::new("forged_slot").expect("slot must be valid"),
+                left.continuation(),
+                left.binding_version(),
+                left.compiler_version(),
+                left.provenance(),
+            ),
+        ),
+        (
+            "continuation",
+            forge(
+                left.position().clone(),
+                left.question(),
+                left.environment().to_vec(),
+                left.answer_slot().clone(),
+                right.continuation(),
+                left.binding_version(),
+                left.compiler_version(),
+                left.provenance(),
+            ),
+        ),
+        (
+            "binding version",
+            forge(
+                left.position().clone(),
+                left.question(),
+                left.environment().to_vec(),
+                left.answer_slot().clone(),
+                left.continuation(),
+                BindingVersionRef::from_artifact_ref(artifact(0xe4)),
+                left.compiler_version(),
+                left.provenance(),
+            ),
+        ),
+        (
+            "compiler version",
+            forge(
+                left.position().clone(),
+                left.question(),
+                left.environment().to_vec(),
+                left.answer_slot().clone(),
+                left.continuation(),
+                left.binding_version(),
+                right.compiler_version(),
+                left.provenance(),
+            ),
+        ),
+        (
+            "provenance",
+            forge(
+                left.position().clone(),
+                left.question(),
+                left.environment().to_vec(),
+                left.answer_slot().clone(),
+                left.continuation(),
+                left.binding_version(),
+                left.compiler_version(),
+                right.provenance(),
+            ),
+        ),
+    ] {
+        assert!(matches!(
+            forged.check(&scenario.catalog),
+            Err(AskOccurrenceCheckError::DerivedFieldMismatch(actual)) if actual == field
+        ));
+    }
+
+    let shadowed = SourceConfig::new(
+        scenario.answer_type,
+        left_root,
+        vec![ProgramBinding::new(
+            TypeSymbol::new("answer").expect("name must be valid"),
+            scenario.source,
+        )],
+        scenario.binding,
+        artifact(0xe5),
+        ProvenanceRef::from_artifact_ref(artifact(0xe6)),
+    )
+    .expect("a source configuration can represent the external capture candidate");
+    scenario.catalog.insert_source_config(shadowed.clone());
+    assert!(matches!(
+        shadowed.ask_occurrences(&scenario.catalog),
+        Err(AskOccurrenceCheckError::AnswerSlotShadowsEnvironment(name)) if name == "answer"
     ));
 }
 

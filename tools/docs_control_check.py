@@ -89,6 +89,18 @@ V2_FIXTURE_IDS = {
     "QCODE-TYPING-001",
 }
 
+# A v2 fixture may become PASS only through a deliberately registered executable
+# breaker. The status ledger names the protected boundary and coverage; this
+# registry ties that claim to concrete test source. The Rust gate executes the
+# breaker independently, so this topology check never treats a prose row as its
+# own warrant. Adding a new PASS route is an acceptance-checker change.
+V2_PASS_EVIDENCE = {
+    "QSUCC-OCC-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "occurrence_indexed_successors_keep_equal_questions_and_answers_distinct",
+    ),
+}
+
 ERRORS: list[str] = []
 
 
@@ -253,10 +265,33 @@ def check_canonical_source() -> None:
         ]
         if len(status_lines) == 1:
             cells = [cell.strip() for cell in status_lines[0].split("|")]
-            if len(cells) < 4 or cells[3] != "PENDING":
+            status = cells[3] if len(cells) >= 4 else ""
+            if status not in {"PENDING", "PASS"}:
                 error(
                     "CONFORMANCE_STATUS.md: adopted fixture "
-                    f"{fixture_id} must remain PENDING until executable evidence passes"
+                    f"{fixture_id} must be PENDING or PASS, got {status!r}"
+                )
+                continue
+            if status != "PASS":
+                continue
+
+            evidence = V2_PASS_EVIDENCE.get(fixture_id)
+            if evidence is None:
+                error(
+                    "CONFORMANCE_STATUS.md: adopted fixture "
+                    f"{fixture_id} cannot be PASS without registered executable evidence"
+                )
+                continue
+            evidence_path, test_name = evidence
+            evidence_source = read_text(evidence_path)
+            if f"fn {test_name}" not in evidence_source:
+                error(
+                    f"{evidence_path}: registered v2 evidence test {test_name} is missing"
+                )
+            if test_name not in status_lines[0]:
+                error(
+                    "CONFORMANCE_STATUS.md: PASS fixture "
+                    f"{fixture_id} must name its registered test {test_name}"
                 )
 
 

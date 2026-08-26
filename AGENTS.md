@@ -349,6 +349,34 @@ Run the smallest decisive discriminator first, then directly affected tests, the
 gates. A valid test may be replaced only after the predecessor contract is shown inapplicable or
 superseded under the proper authority; never weaken it to make a candidate pass.
 
+A test occurrence is evidence for a declared consequence boundary, not a self-standing proof of
+correctness. Each new or materially changed conformance claim must identify:
+
+```text
+F      protected failure or consequence
+C      proposed delimiting condition
+Omega  admitted scope and protected horizon
+M      relevant system or transition semantics
+P      actual or pure probe used to seek the breaker
+V      independent checker
+E      evidence and coverage
+U      reopening condition
+```
+
+For a proposed necessary boundary, explicitly seek the breaker
+`Reachable_(Omega,M)(x) AND F(x) AND NOT C(x)`. A found witness reopens or rejects the boundary.
+Only an independently established empty breaker field licenses `F => C` at the declared scope;
+an empty search under incomplete coverage remains `Unknown`. Establish the reverse breaker
+separately before claiming `F <=> C`. A green runner result is an occurrence, not an exact
+boundary theorem. For a repair, test the changed reachability relation or an invariant excluding
+the admitted failure region, rather than only re-running the original sample. Promote discovered
+conditions into ordinary objects for variation, ablation, control, composition, and reopening.
+
+`CONFORMANCE_STATUS.md` is the durable boundary ledger: a `PASS` row must name its executable
+breaker and state its protected difference and declared coverage/reopen condition. The control
+checker may accept such a pass only through explicitly registered test evidence; it cannot accept
+a prose assertion or a fixture merely because the candidate changed its status.
+
 For the Rust workspace, the baseline gates are:
 
 ```bash

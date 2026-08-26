@@ -3828,6 +3828,17 @@ V2.0 requires every conservatively embedded predecessor fixture plus the followi
 reciprocal-boundary and interrogative obligations. Status and evidence belong only
 in `CONFORMANCE_STATUS.md`; listing an obligation here makes no conformance claim.
 
+Every executable claim is an implementation test boundary
+`<F, C, Omega, M, P, V, E, U>` governed by the repository testing standard:
+protected consequence/failure, proposed delimiting condition, admitted scope/horizon,
+relevant semantics, probe, independent checker, evidence/coverage, and reopening condition.
+For a necessary boundary, the fixture must seek `Reachable_(Omega,M)(x) AND F(x) AND NOT C(x)`.
+A missing witness is `Unknown` until the declared breaker field is independently established
+empty; the reverse breaker is separately required for an exact `F <=> C` characterization. A
+repair fixture must establish the changed reachability relation or an excluding invariant, not
+only re-run a historical example. `CONFORMANCE_STATUS.md` records the resulting scope-limited
+claim, and its evidence name must resolve to an explicitly registered executable breaker.
+
 ## 74.1 Determination and departure
 
 1. A source determination presentation is explicit and versioned.

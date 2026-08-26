@@ -6,43 +6,42 @@ Repository actuality must be probed before acting. The current residual was deri
 
 ## Immediate demonstrated predecessor
 
-`CUE-PLANNING-001` established a cold-replayable exact finite cue admission boundary. A complete signature participates in basis and finite resource-frontier checking only after its method/ports, applicability and binding, whole-field coverage question, exact claim- and relation-targeted standing routes, and actual answer provenance are rechecked. Incomplete evidence remains `Unknown`; generated semantics remain unadmitted; and an insufficient admitted basis retains its concrete separator and generic reentry path.
+`QSUCC-OCC-001` established content-addressed, re-walkable `SourceConfig`, `ProgramPosition`, and `AskOccurrence` identities. The same semantic question and same admitted answer now remain protectedly distinct when their checked source continuation differs; dynamic succession derives its successor from that occurrence and retains the whole answer. It adds no runtime transition, scheduler, controller, table, or second history.
 
 ## Strongest live obligation
 
-Represent and check the source `Ask` occurrence whose continuation makes question succession dynamic.
+Carry every member of a partial supported answer through occurrence-indexed successor reconstruction without singleton selection.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QSUCC-OCC-001
+id: QSUCC-PARTIAL-001
 plan_phase: 3
-goal: Add checked content-addressed SourceConfig and AskOccurrence identities, then derive question succession from the exact occurrence, whole supported answer, and first-order continuation rather than from the semantic question and answer alone.
-protected_difference: Two checked Ask occurrences may carry the same semantic question and the same whole proof-carrying supported answer while their distinct continuations yield different lawful successor questions.
-discriminator: Construct two source configurations with equal q and equal supported answer but different checked continuations; preserve two occurrence identities and successor results, and reject a copied position, environment, slot, continuation, binding/compiler version, or provenance field.
-horizon: one binding, one result type, two finite first-order source programs, one equal admitted supported-answer value, pure normalization only until the next Ask or Return
-relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0131, D-0133
+goal: Preserve a complete multi-member admitted finite answer as the proof-carrying input to one checked Ask occurrence and its reconstructed successor; expose a partial member projection only as a non-authoritative view.
+protected_difference: A multi-completion supported answer is not a caller-selected member. The successor must retain the complete candidate/support/event/raw-return provenance even when a consumer inspects only a member projection.
+discriminator: Admit at least two decoded completions through their distinct exact Probe support routes, derive one occurrence-indexed successor from the entire answer, demonstrate that both candidates and all support remain retained, and reject any API or fixture path that substitutes one member as the successor answer.
+horizon: one binding, one checked Ask occurrence, one two-or-more-member finite admitted answer, one first-order continuation, pure normalization only until the next Ask or Return
+relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0131, D-0133, D-0134
 relevant_failures: F-0003
-if_pass: QSUCC-PARTIAL-001 proof-carrying partial-member successor reconstruction
-if_fail: reopen the smallest SourceConfig, structural-position, environment-replay, capture-safety, provenance, or continuation-identity relation; do not add a scheduler or transition opcode
+if_pass: QSTATIC-DYNAMIC-001 static relation structure does not manufacture a realized successor route
+if_fail: reopen the smallest supported-answer identity, whole-answer retention, capture-safe binding, or successor-reconstruction relation; do not add a singleton policy or transition opcode
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Start from the canonical `IProg::Ask` representation, explicit environment, capture-safe answer binding, admitted finite supported answer, and existing question identities.
+Start from the existing two-candidate finite decoder/support fixture, one checked source configuration, its root Ask occurrence, and the derived successor relation.
 
-Construct two checked source programs whose live `Ask` nodes have the same question and accept the same complete supported-answer value, but whose named continuations normalize to different next questions. Derive a checked `SourceConfig` and `AskOccurrence` for each by re-walking the exact first-order syntax. Bind the same supported answer to both and derive their distinct successors.
+Pass the complete two-member admitted answer to one checked occurrence. The successor must retain that exact answer object, including both completion candidates, their observation uses, support routes, event, operator, and raw return. A member projection may be inspected only after the successor is derived and must not replace its answer.
 
-Then copy one occurrence field at a time across the pair. The checker must reject the foreign structural position, environment, answer slot, continuation, binding/compiler version, or structural provenance instead of accepting the copied occurrence because the question matches.
+Construct the smallest wrong path: choose one candidate from the admitted set and attempt to pass it as the successor answer. The type boundary must make that path non-formable; if a new representation is needed to express the rejected candidate, add only the smallest derived view required by the breaker.
 
-The smallest wrong implementation would key dynamic succession by `(q, answer)` and collapse both continuations to one route.
+The smallest wrong implementation would preserve only a convenient candidate or candidate list while discarding support, event, raw-return, or route provenance.
 
 ## Prohibitions at this boundary
 
-- Do not add `QSucc`, question roots, or routes as runtime opcodes or authoritative history.
-- Do not identify semantic question identity with one source occurrence.
-- Do not trust caller-supplied structural positions, environments, versions, provenance, slots, or continuations without re-walking and rechecking the source syntax.
-- Do not select a singleton from the supported answer or erase its proof/evidence identity.
-- Do not add a scheduler, controller, table, crate, credential store, or second history.
+- Do not select, rank, or schedule a member of the admitted answer.
+- Do not erase observation, support, event, raw-return, decoder, operator, or route provenance.
+- Do not conflate a member projection with the proof-carrying answer.
+- Do not add a scheduler, controller, table, crate, credential store, canonical answer artifact, or second history unless the breaker proves it necessary.
 
 ## Exit
 
-On pass, update conformance and any warranted append-only decision, replace the live block with `QSUCC-PARTIAL-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated occurrence-checking relation rather than broadening the architecture.
+On pass, update conformance and any warranted append-only decision, replace the live block with `QSTATIC-DYNAMIC-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated whole-answer relation rather than broadening the architecture.
