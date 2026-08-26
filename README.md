@@ -303,6 +303,12 @@ unlock conditions. Exact and approximate licences have different identities; the
 an explicit distortion contract. This records a claimed licence, not a proof of regeneration,
 recovery, approximation soundness, or an authorized active fold.
 
+Phase 10 now also has a canonical `MethodContract` registry record for native and learned
+traversal methods. It names a checked implemented relation, applicability, law, coverage,
+authority, extension domain, backend, optional checker/cost, failure schemas, and provenance.
+This is neither standing acceptance nor a statement that the backend is available, applicable,
+executed, or semantically warranted.
+
 `BoundaryChart` is now a derived, content-addressed local chart record. It retains the query,
 `X`/`Y`/boundary type references, projections, determination references, oriented use frontiers,
 seed, compatibility formula, optional traversal, grain, and horizon. It preserves missing fields

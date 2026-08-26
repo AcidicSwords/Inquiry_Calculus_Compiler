@@ -21,6 +21,7 @@ mod finite_cell;
 mod formula;
 mod frontier;
 mod iprog;
+mod method;
 mod negation;
 mod negation_query;
 mod probe;
@@ -125,6 +126,11 @@ pub use frontier::{
 pub use iprog::{
     IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgCatalog, IProgCheckError,
     IProgError, IProgIR, IProgRef, ProgramBinding,
+};
+pub use method::{
+    BackendRef, CheckerRef, CostModelRef, CoverageRef, ExtensionDomainRef,
+    METHOD_CONTRACT_ARTIFACT_KIND, METHOD_CONTRACT_SCHEMA_VERSION, MethodContract,
+    MethodContractCheckError, MethodContractError, MethodRef, ResidualSchemaRef,
 };
 pub use negation::{
     NEGATION_USE_ARTIFACT_KIND, NEGATION_USE_SCHEMA_VERSION, NegationCatalog, NegationCoverage,

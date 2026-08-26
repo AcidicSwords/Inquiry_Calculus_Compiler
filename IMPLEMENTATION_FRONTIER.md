@@ -372,6 +372,11 @@ approximate licences distinct and preserves evidence/recovery/unlock references 
 them. Regeneration, recovery, compression admission, approximation soundness, and actual reopen
 effects remain separate live contracts.
 
+Phase 10 now has canonical `MethodContract` identity with a rechecked implemented relation and
+preserved authority/coverage/backend/failure/provenance declarations. Contract registration is
+not admission, runnable availability, `usable(q)`, backend execution, a raw return, semantic
+resolution, or warrant.
+
 ## Known later questions
 
 These are recorded now but do not outrank the Phase 4 determination boundary:
