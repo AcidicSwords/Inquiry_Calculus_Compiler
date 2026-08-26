@@ -4131,6 +4131,12 @@ second ordinary event, regenerates separate paired source/return traces, retains
 event-sensitive reopen witness. The next Phase 8/9 residual is a derived sufficient-present
 update/recovery view over an explicit new ledger event, with no mutable memory or causal store.
 
+That Phase 8/9 update/recovery view now passes. It preserves every old presentation and protected
+observation row under a strict history extension, regenerates an updated present when possible,
+and returns a positive reopen separator when the appended history splits it. The next executable
+step is `SEPARATOR-001`: one admitted/replayed residual must select a typed answer-dependent
+continuation using the existing generic separator boundary rather than a method-name switch.
+
 Later phase constraints are deliberately local:
 
 - Phase 8 preserves ledger order versus causal order, resume versus replay, and endpoint versus

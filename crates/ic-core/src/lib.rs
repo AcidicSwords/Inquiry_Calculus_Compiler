@@ -225,10 +225,11 @@ pub use standing::{
     standing_from_declared_support, standing_relation_use_support,
 };
 pub use sufficient_present::{
-    ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFiniteSufficientPresent,
-    ExactFiniteSufficientPresentError, ExactFiniteSufficientPresentResult,
-    ExactProtectedContinuation, challenge_exact_finite_sufficient_present,
-    derive_exact_finite_sufficient_present,
+    ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFinitePresentUpdate,
+    ExactFinitePresentUpdateError, ExactFiniteSufficientPresent, ExactFiniteSufficientPresentError,
+    ExactFiniteSufficientPresentResult, ExactProtectedContinuation,
+    challenge_exact_finite_sufficient_present, derive_exact_finite_sufficient_present,
+    extend_exact_finite_sufficient_present,
 };
 pub use supported_answer::{
     AdmittedFiniteAnswerSet, BoundFiniteAskContinuation, FiniteAnswerBindingError,

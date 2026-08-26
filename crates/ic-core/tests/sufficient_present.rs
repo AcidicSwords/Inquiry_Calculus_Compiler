@@ -1,9 +1,10 @@
 use ic_core::{
     ApplicabilityRef, ArtifactRef, BindingVersionRef, ExactDeterminationError,
-    ExactFinitePresentChallenge, ExactFiniteSignature, ExactFiniteSufficientPresentError,
-    ExactFiniteSufficientPresentResult, ExactProtectedContinuation, GrainRef, HorizonRef,
-    ProtectedContinuationRef, ScopeRef, SignatureContext, TypeRef,
-    challenge_exact_finite_sufficient_present, derive_exact_finite_sufficient_present,
+    ExactFinitePresentChallenge, ExactFinitePresentUpdate, ExactFinitePresentUpdateError,
+    ExactFiniteSignature, ExactFiniteSufficientPresentError, ExactFiniteSufficientPresentResult,
+    ExactProtectedContinuation, GrainRef, HorizonRef, ProtectedContinuationRef, ScopeRef,
+    SignatureContext, TypeRef, challenge_exact_finite_sufficient_present,
+    derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
 };
 
 fn artifact(byte: u8) -> ArtifactRef {
@@ -105,5 +106,117 @@ fn present_extension_rejects_duplicates_and_context_drift() {
         Err(ExactFiniteSufficientPresentError::Determination(
             ExactDeterminationError::ContextMismatch { .. }
         ))
+    ));
+}
+
+#[test]
+fn present_history_update_preserves_prior_rows_or_returns_a_positive_reopen_witness() {
+    let signature_context = context(0xb0);
+    let continuation = ProtectedContinuationRef::from_artifact_ref(artifact(0xc0));
+    let prior_presentation = ExactFiniteSignature::new(
+        signature_context,
+        vec![(artifact(1), artifact(0xd0)), (artifact(2), artifact(0xd0))],
+    )
+    .expect("prior history must be exact");
+    let prior_observation = ExactFiniteSignature::new(
+        signature_context,
+        vec![(artifact(1), artifact(0xe0)), (artifact(2), artifact(0xe0))],
+    )
+    .expect("prior protected observation must be exact");
+    let ExactFiniteSufficientPresentResult::Sufficient(prior) =
+        derive_exact_finite_sufficient_present(
+            prior_presentation,
+            vec![ExactProtectedContinuation::new(
+                continuation,
+                prior_observation,
+            )],
+        )
+        .expect("prior fold must be sufficient")
+    else {
+        panic!("constant prior observation must fold")
+    };
+
+    let updated_presentation = ExactFiniteSignature::new(
+        signature_context,
+        vec![
+            (artifact(1), artifact(0xd0)),
+            (artifact(2), artifact(0xd0)),
+            (artifact(3), artifact(0xd0)),
+        ],
+    )
+    .expect("extended history must be exact");
+    let updated_observation = ExactFiniteSignature::new(
+        signature_context,
+        vec![
+            (artifact(1), artifact(0xe0)),
+            (artifact(2), artifact(0xe0)),
+            (artifact(3), artifact(0xe0)),
+        ],
+    )
+    .expect("extended protected observation must be exact");
+    let ExactFinitePresentUpdate::Updated(updated) = extend_exact_finite_sufficient_present(
+        &prior,
+        updated_presentation.clone(),
+        vec![ExactProtectedContinuation::new(
+            continuation,
+            updated_observation,
+        )],
+    )
+    .expect("a constant appended history remains sufficient") else {
+        panic!("constant appended history must remain folded")
+    };
+    assert_eq!(updated.class_count(), 1);
+
+    let reopening_observation = ExactFiniteSignature::new(
+        signature_context,
+        vec![
+            (artifact(1), artifact(0xe0)),
+            (artifact(2), artifact(0xe0)),
+            (artifact(3), artifact(0xe1)),
+        ],
+    )
+    .expect("reopening observation must be exact");
+    let ExactFinitePresentUpdate::Reopened(witness) = extend_exact_finite_sufficient_present(
+        &prior,
+        updated_presentation.clone(),
+        vec![ExactProtectedContinuation::new(
+            continuation,
+            reopening_observation,
+        )],
+    )
+    .expect("a new protected difference must produce a positive separator") else {
+        panic!("new history difference must reopen the prior fold")
+    };
+    assert_eq!(witness.continuation(), continuation);
+    assert_eq!(witness.separator().available_value(), artifact(0xd0));
+
+    let rewritten = ExactFiniteSignature::new(
+        signature_context,
+        vec![
+            (artifact(1), artifact(0xd1)),
+            (artifact(2), artifact(0xd0)),
+            (artifact(3), artifact(0xd0)),
+        ],
+    )
+    .expect("rewritten proposed history is syntactically exact");
+    assert!(matches!(
+        extend_exact_finite_sufficient_present(
+            &prior,
+            rewritten,
+            vec![ExactProtectedContinuation::new(
+                continuation,
+                ExactFiniteSignature::new(
+                    signature_context,
+                    vec![
+                        (artifact(1), artifact(0xe0)),
+                        (artifact(2), artifact(0xe0)),
+                        (artifact(3), artifact(0xe0)),
+                    ],
+                )
+                .expect("rewritten check observation is exact"),
+            )],
+        ),
+        Err(ExactFinitePresentUpdateError::PresentationHistoryChanged(history))
+            if history == artifact(1)
     ));
 }

@@ -189,10 +189,16 @@ artifacts, paired traces, unknown-causal traversal, one-class sufficient present
 event-sensitive reopen witness regenerate with no additional provider call. The fixture treats the
 ledger edge only as ledger membership/append actuality; its causal reading remains `Unknown`.
 
-The strongest executable obligation is now `PHASE-8/9-FOLD-001`: make the demonstrated finite
-multi-event present usable as a derived sufficient-present update/recovery view across an explicit
-new ordinary event, while preserving its loss/reopen witness and without adding mutable memory,
-causal storage, or a second authoritative history.
+`PHASE-8/9-FOLD-001` is now demonstrated. A derived exact-present update accepts only a strictly
+extended finite history whose old presentation rows and protected-observation rows are unchanged.
+It either regenerates the updated present or returns a positive separator when the newly appended
+event splits the old fold. The two-event cold-replay traversal drives this update directly; it adds
+no mutable memory, causal storage, or second authoritative history.
+
+The strongest executable obligation is now `SEPARATOR-001`: route one live residual from an
+admitted/replayed inquiry occurrence into the existing generic `SeparatorProblem`, obtain a
+typed answer-dependent continuation without a hard-coded method switch, and preserve/replay the
+resulting residual provenance.
 
 Do not weaken support, pre-warrant generated output, choose a singleton implicitly, or add a
 provider framework, scheduler, model policy, credential store, semantic opcode, table, or crate.

@@ -10,8 +10,8 @@ use std::collections::BTreeSet;
 use thiserror::Error;
 
 use crate::{
-    ExactDeterminationError, ExactDeterminationResult, ExactFactorization, ExactFiniteSignature,
-    KernelSeparator, ProtectedContinuationRef, determine_through_exact,
+    ArtifactRef, ExactDeterminationError, ExactDeterminationResult, ExactFactorization,
+    ExactFiniteSignature, KernelSeparator, ProtectedContinuationRef, determine_through_exact,
 };
 
 /// One protected continuation and its exact observation over the declared finite history domain.
@@ -116,6 +116,17 @@ pub enum ExactFinitePresentChallenge {
     Reopened(ExactFinitePresentReopenWitness),
 }
 
+/// Result of extending an exact finite present with newly declared history under the same
+/// currently protected continuations.
+///
+/// The update is derived data only. It retains no mutable memory and refuses a proposed
+/// extension that rewrites the already checked history or one of its protected observations.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ExactFinitePresentUpdate {
+    Updated(ExactFiniteSufficientPresent),
+    Reopened(ExactFinitePresentReopenWitness),
+}
+
 /// Checks `ker(presentation) subseteq ker(continuation)` for every protected continuation.
 pub fn derive_exact_finite_sufficient_present(
     presentation: ExactFiniteSignature,
@@ -178,6 +189,87 @@ pub fn challenge_exact_finite_sufficient_present(
     }
 }
 
+/// Rechecks an exact finite present after appending declared history.
+///
+/// Every old history/value pair and every old protected observation must remain an exact
+/// restriction of the supplied extension. A new event may therefore expose a positive separator,
+/// but cannot silently rewrite the prior fold. New protected continuations are intentionally not
+/// accepted here: challenge the present separately so horizon growth remains distinct from history
+/// growth.
+pub fn extend_exact_finite_sufficient_present(
+    prior: &ExactFiniteSufficientPresent,
+    presentation: ExactFiniteSignature,
+    protected: Vec<ExactProtectedContinuation>,
+) -> Result<ExactFinitePresentUpdate, ExactFinitePresentUpdateError> {
+    if prior.presentation().context() != presentation.context() {
+        return Err(ExactFinitePresentUpdateError::PresentationContextChanged);
+    }
+    if presentation.values().len() <= prior.presentation().values().len() {
+        return Err(ExactFinitePresentUpdateError::NoNewHistory);
+    }
+    preserve_signature(
+        prior.presentation(),
+        &presentation,
+        ExactFinitePresentUpdateError::PresentationHistoryChanged,
+    )?;
+    reject_duplicate_continuations(&protected)?;
+    if protected.len() != prior.protected().len() {
+        return Err(ExactFinitePresentUpdateError::ProtectedSetChanged);
+    }
+
+    for prior_contract in prior.protected() {
+        let Some(updated_contract) = protected
+            .iter()
+            .find(|contract| contract.continuation() == prior_contract.continuation())
+        else {
+            return Err(ExactFinitePresentUpdateError::ProtectedSetChanged);
+        };
+        if updated_contract.observation().context() != prior_contract.observation().context() {
+            return Err(
+                ExactFinitePresentUpdateError::ProtectedObservationContextChanged {
+                    continuation: prior_contract.continuation(),
+                },
+            );
+        }
+        preserve_signature(
+            prior_contract.observation(),
+            updated_contract.observation(),
+            |history| ExactFinitePresentUpdateError::ProtectedHistoryChanged {
+                continuation: prior_contract.continuation(),
+                history,
+            },
+        )?;
+    }
+
+    match derive_exact_finite_sufficient_present(presentation, protected)? {
+        ExactFiniteSufficientPresentResult::Sufficient(present) => {
+            Ok(ExactFinitePresentUpdate::Updated(present))
+        }
+        ExactFiniteSufficientPresentResult::Insufficient {
+            continuation,
+            separator,
+        } => Ok(ExactFinitePresentUpdate::Reopened(
+            ExactFinitePresentReopenWitness {
+                continuation,
+                separator,
+            },
+        )),
+    }
+}
+
+fn preserve_signature<E>(
+    prior: &ExactFiniteSignature,
+    extended: &ExactFiniteSignature,
+    changed: impl Fn(ArtifactRef) -> E,
+) -> Result<(), E> {
+    for (history, value) in prior.values() {
+        if extended.values().get(history) != Some(value) {
+            return Err(changed(*history));
+        }
+    }
+    Ok(())
+}
+
 fn reject_duplicate_continuations(
     protected: &[ExactProtectedContinuation],
 ) -> Result<(), ExactFiniteSufficientPresentError> {
@@ -200,4 +292,28 @@ pub enum ExactFiniteSufficientPresentError {
     Determination(#[from] ExactDeterminationError),
     #[error("protected continuation {0} is declared more than once")]
     DuplicateProtectedContinuation(ProtectedContinuationRef),
+}
+
+/// Failures while extending a derived exact finite sufficient present.
+#[derive(Debug, Error)]
+pub enum ExactFinitePresentUpdateError {
+    #[error("the proposed presentation changes indexed signature context")]
+    PresentationContextChanged,
+    #[error("the proposed extension contains no newly declared history")]
+    NoNewHistory,
+    #[error("the proposed presentation rewrites or removes prior history {0}")]
+    PresentationHistoryChanged(ArtifactRef),
+    #[error("the proposed update changes the protected continuation set")]
+    ProtectedSetChanged,
+    #[error("protected continuation {continuation} changes indexed signature context")]
+    ProtectedObservationContextChanged {
+        continuation: ProtectedContinuationRef,
+    },
+    #[error("protected continuation {continuation} rewrites or removes prior history {history}")]
+    ProtectedHistoryChanged {
+        continuation: ProtectedContinuationRef,
+        history: ArtifactRef,
+    },
+    #[error(transparent)]
+    SufficientPresent(#[from] ExactFiniteSufficientPresentError),
 }

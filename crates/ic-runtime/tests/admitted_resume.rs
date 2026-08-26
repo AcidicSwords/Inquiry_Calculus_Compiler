@@ -15,23 +15,23 @@ use ic_core::{
     ArtifactKind, ArtifactRef, BackendRequest, BindingVersionRef, BoundaryChart, BoundaryRef,
     CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DeclaredSupportClosure, DischargeMode, EventRef, ExactFinitePresentChallenge,
-    ExactFinitePresentReopenWitness, ExactFiniteSignature, ExactFiniteSufficientPresent,
-    ExactFiniteSufficientPresentResult, ExactProtectedContinuation, FiniteAnswerBindingError,
-    FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderRef,
-    FiniteSupportedAnswerError, FormulaArtifact, FormulaCatalog, FormulaRef, GrainRef, HorizonRef,
-    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, ObservationResultCatalog,
-    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrenceCatalog, PortBinding,
-    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedContinuationRef,
-    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
-    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
-    RelationUseContext, RelationUseRef, RelationUseSupportCatalog, ResolutionCatalog,
+    ExactFinitePresentReopenWitness, ExactFinitePresentUpdate, ExactFiniteSignature,
+    ExactFiniteSufficientPresent, ExactFiniteSufficientPresentResult, ExactProtectedContinuation,
+    FiniteAnswerBindingError, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
+    FiniteDecoderRef, FiniteSupportedAnswerError, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef,
+    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrenceCatalog,
+    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding,
+    ProtectedContinuationRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef,
+    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
+    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog, ResolutionCatalog,
     ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SignatureContext,
     StateRef, SupportEnvironmentArtifact, SupportEnvironmentCatalog, SupportEnvironmentRef,
     SupportSubjectRef, SurfacePlan, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef,
     TypeSymbol, TypedForm, TypedFormRef, admit_finite_supported_answers,
     bind_finite_ask_continuation, challenge_exact_finite_sufficient_present, decode_actual_event,
-    derive_exact_finite_sufficient_present, match_decoded_observation_use,
-    standing_from_declared_support,
+    derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
+    match_decoded_observation_use, standing_from_declared_support,
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
@@ -460,6 +460,28 @@ fn derive_event_sufficient_present(
         first.question().event().as_artifact_ref(),
         second.question().event().as_artifact_ref(),
     ];
+    let prior_presentation = ExactFiniteSignature::new(
+        context,
+        vec![(histories[0], roots.continuation.as_artifact_ref())],
+    )
+    .expect("the first event forms an exact prior history domain");
+    let prior_observation = ExactFiniteSignature::new(
+        context,
+        vec![(histories[0], roots.answer_a.as_artifact_ref())],
+    )
+    .expect("the first current observation is exact");
+    let ExactFiniteSufficientPresentResult::Sufficient(prior_present) =
+        derive_exact_finite_sufficient_present(
+            prior_presentation,
+            vec![ExactProtectedContinuation::new(
+                current_protected,
+                prior_observation,
+            )],
+        )
+        .expect("one first event must form a sufficient prior present")
+    else {
+        panic!("one event cannot split its current protected continuation")
+    };
     let presentation = ExactFiniteSignature::new(
         context,
         histories
@@ -476,17 +498,16 @@ fn derive_event_sufficient_present(
             .collect(),
     )
     .expect("the currently protected continuation is total over both events");
-    let ExactFiniteSufficientPresentResult::Sufficient(present) =
-        derive_exact_finite_sufficient_present(
-            presentation,
-            vec![ExactProtectedContinuation::new(
-                current_protected,
-                current_observation,
-            )],
-        )
-        .expect("event presentation and protected continuation contexts must agree")
-    else {
-        panic!("the current continuation must fold two event alternatives")
+    let ExactFinitePresentUpdate::Updated(present) = extend_exact_finite_sufficient_present(
+        &prior_present,
+        presentation,
+        vec![ExactProtectedContinuation::new(
+            current_protected,
+            current_observation,
+        )],
+    )
+    .expect("the appended event must preserve prior rows and current protected observation") else {
+        panic!("the current continuation must remain folded after the appended event")
     };
     let event_observation = ExactFiniteSignature::new(
         context,
