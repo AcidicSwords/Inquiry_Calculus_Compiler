@@ -1,12 +1,12 @@
 use std::collections::BTreeMap;
 
 use ic_core::{
-    ArtifactRef, BindingVersionRef, RawReturnRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
-    TypeRef, TypedForm, TypedFormRef,
+    ArtifactRef, BindingVersionRef, IProgRef, RawReturnRef, TyIR, TypeArtifact, TypeCatalog,
+    TypeFamilyRef, TypeRef, TypedForm, TypedFormRef,
 };
 use ic_runtime::{
-    BasicBlock, BlockTarget, MachineStep, ProbeOperatorRef, ProgramCheckError, ProgramIR,
-    RuntimeCatalog, Terminator,
+    AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, MachineStep,
+    ProbeOperatorRef, ProgramCheckError, ProgramIR, RuntimeCatalog, Terminator,
 };
 
 #[derive(Default)]
@@ -101,6 +101,17 @@ fn verified_runtime_program_branches_suspends_and_preserves_raw_return_identity(
     let resumption = suspension.resume(raw);
     assert_eq!(resumption.raw_return(), raw);
     assert_eq!(resumption.state().target(), BlockTarget::new(3));
+
+    let source_continuation = IProgRef::from_artifact_ref(artifact(0x15));
+    let lowering = ContinuationLowering::new(source_continuation, BlockTarget::new(3));
+    assert!(lowering.check(&program).is_ok());
+    assert_eq!(lowering.source(), source_continuation);
+    assert_eq!(lowering.target(), BlockTarget::new(3));
+    assert!(matches!(
+        ContinuationLowering::new(source_continuation, BlockTarget::new(99)).check(&program),
+        Err(AdmittedResumeError::UnknownLoweringTarget(target))
+            if target == BlockTarget::new(99)
+    ));
 }
 
 #[test]

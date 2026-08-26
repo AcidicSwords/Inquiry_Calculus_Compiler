@@ -98,14 +98,18 @@ binding is now available as a derived `BoundFiniteAskContinuation`: it rechecks 
 rejects an answer slot that shadows the explicit environment, requires the answer's question to
 match, and retains the source/continuation identities, environment, slot, and whole admitted set.
 It does not substitute or evaluate the continuation. Normalization, registered pure operations,
-runtime lowering, and execution remain deferred.
+general lowering, and external execution remain deferred.
 
 Phase 5 has a first-order structural `ProgramIR` in `ic-runtime`: typed `Return`, nonempty
 internal `Branch`, and `Probe` suspension/resume blocks. Verification rechecks typed returns,
 closed targets, and the representable guarded-recurrence boundary; a branch-only cycle is
-rejected. Stepping a probe only creates a suspension, and resumption carries a `RawReturnRef`
-without dispatching, decoding, or treating it as an actual event. Probe operator schemas and
-raw-return-dependent continuation selection remain later contracts.
+rejected. Stepping a probe only creates a suspension. Raw-only resumption remains explicitly
+non-actual and non-admitted. A separate derived finite bridge accepts only a
+`BoundFiniteAskContinuation` plus an explicit `ContinuationLowering`: the admitted event's
+operator must equal the suspended operator, the lowering source must equal the checked source
+continuation, and its target must equal the probe's fixed resume target. The resumed state retains
+the whole bound answer, event, and raw-return provenance. It does not dispatch, append history,
+evaluate the continuation, establish warrant, or make the generated lowering authoritative.
 
 `ProbeOperator` now has a canonical compiled-operator identity shared with the runtime probe
 terminator. Its explicit fields are query, boundary chart, active view, backend, executable-code,

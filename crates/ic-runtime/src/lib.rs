@@ -1,14 +1,16 @@
 //! First-order structural control flow for the Inquiry Calculus runtime.
 //!
-//! This phase contains only `Return`, `Branch`, and probe suspension/resumption. It never
-//! dispatches an operator, records an actuality event, decodes a raw return, or selects a
-//! raw-return-dependent continuation; those contracts remain Phase 6/7 work.
+//! This phase contains `Return`, `Branch`, probe suspension, raw-only resumption, and one derived
+//! finite admitted-answer resumption bridge. It never dispatches an operator or records an
+//! actuality event. The admitted bridge consumes event-linked evidence produced by `ic-core`; it
+//! does not manufacture actuality, decoding, standing, or warrant.
 
 use std::collections::BTreeMap;
 
 pub use ic_core::ProbeOperatorRef;
 use ic_core::{
-    RawReturnRef, TypeCatalog, TypeCheckError, TypeError, TypeRef, TypedForm, TypedFormRef,
+    BoundFiniteAskContinuation, EventRef, IProgRef, RawReturnRef, TypeCatalog, TypeCheckError,
+    TypeError, TypeRef, TypedForm, TypedFormRef,
 };
 use thiserror::Error;
 
@@ -245,6 +247,73 @@ impl ProbeSuspension {
             raw_return,
         }
     }
+
+    /// Resumes through one explicitly checked source-to-runtime lowering while retaining the
+    /// whole admitted answer binding.
+    ///
+    /// Unlike [`Self::resume`], this path requires event-linked supported-answer evidence. The
+    /// lowering must name the checked source continuation, this suspension's compiled operator,
+    /// and this suspension's fixed resume target. It does not evaluate that continuation.
+    pub fn resume_admitted(
+        self,
+        binding: BoundFiniteAskContinuation,
+        lowering: ContinuationLowering,
+        program: &ProgramIR,
+    ) -> Result<AdmittedResumption, AdmittedResumeError> {
+        lowering.check(program)?;
+        validate_admitted_lowering(
+            self.operator,
+            self.resume,
+            binding.answer().operator(),
+            binding.continuation(),
+            lowering,
+        )?;
+        Ok(AdmittedResumption {
+            state: ReadyState {
+                target: lowering.target,
+            },
+            binding,
+        })
+    }
+}
+
+/// One explicit derived lowering from a checked source continuation to a runtime block.
+///
+/// This is a generated mapping candidate rather than canonical identity or evidence of execution.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ContinuationLowering {
+    source: IProgRef,
+    target: BlockTarget,
+}
+
+impl ContinuationLowering {
+    #[must_use]
+    pub const fn new(source: IProgRef, target: BlockTarget) -> Self {
+        Self { source, target }
+    }
+
+    #[must_use]
+    pub const fn source(self) -> IProgRef {
+        self.source
+    }
+
+    #[must_use]
+    pub const fn target(self) -> BlockTarget {
+        self.target
+    }
+
+    /// Checks only that the declared runtime target exists in this program.
+    pub fn check(self, program: &ProgramIR) -> Result<(), AdmittedResumeError> {
+        if program
+            .blocks()
+            .iter()
+            .any(|block| block.target() == self.target)
+        {
+            Ok(())
+        } else {
+            Err(AdmittedResumeError::UnknownLoweringTarget(self.target))
+        }
+    }
 }
 
 /// A control-flow resumption carrying the raw return for later Phase 6/7 event and resolution work.
@@ -252,6 +321,37 @@ impl ProbeSuspension {
 pub struct Resumption {
     state: ReadyState,
     raw_return: RawReturnRef,
+}
+
+/// A ready runtime state that still carries the complete admitted lexical answer binding.
+///
+/// This is derived execution state, not a canonical event, standing change, or warrant.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct AdmittedResumption {
+    state: ReadyState,
+    binding: BoundFiniteAskContinuation,
+}
+
+impl AdmittedResumption {
+    #[must_use]
+    pub const fn state(&self) -> ReadyState {
+        self.state
+    }
+
+    #[must_use]
+    pub const fn binding(&self) -> &BoundFiniteAskContinuation {
+        &self.binding
+    }
+
+    #[must_use]
+    pub const fn event(&self) -> EventRef {
+        self.binding.answer().event()
+    }
+
+    #[must_use]
+    pub const fn raw_return(&self) -> RawReturnRef {
+        self.binding.answer().raw_return()
+    }
 }
 
 impl Resumption {
@@ -292,6 +392,34 @@ fn reject_unguarded_branch_cycles(
     let mut completed = Vec::new();
     for target in blocks.keys().copied() {
         visit_unguarded_branch_cycle(target, blocks, &mut visiting, &mut completed)?;
+    }
+    Ok(())
+}
+
+fn validate_admitted_lowering(
+    suspended_operator: ProbeOperatorRef,
+    resume_target: BlockTarget,
+    answer_operator: ProbeOperatorRef,
+    bound_continuation: IProgRef,
+    lowering: ContinuationLowering,
+) -> Result<(), AdmittedResumeError> {
+    if suspended_operator != answer_operator {
+        return Err(AdmittedResumeError::OperatorMismatch {
+            suspended: suspended_operator,
+            answer: answer_operator,
+        });
+    }
+    if lowering.source != bound_continuation {
+        return Err(AdmittedResumeError::ContinuationMismatch {
+            bound: bound_continuation,
+            lowered: lowering.source,
+        });
+    }
+    if lowering.target != resume_target {
+        return Err(AdmittedResumeError::ResumeTargetMismatch {
+            suspended: resume_target,
+            lowered: lowering.target,
+        });
     }
     Ok(())
 }
@@ -370,4 +498,77 @@ pub enum ProgramCheckError {
 pub enum RuntimeStepError {
     #[error("runtime state refers to missing block {0:?}")]
     MissingBlock(BlockTarget),
+}
+
+/// Errors from the finite admitted-answer runtime bridge.
+#[derive(Debug, Error, Eq, PartialEq)]
+pub enum AdmittedResumeError {
+    #[error("continuation lowering refers to missing runtime block {0:?}")]
+    UnknownLoweringTarget(BlockTarget),
+    #[error("suspended operator {suspended} differs from admitted answer operator {answer}")]
+    OperatorMismatch {
+        suspended: ProbeOperatorRef,
+        answer: ProbeOperatorRef,
+    },
+    #[error("bound continuation {bound} differs from lowered source continuation {lowered}")]
+    ContinuationMismatch { bound: IProgRef, lowered: IProgRef },
+    #[error("suspended resume target {suspended:?} differs from lowered target {lowered:?}")]
+    ResumeTargetMismatch {
+        suspended: BlockTarget,
+        lowered: BlockTarget,
+    },
+}
+
+#[cfg(test)]
+mod admitted_lowering_tests {
+    use ic_core::{ArtifactRef, IProgRef, ProbeOperatorRef};
+
+    use super::{
+        AdmittedResumeError, BlockTarget, ContinuationLowering, validate_admitted_lowering,
+    };
+
+    fn artifact(byte: u8) -> ArtifactRef {
+        ArtifactRef::from_bytes([byte; 32])
+    }
+
+    #[test]
+    fn admitted_lowering_keeps_operator_continuation_and_resume_target_independent() {
+        let operator = ProbeOperatorRef::from_artifact_ref(artifact(1));
+        let continuation = IProgRef::from_artifact_ref(artifact(2));
+        let target = BlockTarget::new(3);
+        let lowering = ContinuationLowering::new(continuation, target);
+        assert!(
+            validate_admitted_lowering(operator, target, operator, continuation, lowering).is_ok()
+        );
+        assert!(matches!(
+            validate_admitted_lowering(
+                operator,
+                target,
+                ProbeOperatorRef::from_artifact_ref(artifact(4)),
+                continuation,
+                lowering,
+            ),
+            Err(AdmittedResumeError::OperatorMismatch { .. })
+        ));
+        assert!(matches!(
+            validate_admitted_lowering(
+                operator,
+                target,
+                operator,
+                IProgRef::from_artifact_ref(artifact(5)),
+                lowering,
+            ),
+            Err(AdmittedResumeError::ContinuationMismatch { .. })
+        ));
+        assert!(matches!(
+            validate_admitted_lowering(
+                operator,
+                BlockTarget::new(6),
+                operator,
+                continuation,
+                lowering
+            ),
+            Err(AdmittedResumeError::ResumeTargetMismatch { .. })
+        ));
+    }
 }

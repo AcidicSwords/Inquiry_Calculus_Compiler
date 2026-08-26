@@ -15,7 +15,10 @@ requires every completion to retain its exact `Probe` observation use, exact clo
 relation-support route, and the event's raw return. It preserves multi-completion partial answers
 without selecting a singleton. A derived capture-safe binding now supplies that whole set to one
 checked `IProg::Ask` answer slot while retaining the explicit environment and continuation
-identity. Runtime lowering remains open at the Phase 3/5/6/7 boundary. Phase 11 now has canonical claim and candidate
+identity. An explicit finite source-continuation lowering now resumes a matching suspended probe
+while retaining the bound event/raw-return provenance; operator, continuation, and target
+mismatches reject. External dispatch and durable replay remain open at the Phase 5/6 boundary.
+Phase 11 now has canonical claim and candidate
 support-environment identity with structural provenance checking. One typed least-fixed-point
 engine now carries claim and relation subjects, rejects mixed rootless cycles, retains exact
 closing-environment provenance, and keeps equal underlying digests separated by subject kind.
@@ -45,15 +48,16 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-After the finite reciprocal semantic slice, exact finite supported-answer admission, and
-capture-safe source binding, resolve the earliest executable lowering gap:
+After the finite reciprocal semantic slice and its event-to-runtime continuation bridge, resolve
+the earliest durable actuality gap:
 
-> Given a `BoundFiniteAskContinuation` and the verified `Return | Branch | Probe` runtime, what is
-> the smallest explicit lowering that proves one named source continuation corresponds to the
-> probe's fixed resume target and preserves the bound answer in the resumed machine state? The
-> bridge must reject another operator, continuation, target, or raw-return provenance; remain
-> cold-replayable from the admitted event; and keep proposal, actuality, resolution, check,
-> warrant, and standing visibly distinct.
+> Given a verified `ProbeSuspension`, the append-only ordinary event ledger, immutable artifacts,
+> and the finite event-to-resumption bridge, what is the smallest crash-safe Phase 6 transaction
+> and replay recipe that records request intent before an external effect, preserves the raw return
+> before decoding, appends exactly one checked event, and reconstructs the same admitted resumption
+> after restart? It must not collapse a proposed request, an attempt, a completed event, a decoded
+> answer, or a warrant, and it must not freeze the still-open canonical/plan attempt-record shape
+> without an executable breaker.
 
 The protected difference is visible in the accepted sources:
 
@@ -96,6 +100,14 @@ The protected difference is visible in the accepted sources:
   environment, named slot, and entire admitted set. A two-completion partial answer remains two
   completions. The result is derived data and does not rewrite the canonical source artifact,
   evaluate a continuation, choose a runtime block, or establish a source-to-runtime lowering.
+- `ContinuationLowering` and `ProbeSuspension::resume_admitted` supply the first finite
+  source-to-runtime bridge. The lowering source must be the bound checked continuation, its target
+  must exist and equal the suspension's fixed resume block, and the admitted answer's operator must
+  equal the suspended operator. The resulting `AdmittedResumption` retains the entire binding plus
+  event and raw-return identities. A full fixture rebuilds those inputs from one event-linked
+  finite decode before resuming and rejects rival continuation and target maps. The bridge neither
+  dispatches the operator nor writes history, and a generated lowering is not self-warranting
+  canonical identity.
 - `match_decoded_observation_use` supplies the next derived structural boundary. It requires a
   preserved candidate from that decoded result and a declared relation use to rehash and agree
   exactly on query relation, complete named bindings, and the query's scope, applicability,
@@ -448,12 +460,11 @@ These are recorded now but do not outrank the Phase 4 determination boundary:
   web of the standing source determination, with exact scope, applicability, grain,
   horizon, version, and provenance, is the smallest lawful
   `DeterminationPresentation`; keep later minimization reversible.
-- **Phase 3/7 answer materialization:** canonical complete candidates now represent individual
-  elements of an answer carrier, and exact finite single-port decoder tables can retain one or
-  more such candidates beside their actual event and direct route. Retain the `Ask` answer binder
-  as first-order syntax until general Phase 6 actuality and Phase 7 resolution/fiber contracts
-  supply multi-port supported-answer-set representation. Do not coerce a `CompletionCandidate`
-  or finite decoder table into relation support, substitution, branch selection, or normalization.
+- **Phase 3/7 general answer materialization:** the finite single-open-port route now admits and
+  binds an exact supported set and preserves it through one explicit runtime lowering. General
+  multi-port resolution, first-order substitution/evaluation, branch-family construction, and
+  canonical replay recipes remain open. Do not coerce a `CompletionCandidate` or finite decoder
+  table into relation support, substitution, branch selection, or normalization.
 - **Phase 4 reciprocal core:** implement positive departure, oriented and tagged
   `NegationUse`, distinct semantic/execution coverage, same-use return fibers,
   protected recovery, exact `DetermineThrough` factorization, seed/reorientation,
