@@ -239,10 +239,10 @@ regime. `ProposedRegimeExtension` instead retains a route outside that regime ag
 problem. Both are candidates: neither selects, runs, admits, or changes a binding.
 
 Phase 15 now has a finite `BindingBridgeIR`: explicit old-to-new `QueryRef` transport is injective
-and rechecked against the source/target relation-schema bindings. Only a declared conservative
-observational extension may carry a target question outside the finite transport image as a
-strict-growth witness. This is finite demonstrated transport, not an unbounded inclusion theorem;
-rebinding carries no automatic question-language inclusion.
+and rechecked against the source/target relation-schema bindings and declared scope/horizon. Only
+a declared conservative observational extension may carry a target question outside the finite
+transport image as a strict-growth witness. This is finite demonstrated transport, not an
+unbounded inclusion theorem; rebinding carries no automatic question-language inclusion.
 
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates

@@ -8,8 +8,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use thiserror::Error;
 
 use crate::{
-    BindingVersionRef, OpenQueryCatalog, OpenQueryCheckError, OpenQueryError, QueryRef,
-    RelationError,
+    BindingVersionRef, HorizonRef, OpenQueryCatalog, OpenQueryCheckError, OpenQueryError, QueryRef,
+    RelationError, ScopeRef,
 };
 
 /// The declared semantic role of a finite binding bridge.
@@ -25,6 +25,8 @@ pub enum BindingChangeKind {
 pub struct BindingBridgeIR {
     source: BindingVersionRef,
     target: BindingVersionRef,
+    scope: ScopeRef,
+    horizon: HorizonRef,
     kind: BindingChangeKind,
     transports: BTreeMap<QueryRef, QueryRef>,
     strict_growth_witness: Option<QueryRef>,
@@ -34,6 +36,8 @@ impl BindingBridgeIR {
     pub fn new(
         source: BindingVersionRef,
         target: BindingVersionRef,
+        scope: ScopeRef,
+        horizon: HorizonRef,
         kind: BindingChangeKind,
         transports: Vec<(QueryRef, QueryRef)>,
         strict_growth_witness: Option<QueryRef>,
@@ -61,6 +65,8 @@ impl BindingBridgeIR {
         Ok(Self {
             source,
             target,
+            scope,
+            horizon,
             kind,
             transports: map,
             strict_growth_witness,
@@ -74,6 +80,14 @@ impl BindingBridgeIR {
     #[must_use]
     pub const fn target(&self) -> BindingVersionRef {
         self.target
+    }
+    #[must_use]
+    pub const fn scope(&self) -> ScopeRef {
+        self.scope
+    }
+    #[must_use]
+    pub const fn horizon(&self) -> HorizonRef {
+        self.horizon
     }
     #[must_use]
     pub const fn kind(&self) -> BindingChangeKind {
@@ -93,6 +107,8 @@ impl BindingBridgeIR {
         for (old_ref, new_ref) in &self.transports {
             let old = checked_query(catalog, *old_ref)?;
             let new = checked_query(catalog, *new_ref)?;
+            self.check_question_context(*old_ref, &old)?;
+            self.check_question_context(*new_ref, &new)?;
             let old_schema = catalog
                 .resolve_relation_schema(old.relation())
                 .ok_or(BindingBridgeCheckError::UnresolvedRelation(old.relation()))?;
@@ -116,6 +132,7 @@ impl BindingBridgeIR {
         }
         if let Some(witness_ref) = self.strict_growth_witness {
             let witness = checked_query(catalog, witness_ref)?;
+            self.check_question_context(witness_ref, &witness)?;
             let schema = catalog.resolve_relation_schema(witness.relation()).ok_or(
                 BindingBridgeCheckError::UnresolvedRelation(witness.relation()),
             )?;
@@ -126,6 +143,28 @@ impl BindingBridgeIR {
                     actual: schema.binding(),
                 });
             }
+        }
+        Ok(())
+    }
+
+    fn check_question_context(
+        &self,
+        question: QueryRef,
+        resolved: &crate::OpenQuery,
+    ) -> Result<(), BindingBridgeCheckError> {
+        if resolved.context().scope() != self.scope {
+            return Err(BindingBridgeCheckError::QuestionScopeMismatch {
+                question,
+                expected: self.scope,
+                actual: resolved.context().scope(),
+            });
+        }
+        if resolved.context().horizon() != self.horizon {
+            return Err(BindingBridgeCheckError::QuestionHorizonMismatch {
+                question,
+                expected: self.horizon,
+                actual: resolved.context().horizon(),
+            });
         }
         Ok(())
     }
@@ -189,5 +228,17 @@ pub enum BindingBridgeCheckError {
         question: QueryRef,
         expected: BindingVersionRef,
         actual: BindingVersionRef,
+    },
+    #[error("question {question} has scope {actual}, expected {expected}")]
+    QuestionScopeMismatch {
+        question: QueryRef,
+        expected: ScopeRef,
+        actual: ScopeRef,
+    },
+    #[error("question {question} has horizon {actual}, expected {expected}")]
+    QuestionHorizonMismatch {
+        question: QueryRef,
+        expected: HorizonRef,
+        actual: HorizonRef,
     },
 }

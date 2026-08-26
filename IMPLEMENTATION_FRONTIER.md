@@ -357,9 +357,9 @@ separator problem. Neither selects a route, establishes expressibility failure, 
 binding extension.
 
 Phase 15 now has finite declared `BindingBridgeIR` transport and a target-only strict-growth
-witness for conservative observational extension. It rechecks named query/schema bindings but
-does not establish transport for every old question, preservation of interpretations, a binding
-admission, or any inclusion under rebinding.
+witness for conservative observational extension. It rechecks named query/schema bindings under
+one declared scope and horizon, but does not establish transport for every old question,
+preservation of interpretations, a binding admission, or any inclusion under rebinding.
 
 ## Known later questions
 

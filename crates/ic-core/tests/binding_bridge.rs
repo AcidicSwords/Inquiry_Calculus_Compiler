@@ -83,12 +83,12 @@ fn query(byte: u8) -> QueryRef {
     QueryRef::from_artifact_ref(artifact(byte))
 }
 
-fn context(byte: u8) -> ic_core::RelationUseContext {
+fn context(byte: u8, scope: ScopeRef, horizon: HorizonRef) -> ic_core::RelationUseContext {
     ic_core::RelationUseContext::new(
-        ScopeRef::from_artifact_ref(artifact(byte)),
+        scope,
         ApplicabilityRef::from_artifact_ref(artifact(byte + 1)),
         GrainRef::from_artifact_ref(artifact(byte + 2)),
-        HorizonRef::from_artifact_ref(artifact(byte + 3)),
+        horizon,
         DischargeMode::Check,
         SupportRef::from_artifact_ref(artifact(byte + 4)),
         None,
@@ -111,9 +111,13 @@ fn open_query(relation: RelationRef, context: ic_core::RelationUseContext) -> Op
 fn finite_bridge_keeps_conservative_growth_distinct_from_rebinding() {
     let old = BindingVersionRef::from_artifact_ref(artifact(0x10));
     let new = BindingVersionRef::from_artifact_ref(artifact(0x11));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x12));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0x13));
     let bridge = BindingBridgeIR::new(
         old,
         new,
+        scope,
+        horizon,
         BindingChangeKind::ConservativeObservationalExtension,
         vec![(query(0x20), query(0x30))],
         Some(query(0x31)),
@@ -125,6 +129,8 @@ fn finite_bridge_keeps_conservative_growth_distinct_from_rebinding() {
         BindingBridgeIR::new(
             old,
             new,
+            scope,
+            horizon,
             BindingChangeKind::Rebinding,
             vec![(query(0x20), query(0x30))],
             Some(query(0x31)),
@@ -135,6 +141,8 @@ fn finite_bridge_keeps_conservative_growth_distinct_from_rebinding() {
         BindingBridgeIR::new(
             old,
             new,
+            scope,
+            horizon,
             BindingChangeKind::ConservativeObservationalExtension,
             vec![(query(0x20), query(0x30)), (query(0x21), query(0x30))],
             None,
@@ -145,6 +153,8 @@ fn finite_bridge_keeps_conservative_growth_distinct_from_rebinding() {
         BindingBridgeIR::new(
             old,
             new,
+            scope,
+            horizon,
             BindingChangeKind::ConservativeObservationalExtension,
             vec![(query(0x20), query(0x30))],
             Some(query(0x30)),
@@ -157,6 +167,8 @@ fn finite_bridge_keeps_conservative_growth_distinct_from_rebinding() {
 fn finite_bridge_rechecks_named_questions_against_their_declared_bindings() {
     let source = BindingVersionRef::from_artifact_ref(artifact(0x10));
     let target = BindingVersionRef::from_artifact_ref(artifact(0x11));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x12));
+    let horizon = HorizonRef::from_artifact_ref(artifact(0x13));
     let mut catalog = Catalog::default();
     let source_unit = catalog.insert_type(TypeArtifact::new(source, TyIR::Unit));
     let target_unit = catalog.insert_type(TypeArtifact::new(target, TyIR::Unit));
@@ -184,12 +196,17 @@ fn finite_bridge_rechecks_named_questions_against_their_declared_bindings() {
         Vec::new(),
         Vec::new(),
     ));
-    let old_query = catalog.insert_query(open_query(source_relation, context(0x50)));
-    let new_query = catalog.insert_query(open_query(target_relation, context(0x60)));
-    let growth_query = catalog.insert_query(open_query(target_relation, context(0x70)));
+    let old_query =
+        catalog.insert_query(open_query(source_relation, context(0x50, scope, horizon)));
+    let new_query =
+        catalog.insert_query(open_query(target_relation, context(0x60, scope, horizon)));
+    let growth_query =
+        catalog.insert_query(open_query(target_relation, context(0x70, scope, horizon)));
     let bridge = BindingBridgeIR::new(
         source,
         target,
+        scope,
+        horizon,
         BindingChangeKind::ConservativeObservationalExtension,
         vec![(old_query, new_query)],
         Some(growth_query),
@@ -203,6 +220,8 @@ fn finite_bridge_rechecks_named_questions_against_their_declared_bindings() {
     let wrong_direction = BindingBridgeIR::new(
         source,
         target,
+        scope,
+        horizon,
         BindingChangeKind::DefinitionalExtension,
         vec![(new_query, new_query)],
         None,
@@ -211,5 +230,21 @@ fn finite_bridge_rechecks_named_questions_against_their_declared_bindings() {
     assert!(matches!(
         wrong_direction.check(&catalog),
         Err(BindingBridgeCheckError::SourceBindingMismatch { question, .. }) if question == new_query
+    ));
+
+    let other_scope = ScopeRef::from_artifact_ref(artifact(0x14));
+    let scope_mismatch = BindingBridgeIR::new(
+        source,
+        target,
+        other_scope,
+        horizon,
+        BindingChangeKind::DefinitionalExtension,
+        vec![(old_query, new_query)],
+        None,
+    )
+    .expect("constructor does not inspect named question context");
+    assert!(matches!(
+        scope_mismatch.check(&catalog),
+        Err(BindingBridgeCheckError::QuestionScopeMismatch { question, .. }) if question == old_query
     ));
 }
