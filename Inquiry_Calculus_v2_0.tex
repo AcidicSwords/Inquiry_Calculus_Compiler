@@ -22,7 +22,7 @@
   linkcolor=blue!45!black,
   urlcolor=blue!45!black,
   citecolor=blue!45!black,
-  pdftitle={Inquiry Calculus --- Unified Canonical Specification},
+  pdftitle={Inquiry Calculus v2.0 --- Typed Relational Inquiry, Interrogative Succession, and Regenerative Control},
   pdfauthor={},
   pdfsubject={Typed relational programming language for inquiry}
 }
@@ -31,7 +31,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{Inquiry Calculus}
-\fancyhead[R]{Unified Canonical Specification v1.1}
+\fancyhead[R]{Unified Canonical Specification v2.0}
 \fancyfoot[C]{\thepage}
 
 \setlist[itemize]{leftmargin=1.5em}
@@ -109,6 +109,24 @@
 \newcommand{\Interpret}{\operatorname{Interpret}}
 \newcommand{\Chk}{\operatorname{Check}}
 \newcommand{\Actualize}{\operatorname{Actualize}}
+\newcommand{\Formable}{\operatorname{Formable}}
+\newcommand{\Executable}{\operatorname{Executable}}
+\newcommand{\Answerable}{\operatorname{Answerable}}
+\newcommand{\Productive}{\operatorname{Productive}}
+\newcommand{\ResolvedQ}{\operatorname{ResolvedQ}}
+\newcommand{\Ready}{\operatorname{Ready}}
+\newcommand{\RequiredDischarge}{\operatorname{RequiredDischarge}}
+\newcommand{\QSucc}{\operatorname{QSucc}}
+\newcommand{\QStep}{\operatorname{QStep}}
+\newcommand{\HeadQ}{\operatorname{HeadQ}}
+\newcommand{\RootFrontier}{\operatorname{RootFrontier}}
+\newcommand{\IFP}{\operatorname{IFP}}
+\newcommand{\CueRaw}{\operatorname{CueRaw}}
+\newcommand{\CueSupp}{\operatorname{CueSupp}}
+\newcommand{\AskRef}{\mathfrak a}
+\newcommand{\SupportedRoute}{\operatorname{SupportedByDeclaredRoute}}
+\newcommand{\ND}{\operatorname{ND}}
+\newcommand{\ResPath}{\varrho}
 \newcommand{\den}[1]{[\![#1]\!]}
 \newcommand{\eqH}{\equiv_{\mathcal H}}
 \newcommand{\bind}{\mathbin{\mathsf{bind}}}
@@ -117,18 +135,29 @@
 \crefname{definition}{definition}{definitions}
 \crefname{law}{law}{laws}
 \crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{obligation}{obligation}{obligations}
 
-\title{\textbf{Inquiry Calculus}\\
-\large Successor Reciprocal-Boundary / Positive-Negation Edition\\
-\normalsize A Unified, Well-Typed Relational Programming Language for Recursive Distinction, Regenerative Abstraction, Question Programs, Boundary Traversal, Representation Invention, Realized Perception, Warranted Revision, and LLM-Native Inquiry}
+\title{\textbf{Inquiry Calculus v2.0}\\
+\large Typed Relational Inquiry, Interrogative Succession, and Regenerative Control\\
+\normalsize A Unified, Well-Defined, Well-Typed Relational Programming Language}
 \author{}
-\date{Version 1.1 --- Unified Canonical Specification\\Positive-Negation Successor Edition --- 25 August 2026}
+\date{Version 2.0 --- Unified Canonical Specification\\26 August 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This document specifies Inquiry Calculus v1.1 as the single forward semantic, programming-language, compiler, and runtime authority for the project.  Version 1.1 preserves the typed relation, question, probe, actuality, history, warrant, compression, and self-revision machinery of v1.0, but corrects the level at which the calculus begins.  The primary represented unit is now a typed \emph{form}: any consequentially represented value, relation, distinction, question, operator, program, or reified construction that may lawfully enter further typed relations.  Object-role and operator-role are therefore not primitive ontological species; they are roles a represented form may occupy under a typed interface.
+This document specifies Inquiry Calculus v2.0 as the single forward semantic,
+programming-language, compiler, runtime, and regenerative-control authority for the project.
+Version 2.0 conservatively embeds the standing v1.1 typed relational calculus and consolidates its
+positive-negation successor, paired-actuality, and interrogative-succession results into one
+coherent language architecture.  The major version marks that consolidation; it does not license
+accidental semantic strengthening.  The primary represented unit is a typed \emph{form}: any
+consequentially represented value, relation, distinction, question, operator, program, or reified
+construction that may lawfully enter further typed relations.  Object-role and operator-role are
+therefore relational roles under typed interfaces rather than primitive ontological species.
 
 Every pair of represented forms shares at least the coarsest relation of joint admission to the current represented field.  Inquiry seeks consequentially finer relations.  A realized distinction is not exhausted by a binary label or by a four-cell display.  It admits a recursively compositional candidate-boundary form
 \[
@@ -140,7 +169,13 @@ whose projections supply candidate side incidence, but neither projection is the
 \]
 retains the two negation-use identities, their semantic and execution coverage, the use-specific return fibers, protected recovery, seed support, residuals, and provenance.  The six roles are not independent slots, and \(\Gamma_D\) checks joint compatibility only after they have been generated.  The oriented double cover \(\widetilde B_D=B_D\times\{+,-\}\) records orientation without synthesizing a reverse negation.  The familiar four-cell square remains only a projection of the dependent occurrence.
 
-A question remains a partially bound typed relation.  Version 1.1 makes explicit that partial binding is a regenerative abstraction: bind the known ports, preserve the relation, and the remaining open section/fiber is the question.  Removing a filling while preserving all relations through which it mattered leaves a structured hole.  The intersection of the solution fibers of a relational web is the field of lawful replacements.  A representation understands or determines a form, relative to a protected horizon, when this residual web regenerates a unique protected equivalence class and the discriminators needed to reopen the abstraction remain available.
+A question is a partially bound typed relation.  Partial binding is a regenerative abstraction:
+bind the known ports, preserve the relation, and the remaining open section/fiber is the question.
+Removing a filling while preserving all relations through which it mattered leaves a structured
+hole.  The intersection of the solution fibers of a relational web is the field of lawful
+replacements.  A representation understands or determines a form, relative to a protected
+horizon, when this residual web regenerates a unique protected equivalence class and the
+discriminators needed to reopen the abstraction remain available.
 
 This yields a direct account of generative inquiry and scientific representation invention.  If a current representation identifies two cases whose protected consequences differ, the representation is insufficient.  The calculus then opens higher-order questions for a separating context, a finer representation, a more appropriate grain, a new probe or instrument, or a binding extension.  Tool construction is therefore probe-basis extension: implementing a discriminator that makes a consequentially hidden difference observable.  The dual operation is abstraction: when an active difference never changes protected consequence, it becomes a candidate for folding.
 
@@ -154,6 +189,10 @@ P::=\mathsf{Return}\mid\mathsf{Branch}\mid\mathsf{Probe}.
 \]
 A semantic question compiles to deterministic computation, LLM generation, an actual probe, an independent checker, a warrant operation, or a mixed program according to the modes of its open ports.  Raw return, decoded completion, interpretation, checking, warrant, and standing remain distinct.  Realized history remains authoritative evidence; learned distinctions, representations, question paths, and operator folds are compact regenerative structures over that history rather than replacements for it.
 
+The derived interrogative algebra makes answer-conditioned succession explicit without adding a second semantics.  A dynamic successor is indexed by the checked \(\mathsf{Ask}\) occurrence and its first-order continuation, because the same semantic question and supported answer under different continuations may lead to different successor questions.  A live frontier retains both discretionary productive questions and questions required to discharge an explicit \(\mathsf{Probe}\), \(\mathsf{Check}\), \(\mathsf{Warrant}\), support, or reconstruction obligation.  Surface interrogatives and route labels remain erasable renderings of ordinary relations, questions, and \(\mathsf{IProg}\).
+
+Question-side and return-side actuality are likewise derived projections of one ordinary authoritative event spine.  The canonical reconstruction chain is a checked \(\mathsf{Ask}\) occurrence, its ordinary event and raw return, the exact resolution path, the whole supported answer set, the occurrence-specific continuation, and the next \(\mathsf{Ask}\) occurrence.  Resume is not replay, endpoint equality is not path identity, and no paired or question-route projection creates a second history.
+
 The result is a recursively closed, well-typed calculus for forming distinctions, positively determining typed exteriority, returning through use-specific fibers, opening holes, generating and executing questions, inventing representations and probes, traversing reciprocal boundaries, preserving actuality, learning regenerative forms and operator paths, folding and reopening structure, and applying the same operations to its own presentation without self-warrant.
 \end{abstract}
 
@@ -166,9 +205,15 @@ The result is a recursively closed, well-typed calculus for forming distinctions
 
 \subsection{Forward authority}
 
-This specification is designed to be the one cohesive document from which the active Inquiry Calculus is reconstructed.  Earlier project documents remain regression ancestry, derivation evidence, and sources of counterexamples.  They do not silently override this document merely because they contain older notation or a larger architecture.
+This specification is the one cohesive document from which the active Inquiry Calculus is
+reconstructed.  Earlier semantic documents remain regression ancestry, derivation evidence, and
+sources of counterexamples.  They do not silently override this document merely because they
+contain older notation or a larger architecture.
 
-The immediately preceding stable-path canonical specification is retained at Git commit \texttt{49dc381}; the project authority records preserve the full identifier.  It remains ancestry and regression evidence rather than coequal forward authority.
+The complete immediately preceding v1.1 authority surface is retained at the pre-consolidation Git
+coordinate \texttt{a936ebf}; the decision ledger records its full identity and the independently
+received interrogative-source digest.  It remains ancestry and regression evidence rather than a
+coequal forward authority.
 
 A later successor may replace this document only by a predecessor-judged revision that:
 \begin{enumerate}
@@ -179,17 +224,129 @@ A later successor may replace this document only by a predecessor-judged revisio
 \item receives standing independently of the candidate's own assertion that it is better.
 \end{enumerate}
 
-\subsection{Four statuses}
+\subsection{Conservative embedding of v1.1}
+
+\begin{theorem}[v1.1 conservative embedding]\label{thm:v11-embedding}
+There is a typed injective translation
+\[
+\boxed{
+\operatorname{Embed}_{1.1\to2.0}:
+\mathcal L_{1.1}\hookrightarrow\mathcal L_{2.0}
+}
+\]
+that maps every admitted v1.1 typed form, relation, partial-binding question, supported answer,
+\(\mathsf{Return}_I/\mathsf{Ask}\) source program, runtime program, discharge mode, event/raw
+return, support/standing construction, positive-negation reciprocal occurrence, fold, bridge, and
+predecessor-judged revision to the same typed semantic construction in v2.0.  For every v1.1 term
+\(t\) and binding carried by the translation,
+\[
+\boxed{
+\den{\operatorname{Embed}_{1.1\to2.0}(t)}_{2.0}
+=
+\den{t}_{1.1}.
+}
+\]
+For a predecessor supported answer with semantic member set \(S\), the proof-carrying v2.0
+translation satisfies
+\[
+\boxed{
+\left|\operatorname{EmbedSupp}_{1.1\to2.0}(S,\vartheta,E,w)\right|=S,
+}
+\]
+retains the predecessor route/evidence witness, and selects the same source continuation branch.
+The predecessor \(\mathsf{Code}(A)\) carrier maps to the explicitly typed reified-code family of
+\cref{def:program-code-families}; it is neither dropped nor identified with execution.
+No v1.1 discharge port is weakened, no generated form becomes actual or standing, and no existing
+event, use identity, return fiber, support route, or reopening condition is erased by embedding.
+\end{theorem}
+
+\begin{proof}
+The v2.0 substrate retains the v1.1 type/form universe, typed relation denotation, named-port
+question constructor, supported-answer semantics, source and runtime grammars, five discharge
+modes, ordinary event spine, least-fixed-point standing, positive-negation contracts, and
+fold/bridge/revision laws unchanged.  The new interrogative and paired-actuality structures are
+typed derived annotations or projections over those constructions and erase by
+\cref{thm:interrogative-lowering,law:one-occurrence-spine}.  Structural inclusion therefore
+preserves typing and denotation, and no new equality is imposed on old forms.
+\end{proof}
+
+\begin{corollary}[Evidence transport without conformance inflation]\label{cor:v11-evidence-transport}
+An executable v1.1 fixture remains evidence for the embedded v2.0 behavior at exactly its original
+scope, applicability, grain, horizon, versions, and coverage.  The embedding alone establishes no
+new interrogative, controller, or consolidation fixture as passing.
+\end{corollary}
+
+\begin{law}[Major version non-strengthening]\label{law:v2-nonstrengthening}
+The v2.0 name records a coherent language and control consolidation.  It does not authorize
+strengthening converse into inverse, possibility into actuality, parsing into support, checking
+into warrant, ledger order into causality, or derived projections into new authority.
+\end{law}
+
+\subsection{Five statuses}
 
 Every construct in this document is explicitly one of:
 \begin{enumerate}
 \item \textbf{constitutional}: a law of the calculus;
-\item \textbf{derived}: regenerable from constitutional structure;
+\item \textbf{canonical-restated}: a constitutional or previously admitted construct repeated locally so that a derivation is readable, without becoming a second definition;
+\item \textbf{derived}: regenerable from constitutional and canonical-restated structure;
 \item \textbf{binding-supplied}: additional structure supplied by a domain or runtime binding;
 \item \textbf{implementation-only}: an encoding needed by a compiler/runtime but not an ontological primitive.
 \end{enumerate}
 
 A convenient implementation sort never becomes constitutional merely because code requires a record for it.
+
+Unless a local status line says otherwise, definitions, typing judgments, laws, and theorems in the
+typed semantic-language parts are \textbf{constitutional}; a repeated presentation explicitly
+identified as such is \textbf{canonical-restated}; constructions in the derived-structures and
+interrogative-algebra sections are \textbf{derived}; domain and mathematical-home choices are
+\textbf{binding-supplied}; and concrete runtime record layouts, indexes, storage, and backend
+encodings are \textbf{implementation-only}.  A cross-reference to a constitutional contract from an
+implementation-only record does not transfer the record's layout into semantics.  These defaults
+give every named construction exactly one status while permitting a local explicit override.
+
+Material consolidated from the paired-actuality and interrogative-succession analyses below is
+explicitly \textbf{derived}.  Its inclusion in the single canonical source removes competing
+authority paths; it does not promote a trace projection, root annotation, route classification,
+or controller view into a constitutional primitive.
+
+\section{Typed language architecture}\label{sec:language-architecture}
+
+The organizing spine of v2.0 is the typed compilation and evidence stack
+\[
+\boxed{
+\begin{array}{c}
+\text{surface interrogative / binding-native syntax}\\
+\downarrow\ \Elab\\
+\text{derived interrogative roots, macros, and route annotations}\\
+\downarrow\ \operatorname{Lower}_Q\\
+\text{typed open relation }(?_I R[\beta])\\
+\downarrow\\
+\text{source }\mathsf{IProg}:\mathsf{Return}_I\mid\mathsf{Ask}\\
+\downarrow\ \Compile\\
+\text{runtime/effect IR}:\mathsf{Return}\mid\mathsf{Branch}\mid\mathsf{Probe}\\
+\downarrow\\
+\text{actual execution / immutable }\Raw\text{ return / ordinary event}\\
+\downarrow\\
+\text{resolution / support / check / warrant / standing}\\
+\downarrow\\
+\text{residual and occurrence-indexed successor-question frontier}.
+\end{array}
+}
+\]
+
+Each layer has one responsibility.  Surface syntax renders; derived roots construct ordinary
+questions; \(\operatorname{Lower}_Q\) erases annotations; the source program carries typed
+answer-dependent control; the runtime performs only its admitted effects; ordinary history records
+actuality; resolution and authority relations determine what the return supports; the residual
+constructs the next live occurrence.  No downstream convenience may redefine an upstream semantic
+relation.
+
+\begin{law}[Typed non-collapse across the language stack]\label{law:language-stack-noncollapse}
+Every transition between layers preserves the represented type, binding, occurrence identity,
+whole supported answer, discharge authority, provenance, and protected continuation required by
+its contract.  In particular, raw provider bytes do not directly select a semantic continuation,
+route annotations do not execute, and a controller policy does not create standing.
+\end{law}
 
 \section{Constitutional laws}
 
@@ -450,11 +607,42 @@ A,B ::= {}&
 \mid \mathsf{List}(A)\\
 &\mid \Raw(A)
 \mid \Result(A)
+\mid \mathsf{IProg}(A)
 \mid \Prog(A)
 \mid \mathsf{Code}(A).
 \end{aligned}
 \]
 This is a programming-language representation.  A native binding need not claim that the represented domain intrinsically carries every one of these structures.
+
+\begin{definition}[Program and code families]\label{def:program-code-families}
+\(\mathsf{IProg}(A)\) is the first-order source syntax returning \(A\),
+\(\Prog(A)\) is the executable runtime syntax returning \(A\), and
+\(\mathsf{Code}(A)\) is nonexecuting reified program syntax.  Their constructors and typing rules
+are given below.  There are typed quotations
+\[
+\mathsf{quote}_I:\mathsf{IProg}(A)\to\mathsf{Code}(A),
+\qquad
+\mathsf{quote}_P:\Prog(A)\to\mathsf{Code}(A),
+\]
+and a binding- and compiler-version-indexed partial interpretation
+\[
+\mathsf{Act}^{code}_{\B,v,A}:
+\mathsf{Code}(A)
+\rightharpoonup
+\mathsf{IProg}(A)+\Prog(A).
+\]
+Quotation alone neither executes nor warrants code.  The partial interpretation is available only
+through an admitted binding \(\B\) and compiler version \(v\).  Whenever \(v\) admits the
+corresponding quotation form, it satisfies the typed quotation laws
+\[
+\mathsf{Act}^{code}_{\B,v,A}(\mathsf{quote}_I(K))=\mathsf{inl}(K),
+\qquad
+\mathsf{Act}^{code}_{\B,v,A}(\mathsf{quote}_P(P))=\mathsf{inr}(P).
+\]
+Outside the admitted syntax/version domain the interpretation is undefined rather than guessed.
+Thus the predecessor \(\mathsf{Code}(A)\)
+constructor has a total place in the v2.0 type grammar without becoming a second program semantics.
+\end{definition}
 
 \subsection{Implementation code sorts}
 
@@ -583,7 +771,7 @@ The principal judgments are:
 \B;\Gamma\vdash P:\Prog(A),
 \]
 \[
-\B;\Gamma\vdash \rho:A\leadsto B,
+\B;\Gamma\vdash \ResPath:A\leadsto B,
 \]
 and
 \[
@@ -1086,7 +1274,7 @@ hence
 \begin{definition}[Active representation refinement]
 Let
 \[
-\eta_t:X\to S_t
+\eta_t:X\to V_t
 \]
 be the current active question-conditioned representation.  Adding a nonredundant question coordinate gives:
 \[
@@ -1111,7 +1299,7 @@ This equation is the exact form of the statement that a question expands semanti
 \begin{proposition}[Question redundancy]
 A functional question \(q\) adds no active discriminatory coordinate exactly when there exists
 \[
-\bar\pi_q:S_t\to A(q)
+\bar\pi_q:V_t\to A(q)
 \]
 such that
 \[
@@ -2162,7 +2350,9 @@ For a returned \(y\):
 \item \(|\delta_q(y)|=1\): a complete semantic answer is supported;
 \item \(1<|\delta_q(y)|<|A(q)|\): the response partially resolves the question;
 \item \(\delta_q(y)=A(q)\): the decoded return is nondiscriminating for \(q\);
-\item \(\delta_q(y)\) undefined: the response is malformed, unsupported, or outside this decoder.
+\item \(\delta_q(y)\) undefined: the response is malformed or outside this decoder's declared
+      decoding domain; support failure and incomplete coverage are classified only by the
+      subsequent resolution judgment.
 \end{itemize}
 
 For infinite answer carriers, ``partial'' means a proper nonempty supported subset rather than cardinality comparison.
@@ -2191,31 +2381,65 @@ Thus a response need not terminate inquiry.  It may merely contract the live bou
 Resolution paths are typed:
 \[
 \boxed{
-\rho:A\leadsto B.
+\ResPath:A\leadsto B.
 }
 \]
 The reference grammar is:
 \[
-\rho::=
+\ResPath::=
 \mathsf{Id}_A
 \mid
 \mathsf{Edge}(e)
 \mid
-\rho_2\circ\rho_1,
+\ResPath_2\circ\ResPath_1,
 \]
 where each edge is an admitted decoder, parser, checker-facing conversion, or binding-native interpretation step.
-\end{definition}
-
-For a raw return \(r:A\), a semantic completion \(a\in A(q)\) is supported through \(\rho\) when:
+Its denotation is a typed relation
 \[
 \boxed{
-\operatorname{Run}(\rho,r)=a
+\operatorname{Run}(p)\subseteq A\times B
+\qquad(p:A\leadsto B),
+}
+\]
+defined by
+\[
+\begin{aligned}
+\operatorname{Run}(\mathsf{Id}_A,a,b)
+&\iff a=b,\\
+\operatorname{Run}(\mathsf{Edge}(e),a,b)
+&\iff \den{e}(a,b),\\
+\operatorname{Run}(p_2\circ p_1,a,c)
+&\iff \exists b.\,
+\operatorname{Run}(p_1,a,b)\land\operatorname{Run}(p_2,b,c).
+\end{aligned}
+\]
+Equivalently,
+\(\operatorname{Run}(p,a)=\{b:\operatorname{Run}(p,a,b)\}\); this set may be empty,
+singleton, or non-singleton.  Undefined computation is represented by absence of a related output
+together with the path's typed resolution residual, never by an untyped exception masquerading as
+an empty semantic answer.
+\end{definition}
+
+For a raw return \(r:A\), a semantic completion \(a\in A(q)\) is supported through
+\(\ResPath\) when:
+\[
+\boxed{
+\operatorname{Run}(\ResPath,r,a)
 \land
 \Comp_q(a).
 }
 \]
 
-If a path yields a set of compatible completions, it is represented by the partial-answer semantics above.
+The candidate completion set supplied to the five-way resolution classifier is therefore
+\[
+\boxed{
+C_{q,p,r}:=
+\{a\in A(q):\operatorname{Run}(p,r,a)\land\Comp_q(a)\}.
+}
+\]
+Support, exact emptiness, undefinedness, support failure, and incomplete coverage are determined
+from this set together with the path's declared domain, evidence, and coverage; cardinality alone
+does not select the constructor.
 
 \begin{law}[Resolution provenance]
 The runtime must retain the path by which a raw return was decoded when protected future use may distinguish different resolution routes.
@@ -2226,32 +2450,132 @@ The runtime must retain the path by which a raw return was decoded when protecte
 
 The runtime effect language below is intentionally lower-level than the source language used to express portable question programs.  The source language makes answer-dependent questioning explicit and is executable in an ordinary chat when its discharge modes require no unavailable external effect.
 
-\begin{definition}[Supported answer type]
-For semantic question \(q\), define
+\begin{definition}[Declared-route support judgment]\label{def:declared-route-support}
+For a well-typed question \(q=?_I R[\beta]\), a nonempty candidate set
+\(S\subseteq A(q)\), an exact route description \(\vartheta\), and an evidence environment
+\(E\), the checked judgment
+\[
+\SupportedRoute(q,S;\vartheta,E)
+\]
+holds exactly when every member of \(S\) is a well-typed completion admitted through the declared
+mode of each open port, the referenced evidence and resolution paths exist and apply at the declared
+scope/grain/horizon, and no member is promoted beyond that route's authority.  The judgment retains
+per-component provenance and coverage.  It may support a proper subset of the completion fiber;
+unexamined or unresolved members remain \(\mathsf{Unknown}\).  A generated proposal may be admitted
+as a generated branch, but it is not thereby actual, checked, warranted, or standing.
+\end{definition}
+
+\begin{definition}[First-order support witness]\label{def:support-witness}
+For the same \((q,S,\vartheta,E)\), let
+\[
+\mathsf{SupportWitness}(q,S;\vartheta,E)
+\]
+be the first-order carrier of checked derivations of
+\(\SupportedRoute(q,S;\vartheta,E)\).  An inhabitant records the declared coverage, a
+component-indexed provenance map for every represented component of every member of \(S\), and the
+checked support derivation.  Its validation judgment is
+\[
+\B;\Gamma\vdash
+w:\mathsf{SupportWitness}(q,S;\vartheta,E).
+\]
+The judgment \(\SupportedRoute(q,S;\vartheta,E)\) holds exactly when this carrier is inhabited.
+Thus support evidence is inspectable proof-relevant program data; it is not an erased truth value or
+a self-warranting assertion.
+\end{definition}
+
+\begin{definition}[Supported answer type]\label{def:supported-answer-type}
+For semantic question \(q\), let \(\mathsf{Route}(q)\) be its first-order route-description type and
+let \(\mathsf{EvidenceEnv}(q,\vartheta)\) be the corresponding typed evidence-environment type.
+Define
 \[
 \boxed{
 \mathsf{SuppAns}(q)
 =
-\{S\subseteq A(q):S\neq\varnothing\land S\text{ is supported by the declared decoder/resolution route}\}.
+\sum_{\vartheta:\mathsf{Route}(q)}
+\sum_{E:\mathsf{EvidenceEnv}(q,\vartheta)}
+\sum_{S:\mathcal P_+(A(q))}
+\mathsf{SupportWitness}(q,S;\vartheta,E).
 }
 \]
-A complete answer is the singleton specialization.  A partial answer is a proper supported subset with more than one live completion.
+Write
+\[
+\widehat S=\langle\vartheta,E,S,w\rangle,
+\qquad
+|\widehat S|=S.
+\]
+The projections \(\mathsf{route}(\widehat S)\), \(\mathsf{evidence}(\widehat S)\),
+\(\mathsf{coverage}(\widehat S)\), \(\mathsf{componentProv}(\widehat S)\), and
+\(\mathsf{support}(\widehat S)\) retain the exact checked route, evidence, declared coverage,
+per-component provenance, and support witness carried by \(w\).  Equality of supported answers is
+equality of this proof-carrying first-order record, not merely equality of its member projection.
+A complete answer has singleton \(|\widehat S|\).  A partial answer has more than one live
+completion or leaves declared components unresolved.  The record is supplied whole to its
+continuation; no rule implicitly selects one member or erases its ancestry.
+\end{definition}
+
+\begin{definition}[Resolution certificate and residual carriers]\label{def:resolution-carriers}
+The resolution payloads are first-order, question-indexed carriers:
+\begin{itemize}
+\item \(\mathsf{EmptyCert}(q)\) contains an admitted exhaustive-coverage certificate and a checked
+      derivation that no completion of \(q\) is supported under that coverage;
+\item \(\mathsf{ResolutionResidual}(q)\) identifies a malformed, inapplicable, or undefined
+      decoding/resolution path together with the event/raw-return and version provenance checked so
+      far;
+\item \(\mathsf{SupportResidual}(q)\) contains decoded candidate members and the exact declared
+      support obligations they fail, without treating failure as semantic negation; and
+\item \(\mathsf{CoverageResidual}(q)\) identifies the uncovered completion region or unresolved
+      components that prevent either support or exact emptiness.
+\end{itemize}
+These carriers are disjoint by constructor and retain the exact route, evidence, versions, scope,
+grain, horizon, and provenance needed to check or reopen the result.
+\end{definition}
+
+\begin{definition}[Resolution outcome]\label{def:resolution-outcome}
+Resolution does not fabricate a nonempty supported answer when no such record is established:
+\[
+\boxed{
+\begin{aligned}
+\mathsf{ResolutionOutcome}(q)
+={}&
+\mathsf{Supported}(\mathsf{SuppAns}(q))\\
+&+\mathsf{ExactEmpty}(\mathsf{EmptyCert}(q))\\
+&+\mathsf{Undefined}(\mathsf{ResolutionResidual}(q))\\
+&+\mathsf{Unsupported}(\mathsf{SupportResidual}(q))\\
+&+\mathsf{Unknown}(\mathsf{CoverageResidual}(q)).
+\end{aligned}
+}
+\]
+\(\mathsf{ExactEmpty}\) requires exhaustive admitted coverage; \(\mathsf{Undefined}\) records a
+malformed or inapplicable resolution path; \(\mathsf{Unsupported}\) records a decoded candidate
+that fails its declared support route; and \(\mathsf{Unknown}\) records incomplete coverage.
+Provider unavailability and resource exhaustion remain the distinct operational stop states
+\(\mathsf{Blocked}\) and \(\mathsf{ResourceBounded}\).  Only the
+\(\mathsf{Supported}(\widehat S)\) summand may fill a source answer slot.
 \end{definition}
 
 \begin{definition}[Inquiry source grammar]
 \[
 \boxed{
 K::=
-\mathsf{Return}_I(a)
+\mathsf{Return}_I(e)
 \mid
-\mathsf{Ask}(q,\kappa).
+\mathsf{Ask}\{q,x,e_K\}.
 }
 \]
-For \(\mathsf{Ask}(q,\kappa)\),
+Here \(e\) and \(e_K\) are first-order expressions, and an \(\mathsf{Ask}\) stores an answer slot
+\(x\) rather than a host-language callback.  Its checked continuation package is
 \[
-\kappa:\mathsf{SuppAns}(q)\to\mathsf{IProg}(A)
+\boxed{
+\kappa=\langle\Gamma,x:\mathsf{SuppAns}(q),e_K\rangle,
+\qquad
+\kappa(\widehat S)=e_K[\widehat S/x]\ \text{under explicit }\Gamma.
+}
 \]
-is an answer-dependent continuation represented as inspectable first-order program data with an explicit environment and capture-safe answer binding.  It is not an opaque host-language closure or hidden model policy.  The continuation may construct a new relation/question from the returned distinction rather than selecting only among a fixed textual checklist.
+The environment, expression, answer slot, and any named subprogram references are inspectable,
+serializable program data; substitution is capture-safe.  The notation \(\mathsf{Ask}(q,\kappa)\)
+used elsewhere abbreviates this record.  It never denotes an opaque host-language closure or hidden
+model policy.  The continuation may construct a new relation/question from the returned distinction
+rather than selecting only among a fixed textual checklist.
 \end{definition}
 
 \subsection{Source typing}
@@ -2266,7 +2590,7 @@ is an answer-dependent continuation represented as inspectable first-order progr
 \frac{
 \Gamma\vdash q\;\mathsf{question}
 \qquad
-\Gamma,S:\mathsf{SuppAns}(q)\vdash\kappa(S):\mathsf{IProg}(A)
+\Gamma,\widehat S:\mathsf{SuppAns}(q)\vdash\kappa(\widehat S):\mathsf{IProg}(A)
 }{
 \Gamma\vdash\mathsf{Ask}(q,\kappa):\mathsf{IProg}(A)
 }
@@ -2278,21 +2602,178 @@ A higher-order continuation may be represented by
 \[
 \boxed{
 \mathsf{ResidualQuestion}:
-(\Sigma,q,S,\mathsf{Residual})
+(\Sigma,\AskRef,\widehat S,\mathsf{Residual})
 \rightsquigarrow
 q'.
 }
 \]
-The residual includes surviving filler classes, open dependencies, broken exclusions, reopened folds, representation defects, or other consequential structure left unresolved by the answer.  The canonical next question is one whose possible supported returns can discriminate that residual.
+Here \(\widehat S:\mathsf{SuppAns}(\mathsf{AskQuestion}(\AskRef))\) is supplied whole and
+\(\AskRef\) is the checked source \(\mathsf{Ask}\) occurrence, so the generator retains the
+continuation and environment that make the route meaningful.  The residual includes surviving
+filler classes, open dependencies, broken exclusions, reopened folds, representation defects, or
+other consequential structure left unresolved by the answer.  The canonical next question is one
+whose possible supported returns can discriminate that residual or whose discharge is explicitly
+required by the standing program.
 \end{definition}
 
-Hence an inquiry trace has the semantic shape
+Hence a rendered inquiry trace may abbreviate the semantic questions as
 \[
 \boxed{
-q_0\xrightarrow{r_0/S_0}q_1\xrightarrow{r_1/S_1}q_2\xrightarrow{}\cdots
+q_0\xrightarrow{\AskRef_0,E_0,\ResPath_0,\widehat S_0}q_1
+\xrightarrow{\AskRef_1,E_1,\ResPath_1,\widehat S_1}q_2\xrightarrow{}\cdots
 }
 \]
-rather than a static list of instructions.
+rather than a static list of instructions.  This display is only a projection of the canonical
+occurrence chain in \cref{def:resolved-inquiry-occurrence}; it does not identify an event, raw
+return, resolution path, or supported set with a question.
+
+\subsection{Derived occurrence-indexed question succession}
+
+\textbf{Status: DERIVED.}  Dynamic succession is a projection of the source program; it is not a
+new transition primitive.
+
+\begin{definition}[Checked Ask occurrence]\label{def:ask-occurrence}
+For result type \(A\), let \(\mathsf{SourceConfig}_{\B}(A)\) be the first-order dependent carrier
+\[
+\boxed{
+\mathsf{SourceConfig}_{\B}(A)
+:=
+\left\{
+\langle K,\Gamma,b,v,p\rangle
+\ \middle|\
+\begin{aligned}
+&K\in\mathsf{IProg}(A),\quad
+ \Gamma\in\mathsf{Env}_{\B},\quad
+ b\in\mathsf{BindingVersion}_{\B},\\
+&v\in\mathsf{CompilerVersion}_{\B},\quad
+ p\in\mathsf{Provenance}_{\B},\\
+&\B;\Gamma\vdash K:\mathsf{IProg}(A)
+ \land\mathsf{CheckedSourceVersions}(\B,\Gamma,b,v,p)
+\end{aligned}
+\right\}.
+}
+\]
+Here \(\mathsf{CheckedSourceVersions}\) verifies that \(\Gamma\), binding version \(b\), compiler
+version \(v\), and accepted provenance \(p\) are mutually applicable to the stored source program;
+it is not inferred from co-location.
+For \(\Sigma=\langle K,\Gamma,b,v,p\rangle:\mathsf{SourceConfig}_{\B}(A)\), let
+\(\mathsf{Pos}(K)\) be the first-order structural positions of \(K\), let
+\(K|_\pi\) be the subterm at \(\pi\), and let
+\(\mathsf{EnvAt}(K,\Gamma,\pi)\) and \(\mathsf{ProvAt}(p,\pi)\) be the capture-safe environment and
+structural provenance obtained by replaying the source syntax to that position.  These are checked
+structural operations, not user-supplied labels.  Define
+\[
+\boxed{
+\mathsf{AskOcc}_A(\Sigma)
+:=
+\left\{
+\begin{gathered}
+\langle\pi,q,x,e_K,\Gamma_\pi,b_\pi,v_\pi,p_\pi\rangle
+\\[-1mm]
+\mathrel{\Big|}\quad
+\pi\in\mathsf{Pos}(K),\quad
+ K|_\pi=\mathsf{Ask}\{q,x,e_K\},\\
+\Gamma_\pi=\mathsf{EnvAt}(K,\Gamma,\pi),\quad
+ b_\pi=b,\quad v_\pi=v,\quad p_\pi=\mathsf{ProvAt}(p,\pi),\\
+\B;\Gamma_\pi\vdash q\ \mathsf{question},\quad
+\B;\Gamma_\pi,x:\mathsf{SuppAns}(q)\vdash e_K:\mathsf{IProg}(A),\\
+\mathsf{CaptureSafe}(K,\pi,x,e_K,\Gamma_\pi)
+\end{gathered}
+\right\}.
+}
+\]
+Thus the formation judgment
+\(\Sigma\vdash\AskRef:\mathsf{AskOcc}_A\) is derivable exactly by re-walking the source program
+and checking every displayed field.  A copied position, question, slot, environment, continuation,
+binding/compiler version, or provenance field does not form an occurrence.
+Let \(\mathsf{Question}_{\B}(\Sigma)\) be the dependent carrier of questions appearing with such a
+typing derivation in \(\Sigma\), including capture-safe answer extensions reached by pure
+normalization of its subprograms.  For
+\(\AskRef=\langle\pi,q,x,e_K,\Gamma_\pi,b,v,p_\pi\rangle\), write
+\[
+\mathsf{AskQuestion}(\AskRef)=q,
+\qquad
+\mathsf{AskContinuation}(\AskRef)=\kappa_{\AskRef},
+\qquad
+\kappa_{\AskRef}(\widehat S)=e_K[\widehat S/x]\ \text{under }\Gamma_\pi.
+\]
+The projections have dependent types
+\[
+\mathsf{AskQuestion}:\mathsf{AskOcc}_A(\Sigma)\to\mathsf{Question}_{\B}(\Sigma),
+\]
+\[
+\mathsf{AskContinuation}(\AskRef):
+\mathsf{SuppAns}(\mathsf{AskQuestion}(\AskRef))\to\mathsf{IProg}(A).
+\]
+Two occurrences may have the same normalized question while retaining different continuations.
+\end{definition}
+
+\begin{definition}[Head question]\label{def:head-question}
+\(\HeadQ(K,q')\) holds when pure normalization of source program \(K\) first reaches the checked
+semantic question \(q'\).  It is empty when \(K\) returns before another question.
+Thus
+\(\HeadQ_{\Sigma}\subseteq\mathsf{IProg}(A)\times\mathsf{Question}_{\B}(\Sigma)\) is a partial
+functional relation at a fixed deterministic normalization version, restricted to programs and
+capture-safe answer extensions belonging to \(\Sigma\).  Write \(\HeadQ\) when \(\Sigma\) is
+inferable.
+\end{definition}
+
+\begin{definition}[Occurrence-indexed question succession]\label{def:qsucc-occurrence}
+For \(\widehat S\in\mathsf{SuppAns}(\mathsf{AskQuestion}(\AskRef))\),
+\[
+\boxed{
+\QSucc(\AskRef,\widehat S,q')
+\iff
+\HeadQ(\kappa_{\AskRef}(\widehat S),q').
+}
+\]
+The protected successor presentation
+\(\QStep(\Sigma,\AskRef,\widehat S)\) is obtained by the same answer substitution and any pure canonical
+reconstruction preceding the next open effect.
+Equivalently, at fixed versions,
+\[
+\QSucc\subseteq
+\sum_{\AskRef:\mathsf{AskOcc}_A(\Sigma)}
+\mathsf{SuppAns}(\mathsf{AskQuestion}(\AskRef))
+\times\mathsf{Question}_{\B}(\Sigma).
+\]
+\end{definition}
+
+\begin{theorem}[Question-succession typing]\label{thm:qsucc-occurrence-typing}
+If \(\AskRef\) checks as an \(\mathsf{Ask}\) occurrence, \(\widehat S\) is a supported answer to its
+exact question, and \(\QSucc(\AskRef,\widehat S,q')\), then \(q'\) is well typed in the lawful
+first-order environment obtained by capture-safe substitution of \(\widehat S\) into
+\(\kappa_{\AskRef}\).
+\end{theorem}
+
+\begin{proof}
+The \textsc{Ask} rule types \(\kappa_{\AskRef}(\widehat S)\) in the explicit continuation
+environment.
+Pure normalization preserves source-program typing, so its first open question is typed in that
+environment.  No additional transition or typing rule is used.
+\end{proof}
+
+\begin{law}[Occurrence identity is consequential]\label{law:qsucc-occurrence-identity}
+In general,
+\[
+\mathsf{AskQuestion}(\AskRef_1)=\mathsf{AskQuestion}(\AskRef_2)
+\land \widehat S_1=\widehat S_2
+\not\Rightarrow
+\QStep(\Sigma,\AskRef_1,\widehat S_1)
+=
+\QStep(\Sigma,\AskRef_2,\widehat S_2).
+\]
+Therefore no dynamic route, learned question method, trace fingerprint, or replay check may identify
+successions only by \((q,\widehat S)\).  It retains the occurrence or an equivalent checked continuation
+identity.  A partial supported set is passed whole; succession never selects an arbitrary member.
+\end{law}
+
+\begin{law}[Static and dynamic question structure differ]\label{law:q-static-dynamic}
+A static relation between reified questions---refinement, shared anchor, converse orientation,
+breaker duality, binding-supplied adjunction, or reciprocal pairing---does not create a realized
+answer-conditioned route.  Conversely, an occurrence may unlock a successor that is not its static
+complement, converse, or refinement.
+\end{law}
 
 \subsection{Portable chat execution}
 
@@ -2304,25 +2785,133 @@ A source inquiry program specifies open typed relations and answer-dependent con
 
 \subsection{Canonical derived combinators}
 
-\begin{definition}[Dependent reciprocal program]\label{def:recip-program}
-For distinction \(D\) and supported source presentation \(W_D^X(S_X)\), \(\mathsf{Recip}(D,W_D^X(S_X))\) is the derived source program that composes ordinary questions in the order
+\begin{definition}[Supported-family lifting]\label{def:supported-family-lifting}
+For \(\widehat S:\mathsf{SuppAns}(q)\) and a typed question family
+\(a\mapsto q_a=?_{I_a}R_a[\beta_a]\), choose a finite nonempty materialized family
+\(F\subseteq|\widehat S|\) with declared coverage \(c_F\).  Put
 \[
 \boxed{
-\begin{aligned}
-&?u_X[\mathsf{ApplicableNegationUse}(D,X,W_D^X,S_X,u_X)]\\
-\bind{}&?(O_X,w_X)[\PosNeg(u_X;S_X,O_X,w_X)]\\
-\bind{}&\mathsf{ReturnFiber}(F_X=\RetField_{u_X}(O_X))\\
-\bind{}&?R_X[R_X\in F_X]\ \bind{}\mathsf{RecoveryCheck}(F_X)\\
-\bind{}&?S_Y[\sigma_{X\to Y}(O_X,S_Y)]\ \bind{}\mathsf{Present}(W_D^Y(S_Y))\\
-\bind{}&?u_Y[\mathsf{ApplicableNegationUse}(D,Y,W_D^Y,S_Y,u_Y)]\\
-\bind{}&?(O_Y,w_Y)[\PosNeg(u_Y;S_Y,O_Y,w_Y)]\\
-\bind{}&\mathsf{ReturnFiber}(F_Y=\RetField_{u_Y}(O_Y))\\
-\bind{}&?R_Y[R_Y\in F_Y]\ \bind{}\mathsf{RecoveryCheck}(F_Y)\\
-\bind{}&?\gamma[\gamma=\mathsf{Check}(\Gamma_D(\omega))].
-\end{aligned}
+J_F:=\sum_{a\in F}I_a,
+\qquad
+X^F_{(a,i)}:=X^a_i,
+\qquad
+A_F:=\prod_{(a,i)\in J_F}X^a_i
+\cong\prod_{a\in F}A(q_a).
 }
 \]
-Each continuation receives the supported answer set of its predecessor and may retain multiple live uses, exteriors, returns, or seeds.  If a boundary point \(z\) supplied the candidate chart, its provenance is carried through \(\omega\); it does not generate any role.  The final \(\Gamma_D\) question is reached only after the dependent occurrence exists.  This program is a macro over \(\mathsf{Return}_I\), \(\mathsf{Ask}\), partial binding, sections, and ordinary checks, not a primitive effect or six-slot oracle.
+Let \(R^\Pi_{F,q_\bullet}\) be the ordinary product/conjunction of the child relation instances,
+with completion predicate
+\[
+\boxed{
+\Comp_{R^\Pi_{F,q_\bullet}}\!\bigl((b_a)_{a\in F}\bigr)
+\iff
+\forall a\in F.\,\Comp_{q_a}(b_a).
+}
+\]
+The finite ordinary dependent question is
+\[
+\boxed{
+\mathsf{LiftQ}_F(\widehat S,q_\bullet;c_F)
+:=
+?_{J_F}R^\Pi_{F,q_\bullet}.
+}
+\]
+Its answer carrier is \(A_F\), and its discharge authority is inherited pointwise:
+\[
+\boxed{
+\operatorname{mode}(\mathsf{LiftQ}_F(\widehat S,q_\bullet;c_F),(a,i))
+:=
+\operatorname{mode}(q_a,i).
+}
+\]
+The checked family route records \((a,i)\) before discharging that position; it may not replace
+heterogeneous child modes by one common mode or use a generated tag to discharge a
+\(\mathsf{Probe}\), \(\mathsf{Check}\), or \(\mathsf{Warrant}\) position.
+Every completion remains tagged by its predecessor \(a\), the proof-carrying parent
+\(\widehat S\), and its own declared-route evidence.  Iterated lifting therefore produces a
+dependent family of complete tagged paths.  It neither selects one member nor introduces a source
+constructor or runtime opcode.  The lift has whole-parent coverage exactly when \(c_F\) checks
+\(F=|\widehat S|\).  Otherwise every member in \(|\widehat S|\setminus F\) remains explicitly
+\(\mathsf{Unknown}\), and no consumer may treat \(\mathsf{LiftQ}_F\) as the complete family.
+\end{definition}
+
+\begin{definition}[Dependent reciprocal program]\label{def:recip-program}
+For \(\alpha\in\{X,Y\}\), source presentation \(W=W_D^\alpha(s)\), protected horizon
+\(\mathcal H\), and declared semantic/execution coverage \(c_{sem},c_{exec}\), use the following
+ordinary typed question families:
+\[
+\begin{aligned}
+q^{use}_\alpha(W,s)
+&:=?u[\mathsf{ApplicableNegationUse}(D,\alpha,W,s,u)],\\
+q^{ext}_\alpha(W,s,u)
+&:=?(e,w)[\PosNeg(u;s,e,w)],\\
+q^{fib}_\alpha(u,e)
+&:=?F[\mathsf{SameUseFiber}(u,e,F)],\\
+q^{ret}_\alpha(u,e,F)
+&:=?(R,m_R)[R\in F\land m_R:\mathsf{Member}(R,F)],\\
+q^{rec}_\alpha(W,\mathcal H,u,e,F,c_{sem},c_{exec})
+&:=?\rho[\mathsf{RecoveryProfile}(W,\mathcal H,u,e,F,c_{sem},c_{exec},\rho)].
+\end{aligned}
+\]
+Here \(\mathsf{SameUseFiber}(u,e,F)\) admits exactly a first-order fiber record whose membership
+relation is \(\RetField_u(e)\).  The relation \(\mathsf{RecoveryProfile}\) returns the complete
+three-valued map of \cref{def:recovery-loss-profile} for every declared \(r\in W\), retaining
+\(s,e,u,F,\mathcal H,c_{sem},c_{exec}\), occurrence evidence, and local/web/family provenance.
+Thus recovery is never a function of \(F\) alone.
+
+The reorientation questions are
+\[
+\begin{aligned}
+q^{seed}_{X\to Y}(u_X,O_X,w_X,F_X,\rho_X)
+&:=?(S_Y,\sigma,w_\sigma)
+  [\mathsf{AdmittedSeed}(u_X,O_X,w_X,F_X,\rho_X,S_Y,\sigma,w_\sigma)],\\
+q^{pres}_Y(S_Y)
+&:=?(W_Y,w_W)[\mathsf{AdmittedPresentation}(D,Y,S_Y,W_Y,w_W)],
+\end{aligned}
+\]
+where \(w_\sigma\) and \(w_W\) are exact support/warrant records.  No undeclared
+\(\mathsf{Present}\) predicate is used.  Once the complete dependent occurrence \(\omega\) exists,
+the downstream question is
+\[
+\boxed{
+q^\Gamma_D(\omega)
+:=?\gamma[\mathsf{GammaOutcome}_D(\omega,\gamma)].
+}
+\]
+Its answer carrier is the tagged sum of a compatibility certificate, an incompatibility witness,
+and an \(\mathsf{Unknown}\) coverage residual.  The open port of \(q^\Gamma_D\) has mode
+\(\mathsf{Check}\); \(\mathsf{Check}\) is not a result constructor.  Likewise \(q^{fib}_\alpha\)
+uses \(\mathsf{Pure}\), \(q^{rec}_\alpha\) uses \(\mathsf{Check}\), and
+\(q^{pres}_Y\) uses \(\mathsf{Warrant}\).  Every other port keeps the exact mode declared by its
+relation use and route.
+
+The derived first-order program \(\mathsf{Recip}(D,W_D^X(S_X))\) is the nested
+\(\mathsf{Ask}\)/named-continuation expansion of the dependency graph
+\[
+\boxed{
+\begin{gathered}
+q^{use}_X
+\to q^{ext}_X
+\to q^{fib}_X
+\to (q^{ret}_X,q^{rec}_X)
+\to q^{seed}_{X\to Y}
+\to q^{pres}_Y\\
+\to q^{use}_Y
+\to q^{ext}_Y
+\to q^{fib}_Y
+\to (q^{ret}_Y,q^{rec}_Y)
+\to q^\Gamma_D.
+\end{gathered}
+}
+\]
+Every arrow is implemented by the checked finite
+\(\mathsf{LiftQ}_F(\widehat S,q_\bullet;c_F)\), so all proof-carrying predecessor answers and tags
+are preserved.  If \(F\neq|\widehat S|\), the uncovered family remains \(\mathsf{Unknown}\) and no
+complete downstream role may be claimed.  The second use is independently admitted from the
+supported seed presentation; one-way success cannot fill it.  A boundary point contributes only
+provenance, and \(q^\Gamma_D\) is reachable only after every dependent role, use, fiber, recovery,
+seed, and residual field exists.  This is a transparent macro over ordinary first-order source
+syntax and checks, never a runtime opcode, hidden closure, or six-slot oracle.
 \end{definition}
 
 \begin{definition}[Hole solving]
@@ -2349,7 +2938,7 @@ P::=
 \mid
 \mathsf{Branch}\{P_i\}_{i\in I}
 \mid
-\mathsf{Probe}(o,\kappa).
+\mathsf{Probe}(o,\kappa^{raw}).
 }
 \]
 
@@ -2357,7 +2946,9 @@ Interpretation:
 \begin{itemize}
 \item \(\mathsf{Return}(a)\): pure return with no external actuality event;
 \item \(\mathsf{Branch}\{P_i\}\): internal/generative alternatives, none of which is thereby actual;
-\item \(\mathsf{Probe}(o,\kappa)\): actualizable interaction whose realized raw return chooses a continuation.
+\item \(\mathsf{Probe}(o,\kappa^{raw})\): actualizable interaction whose lower-level operational
+      handler receives the immutable raw return only after its ordinary event has been appended.
+      The handler is not a source answer continuation.
 \end{itemize}
 
 \subsection{Typing rules}
@@ -2385,21 +2976,134 @@ If
 \]
 and
 \[
-\Gamma,r:\Raw(R)\vdash\kappa(r):\mathsf{Fin}(\Prog(A)),
+\Gamma,r:\Raw(R)\vdash\kappa^{raw}(r):\mathsf{Fin}(\Prog(A)),
 \]
 then:
 \[
 \frac{
 \Gamma\vdash o:\ProbeIR[R]
 \qquad
-\Gamma,r:\Raw(R)\vdash\kappa(r):\mathsf{Fin}(\Prog(A))
+\Gamma,r:\Raw(R)\vdash\kappa^{raw}(r):\mathsf{Fin}(\Prog(A))
 }{
-\Gamma\vdash\mathsf{Probe}(o,\kappa):\Prog(A)
+\Gamma\vdash\mathsf{Probe}(o,\kappa^{raw}):\Prog(A)
 }
 \quad(\textsc{Probe})
 \]
 
 A deterministic continuation is the singleton specialization.
+
+\begin{definition}[Source-safe Ask lowering]\label{def:source-safe-ask-lowering}
+For \(\AskRef:\mathsf{AskOcc}_A(\Sigma)\) and
+\(q=\mathsf{AskQuestion}(\AskRef)=?_I R[\beta]\), define the evidence carrier for each open port
+by its declared mode:
+\[
+\boxed{
+\mathsf{PortEvidence}(\AskRef,i)
+:=
+\begin{cases}
+\mathsf{PureEvidence}(\AskRef,i),
+  &\operatorname{mode}(q,i)=\mathsf{Pure},\\
+\mathsf{GenerationEvidence}(\AskRef,i),
+  &\operatorname{mode}(q,i)=\mathsf{Generate},\\
+\mathsf{ProbeEvidence}(\AskRef,i),
+  &\operatorname{mode}(q,i)=\mathsf{Probe},\\
+\mathsf{CheckEvidence}(\AskRef,i),
+  &\operatorname{mode}(q,i)=\mathsf{Check},\\
+\mathsf{WarrantEvidence}(\AskRef,i),
+  &\operatorname{mode}(q,i)=\mathsf{Warrant}.
+\end{cases}
+}
+\]
+Pure, generation, check, and warrant evidence retain their exact typed result, route, resolution
+path, versions, and provenance; generation evidence carries no actuality authority.  Probe evidence is the dependent
+record
+\[
+\boxed{
+\begin{aligned}
+\mathsf{ProbeEvidence}(\AskRef,i)
+&:=\sum_{R_i}\sum_{o_i:\ProbeIR[R_i]}\\[-1mm]
+&\quad\sum_{E_i:\mathsf{ActualEvent}}\sum_{r_i:\Raw(R_i)}
+\sum_{p_i:\Raw(R_i)\leadsto X_i}
+\bigl(\mathsf{EventFor}(E_i,\AskRef)
+\times\mathsf{PortFor}(E_i,\AskRef,i)\\
+&\times\mathsf{OperatorFor}(E_i,o_i)
+\times\mathsf{RawFor}(E_i,r_i)
+\times\mathsf{ResolutionRouteFor}(i,E_i,p_i)\bigr).
+\end{aligned}
+}
+\]
+The \(\mathsf{PortFor}\) checker follows the accepted source lowering from \(i\) to the exact
+operator/request; it is not inferred from event order.  \(\mathsf{OperatorFor}\) checks that exact
+compiled operator/request, \(\mathsf{RawFor}\) checks that the event's immutable
+\(\ReturnRef\) names exactly \(r_i\), and \(\mathsf{ResolutionRouteFor}\) checks the exact stored
+path \(p_i\) from that raw-return type to the port carrier.  Byte equality without event identity
+is insufficient.
+
+The complete port-indexed bundle and program-wide resolver are
+\[
+\boxed{
+\begin{aligned}
+\mathsf{DischargeBundle}(\AskRef)
+&:=\prod_{i\in I}\mathsf{PortEvidence}(\AskRef,i),\\
+\mathsf{Resolver}(\AskRef)
+&:=\mathsf{DischargeBundle}(\AskRef)
+  \to\mathsf{ResolutionOutcome}(q).
+\end{aligned}
+}
+\]
+The bundle may contain zero, one, or several ordinary actual events.  Shared events require an
+explicit checked multi-port lowering; separate events retain separate identities and route
+provenance.  The resolver checks cross-port relation constraints and support after all components
+are available; it does not manufacture a Cartesian answer when \(R\) forbids one.
+Write
+\[
+\B;\Gamma\vdash
+P\;\mathsf{lowers}_{\Sigma}\;(\AskRef,d):A
+\]
+only under the premises
+\[
+\Sigma:\mathsf{SourceConfig}_{\B}(A),
+\qquad
+\AskRef:\mathsf{AskOcc}_A(\Sigma),
+\qquad
+\B;\Gamma\vdash d:\mathsf{Resolver}(\AskRef),
+\]
+and when \(P:\Prog(A)\) expands only to the existing
+\(\mathsf{Return}/\mathsf{Branch}/\mathsf{Probe}\) core, covers every \(i\in I\) exactly once under
+its declared mode, and every probe component first enters the ordinary event spine.  Every complete
+execution follows the typed factorization
+\[
+\mathcal D:\mathsf{DischargeBundle}(\AskRef)
+\longrightarrow
+d(\mathcal D)=\zeta:\mathsf{ResolutionOutcome}(q)
+\]
+before any source continuation is reached, with
+\[
+\begin{array}{rcl}
+\zeta=\mathsf{Supported}(\widehat S)
+  &\Rightarrow& \Compile_{\mathsf{compiler}(\Sigma)}(\kappa_{\AskRef}(\widehat S)),\\
+\zeta=\mathsf{ExactEmpty}(\nu)
+  &\Rightarrow& \text{typed residual or justified stop carrying }\nu,\\
+\zeta=\mathsf{Undefined}(\nu)
+  &\Rightarrow& \text{typed residual or justified stop carrying }\nu,\\
+\zeta=\mathsf{Unsupported}(\nu)
+  &\Rightarrow& \text{typed residual or justified stop carrying }\nu,\\
+\zeta=\mathsf{Unknown}(\nu)
+  &\Rightarrow& \text{typed residual or justified stop carrying }\nu.
+\end{array}
+\]
+The lower-level handler may preserve and route raw actuality, but it is ill typed for it to fill
+the source answer slot directly.  No non-\(\mathsf{Supported}\) outcome may invoke
+\(\kappa_{\AskRef}\).  A single-Probe-port lowering is only the one-probe specialization of this
+bundle judgment.  This is a compiler/lowering judgment, not a new runtime constructor.
+\end{definition}
+
+\begin{law}[Source Ask compilation is source-safe]\label{law:source-ask-safe}
+Every compilation of a source \(\mathsf{Ask}\) establishes
+\cref{def:source-safe-ask-lowering}.  A direct predecessor runtime
+\(\mathsf{Probe}(o,\kappa^{raw})\) remains a runtime program but is not thereby a lawful lowering of
+an occurrence-specific source \(\mathsf{Ask}\).
+\end{law}
 
 \section{Sequencing and composition of programs}
 
@@ -2429,13 +3133,13 @@ k(a).
 
 \[
 \boxed{
-\mathsf{Probe}(o,\kappa)\bind k
+\mathsf{Probe}(o,\kappa^{raw})\bind k
 =
 \mathsf{Probe}
 \left(
 o,
 r\mapsto
-\{P\bind k:P\in\kappa(r)\}
+\{P\bind k:P\in\kappa^{raw}(r)\}
 \right).
 }
 \]
@@ -2483,7 +3187,7 @@ This transition changes represented possibility; it creates no actuality event.
 
 For
 \[
-P=\mathsf{Probe}(o,\kappa),
+P=\mathsf{Probe}(o,\kappa^{raw}),
 \]
 the runtime:
 \begin{enumerate}
@@ -2491,7 +3195,9 @@ the runtime:
 \item actualizes \(\den{o}_{\B}\);
 \item receives raw return \(r\) and successor coupled configuration \(z'\);
 \item appends the raw occurrence to authoritative event history before decoding;
-\item continues through \(\kappa(r)\).
+\item supplies \(r\) to the lower-level \(\kappa^{raw}\); for a compiled source Ask, the
+      source-safe lowering judgment requires event linkage and a declared resolution outcome
+      before the source continuation can be reached.
 \end{enumerate}
 
 Schematically:
@@ -2499,11 +3205,11 @@ Schematically:
 \frac{
 \den{o}_{\B}(z,r,z')
 }{
-\langle\mathsf{Probe}(o,\kappa),X_t[z]\rangle
+\langle\mathsf{Probe}(o,\kappa^{raw}),X_t[z]\rangle
 \longrightarrow
 \{
 \langle P,X_{t+1}[z']\rangle:
-P\in\kappa(r)
+P\in\kappa^{raw}(r)
 \}
 }.
 \]
@@ -2711,6 +3417,58 @@ A canonical renderer must preserve:
 \item any comparator required for recurrent probing.
 \end{itemize}
 
+\subsection{Derived interrogative rendering and erasure}
+
+\textbf{Status: DERIVED.}  Surface forms such as \emph{what}, \emph{why}, \emph{how},
+\emph{why not}, \emph{under what conditions}, and \emph{what if} are controlled renderings of
+ordinary typed open relations.  They are not semantic question species.  The same word may render
+support, mechanism, contrast, necessity, provenance, applicability, or another binding-native
+relation, and different words may normalize to the same question.
+
+An implementation may attach an implementation-only root or route annotation to guide rendering
+or bounded search, provided
+\[
+\boxed{
+\Normalize(\mathsf{eraseAnn}(q,\mathsf{ann}))=\Normalize(q).
+}
+\]
+The annotation cannot alter the answer carrier, occurrence-specific continuation, discharge mode,
+standing, use-specific reciprocal provenance, or coverage.
+
+Controlled rendering preserves whether a backward relation is an existential converse/preimage, a
+binding-supplied universal guarantee or adjoint, a causal/prerequisite relation, or the reverse
+section of an exact admitted reciprocal use.  In particular, rendering ``under what conditions''
+may not strengthen an existential preimage into a weakest sufficient condition, and surface
+opposition may not synthesize a contextual \(\mathsf{NegationUse}\).  Classical formula negation
+inside a breaker remains the \(\mathsf{FormulaIR}\) constructor, distinct from contextual typed
+negation.
+
+\begin{theorem}[Conservative interrogative lowering]\label{thm:interrogative-lowering}
+Let \(K_Q\) be a well-typed source presentation using the derived root and route annotations of
+\cref{sec:derived-interrogative-algebra}.  Expanding every transparent macro, compiling each
+dependent route to occurrence-indexed \(\mathsf{Ask}(q,\kappa)\), and erasing explanatory
+annotations yields an ordinary v1.1 \(\mathsf{IProg}\) with the same semantic questions, whole
+supported-answer branches, discharge modes, actuality obligations, use-specific provenance, and
+protected continuations.
+\end{theorem}
+
+\begin{proof}
+Expose is ordinary partial binding; orientation uses a relation or its admitted converse; factor
+uses join, exposure, and hiding; polarization opens an ordinary logical breaker, separator, or
+already admitted positive-negation relation; variation opens a binding-supplied transform; and
+grounding opens ordinary support, check, or warrant relations.  Dependent composition is the
+canonical \textsc{Ask} rule.  Route labels add no transition and erase.  Reciprocal cases remain the
+derived program of \cref{def:recip-program}.  Thus no semantic constructor or runtime effect is
+added.
+\end{proof}
+
+\begin{corollary}[No interrogative runtime opcode]\label{cor:no-interrogative-opcode}
+No runtime opcode for \textsf{Why}, \textsf{How}, \textsf{WhatIf}, \textsf{Unlock},
+\textsf{Root}, \textsf{Orbit}, or \textsf{Saturate} is required.  Any implementation convenience
+with such a name must erase to the ordinary source/runtime core while preserving authority and
+actuality.
+\end{corollary}
+
 \section{Behavioral compiler correctness}
 
 Literal text equality is not the relevant criterion.  For protected continuation family \(\mathcal H\), define:
@@ -2743,9 +3501,9 @@ A practical LLM context may be constructed from:
 \boxed{
 \mathcal F_t(q)
 =
-A_t(q)
+ \mathsf{Active}_t(q)
 +
-H_t(q)
+ \mathsf{Prior}_t(q)
 +
 Cross_t(q)
 +
@@ -2759,8 +3517,8 @@ Reopen_t(q).
 
 These symbols denote derived projections:
 \begin{itemize}
-\item \(A_t(q)\): currently active relation-bearing structure;
-\item \(H_t(q)\): prior comparable occurrences of the same probe contract;
+\item \(\mathsf{Active}_t(q)\): currently active relation-bearing structure;
+\item \(\mathsf{Prior}_t(q)\): prior comparable occurrences of the same probe contract;
 \item \(Cross_t(q)\): other probe traces relevant to covariation or dissociation;
 \item \(Retrieve_t(q)\): distant retained/documentary structure adjacent under the open relation;
 \item \(Methods_t(q)\): native methods whose typed input/output relation may discharge a port;
@@ -2792,7 +3550,25 @@ T_D.
 
 No equation among these is constitutional.
 
-\section{Authoritative histories}
+\section{Single authoritative ancestry and typed projections}
+
+\begin{definition}[Authoritative ancestry]\label{def:authoritative-ancestry}
+\[
+\boxed{
+H^{auth}
+=
+\mathsf{AcceptedRoots}
+\cup H^{evt}
+\cup H^{acc}
+}
+\]
+is the one authoritative provenance structure: accepted content-addressed source/program/artifact
+roots, ordinary actual events, and independently accepted revisions linked by immutable typed
+references.  The event and revision sequences below are non-collapsing typed projections of
+\(H^{auth}\), not competing histories.  Derived traces, routes, presents, memories, methods, and
+reciprocal views can point into this ancestry but cannot append semantic actuality or acceptance on
+their own authority.
+\end{definition}
 
 \begin{definition}[Event history]
 \[
@@ -2812,7 +3588,9 @@ H_t^{acc}=P_0\cdot P_1\cdots P_{m-1}
 is the authoritative history of accepted semantic/traversal/compiler/binding/protection patches.
 \end{definition}
 
-Event history and accepted revision history are independent ancestries.  A semantic interpretation may be revised without rewriting the external event from which it was derived.
+The event and accepted-revision projections have independent edge semantics inside one ancestry.
+A semantic interpretation may be revised without rewriting the external event from which it was
+derived.
 
 \section{Event record}
 
@@ -2822,6 +3600,7 @@ A canonical actual event record is:
 E_t=
 \left\langle
 \StateRef_t,
+\mathsf{sourceAsk}_t,
 q_t,
 \BoundaryRef_t,
 \OpRef_t,
@@ -2833,10 +3612,22 @@ g_t,
 \right\rangle.
 }
 \]
+The source-occurrence field has the dependent option type
+\[
+\boxed{
+\mathsf{sourceAsk}_t:
+\mathbf 1+
+\sum_{A:\mathsf{Ty}_{\B}}\sum_{\Sigma:\mathsf{SourceConfig}_{\B}(A)}
+\mathsf{AskOcc}_A(\Sigma).
+}
+\]
+The \(\mathbf 1\) summand is \(\mathsf{none}\) for a direct or legacy runtime probe; every event
+compiled from a source \(\mathsf{Ask}\) uses \(\mathsf{some}(\AskRef)\).
 
 The record preserves:
 \begin{itemize}
 \item the state/configuration reference before the occurrence;
+\item the exact source \(\mathsf{Ask}\) occurrence when the event was compiled from one;
 \item the semantic question/probe-schema reference;
 \item the active boundary chart reference;
 \item the exact compiled operator/prompt reference;
@@ -2847,8 +3638,177 @@ The record preserves:
 \item provenance, backend version, binding version, and required replay metadata.
 \end{itemize}
 
+\begin{definition}[Source event linkage]\label{def:event-for-ask}
+For \(A:\mathsf{Ty}_{\B}\), \(\Sigma:\mathsf{SourceConfig}_{\B}(A)\), and
+\(\AskRef:\mathsf{AskOcc}_A(\Sigma)\), source event linkage is the checked proposition
+\[
+\boxed{
+\mathsf{EventFor}(E,\AskRef)
+}
+\]
+holds exactly when
+\[
+\mathsf{sourceAsk}(E)=\mathsf{some}(\AskRef),
+\qquad
+\mathsf{question}(E)=\mathsf{AskQuestion}(\AskRef),
+\]
+and the event's operator/request, binding and compiler versions, ledger membership, and
+provenance are the checked lowering and dispatch context of that exact occurrence.  Equality of
+question, operator, raw return, or endpoint without this link is insufficient.
+\end{definition}
+
 \begin{law}[Reciprocal actuality is ordinary actuality]\label{law:reciprocal-actuality}
 A generated negation use, exterior candidate, return candidate, seed, recovery claim, or sixfold view is not thereby actual.  Every external/model/tool result enters history through the ordinary event spine before decoding or interpretation.  Partial, failed, or one-sided reciprocal attempts remain reconstructible as ordinary events and residuals.  A completed \(\Xi_D(\omega)\) is a derived view over those events, relation uses, fibers, and support; it is never a substitute authoritative history.
+\end{law}
+
+\section{Derived paired actuality and question-route projection}
+
+\textbf{Status: DERIVED.}  The paired view below consolidates the question-side and return-side
+projections of an inquiry occurrence without adding another event species or history.
+
+\begin{definition}[Resolved inquiry occurrence]\label{def:resolved-inquiry-occurrence}
+For result type \(A\), define the normalized source-control result
+\[
+\boxed{
+\mathsf{Next}_A
+:=
+\left(\sum_{\Sigma':\mathsf{SourceConfig}_{\B}(A)}\mathsf{AskOcc}_A(\Sigma')\right)
++\den{A}_{\B}.
+}
+\]
+The checked relation \(\mathsf{HeadResult}_A(\Sigma,K,n)\) uses the environment, versions, and
+provenance inherited from \(\Sigma\) to normalize \(K:\mathsf{IProg}(A)\) capture-safely.  Its
+result \(n:\mathsf{Next}_A\) is either a newly checked \(\mathsf{AskOcc}_A(\Sigma')\) or the value
+of \(\mathsf{Return}_I(a)\), in the corresponding summand.
+
+A resolved occurrence is the dependent first-order record
+\[
+\boxed{
+\begin{aligned}
+\mathsf{ResolvedOccurrence}_A
+:=\{\langle\Sigma,\AskRef,\mathcal D,d,\widehat S,K,n\rangle\mid{}&
+ \Sigma:\mathsf{SourceConfig}_{\B}(A),\quad
+ \AskRef:\mathsf{AskOcc}_A(\Sigma),\\
+&\mathcal D:\mathsf{DischargeBundle}(\AskRef),\quad
+ d:\mathsf{Resolver}(\AskRef),\\
+&d(\mathcal D)=\mathsf{Supported}(\widehat S),\\
+&\widehat S:\mathsf{SuppAns}(\mathsf{AskQuestion}(\AskRef)),\\
+&K=\kappa_{\AskRef}(\widehat S),\quad
+ \mathsf{HeadResult}_A(\Sigma,K,n)\}.
+\end{aligned}
+}
+\]
+Write the field projections as \(\mathsf{ask}(\omega)\), \(\mathsf{bundle}(\omega)\),
+\(\mathsf{answer}(\omega)\), \(\mathsf{continuation}(\omega)\), and
+\(\mathsf{next}(\omega)\).  The probe components of \(\mathcal D\) retain every exact
+\(E/\ReturnRef/\ResPath\) chain; non-probe components retain their own declared routes.  No
+\(\mathsf{ExactEmpty}\), \(\mathsf{Undefined}\), \(\mathsf{Unsupported}\), or
+\(\mathsf{Unknown}\) outcome inhabits this carrier.
+
+Thus its provenance-retaining projection is
+\[
+\AskRef_t
+\longrightarrow\mathcal D_t
+\longrightarrow\mathsf{Supported}(\widehat S_t)
+\longrightarrow\kappa_{\AskRef_t}(\widehat S_t)
+\longrightarrow n_t:\mathsf{Next}_A.
+\]
+Every arrow is checked against the same occurrence and binding/version/provenance context.  The
+abbreviated tuple \((z,q,r,z')\), when useful for a one-probe specialization, is only a projection
+of this record and cannot replace its complete identity.
+\end{definition}
+
+\begin{definition}[Paired actuality view]\label{def:paired-actuality-view}
+For a resolved occurrence \(\omega_t\), let \(\mathsf{ProbeComponents}(\omega_t)\) be the
+port-and-event-indexed family of Probe components in its discharge bundle and define
+\[
+\boxed{
+\mathsf{PairedActuality}(\omega_t)
+=
+\bigl(
+\mathsf{QuestionTrace}(\omega_t,i,E),
+\mathsf{ReturnTrace}(\omega_t,i,E)
+\bigr)_{(i,E)\in\mathsf{ProbeComponents}(\omega_t)}.
+}
+\]
+For each \((i,E)\), the question projection retains the source occurrence, port, question, pre-state,
+boundary, operator, route, binding, and event.  The return projection retains the same event, raw
+return, port resolution path, full program-supported answer, continuation, successor/return,
+post-state, route, and binding.  They are coupled by exact event identity; neither is independently
+authoritative.  Multiple ports may share one event only through an explicit checked multi-port
+lowering; their port-indexed evidence and paired traces remain distinct.  A no-Probe occurrence has
+an empty paired-actuality family rather than a fabricated event.
+\end{definition}
+
+\begin{law}[One authoritative occurrence spine]\label{law:one-occurrence-spine}
+\[
+\boxed{
+\text{question trace}\neq\text{return trace},
+\qquad
+\text{paired view}\neq\text{second history}.
+}
+\]
+Endpoint equality does not imply equal event, raw-return, resolution-path, supported-answer, or
+continuation provenance.  Conversely, replaying one historical event reconstructs a view of that
+same occurrence and does not append a new event.
+\end{law}
+
+\begin{law}[Resume, replay, and order separation]\label{law:resume-replay-order}
+Resume supplies a supported answer to an already checked continuation.  Replay reconstructs the
+historical chain in \cref{def:resolved-inquiry-occurrence} from accepted roots and ordinary event
+history, without redispatch.  Therefore
+\[
+\boxed{
+\mathsf{Resume}\neq\mathsf{Replay},
+\qquad
+<_{\mathrm{ledger}}\neq\lambda_{\mathrm{real}}\neq\QSucc.
+}
+\]
+Ledger membership or order never manufactures a causal edge or a question-successor occurrence.
+\end{law}
+
+\begin{definition}[Distinct regenerative cue fibers]\label{def:paired-cue-fibers}
+Because raw returns, supported answers, and question occurrences occupy different carriers, their
+reconstruction fibers remain distinct.  Write \(\mathsf{NextAsk}(\omega,\AskRef')\) when
+\(\mathsf{next}(\omega)=\mathsf{inl}(\Sigma',\AskRef')\) for some checked successor configuration
+\(\Sigma'\).  For checked neighboring occurrence information, define:
+\[
+\CueRaw(\AskRef,\AskRef')
+=
+\{\mathsf{bundle}(\omega):\exists A.\,
+\omega\in\mathsf{ResolvedOccurrence}_A
+\land\mathsf{ask}(\omega)=\AskRef
+\land\mathsf{NextAsk}(\omega,\AskRef')\},
+\]
+\[
+\CueSupp(\AskRef,\AskRef')
+=
+\{\mathsf{answer}(\omega):\exists A.\,
+\omega\in\mathsf{ResolvedOccurrence}_A
+\land\mathsf{ask}(\omega)=\AskRef
+\land\mathsf{NextAsk}(\omega,\AskRef')\},
+\]
+and
+\[
+\mathsf{CueAsk}(\widehat S_{t-1},\widehat S_t)
+=
+\{\AskRef:\exists\omega.\,
+\mathsf{ContinuationHead}(\widehat S_{t-1},\AskRef)
+\land
+\mathsf{OccurrenceAnswer}(\AskRef,\widehat S_t,\omega)\}.
+\]
+A missing position is regenerated exactly only when the appropriate fiber collapses to one
+protected class under declared coverage.  Collapse of \(\CueSupp\) does not reconstruct a unique
+raw event or resolution path; collapse of a raw-return fiber does not identify a unique
+continuation occurrence.
+\end{definition}
+
+\begin{law}[Paired regeneration and reopening]\label{law:paired-regeneration}
+Question occurrences constrain which supported returns and actual provenance could lawfully connect
+them; supported returns constrain which occurrence-specific continuations could connect neighboring
+positions.  A recurrent segment may be folded only when the relevant fibers, authority,
+provenance, and protected consequences regenerate.  A new separator, probe, binding, or protected
+continuation that splits a folded fiber reopens the fold through ordinary ancestry.
 \end{law}
 
 \section{State and working presentation}
@@ -3385,24 +4345,33 @@ Thus:
 
 \section{Question-pattern learning}
 
-A realized question-pattern occurrence can be represented:
+A realized question-pattern occurrence is represented first by the complete occurrence-indexed
+chain:
 \[
 \boxed{
-\mathcal T_t
-\subseteq
-\OpenIR
-\times
-\OpRef
-\times
-\ReturnRef
-\times
-\OpenIR.
+\mathcal T_t^{occ}
+:=
+\left\{
+\omega_t:\mathsf{ResolvedOccurrence}_A
+\right\}.
 }
 \]
-
-With state and boundary linkage:
+Let
 \[
-\mathcal T_t^+
+\mathsf{ProbeView}:=
+\mathsf{Fin}(\mathsf{PortName}\times\OpRef\times\ReturnRef).
+\]
+Its compact operator and state/boundary views are the lossy projections
+\[
+\pi_{op}(\mathcal T_t^{occ})
+\subseteq
+\OpenIR
+\times\mathsf{ProbeView}
+\times\OpenIR
+\]
+and
+\[
+\pi_{state}(\mathcal T_t^{occ})
 \subseteq
 \StateRef
 \times
@@ -3410,20 +4379,26 @@ With state and boundary linkage:
 \times
 \BoundaryRef
 \times
-\OpRef
-\times
-\ReturnRef
+\mathsf{ProbeView}
 \times
 \StateRef
 \times
 \OpenIR.
 \]
+Neither projection identifies the occurrence.  In particular, equal open queries, endpoints,
+operators, boundaries, or content-equal raw returns do not erase the checked \(\AskRef_t\), any
+event/path member of its discharge bundle, \(\widehat S_t\), the checked continuation, or its
+normalized next-control result.  Operator-pattern aggregation may
+index either projection only after a protected-equivalence and applicability check licenses that
+generalization.
 
 A learned policy/method describes:
 \[
-(q_t,r_t,s_t)\rightsquigarrow q_{t+1}
+(\mathcal T_t^{occ},s_t)\rightsquigarrow q_{t+1}
 \]
-only under an explicit applicability relation.  It is not a universal scheduler or a semantic truth relation.
+only under an explicit applicability relation.  It may expose a compact projection for lookup, but
+must recover the occurrence chain before selecting an occurrence-specific continuation.  It is not
+a universal scheduler or a semantic truth relation.
 
 \section{Memory and recovery}
 
@@ -3848,7 +4823,8 @@ Conversely, pattern completion across compressed histories is licensed only when
 
 \section{Semantic question universe}
 
-Let:
+Fix \(A:\mathsf{Ty}_{\B}\) and a source-bearing presentation
+\(\Sigma:\mathsf{SourceConfig}_{\B}(A)\).  Let:
 \[
 Q^\infty(\Sigma)
 \]
@@ -3863,11 +4839,11 @@ and protected interpretation remains available through \(j\).  Then structural
 transport induces an embedding
 \[
 \boxed{
-\iota_Q:Q^\infty(\Sigma_t)\hookrightarrow Q^\infty(\Sigma_{t+1}).
+\operatorname{EmbedQ}:Q^\infty(\Sigma_t)\hookrightarrow Q^\infty(\Sigma_{t+1}).
 }
 \]
 The image inclusion is strict only when the successor admits at least one well-typed
-question not in the image of \(\iota_Q\).  Rebinding, replacement, or semantic revision
+question not in the image of \(\operatorname{EmbedQ}\).  Rebinding, replacement, or semantic revision
 is not necessarily conservative, so no unqualified inclusion of question universes is
 licensed for those changes.
 \end{theorem}
@@ -3901,18 +4877,88 @@ Q^\epsilon(\Sigma)\subseteq Q^\infty(\Sigma).
 
 Failure to generate a question under \(\epsilon\) is not proof that no such semantic question exists.
 
-\section{Question productivity}
-
-Let \(Step^\ast(\Sigma,q,r)\) be the finite or binding-native successor behavior after a supported return class \(r\).
-
-A question is productive relative to \(\mathcal H\) when there exist lawful supported returns \(r_1,r_2\) such that:
+The corresponding checked occurrence universes are the dependent subtypes
 \[
 \boxed{
-Step^\ast(\Sigma,q,r_1)
-\not\equiv_{\mathcal H}^{\mathcal P}
-Step^\ast(\Sigma,q,r_2).
+\mathsf{AskOcc}^{\infty}(\Sigma)
+=
+\left\{
+\AskRef:\mathsf{AskOcc}_A(\Sigma)
+\mid
+\mathsf{AskQuestion}(\AskRef)\in Q^\infty(\Sigma)
+\right\},
 }
 \]
+\[
+\boxed{
+\mathsf{AskOcc}^{\epsilon}(\Sigma)
+=
+\left\{
+\AskRef\in\mathsf{AskOcc}^{\infty}(\Sigma)
+\mid
+\mathsf{AskQuestion}(\AskRef)\in Q^\epsilon(\Sigma)
+\right\}.
+}
+\]
+Write \(q_{\AskRef}:=\mathsf{AskQuestion}(\AskRef)\).  The superscripts classify existing checked
+source occurrences; they do not introduce new occurrence species.
+
+\section{Derived question availability and required discharge}
+
+\textbf{Status: DERIVED.}  For a checked occurrence \(\AskRef\) with question \(q\), distinguish:
+\begin{itemize}
+\item \(\Formable_{\B,\Sigma}(q)\): the relation, bindings, guards, and open carriers are
+      representable and well typed;
+\item \(\Applicable_{\B,\Sigma}(q)\): the question applies at the declared scope, grain, binding,
+      version, and horizon;
+\item \(\Executable_{\B,\Sigma,\epsilon}(q)\): every open port has a lawful route within the
+      current effectivity horizon;
+\item \(\Answerable_{\B,\Sigma}(q)\): the declared semantic/domain state admits at least one
+      supported completion;
+\item \(\Productive_{\mathcal H}(\Sigma,\AskRef)\): supported answers can induce
+      protected-different occurrence-specific successors;
+\item \(\ResolvedQ_{\mathcal H}(\Sigma,\AskRef)\): all live supported answers induce
+      protected-equivalent successors under sufficient declared coverage; and
+\item \(\Ready^{\chi}_{\Sigma}(q)\): formability, applicability, and the declared use contract
+      \(\chi\) hold.
+\end{itemize}
+These predicates do not collapse.  A formable check can be nonexecutable; an executable exhaustive
+probe can establish an empty completion field; incomplete coverage cannot establish resolvedness.
+
+\begin{definition}[Required discharge]\label{def:required-discharge}
+\(\RequiredDischarge(\Sigma,\AskRef,d)\) holds when an explicit standing or source-program
+dependency \(d\) cannot lawfully continue until the open relation of \(\AskRef\) is discharged through
+its declared \(\mathsf{Probe}\), \(\mathsf{Check}\), \(\mathsf{Warrant}\), exact support, or
+reconstruction route.  It is not a new question species and does not assert that the obligation is
+executable or successfully discharged.
+\end{definition}
+
+\begin{law}[Productivity and required discharge differ]\label{law:productive-required-discharge}
+A singleton-result check or warrant may be nonproductive as a discretionary discriminator while
+remaining obligatory for lawful continuation.  Conversely, a productive generated question is
+not thereby required or authorized.  Therefore a controller may omit a continuation-equivalent
+question only when no explicit dependency requires its discharge.
+\end{law}
+
+\section{Question productivity}
+
+Let \(\QStep^\ast(\Sigma,\AskRef,\widehat S)\) be the finite or binding-native successor behavior
+after supplying proof-carrying supported answer \(\widehat S\) to the exact occurrence
+\(\AskRef\).
+
+An occurrence is productive relative to \(\mathcal H\) when there exist lawful supported answer
+records \(\widehat S_1,\widehat S_2\in
+\mathsf{SuppAns}(\mathsf{AskQuestion}(\AskRef))\) such that:
+\[
+\boxed{
+\QStep^\ast(\Sigma,\AskRef,\widehat S_1)
+\not\equiv_{\mathcal H}^{\mathcal P}
+\QStep^\ast(\Sigma,\AskRef,\widehat S_2).
+}
+\]
+
+The occurrence index is required: the same normalized \(q\) and return class under another checked
+continuation may have a different successor.
 
 The lifting \(\equiv_{\mathcal H}^{\mathcal P}\) for plural/nondeterministic successors is binding-supplied.  The reference finite symmetric lifting is:
 \[
@@ -3932,25 +4978,56 @@ Bindings may instead supply Hoare, Smyth, Plotkin, probabilistic, trace, game, o
 
 \section{Semantic and executable frontiers}
 
+For a binding-supplied resource/risk preorder \(\preceq\), let \(\ND_{\preceq}(C)\) be the
+members of \(C\) not strictly dominated by another member.  Define
+\[
+\mathsf{Req}_{\Sigma}(C)
+=
+\{\AskRef\in C:\exists d.\RequiredDischarge(\Sigma,\AskRef,d)\},
+\]
+\[
+\boxed{
+\ND_{\preceq,\Sigma}^{req}(C)
+=
+\mathsf{Req}_{\Sigma}(C)
+\cup
+\ND_{\preceq}(C).
+}
+\]
+When no preorder is supplied, \(\ND_{\Sigma}^{req}(C)=C\).  A stronger rule may remove a required
+occurrence only with a typed proof that another retained occurrence discharges the same dependency;
+ordinary cost dominance never deletes it.  Since nondominance is still computed over all of \(C\),
+a required occurrence may dominate and remove an optional occurrence.  Requiredness protects its
+bearer from removal; it does not protect unrelated optional work from comparison against it.
+
 Define:
 \[
 \boxed{
+\begin{aligned}
+\mathcal C^\infty_{\mathcal H}(\Sigma)
+=\bigl\{\AskRef\in\mathsf{AskOcc}^\infty(\Sigma):{}&\\[-1mm]
+&\Formable_{\B,\Sigma}(q_{\AskRef})
+ \land\Applicable_{\B,\Sigma}(q_{\AskRef})\\
+&\land\bigl(
+  (\Productive_{\mathcal H}(\Sigma,\AskRef)
+   \land\neg\ResolvedQ_{\mathcal H}(\Sigma,\AskRef))\\
+&\hspace{21mm}\lor
+  \exists d.\,\RequiredDischarge(\Sigma,\AskRef,d)
+\bigr)\bigr\}.
+\end{aligned}
+}
+\]
+and
+\[
+\boxed{
 Frontier^\infty_{\mathcal H}(\Sigma)
-=
-ND\{
-q\in Q^\infty(\Sigma):
-Applicable(q,\Sigma)
-\land
-Productive_{\mathcal H}(q,\Sigma)
-\land
-\neg Resolved(q,\Sigma)
-\}.
+=\ND_{\preceq,\Sigma}^{req}\bigl(\mathcal C^\infty_{\mathcal H}(\Sigma)\bigr).
 }
 \]
 
 Define the executable classification:
 \[
-Class^\epsilon(q)
+Class^\epsilon(\Sigma,\AskRef)
 \in
 \{
 \mathsf{productive},
@@ -3962,21 +5039,203 @@ Class^\epsilon(q)
 Then:
 \[
 \boxed{
+\begin{aligned}
+\mathcal C^\epsilon_{\mathcal H}(\Sigma)
+=\bigl\{\AskRef\in\mathsf{AskOcc}^\epsilon(\Sigma):{}&\\[-1mm]
+&\Formable_{\B,\Sigma}(q_{\AskRef})
+ \land\Applicable_{\B,\Sigma}(q_{\AskRef})\\
+&\land\Executable_{\B,\Sigma,\epsilon}(q_{\AskRef})\\
+&\land\bigl(Class^\epsilon(\Sigma,\AskRef)=\mathsf{productive}
+  \lor\exists d.\,\RequiredDischarge(\Sigma,\AskRef,d)\bigr)
+\bigr\}.
+\end{aligned}
+}
+\]
+and
+\[
+\boxed{
 Frontier^\epsilon_{\mathcal H}(\Sigma)
-=
-ND\{
-q\in Q^\epsilon(\Sigma):
-Applicable^\epsilon(q,\Sigma)
-\land
-\neg Resolved^\epsilon(q,\Sigma)
-\land
-Class^\epsilon(q)\neq\mathsf{idle}
-\}.
+=\ND_{\preceq,\Sigma}^{req}\bigl(\mathcal C^\epsilon_{\mathcal H}(\Sigma)\bigr).
 }
 \]
 
+A required but nonexecutable obligation remains an explicit \(\mathsf{Blocked}\),
+\(\mathsf{Unknown}\), or resource residual outside the executable frontier; it is not erased as
+idle.  A resolvedness claim cannot suppress an undischarged obligation.
+
 \begin{law}[Unknown legality]
 Failure to find a separator, path, counterexample, proof, or useful question under current resources does not establish equivalence, impossibility, necessity, or irrelevance.
+\end{law}
+
+\section{Derived interrogative algebra}\label{sec:derived-interrogative-algebra}
+
+\textbf{Status: DERIVED.}  Natural-language question roots and route classifications are
+transparent normal forms over the canonical relation/question/source-program language.  They add
+no interrogative ontology, actuality species, authority route, or scheduler primitive.
+
+\subsection{Root normal forms}
+
+The retained derived root family is
+\[
+\boxed{
+\Omega_Q=
+\{\mathsf{Expose},\mathsf{Orient},\mathsf{Factor},
+\mathsf{Polarize},\mathsf{Vary},\mathsf{Ground}\}.
+}
+\]
+Its meanings are:
+\begin{itemize}
+\item \(\mathsf{Expose}_I(R,\beta)=?_I R[\beta]\), the canonical question constructor;
+\item \(\mathsf{Orient}^{+}\) and \(\mathsf{Orient}^{-}\), exposure of an admitted relation in
+      forward or converse orientation;
+\item \(\mathsf{Factor}\), exposure of factors or mediators through join, composition, hiding, and
+      open ports;
+\item \(\mathsf{Polarize}\), construction of a binding-appropriate positive alternative,
+      classical breaker, separator, or already admitted positive-negation field;
+\item \(\mathsf{Vary}\), opening a binding-supplied admissible removal, substitution,
+      intervention, perturbation, strengthening, weakening, reversal, or reordering relation; and
+\item \(\mathsf{Ground}\), reifying a claim/relation/question obligation and opening its ordinary
+      support, check, or warrant relation.
+\end{itemize}
+Reification is ambient recursive form closure rather than a seventh root.  Questions about
+questions reify the checked question occurrence and apply the same roots.
+
+\begin{law}[No universal polarization]\label{law:no-universal-polarization}
+Logical complement, counterexample, alternative design, separator, and contextual
+positive-negation incidence remain different relations unless a binding establishes their
+correspondence.  \(\mathsf{Polarize}\) cannot manufacture a \(\mathsf{NegationUse}\), exterior,
+departure witness, or standing breaker.
+\end{law}
+
+Operational names such as \textsf{Contrast}, \textsf{Backchain}, \textsf{Preimage},
+\textsf{Project}, \textsf{Ablate}, \textsf{Substitute}, \textsf{Localize}, \textsf{Construct},
+\textsf{Scrutinize}, \textsf{WhyNot}, and \textsf{HowCan} are transparent compositions of these
+roots.  Deleting a name and expanding its definition must preserve typing, applicability, whole
+supported-answer behavior, authority, failure exits, provenance, and reopening.
+
+\subsection{Static pair discipline}
+
+Keep distinct:
+\[
+\boxed{
+\operatorname{PairwiseDistinct}
+\left(
+\begin{gathered}
+\text{inverse},\ \text{converse},\ \text{logical breaker dual},\\
+\text{binding-supplied adjoint},\ \text{same-use reciprocal return}
+\end{gathered}
+\right).
+}
+\]
+A displayed \(\operatorname{PairwiseDistinct}\) obligation means that every two applicable members
+must retain different relation identity and cannot be substituted without a binding-supplied
+equivalence theorem preserving the protected continuation.
+A many-to-one relation has a lawful converse question with a non-singleton reverse fiber but no
+strict inverse.  An adjoint or weakest-condition question requires a checked binding-supplied law,
+not merely converse incidence.  Reciprocal return requires the exact admitted oriented use and its
+departure, coverage, and fiber provenance.
+
+\subsection{Unlock and route explanations}
+
+\begin{definition}[Answer-conditioned unlock]\label{def:q-unlock}
+For target use contract \(\chi\),
+\[
+\boxed{
+\Unlock^{\chi}(\Sigma;\AskRef,\widehat S\Rightarrow r)
+\iff
+\neg\Ready^{\chi}_{\Sigma}(r)
+\land
+\Ready^{\chi}_{\QStep(\Sigma,\AskRef,\widehat S)}(r).
+}
+\]
+The supported answer may supply a dependent index, guard, foil, mediator, probe, support/warrant
+route, representation, or reciprocal seed.  It does not answer \(r\) merely by making it ready.
+\end{definition}
+
+Route annotations such as narrowing, discharge, defeat, reframe, reorientation, or extension state
+why an ordinary continuation is useful.  They may overlap and are not a runtime enum.  A defeat of
+standing requires sufficient authority; a reframe uses ordinary representation/binding revision;
+reorientation retains the canonical seed relation; extension requires its own accepted successor.
+Mere adjacency does not establish \(\Unlock\), and deleting a route label cannot change execution.
+
+\subsection{Root frontier and local closure}
+
+For reified held structure \(W\), root family \(\Omega\), and effectivity horizon \(\epsilon\),
+define
+\[
+\boxed{
+\begin{aligned}
+\RootFrontier^{\epsilon}_{\mathcal H}(W,\Sigma)
+=\ND^{req}_{\preceq,\Sigma}\!\bigl(\{\AskRef:{}&
+              \AskRef\text{ is produced by an admitted root over }W,\\
+              &\Formable_{\B,\Sigma}(q_{\AskRef})
+               \land\Applicable_{\B,\Sigma}(q_{\AskRef})
+               \land\Executable_{\B,\Sigma,\epsilon}(q_{\AskRef})\\
+              &\land(\Productive_{\mathcal H}(\Sigma,\AskRef)
+               \lor\exists d.\,\RequiredDischarge(\Sigma,\AskRef,d))
+               \}\bigr).
+\end{aligned}
+}
+\]
+The required-safe nondominated operator is relative to a binding-supplied resource/risk preorder and
+becomes the identity when none is supplied.  Cost dominance never removes an occurrence carrying an
+undischarged dependency.  The roots generate candidates; they are not a wheel to execute
+ritually.  After a return, reconstruct the residual and frontier.
+
+\begin{definition}[Local interrogative fixed point]\label{def:local-ifp}
+\(\IFP_{\Omega,\mathcal H,\epsilon}(W,\Sigma)\) holds under explicit coverage when every relevant
+root-generated occurrence is determined by the retained profile, factorably redundant,
+inapplicable, protected-continuation-equivalent with no required discharge, explicitly blocked,
+resource-bounded, or dependent on a represented language/probe/binding extension.  No executable,
+applicable, nonredundant productive occurrence or executable required discharge remains.
+\end{definition}
+
+\begin{law}[Local closure reopens]\label{law:local-ifp-reopens}
+Local interrogative closure is not global completion.  A new separator, relation, probe, foil,
+binding, representation, protected horizon, or resource regime may make a new occurrence formable,
+executable, productive, or required and thereby reopen the fixed point.
+\end{law}
+
+\subsection{Question-route occurrence and regeneration}
+
+A compact derived route record is
+\[
+\boxed{
+\mathsf{QRouteOcc}
+=
+\langle
+\AskRef,E,r,\ResPath,\widehat S,\AskRef',\chi,
+\Delta_{in},\Delta_{out},\mathcal H,
+\mathsf{modes},\mathsf{coverage},\mathsf{prov}
+\rangle,
+}
+\]
+with absent actual fields left explicitly nonactual for pure/generated routes.  It points to
+canonical program and event ancestry and is not a second history.  The occurrence identity prevents
+two equal semantic \((q,|\widehat S|)\) projections with different occurrences, continuations, or
+support ancestry from collapsing.
+
+Removing a supported-answer position yields the occurrence-specific cue fiber
+\[
+\{\widehat S:\QSucc(\AskRef,\widehat S,q')\},
+\]
+while removing a question position yields a fiber of checked occurrences, not merely surface
+question forms.  Regeneration is exact only when the appropriate fiber is one protected class and
+its typing, authority, event/path provenance, and reopening obligations survive.  Ambiguity remains
+a separator residual.
+
+A recurrent route may be proposed as a transparent method containing its trigger residual, source
+\(\mathsf{IProg}\), applicability, protected gain, failure residuals, coverage, provenance, and
+reopen condition.  Before folding it, ablate or lawfully bypass the question occurrence and seek a
+protected continuation that distinguishes the original and reduced programs.  Frequency alone
+cannot warrant the method, and an answer-independent host policy cannot replace the stored
+continuation.
+
+\begin{law}[No second question language or history]\label{law:no-second-question-language}
+Root syntax, route labels, local-frontier views, and \(\mathsf{QRouteOcc}\) are authoring,
+analysis, or controller projections.  Their conservative expansion contains only ordinary typed
+relations, questions, \(\mathsf{Return}_I\), and occurrence-specific \(\mathsf{Ask}\), and their
+realized evidence remains ordinary event history.
 \end{law}
 
 \section{Relative completeness of the question grammar}
@@ -4570,6 +5829,7 @@ ActualEvent {
     id
     ledger_parent
     state_before_ref
+    source_ask_occurrence_ref_optional
     question_ref
     boundary_ref
     operator_ref
@@ -4710,74 +5970,148 @@ Ledger append serialization, if used for persistence, must not be interpreted as
 
 \part{Canonical Inquiry Process}
 
-\section{One inquiry step}
+\section{One master regenerative recurrence}\label{sec:master-recurrence}
 
-For state \(s_t\) and open consequential residual:
-\begin{enumerate}
-\item \textbf{Reconstruct}: recover accepted presentation and refresh standing without rewriting history.
-\item \textbf{Present}: identify the live source determination and materialize its explicit \(W_D^\alpha(s)\).
-\item \textbf{View}: retrieve relevant structure and hide only licensed consequence-null material.
-\item \textbf{Negation frontier}: derive applicable, warranted, coverage-indexed uses and their tagged candidate frontiers.
-\item \textbf{Open}: construct a positive-negation \(\mathsf{IProg}\) under one retained use identity.
-\item \textbf{Route and compile}: dispatch each open port according to authority and lower through \(\mathsf{Return}/\mathsf{Branch}/\mathsf{Probe}\).
-\item \textbf{Actualize}: where required, execute and preserve the raw return before decoding or interpretation.
-\item \textbf{Resolve}: retain zero, one, or several supported exterior completions with path and use provenance.
-\item \textbf{Return}: derive the same-use reverse section, preserving the whole return fiber separately from any selected \(R_\alpha\).
-\item \textbf{Recover}: compute protected local and applicable family recovery; turn ambiguity into residual rather than premature closure.
-\item \textbf{Reorient}: if a reciprocal continuation remains live, establish the seed and repeat the positive-negation/return recurrence from the reciprocal source.
-\item \textbf{Derive}: construct the dependent sixfold occurrence view and its residuals from ordinary questions, fibers, support, and events.
-\item \textbf{Check}: apply \(\Gamma_D\) only after the dependent roles exist.
-\item \textbf{Separate}: send unresolved protected return, recovery, seed, reciprocal, or compatibility differences to the generic separator problem.
-\item \textbf{Represent}: for an inexpressible witnessed difference, open representation, probe, language, or binding extension rather than declaring equivalence.
-\item \textbf{Retain/warrant}: append ordinary event/operator links and update support without treating generated exteriority as standing.
-\item \textbf{Reconcile}: revise or retract standing source semantics only through actualized, checked, warranted evidence.
-\item \textbf{Learn/reopen}: test regenerative sufficiency, propose reusable forms/operators, and fire invalidated unlocks.
-\item \textbf{Recur}: continue on the next consequential residual under the resource horizon.
-\end{enumerate}
+\textbf{Status: DERIVED CONTROL NORMAL FORM.}  The one overarching recurrence of v2.0 is
+\[
+\boxed{
+\mathsf{BIND}
+\to
+\mathsf{OPEN}
+\to
+\mathsf{VARY}
+\to
+\mathsf{RETURN}
+\to
+\mathsf{DETERMINE}
+\to
+\mathsf{REFACTOR}
+\circlearrowleft.
+}
+\]
+These names summarize compositions already available in the canonical language.  They are not
+runtime opcodes, new discharge modes, or a second program grammar.
 
-\section{Compact recurrence}
+Let a bound inquiry configuration \(\Delta_t\) retain the current binding and versions, accepted
+presentation, ordinary event/revision ancestry, standing support, explicit source program and
+environment, protected scope/grain/horizon, effectivity profile, live residual, and declared
+coverage.  One recurrence has the following typed responsibilities.
 
+\begin{description}
+\item[\(\mathsf{BIND}\)] Reconstruct \(\Delta_t\) from accepted roots and actuality; establish the
+      carriers, relations, arrangement, scope, applicability, authority, effectivity, and protected
+      horizon.  Binding does not infer standing or causality from availability or order.
+\item[\(\mathsf{OPEN}\)] Construct the smallest consequential checked \(\mathsf{Ask}\) occurrence
+      \(\AskRef_t\) from the occurrence-aware live frontier.  It is retained because it is productive
+      or because an explicit dependency requires discharge.
+\item[\(\mathsf{VARY}\)] Construct or admit the lawful candidate field needed by that open relation:
+      a contrast, separator, positive-negation exterior candidate, transformation, factor,
+      representation, probe, or other binding-native variation.  Generation proposes occupants and
+      never creates actuality, support, or warrant.
+\item[\(\mathsf{RETURN}\)] Discharge each open component through its declared mode:
+      \(\mathsf{Pure}\), \(\mathsf{Generate}\), \(\mathsf{Probe}\), \(\mathsf{Check}\), or
+      \(\mathsf{Warrant}\).
+      Preserve an actual raw return and ordinary event before resolution.  Preserve partial answer
+      sets and per-component provenance.
+\item[\(\mathsf{DETERMINE}\)] Resolve exactly what the return supports under the declared route and
+      coverage as \(\zeta_t:\mathsf{ResolutionOutcome}(q_{\AskRef_t})\); check protected
+      consequence, departure, recovery, support, or acceptance only where the relevant relation
+      applies; and construct the explicit residual.  Exact emptiness, undefined resolution,
+      unsupported completion, and unknown coverage remain distinct.
+\item[\(\mathsf{REFACTOR}\)] If
+      \(\zeta_t=\mathsf{Supported}(\widehat S_t)\), supply the whole proof-carrying answer to
+      \(\kappa_{\AskRef_t}\).  For \(\mathsf{ExactEmpty}\), \(\mathsf{Undefined}\),
+      \(\mathsf{Unsupported}\), or \(\mathsf{Unknown}\), construct the corresponding typed residual
+      or justified stop without invoking that source continuation.  Then refine, fold, reopen,
+      reconstruct, reorient, reconcile, extend, or rebind only as warranted; retain ancestry and
+      unlocks; and produce the successor bound configuration \(\Delta_{t+1}\) when a lawful
+      continuation exists.
+\end{description}
+
+Thus a realized step factors as
 \[
 \boxed{
 \begin{aligned}
-s_t
-&\xrightarrow{\operatorname{Present}}
-W_D^X(S_X)\\
-&\xrightarrow{\operatorname{NegUse/Depart}}
-(u_X,\mathcal N_D^X(S_X))\\
-&\xrightarrow{\operatorname{Open/Compile/Actualize}}
-(O_X,H_{t+1}^{evt})\\
-&\xrightarrow{\operatorname{ReverseSection/Recover}}
-(F_X,R_X,\rho_X)\\
-&\xrightarrow{\operatorname{Seed/Reorient}}
-W_D^Y(S_Y)\\
-&\xrightarrow{\operatorname{ReciprocalRepeat}}
-(u_Y,O_Y,F_Y,R_Y,\rho_Y)\\
-&\xrightarrow{\operatorname{Derive}/\Gamma_D}
-(\Xi_D(\omega),\mathcal R_t)\\
-&\xrightarrow{\operatorname{ResidualOpen}}
-q_{t+1}.
+\Delta_t
+\xrightarrow{\mathsf{BIND}}
+\widehat\Delta_t
+\xrightarrow{\mathsf{OPEN}}
+\AskRef_t
+\xrightarrow{\mathsf{VARY}}
+\mathsf{route}_t\\
+{}
+\xrightarrow{\mathsf{RETURN}}
+Y_t
+\xrightarrow{\mathsf{DETERMINE}}
+(\zeta_t,\mathcal R_t)
+\xrightarrow{\mathsf{REFACTOR}}
+\Delta_{t+1}\ \text{or a typed stop}.
 \end{aligned}
 }
 \]
-
-In parallel:
+Here the per-port return carrier is the tagged sum
 \[
 \boxed{
-\begin{gathered}
-\text{realized operator occurrences}\to\text{pattern detection}\to\text{method/probe candidates}\\
-\to\text{independent admission}\to\text{reusable operator graph}.
-\end{gathered}
+Y_i=
+\mathsf{PureResult}_i
++\mathsf{GeneratedProposal}_i
++\mathsf{ActualReturn}_i
++\mathsf{CheckedResult}_i
++\mathsf{WarrantResult}_i,
 }
 \]
+selected only by \(\operatorname{mode}(q,i)\).  An actual-return summand contains an immutable
+ordinary event and raw-return reference; resolution then contributes its path and supported
+completion set.  Other summands do not fabricate an event.  A mixed question returns the dependent
+product of its per-port summands and retains each route and provenance.  \(\mathcal R_t\) is the
+explicit protected residual, not an alternate history.
 
-And separately:
+Only
 \[
-\boxed{
-\text{candidate semantic relations}\to\text{support environments}\to\mu T
-\to\text{standing semantic patches}.
-}
+\zeta_t=\mathsf{Supported}(\widehat S_t)
+\quad\Longrightarrow\quad
+\kappa_{\AskRef_t}(\widehat S_t)
 \]
+enters the occurrence-specific source continuation.  Every other resolution summand preserves its
+own evidence and exits through a typed residual or stop; recurrence may later open a new question
+from that residual, but it never fabricates \(\widehat S_t\).
+
+\begin{law}[One recurrence, many specializations]\label{law:one-master-recurrence}
+Every other loop, rhythm, clock, traversal, or repeated program in this specification is a
+specialization, projection, binding, or rendering of
+\cref{sec:master-recurrence}.  None constitutes a second controller or history.
+\end{law}
+
+\begin{law}[Guarded regenerative progress]\label{law:master-progress}
+Recurrence crosses a new actual return, an admitted distinction, a representation/binding or
+authority change, an observed state change, or a strict reduction of a declared finite frontier.
+The fingerprint retains occurrence/continuation identity, bindings, evidence, repository/domain
+actuality, horizon, coverage, and frontier.  The same supported answer in the same state may not
+recur indefinitely; finite fuel yields \(\mathsf{ResourceBounded}\).
+\end{law}
+
+\section{Specializations of the master recurrence}
+
+The positive-negation reciprocal program specializes the six positions as follows:
+\[
+\begin{array}{c|l}
+\mathsf{BIND} & \text{present }W_D^X(S_X)\text{ and admitted oriented use }u_X\\
+\mathsf{OPEN} & \text{open the use-tagged positive-negation relation}\\
+\mathsf{VARY} & \text{construct a positively supported exterior candidate }O_X\\
+\mathsf{RETURN} & \text{obtain the exterior and reverse section of the same use}\\
+\mathsf{DETERMINE} & \text{check departure, the whole fiber, recovery, residuals, and coverage}\\
+\mathsf{REFACTOR} & \text{establish }S_Y\text{ by seed/reorientation and rebuild the frontier.}
+\end{array}
+\]
+The reciprocal orientation repeats through the same master recurrence.  The resulting sixfold and
+\(\Gamma_D\) result are derived projections after both orientations; they are not another loop.
+
+Hole solving, separator inquiry, representation/probe invention, standing closure, paired trace
+reconstruction, sufficient-present updating, method learning, folding/reopening, and
+predecessor-judged revision likewise occupy the six positions with their own typed relations and
+authority.  The interrogative roots are available derived operators used within positions, not a
+fixed root wheel.  The software-engineering clock is a binding-specific rendering of these
+positions and roots, not semantic ontology.
 
 \section{Stopping states}
 
@@ -5125,6 +6459,86 @@ A conforming source inquiry runtime/compiler must:
 \item allow unresolved residuals and representation defects to generate new questions.
 \end{enumerate}
 
+\section{v2 interrogative-language fixture obligations}\label{sec:v2-question-fixtures}
+
+The following executable breakers protect the newly explicit v2.0 derived language/control
+contracts.  Their presence in the canonical specification creates obligations, not passing evidence:
+\begin{enumerate}
+\item \texttt{QSUCC-OCC-001}. Equal semantic questions and the same whole proof-carrying
+      \(\widehat S\) under two checked continuations may yield protected-different successors; a key
+      containing only \((q,\widehat S)\) is rejected.
+\item \texttt{QSUCC-PARTIAL-001}. A proof-carrying answer whose member projection is non-singleton is
+      supplied whole to the first-order continuation; implicit member selection is rejected.
+\item \texttt{QREADY-UNLOCK-001}. A supported answer supplies the exact missing dependency and
+      changes a target question from not ready to ready with occurrence provenance.
+\item \texttt{QREADY-NONUNLOCK-001}. Temporal adjacency or later execution without a readiness
+      change is rejected as an unlock.
+\item \texttt{QSTATIC-DYNAMIC-001}. A static refinement, converse, common anchor, or breaker pairing
+      does not create a realized \(\QSucc\) edge; a dynamic edge retains its answer and continuation.
+\item \texttt{QCONVERSE-NOT-INVERSE-001}. A many-to-one relation admits a converse/preimage with
+      multiple answers while a claimed inverse is rejected.
+\item \texttt{QADJOINT-001}. A universal guarantee, weakest condition, or adjoint is admitted only
+      through its binding-supplied checked law, never inferred from converse incidence.
+\item \texttt{QRECIP-PROV-001}. Reciprocal return retains the exact oriented negation-use,
+      departure, coverage, and same-use fiber provenance and cannot be substituted by a generic
+      converse route.
+\item \texttt{QFRONTIER-REQDISCHARGE-001}. A continuation-equivalent check/warrant/support
+      occurrence remains live when explicitly required even when a cheaper candidate strictly
+      dominates it in the resource preorder, while a productive but unauthorized generated question
+      is not promoted to required; conversely, an optional occurrence strictly dominated by a
+      required occurrence is removed.
+\item \texttt{QIFP-LOCAL-001}. Local interrogative closure is established only for a declared
+      finite root/effectivity/coverage frontier and retains blocked, bounded, extension, and unknown
+      exits.
+\item \texttt{QIFP-REOPEN-001}. A new separator, probe, representation, binding, horizon, or
+      resource regime positively reopens a previously established local fixed point.
+\item \texttt{QROUTE-REGEN-001}. Removing a question or answer position reconstructs it only when
+      the occurrence-specific residual fiber collapses protectedly with typing, authority, and
+      provenance intact.
+\item \texttt{QROUTE-ABLATE-001}. A recurrent route node is foldable only when ablation preserves
+      protected behavior, reopening, first-order control, and actual ancestry.
+\item \texttt{QRENDER-001}. Controlled interrogative rendering/elaboration preserves open ports,
+      bindings, modes, occurrence/continuation references, converse/adjoint/reciprocal distinctions,
+      and route provenance.
+\item \texttt{QLOWER-001}. Erasing every used derived root, macro, and route annotation produces an
+      ordinary typed relation/question/\(\mathsf{IProg}\) with equal supported branches, authority,
+      actuality obligations, provenance, and protected continuations.
+\item \texttt{QACTUAL-SEPARATION-001}. Two checked \(\mathsf{Ask}\) occurrences with equal semantic
+      question, compiled operator, raw bytes, and semantic member projection but
+      protected-different continuations produce events linked to their distinct \(\AskRef\) values.
+      Occurrence formation rejects each independently forged structural position, question, answer
+      slot, environment, continuation, binding/compiler version, and provenance field.
+      Cold replay reconstructs the occurrence-specific \(\QSucc\); a missing or swapped event link
+      is rejected, as is a mismatch in request/operator, raw-return reference, binding/compiler
+      version, ledger membership, or provenance.  A mixed-port case retains every port-indexed
+      route/path/event chain in one discharge bundle, including two ports sharing one explicitly
+      checked event without collapsing their evidence; replay performs zero provider redispatch.
+\item \texttt{QLIFT-ALLPATHS-001}. A non-singleton proof-carrying parent followed by a second
+      non-singleton dependent question preserves every supported tagged path and each child port's
+      discharge mode; arbitrary parent/member selection and common-mode collapse are rejected.  A
+      proper finite materialization \(F\subsetneq|\widehat S|\) retains uncovered members as
+      \(\mathsf{Unknown}\) and cannot claim a complete family.
+\item \texttt{QRESOLUTION-GATE-001}. The same declared question exercises
+      \(\mathsf{Supported}\), \(\mathsf{ExactEmpty}\), \(\mathsf{Undefined}\),
+      \(\mathsf{Unsupported}\), and \(\mathsf{Unknown}\) with their distinct checked payloads; only
+      \(\mathsf{Supported}(\widehat S)\) may reach \(\kappa_{\AskRef}\) or inhabit
+      \(\mathsf{ResolvedOccurrence}_A\).  A non-singleton
+      \(\operatorname{Run}(p,r,-)\) result retains every compatible completion; selecting only its
+      first output is rejected.
+\item \texttt{QCODE-TYPING-001}. Source and runtime quotation preserve result type; interpretation
+      succeeds only under an admitted binding/compiler version and remains undefined for a
+      mismatched version without executing or warranting the code.
+\end{enumerate}
+
+This named actuality-separation fixture traverses the non-collapse chain
+\[
+\AskRef\to\mathcal D\to\zeta=\mathsf{Supported}(\widehat S)
+\to\kappa_{\AskRef}(\widehat S)
+\to(\AskRef'\ \text{or}\ \mathsf{Return}_I),
+\]
+restarts from accepted references, invokes no provider again, and rejects any implementation in
+which raw bytes directly choose the source answer continuation.
+
 \section{Successor reciprocal-boundary fixture obligations}\label{sec:successor-fixtures}
 
 The following seventy fixtures are additional to, and do not replace, the predecessor typing, compiler, actuality, history, standing, fold, binding, and self-revision fixtures.
@@ -5332,7 +6746,7 @@ Implementation IR sorts may use these names.  Their semantics must be regenerate
 
 \section{Regenerative basis}
 
-The smallest currently accepted basis is:
+The regenerative basis fixed by this v2.0 document is:
 \[
 \boxed{
 \begin{gathered}
@@ -5400,7 +6814,24 @@ provenance, warrant, or reopening.
 
 A question is a partially bound typed relation.  Binding what is known while preserving the relation leaves a residual section/fiber: a structured hole whose lawful fillers are the answer field.  A web of such residual relations determines a form to the extent that the intersection of its solution fibers collapses to one protected equivalence class.  Abstraction is therefore regenerative when it removes a filling but preserves enough relational constraint to regenerate the protected form and the discriminators needed to reopen it.  A source inquiry program composes these open relations through answer-dependent continuations and lowers by typed discharge authority to pure computation, generation, actual probing, checking, and warrant.
 
+Dynamic question succession is indexed by a checked \(\mathsf{Ask}\) occurrence \(\AskRef\), not
+only by normalized question text or relation identity.  A supported answer is a proof-carrying
+record with a nonempty member set of typed completions, retained whole with its declared route,
+evidence, coverage, and per-component
+provenance.  Capture-safe substitution into the occurrence-specific first-order continuation yields
+\(\QSucc(\AskRef,\widehat S,q')\).  Static question relations do not manufacture this dynamic edge.  The
+live frontier includes both protectedly productive occurrences and explicit required-discharge
+occurrences; required but nonexecutable obligations survive as typed residuals.
+
 The runtime preserves realized state--operator--return history before interpretation.  Raw return, decoded completion, interpretation, checking, warrant, and standing remain distinct.  Learned distinctions, representations, probes, and operator paths are compact regenerative structures over authoritative history; they never replace the evidence that warranted them and never confer warrant on future outputs merely by being useful.  Every quotient or fold is protected-behavior relative, continuation-compatible where reusable state is claimed, regeneratively sufficient or explicitly approximate, and equipped with residual, recovery/reacquisition, and unlock conditions.
+
+There is one authoritative actuality spine: accepted source/program/artifact ancestry plus ordinary
+event and accepted-revision histories.  Paired actuality, question traces, return traces, route
+records, sufficient presents, cue fibers, learned methods, and reciprocal views are derived checked
+projections.  Resume is not replay, append order is not causal order, and endpoint equality is not
+event/path identity.  Every recurring inquiry is a specialization of
+\(\mathsf{BIND}\to\mathsf{OPEN}\to\mathsf{VARY}\to\mathsf{RETURN}\to
+\mathsf{DETERMINE}\to\mathsf{REFACTOR}\); no specialization adds a second controller or history.
 
 The same forms, distinctions, questions, programs, probes, compiler rules, folds, bindings, and protection declarations may be reified and subjected to the same inquiry.  A successor remains subject to independently grounded, predecessor-preserving judgment and cannot license itself.
 \end{quote}
@@ -5415,11 +6846,13 @@ THE CALCULUS IS CLOSED UNDER REIFICATION, RELATION REFINEMENT, DISTINCTION FORMA
 \end{center}
 No claim is made that global convergence, absolute minimality, or a universally coarsest sufficient representation is decidable.
 
+\clearpage
 \appendix
 
 \section{Canonical notation table}
 
-\begin{longtable}{p{0.25\textwidth}p{0.68\textwidth}}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.34\textwidth}
+                  >{\raggedright\arraybackslash}p{0.59\textwidth}}
 \toprule
 Symbol & Meaning\\
 \midrule
@@ -5446,6 +6879,15 @@ Symbol & Meaning\\
 \(Regen_{\mathcal H}(m,z)\) & representation \(m\) regenerates protected structure of \(z\)\\
 \(\mathsf{Economy}_{\mathcal H,\preceq}(z)\) & minimal licensed representations that preserve inquiry regeneration\\
 \(K::=\mathsf{Return}_I\mid\mathsf{Ask}\) & source inquiry question-program language\\
+\(\AskRef\) & checked source \(\mathsf{Ask}\) occurrence with explicit environment, answer slot, continuation, versions, and provenance\\
+\(\SupportedRoute\) & \(\SupportedRoute(q,S;\vartheta,E)\) checks admission of one nonempty member set through its declared route and evidence environment\\
+\(\widehat S:\mathsf{SuppAns}(q)\) & proof-carrying supported answer record; \(|\widehat S|\) is its nonempty member set\\
+\(\QSucc(\AskRef,\widehat S,q')\) & occurrence-indexed derived successor-question relation\\
+\(\QStep(\Sigma,\AskRef,\widehat S)\) & protected successor presentation after capture-safe answer substitution and pure reconstruction\\
+\(\RequiredDischarge(\Sigma,\AskRef,d)\) & explicit dependency \(d\) requires this occurrence's declared discharge; it does not imply executability or success\\
+\(\Omega_Q\) & derived, unordered root-operator family \(\{\mathsf{Expose},\mathsf{Orient},\mathsf{Factor},\mathsf{Polarize},\mathsf{Vary},\mathsf{Ground}\}\)\\
+\(\IFP_{\Omega,\mathcal H,\epsilon}\) & coverage-relative local interrogative fixed point, reopenable by new relations, evidence, bindings, horizons, or resources\\
+\(\mathsf{MasterRecurrence}\) & \(\mathsf{BIND}\to\mathsf{OPEN}\to\mathsf{VARY}\to\mathsf{RETURN}\to\mathsf{DETERMINE}\to\mathsf{REFACTOR}\), the one derived high-level control recurrence; not runtime opcodes\\
 
 \(A,B,X,Y,Z\) & typed carriers/interfaces\\
 \(R:A\rightsquigarrow B\) & typed relation\\
@@ -5458,6 +6900,7 @@ Symbol & Meaning\\
 \(x\sim_q y\) & local equivalence induced by question \(q\)\\
 \(q\preceq_{\mathrm{prec}}r\) & \(r\) refines/discriminates at least as much as \(q\)\\
 \(\eta_{q,g}\) & question-conditioned active view at grain \(g\)\\
+\(V_t\) & active representation codomain at step \(t\)\\
 \(FD_{\mathcal H}(q)\) & protected distinctions hidden by the local question frame\\
 \(D^+\leftarrow B_D\rightarrow D^-\) & candidate boundary factorization; not itself a negation\\
 \(T_D\) & along-boundary traversal relation\\
@@ -5466,12 +6909,14 @@ Symbol & Meaning\\
 \(o:Z\rightsquigarrow R_o\times Z\) & probe interaction semantics\\
 \(z_t\xrightarrow[o]{r}z_{t+1}\) & realized probe occurrence\\
 \(\delta_q\) & raw/decoded response to supported answer-set map\\
-\(\rho:A\leadsto B\) & explicit resolution path\\
+\(\ResPath:A\leadsto B\) & explicit resolution path; distinct from a generic residual relation \(\rho\)\\
+\(\mathsf{ResolvedOccurrence}_A\) & dependent record \(\AskRef\to\mathcal D\to\mathsf{Supported}(\widehat S)\to\kappa_{\AskRef}(\widehat S)\to\mathsf{Next}_A\), retaining every port/event/path and excluding non-Supported outcomes\\
 \(\mathsf{Return}\) & pure program return\\
 \(\mathsf{Branch}\) & internal/generative alternatives\\
 \(\mathsf{Probe}\) & actualizable program interaction\\
 \(H^{evt}\) & authoritative actual event history\\
 \(H^{acc}\) & accepted patch/revision history\\
+\(H^{auth}\) & one authoritative typed ancestry whose event and accepted-revision histories are non-collapsing projections\\
 \(<_{\mathrm{ledger}}\) & persistence append order\\
 \(\lambda_{\mathrm{real}}\) & binding-defined realized/domain succession\\
 \(\equiv_{\mathcal H}\) & exact protected behavioral equivalence\\
@@ -5490,43 +6935,46 @@ Symbol & Meaning\\
 
 \section{Canonical compiler pipeline}
 
+The single language stack in \cref{sec:language-architecture} has the following typed operational
+projection:
 \[
 \boxed{
 \begin{array}{c}
-\text{Typed Forms / Relation Schema}\\
-\downarrow\ \text{partial binding / residualize / expose ports}\\
-\text{Open Relation / Question}\\
-\downarrow\ \text{compose answer-dependent continuations}\\
-\mathsf{IProg}\\
-\downarrow\ \text{normalize}\\
-\OpenIR\\
-\downarrow\ \text{materialize determination presentation and candidate chart}\\
-W_D^\alpha(s)\ +\ \BoundaryIR\ +\ \widetilde B_D\\
-\downarrow\ \text{derive warranted uses and tagged negation frontier}\\
-\mathcal U_D^\alpha(s)\ +\ \mathcal N_D^\alpha(s)\\
-\downarrow\ \text{project active state; retain unknown reserve and unlocks}\\
-\text{Question-Conditioned View}\\
-\downarrow\ \text{route each port by discharge authority}\\
-\ProbeIR\\
-\downarrow\ \text{backend compiler}\\
-\PromptIR\ /\ \text{Pure Code}\ /\ \text{Tool Call}\ /\ \text{Checker}\ /\ \text{Native Method}\\
-\downarrow\ \text{actualization where required}\\
-\Raw\text{ Return}\\
-\downarrow\ \text{preserve event before interpretation}\\
-\text{Authoritative History}\\
-\downarrow\ \text{decode / resolve with use and path provenance}\\
-\text{Supported Exterior Filling(s)}\\
-\downarrow\ \text{same-use reverse section / protected recovery}\\
-\text{Return Fiber / Recovery / Seed}\\
-\downarrow\ \text{reciprocal repeat; derive dependent view; Gamma post-check}\\
-\Xi_D(\omega)\ +\ \text{Protected Residuals}\\
-\downarrow\ \text{separator / representation search / independent warrant}\\
-\text{Standing Patch or Reconciliation / Next Question}\\
-\downarrow\ \text{fold if regeneratively sufficient; reopen on unlock}\\
-\text{Reusable Regenerative Form / Operator Graph}
+\text{typed forms and named-port relation schema}\\
+\downarrow\ \text{partial bind / expose a nonempty port set}\\
+q=?_I R[\beta]\quad\text{with }A(q)=\prod_{i\in I}X_i\\
+\downarrow\ \text{store first-order answer slot and continuation}\\
+\Sigma:\mathsf{SourceConfig}_{\B}(A),\quad
+\AskRef:\mathsf{AskOcc}_A(\Sigma)\\
+\downarrow\ \text{normalize and compile each port by its declared mode}\\
+\OpenIR\to(\text{pure code / generator / probe / checker / warrant route})\\
+\downarrow\ \text{execute every port only through its selected lawful route}\\
+Y_i:\mathsf{PureResult}_i+\mathsf{GeneratedProposal}_i+\mathsf{ActualReturn}_i
+  +\mathsf{CheckedResult}_i+\mathsf{WarrantResult}_i\\
+Y:=\prod_{i\in I}Y_i\quad\text{selected pointwise by }\operatorname{mode}(q,i)\\
+\downarrow\ \text{for each actual-return component: preserve }E_i/\ReturnRef_i\text{ first}\\
+\mathcal D:\mathsf{DischargeBundle}(\AskRef)\\
+\downarrow\ \text{resolve and check declared-route support without strengthening}\\
+\zeta:\mathsf{ResolutionOutcome}(q)\\
+\downarrow\ \text{case analysis retaining the constructor payload}\\
+\begin{cases}
+\mathsf{Supported}(\widehat S):
+  \kappa_{\AskRef}(\widehat S)
+  \to \QSucc(\AskRef,\widehat S,q')\ \text{or}\ \mathsf{Return}_I(a),\\
+\mathsf{ExactEmpty}/\mathsf{Undefined}/\mathsf{Unsupported}/\mathsf{Unknown}:
+  \text{typed residual or justified stop; never }\kappa_{\AskRef}.
+\end{cases}\\
+\downarrow\ \text{pure normalization / residual construction with the next live frontier.}
 \end{array}
 }
 \]
+
+Positive-negation compilation is one specialization inside this pipeline.  When the open relation
+is an admitted oriented negation use, normalization retains the determination presentation,
+candidate chart, use identity, departure witness, semantic/execution coverage, same-use return
+fiber, recovery signature, seed, reciprocal occurrence, residuals, and downstream-only
+\(\Gamma_D\) check.  These fields refine \(\OpenIR\), support, and residual construction; they do
+not replace the general pipeline or create another history.
 
 \section{Canonical infrastructure dependency direction}
 
@@ -5613,7 +7061,10 @@ nonzero-mean covariance breaker, and query-distribution-change reopening;
 \item state history remaining independently accessible after operator compression.
 \end{enumerate}
 
-In addition, every one of the seventy numbered obligations in \cref{sec:successor-fixtures} requires an executable discriminator before reciprocal-boundary conformance may be claimed.
+In addition, every one of the nineteen identified obligations in
+\cref{sec:v2-question-fixtures} and every one of the seventy numbered obligations in
+\cref{sec:successor-fixtures} requires its declared executable discriminator before the
+corresponding conformance may be claimed.
 
 \section{Normative reading rule}
 

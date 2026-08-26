@@ -63,6 +63,21 @@ END {
 
         if (c == "{" || c == "[") { depth++; i++; continue }
         if (c == "}" || c == "]") { delete key[depth]; depth--; i++; continue }
+
+        # Hook payloads use booleans for fields such as stop_hook_active.
+        # Return JSON literals only when the scanner is positioned at the
+        # value of the exact requested path; text inside strings is handled
+        # by the string branch above and cannot be mistaken for structure.
+        if (pathof(depth) == want) {
+            rest = substr(buf, i)
+            if (rest ~ /^true([^A-Za-z0-9_]|$)/) { printf "true"; exit }
+            if (rest ~ /^false([^A-Za-z0-9_]|$)/) { printf "false"; exit }
+            if (rest ~ /^null([^A-Za-z0-9_]|$)/) { printf "null"; exit }
+            if (match(rest, /^-?[0-9]+([.][0-9]+)?([eE][+-]?[0-9]+)?/)) {
+                printf "%s", substr(rest, 1, RLENGTH)
+                exit
+            }
+        }
         i++
     }
 }

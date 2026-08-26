@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/ic-guard\"",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/ic-run.js\" guard",
             "timeout": 15,
             "statusMessage": "inquiry gate"
           }
@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/ic-stop\"",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/ic-run.js\" stop",
             "timeout": 15,
             "statusMessage": "closing the cycle"
           }
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/ic-inject\"",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/ic-run.js\" inject",
             "timeout": 15,
             "statusMessage": "loading the loop"
           }

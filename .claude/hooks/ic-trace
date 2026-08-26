@@ -1,34 +1,15 @@
 #!/usr/bin/env bash
-# ic-trace -- the inquiry ledger.
+# ic-trace -- append-only engineering inquiry evidence.
 #
-# An append-only, parent-linked, fingerprinted record of one agent's reasoning,
-# carrying the same laws this repository already imposes on its own event spine:
-# a raw return is preserved before anything interprets it, a prediction is sealed
-# before the action it predicts, and no record is ever rewritten.
-#
-#   ic-trace init [slug]      open a trace for this session
-#   ic-trace status           current file, seq, open cycle, fuel
-#   ic-trace open             exit 0 iff a cycle is open (a seal with no residual)
-#   ic-trace <kind> k=v ...   append one record
-#
-# Kinds and their required keys:
-#   ensure    task authority invariants
-#   question  q mode answer branch          mode: Pure|Generate|Probe|Check|Warrant
-#   seal      should_change invariants discriminator wrong_impl
-#   raw       cmd (file= digest is computed, or digest=)
-#   check     verdict coverage
-#   residual  class                         see RESIDUAL_CLASSES below
-#   stop      state                         see STOP_STATES below
-#   note      text
-#
-# Exit 1 refuses the append.  Refusal is the point: a repeated fingerprint with a
-# repeated answer is not progress, and exhausted fuel is ResourceBounded, not a
-# licence to continue.
+# The trace is a derived engineering record, not semantic event history. It preserves
+# sealed predictions, safe raw returns, checks, residuals, and occurrence-aware recurrence
+# fingerprints for clients that honor the repository harness.
 
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 TRACE_DIR="$ROOT/.claude/trace"
+RAW_DIR="$TRACE_DIR/raw"
 STATE="$TRACE_DIR/.state"
 FUEL="$TRACE_DIR/.fuel"
 DEFAULT_FUEL=24
@@ -40,157 +21,292 @@ MODES="Pure Generate Probe Check Warrant"
 die() { printf 'ic-trace: %s\n' "$*" >&2; exit 1; }
 
 esc() {
-    printf '%s' "$1" \
-        | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\t/\\t/g' \
-        | awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }'
+    printf '%s' "$1" |
+        sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\t/\\t/g' |
+        awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }'
 }
 
 in_list() {
     local needle="$1" item
     shift
-    for item in $1; do [ "$item" = "$needle" ] && return 0; done
+    for item in $1; do
+        [ "$item" = "$needle" ] && return 0
+    done
     return 1
 }
 
 trace_file() {
-    [ -f "$STATE" ] || die "no open trace; run: .claude/hooks/ic-trace init"
-    printf '%s' "$TRACE_DIR/$(cat "$STATE")"
+    [ -f "$STATE" ] || die "no trace; run: .claude/hooks/ic-trace init <slug>"
+    local name
+    name="$(cat "$STATE")"
+    case "$name" in
+        *[!A-Za-z0-9._-]*|'') die "invalid trace state filename" ;;
+    esac
+    printf '%s' "$TRACE_DIR/$name"
 }
 
-next_seq() {
-    local f="$1"
-    [ -s "$f" ] || { printf '1'; return; }
-    awk -F'"seq":' 'NF>1 { split($2, a, ","); n = a[1] + 0 } END { print n + 1 }' "$f"
+validate_trace() {
+    node "$ROOT/.claude/hooks/ic-append.js" validate "$1" >/dev/null ||
+        die "active trace failed structural validation"
 }
 
-# Fingerprint = question identity + bindings + repository actuality.
-# Two questions asked against the same repository state with the same bindings
-# are the same question, whatever words wrap them.
+last_line_of_kind() {
+    local f="$1" kind="$2"
+    grep -n "\"kind\":\"$kind\"" "$f" 2>/dev/null | tail -1 | cut -d: -f1
+}
+
+frontier_context() {
+    local f="$ROOT/IMPLEMENTATION_FRONTIER.md"
+    [ -f "$f" ] || die "IMPLEMENTATION_FRONTIER.md is missing"
+    node "$ROOT/.claude/hooks/ic-frontier.js" "$f" context ||
+        die "IMPLEMENTATION_FRONTIER.md live block failed exact schema validation"
+}
+
+repository_actuality() {
+    {
+        git -C "$ROOT" rev-parse HEAD 2>/dev/null || printf 'no-head\n'
+        git -C "$ROOT" diff --binary --no-ext-diff HEAD -- 2>/dev/null || true
+        git -C "$ROOT" ls-files --others --exclude-standard -z 2>/dev/null |
+            while IFS= read -r -d '' rel; do
+                printf 'UNTRACKED\0%s\0' "$rel"
+                sha256sum "$ROOT/$rel" 2>/dev/null || printf 'unreadable\n'
+            done
+    } | sha256sum | cut -c1-24
+}
+
+normalize_coordinate() {
+    printf '%s' "$1" | node "$ROOT/.claude/hooks/ic-coordinate.js" ||
+        die "cannot normalize recurrence coordinate"
+}
+
 fingerprint() {
-    local q="$1" bindings="$2" head dirty
-    head="$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || printf 'no-head')"
-    dirty="$(git -C "$ROOT" status --porcelain 2>/dev/null | sha256sum | cut -c1-16)"
-    printf '%s\0%s\0%s\0%s' "$q" "$bindings" "$head" "$dirty" \
-        | sha256sum | cut -c1-16
+    local q="$1" occurrence="$2" continuation="$3" bindings="$4"
+    local horizon="$5" coverage="$6" authority="$7" evidence="$8"
+    local frontier_id frontier_hash actuality
+    IFS=$'\t' read -r frontier_id frontier_hash <<<"$(frontier_context)"
+    actuality="$(repository_actuality)"
+    printf '%s\0%s\0%s\0%s\0%s\0%s\0%s\0%s\0%s\0%s\0%s' "$q" "$occurrence" "$continuation" "$bindings" "$frontier_id" "$frontier_hash" "$horizon" "$coverage" "$authority" "$evidence" "$actuality" |
+        sha256sum | cut -c1-24
 }
 
 cmd="${1:-}"
-[ -n "$cmd" ] || die "usage: ic-trace <init|status|open|KIND> [k=v ...]"
+[ -n "$cmd" ] || die "usage: ic-trace <init|status|open|stop-pending|control-open|KIND> [k=v ...]"
 shift || true
 
 case "$cmd" in
 init)
+    if [ -f "$STATE" ]; then
+        current="$(trace_file 2>/dev/null || true)"
+        if [ -n "$current" ] && node "$ROOT/.claude/hooks/ic-append.js" validate "$current" >/dev/null 2>&1; then
+            last_seal="$(last_line_of_kind "$current" seal)"
+            last_res="$(last_line_of_kind "$current" residual)"
+            last_stop="$(last_line_of_kind "$current" stop)"
+            if [ -n "$last_seal" ] && { [ -z "$last_res" ] || [ "$last_seal" -gt "$last_res" ]; }; then
+                die "cannot initialize a new trace while the current sealed cycle is open"
+            fi
+            if [ -n "$last_res" ] && { [ -z "$last_stop" ] || [ "$last_res" -gt "$last_stop" ]; }; then
+                die "cannot initialize a new trace before the checked residual has a lawful stop"
+            fi
+        fi
+    fi
     mkdir -p "$TRACE_DIR"
     slug="${1:-session}"
-    name="$(date +%Y%m%d-%H%M%S)-${slug//[^A-Za-z0-9._-]/-}.jsonl"
-    : > "$TRACE_DIR/$name"
-    printf '%s' "$name" > "$STATE"
-    printf '%s' "$DEFAULT_FUEL" > "$FUEL"
-    printf 'trace: %s (fuel %s)\n' ".claude/trace/$name" "$DEFAULT_FUEL"
+    slug="${slug//[^A-Za-z0-9._-]/-}"
+    created="$(mktemp "$TRACE_DIR/$(date +%Y%m%d-%H%M%S)-$slug.XXXXXX.jsonl")" ||
+        die "cannot create trace"
+    printf '%s' "$(basename "$created")" >"$STATE"
+    printf '%s' "$DEFAULT_FUEL" >"$FUEL"
+    printf 'trace: .claude/trace/%s (fuel %s)\n' "$(basename "$created")" "$DEFAULT_FUEL"
     exit 0
     ;;
 status)
-    if [ ! -f "$STATE" ]; then printf 'no open trace\n'; exit 0; fi
+    if [ ! -f "$STATE" ]; then
+        printf 'no trace\n'
+        exit 0
+    fi
     f="$(trace_file)"
+    validate_trace "$f"
     printf 'file    : .claude/trace/%s\n' "$(cat "$STATE")"
-    printf 'records : %s\n' "$(wc -l < "$f" | tr -d ' ')"
+    printf 'records : %s\n' "$(wc -l <"$f" | tr -d ' ')"
     printf 'fuel    : %s\n' "$(cat "$FUEL" 2>/dev/null || printf '?')"
-    if grep -q '"kind":"seal"' "$f" 2>/dev/null; then
-        last_seal="$(grep -n '"kind":"seal"' "$f" | tail -1 | cut -d: -f1)"
-        last_res="$(grep -n '"kind":"residual"' "$f" | tail -1 | cut -d: -f1)"
-        if [ -z "$last_res" ] || [ "$last_seal" -gt "$last_res" ]; then
-            printf 'cycle   : OPEN (seal at line %s, no residual)\n' "$last_seal"
-        else
-            printf 'cycle   : closed\n'
-        fi
+    last_seal="$(last_line_of_kind "$f" seal)"
+    last_res="$(last_line_of_kind "$f" residual)"
+    if [ -n "$last_seal" ] && { [ -z "$last_res" ] || [ "$last_seal" -gt "$last_res" ]; }; then
+        printf 'cycle   : OPEN (seal at line %s, no later residual)\n' "$last_seal"
     else
-        printf 'cycle   : none sealed\n'
+        printf 'cycle   : closed\n'
+    fi
+    if "$0" control-open >/dev/null 2>&1; then
+        printf 'control : authorized for current cycle\n'
+    else
+        printf 'control : closed\n'
     fi
     exit 0
     ;;
 open)
     [ -f "$STATE" ] || exit 1
     f="$(trace_file)"
-    grep -q '"kind":"seal"' "$f" 2>/dev/null || exit 1
-    last_seal="$(grep -n '"kind":"seal"' "$f" | tail -1 | cut -d: -f1)"
-    last_res="$(grep -n '"kind":"residual"' "$f" | tail -1 | cut -d: -f1)"
+    validate_trace "$f"
+    last_seal="$(last_line_of_kind "$f" seal)"
+    last_res="$(last_line_of_kind "$f" residual)"
+    [ -n "$last_seal" ] || exit 1
     [ -z "$last_res" ] && exit 0
-    [ "$last_seal" -gt "$last_res" ] && exit 0
-    exit 1
+    [ "$last_seal" -gt "$last_res" ]
+    exit
     ;;
-ensure|question|seal|raw|check|residual|stop|note) ;;
+stop-pending)
+    [ -f "$STATE" ] || exit 1
+    f="$(trace_file)"
+    validate_trace "$f"
+    last_res="$(last_line_of_kind "$f" residual)"
+    last_stop="$(last_line_of_kind "$f" stop)"
+    [ -n "$last_res" ] || exit 1
+    [ -z "$last_stop" ] && exit 0
+    [ "$last_res" -gt "$last_stop" ]
+    exit
+    ;;
+control-open)
+    [ -f "$STATE" ] || exit 1
+    f="$(trace_file)"
+    validate_trace "$f"
+    wanted="${1:-}"
+    last_control="$(last_line_of_kind "$f" control)"
+    last_res="$(last_line_of_kind "$f" residual)"
+    last_stop="$(last_line_of_kind "$f" stop)"
+    last_close="${last_res:-0}"
+    [ "${last_stop:-0}" -gt "$last_close" ] && last_close="$last_stop"
+    [ -n "$last_control" ] && [ "$last_control" -gt "$last_close" ] || exit 1
+    control_record="$(sed -n "${last_control}p" "$f")"
+    control_scope="$(printf '%s' "$control_record" |
+        awk -v want="scope" -f "$ROOT/.claude/hooks/ic-json.awk")"
+    control_authority="$(printf '%s' "$control_record" |
+        awk -v want="authority" -f "$ROOT/.claude/hooks/ic-json.awk")"
+    authority_norm="$(printf '%s' "$control_authority" | tr 'A-Z' 'a-z')"
+    case "$authority_norm" in *user*|*human*) ;; *) exit 1 ;; esac
+    if [ -n "$wanted" ]; then
+        scope_tokens="$(printf '%s' "$control_scope" |
+            tr 'A-Z,;' 'a-z  ')"
+        matched=false
+        for scope_token in $scope_tokens; do
+            [ "$scope_token" = "$wanted" ] && matched=true
+        done
+        [ "$matched" = "true" ] || exit 1
+    fi
+    exit 0
+    ;;
+ensure|question|seal|raw|check|residual|stop|note|control|route) ;;
 *) die "unknown kind '$cmd'" ;;
 esac
 
 f="$(trace_file)"
-
+validate_trace "$f"
 declare -A kv=()
 for arg in "$@"; do
     case "$arg" in
-        *=*) kv["${arg%%=*}"]="${arg#*=}" ;;
-        *) die "argument '$arg' is not key=value" ;;
+    *=*) kv["${arg%%=*}"]="${arg#*=}" ;;
+    *) die "argument '$arg' is not key=value" ;;
     esac
 done
 
 need() {
+    local k
     for k in "$@"; do
         [ -n "${kv[$k]:-}" ] || die "kind '$cmd' requires non-empty $k="
     done
 }
 
 case "$cmd" in
-ensure)   need task authority invariants ;;
-question) need q mode answer branch
-          in_list "${kv[mode]}" "$MODES" || die "mode must be one of: $MODES" ;;
-seal)     need should_change invariants discriminator wrong_impl ;;
-raw)      need cmd ;;
-check)    need verdict coverage ;;
-residual) need class
-          in_list "${kv[class]}" "$RESIDUAL_CLASSES" || die "class must be one of: $RESIDUAL_CLASSES" ;;
-stop)     need state
-          in_list "${kv[state]}" "$STOP_STATES" || die "state must be one of: $STOP_STATES" ;;
-note)     need text ;;
+ensure) need task authority invariants ;;
+question)
+    need q mode answer branch occurrence continuation bindings horizon coverage authority evidence
+    in_list "${kv[mode]}" "$MODES" || die "mode must be one of: $MODES"
+    ;;
+seal) need should_change invariants discriminator wrong_impl ;;
+raw) need cmd ;;
+check) need verdict coverage ;;
+residual)
+    need class
+    in_list "${kv[class]}" "$RESIDUAL_CLASSES" ||
+        die "class must be one of: $RESIDUAL_CLASSES"
+    ;;
+stop)
+    need state warrant
+    in_list "${kv[state]}" "$STOP_STATES" || die "state must be one of: $STOP_STATES"
+    if [ "${kv[state]}" = "Satisfied" ]; then
+        warrant_norm="$(printf '%s' "${kv[warrant]}" | tr 'A-Z' 'a-z' | tr -d '[:space:]')"
+        case "$warrant_norm" in
+            ''|none|none:*|none-*|self|self:*|self-*|agent|agent:*|agent-*|generated|generated:*|generated-*)
+                die "Satisfied requires a non-self warrant reference" ;;
+        esac
+    fi
+    ;;
+note) need text ;;
+control) need authority residual predecessor scope ;;
+route) need source_occurrence answer successor_occurrence provenance ;;
 esac
 
-# A raw return is preserved and digested before any record interprets it.
-if [ "$cmd" = "raw" ] && [ -n "${kv[file]:-}" ]; then
-    [ -f "${kv[file]}" ] || die "raw file '${kv[file]}' does not exist"
-    kv[digest]="$(sha256sum "${kv[file]}" | cut -c1-32)"
+if [ "$cmd" = "raw" ]; then
+    sensitive="${kv[sensitive]:-false}"
+    [ "$sensitive" = "true" ] || [ "$sensitive" = "false" ] ||
+        die "raw sensitive= must be true or false"
+    if [ -n "${kv[file]:-}" ]; then
+        [ -f "${kv[file]}" ] || die "raw file '${kv[file]}' does not exist"
+        kv[digest]="$(sha256sum "${kv[file]}" | cut -d' ' -f1)"
+        if [ "$sensitive" = "false" ]; then
+            mkdir -p "$RAW_DIR"
+            target="$RAW_DIR/${kv[digest]}"
+            if [ -f "$target" ]; then
+                cmp -s "${kv[file]}" "$target" || die "raw digest collision"
+            else
+                cp -- "${kv[file]}" "$target" || die "cannot preserve raw return"
+                chmod 600 "$target" 2>/dev/null || true
+            fi
+            kv[raw_ref]=".claude/trace/raw/${kv[digest]}"
+        else
+            kv[raw_ref]="digest-only:sensitive"
+        fi
+        unset 'kv[file]'
+    else
+        need digest
+        [ "$sensitive" = "true" ] ||
+            die "digest-only raw records require sensitive=true"
+        case "${kv[digest]}" in
+            *[!0-9a-fA-F]*|'') die "sensitive digest must be exactly 64 hexadecimal SHA-256 characters" ;;
+        esac
+        [ "${#kv[digest]}" -eq 64 ] ||
+            die "sensitive digest must be exactly 64 hexadecimal SHA-256 characters"
+        kv[digest]="$(printf '%s' "${kv[digest]}" | tr 'A-F' 'a-f')"
+        kv[raw_ref]="digest-only:sensitive"
+    fi
+    kv[sensitive]="$sensitive"
 fi
 
 fp=""
 if [ "$cmd" = "question" ]; then
-    fp="$(fingerprint "${kv[q]}" "${kv[bindings]:-}")"
-    # grep -c prints 0 and exits 1 on no match; take the count, not the status.
-    prior="$(grep -c "\"fp\":\"$fp\"" "$f" 2>/dev/null)"
-    prior="${prior:-0}"
-    if [ "$prior" -gt 0 ] \
-       && grep "\"fp\":\"$fp\"" "$f" | grep -qF "\"answer\":\"$(esc "${kv[answer]}")\""; then
-        die "repeated state: this question, these bindings, this repository, this answer.
-GUARDED_RECUR admits no progress here.  Either change the bindings, change the
-repository and observe it, admit a new distinction, or stop with Unknown."
-    fi
-    remaining="$(cat "$FUEL" 2>/dev/null)"
-    remaining="${remaining:-$DEFAULT_FUEL}"
-    if [ "$remaining" -le 0 ]; then
-        die "fuel exhausted.  The honest close is:
-  .claude/hooks/ic-trace stop state=ResourceBounded partial=... frontier=..."
-    fi
-    printf '%s' "$((remaining - 1))" > "$FUEL"
+    kv[bindings_normalized]="$(normalize_coordinate "${kv[bindings]}")"
+    kv[horizon_normalized]="$(normalize_coordinate "${kv[horizon]}")"
+    kv[coverage_normalized]="$(normalize_coordinate "${kv[coverage]}")"
+    kv[authority_normalized]="$(normalize_coordinate "${kv[authority]}")"
+    kv[evidence_normalized]="$(normalize_coordinate "${kv[evidence]}")"
+    fp="$(fingerprint "${kv[q]}" "${kv[occurrence]}" "${kv[continuation]}" "${kv[bindings_normalized]}" "${kv[horizon_normalized]}" "${kv[coverage_normalized]}" "${kv[authority_normalized]}" "${kv[evidence_normalized]}")"
 fi
 
-seq="$(next_seq "$f")"
-parent=$((seq - 1))
-[ "$parent" -lt 1 ] && parent=0
-
-{
-    printf '{"seq":%s,"parent":%s,"ts":"%s","kind":"%s"' \
-        "$seq" "$parent" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$cmd"
+record="$({
+    printf '{"ts":"%s","kind":"%s"' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$cmd"
     [ -n "$fp" ] && printf ',"fp":"%s"' "$fp"
     for k in "${!kv[@]}"; do
         printf ',"%s":"%s"' "$(esc "$k")" "$(esc "${kv[$k]}")"
     done
     printf '}\n'
-} >> "$f"
+})"
+if [ "$cmd" = "question" ]; then
+    seq="$(printf '%s\n' "$record" |
+        node "$ROOT/.claude/hooks/ic-append.js" append "$f" "$FUEL")" ||
+        die "validated trace append failed"
+else
+    seq="$(printf '%s\n' "$record" |
+        node "$ROOT/.claude/hooks/ic-append.js" append "$f")" ||
+        die "validated trace append failed"
+fi
 
 printf 'ic-trace: %s #%s appended\n' "$cmd" "$seq"

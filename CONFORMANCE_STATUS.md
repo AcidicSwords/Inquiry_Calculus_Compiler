@@ -1,13 +1,15 @@
 # Conformance Status
 
-**Last updated:** 2026-08-25
-**Standing semantics:** Inquiry Calculus v1.1, Successor Reciprocal-Boundary / Positive-Negation Edition
-**Implemented boundary:** Phase 1 typed-form and binding-identity kernel
+**Last updated:** 2026-08-26
+**Standing semantics:** Inquiry Calculus v2.0
 
-Passing means only that the named executable fixture distinguishes its stated behavior.
-It does not imply completion of a later phase or of the full v1.1 specification.
-Adopting successor semantic authority does not make any successor fixture executable
-or passing.
+## Interpretation
+
+Each row states one demonstrated or required distinction at the scope named by its fixture. Plan-phase labels identify architectural ownership only; they do not imply completion of that phase.
+
+`PASS` means only that the named executable or mechanical evidence established its stated protected difference under its declared coverage. `PENDING` means the standing specification or implementation plan requires the fixture but no accepted executable evidence currently discharges it. `Unknown`, `Blocked`, and `ResourceBounded` remain lawful outcomes and are not converted into failure or negative evidence.
+
+Adopting v2.0 authority, consolidating documentation, or naming a requirement creates no executable `PASS`.
 
 ## Demonstrated Phase 0 fixtures
 
@@ -245,3 +247,29 @@ summary: `top_B` refinement, recursive distinction composition, square
 information-loss, question-kernel intersection, unified observation/action probes,
 ledger-order versus domain-order separation, and fresh versus history-conditioned
 probing. None is represented as a passing stub or fake verifier.
+
+## Pending v2.0 interrogative-succession fixtures
+
+These obligations protect the corrected derived question algebra and its conservative lowering. Their adoption into the canonical authority is not executable evidence.
+
+| Fixture ID | Plan owner | Status | Protected distinction | Required executable evidence | Coverage / reopen condition |
+|---|---|---|---|---|---|
+| `QSUCC-OCC-001` | Phase 3 | PENDING | The same semantic question and same whole proof-carrying `S_hat` under two checked `Ask` continuations may have different lawful successors. | Reconstruct two occurrence-indexed successors and reject a representation that keys only on semantic `q` and `S_hat`. | One checked finite source-program pair; reopen for generalized continuation identity. |
+| `QSUCC-PARTIAL-001` | Phase 3 | PENDING | A proof-carrying answer with a non-singleton member projection constructs a successor without implicit singleton selection. | Bind and lower the whole record while retaining every supported completion and unresolved component. | Finite declared answer field; incomplete components remain `Unknown`. |
+| `QREADY-UNLOCK-001` | Phase 9 | PENDING | Readiness is false before a supported answer and true after that answer supplies the exact missing dependency. | Derive the readiness transition with its answer and dependency witness. | One local finite state and declared effectivity horizon. |
+| `QREADY-NONUNLOCK-001` | Phase 9 | PENDING | Mere adjacency or later execution is not an unlock. | Reject a route edge whose answer does not change formability, applicability, executability, answerability, or required discharge. | One local finite route; no global absence claim. |
+| `QSTATIC-DYNAMIC-001` | Phases 3 and 9 | PENDING | A static refinement, converse, or common-anchor relation does not create a realized answer-conditioned route edge. | Preserve the static relation while showing that no `QSucc` occurrence exists without an admitted answer and continuation. | One declared question pair and ordinary event/program ancestry. |
+| `QCONVERSE-NOT-INVERSE-001` | Phases 2 and 10 | PENDING | Converse orientation does not imply a single-valued inverse. | Exhibit a many-to-one relation whose reverse completion fiber remains non-singleton. | Exact finite relation binding; no universal inverse theorem. |
+| `QADJOINT-001` | Phases 10 and 15 | PENDING | A forward/backward weakest-condition pairing requires a checked binding-supplied adjunction law. | Accept a pair only with an independently checked law and reject structural converse alone. | One explicit binding and protected consequence relation. |
+| `QRECIP-PROV-001` | Phases 4 and 10 | PENDING | Generic backward traversal with the wrong use identity is not reciprocal return. | Compare equal endpoints under distinct relation uses and admit only the same-use reverse fiber. | One finite tagged reciprocal occurrence. |
+| `QFRONTIER-REQDISCHARGE-001` | Phase 9 | PENDING | A required `Probe`, `Check`, `Warrant`, support, or reconstruction occurrence survives strict cost domination, while an optional occurrence strictly dominated by required work does not. | Retain the required obligation, remove the dominated optional occurrence, and reject productivity-only, ordinary-nondominance, or optional-only dominance controllers. | One local finite occurrence frontier with an explicit standing/program dependency and both dominance orientations. |
+| `QIFP-LOCAL-001` | Phase 9 | PENDING | Interrogative closure is local to a declared finite root and effectivity frontier. | Compute the local fixed point and retain bounded or unknown exits outside declared coverage. | Finite admitted root family and executable horizon only. |
+| `QIFP-REOPEN-001` | Phases 9 and 14 | PENDING | A new separator, probe, or representation can reopen a previously closed local interrogative field. | Supply a positive witness that creates a newly ready or productive occurrence after closure. | One prior local fixed point and one admitted extension. |
+| `QROUTE-REGEN-001` | Phases 8 and 16 | PENDING | A removed question or answer position regenerates only when its residual fiber collapses protectedly. | Remove one route position, reconstruct it from retained basis, and compare protected behavior, authority, and provenance. | One finite transparent route and declared protection horizon. |
+| `QROUTE-ABLATE-001` | Phase 16 | PENDING | A recurrent route node is removable only when typing, authority, provenance, protected behavior, and reopening regenerate. | Ablate one node and reject the fold when any protected component fails reconstruction. | One candidate method/fold; no global route minimality claim. |
+| `QRENDER-001` | Phase 10 | PENDING | Rendering “under what conditions” preserves existential preimage versus universal guarantee. | Round-trip two protectedly different relation contracts through controlled rendering and decoding. | One renderer/provider version and declared relation binding. |
+| `QLOWER-001` | Phases 3 and 10 | PENDING | Erasing derived root and route annotations yields accepted ordinary v2.0 relation/question/`IProg` behavior without changing discharge authority. | Lower every admitted derived constructor used by the fixture and compare typed questions, answer branches, modes, provenance, and protected continuations. | Finite constructor coverage; any non-erasable construct reopens semantic status. |
+| `QACTUAL-SEPARATION-001` | Phases 6–8 | PENDING | Equal question/operator/raw/member projections under protected-different `Ask` continuations remain distinct realized occurrences, and mixed ports retain separate port-indexed route/path/event provenance even when an explicitly checked event is shared. | Reject each forged occurrence field (position, question, slot, environment, continuation, versions, provenance), then cold-reconstruct both chains and a mixed-port bundle, including two ports sharing one checked event without evidence collapse, with zero redispatch while rejecting every swapped occurrence/request/raw/history link. | One file-backed paired-occurrence breaker plus one mixed-port bundle; exact event, route, resolution path, proof-carrying answer, and continuation provenance. |
+| `QLIFT-ALLPATHS-001` | Phases 3–4 | PENDING | Dependent continuation over non-singleton supported stages preserves every tagged path and each child port's authority. | Compose two non-singleton stages; reject arbitrary selection, tag/path loss, and common-mode collapse; prove a proper finite materialization remains incomplete with uncovered members `Unknown`. | One finite complete family and one proper finite subfamily; binding-native unmaterialized coverage remains `Unknown`. |
+| `QRESOLUTION-GATE-001` | Phases 7–8 | PENDING | `Supported`, `ExactEmpty`, `Undefined`, `Unsupported`, and `Unknown` retain distinct payloads and continuation authority; non-singleton relational resolution retains every compatible output. | Exercise all five outcomes, reject first-output selection for a non-singleton `Run`/`Compose` path, and prove that only `Supported(S_hat)` reaches the exact source continuation or constructs `ResolvedOccurrenceIR`. | One finite relational resolver with exhaustive-empty, malformed, support-failure, incomplete-coverage, non-singleton, and resolved-occurrence cases. |
+| `QCODE-TYPING-001` | Phases 3 and 5 | PENDING | Source/runtime quotation preserves result type and interpretation is binding/compiler-version indexed. | Round-trip admitted quotations and reject result-type or version mismatch without executing or warranting code. | One source and one runtime quotation under two compiler versions. |

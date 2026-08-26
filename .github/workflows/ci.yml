@@ -13,11 +13,13 @@ permissions:
 jobs:
   phase-0:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          fetch-depth: 2
 
       - name: Resolve pinned Rust toolchain
         run: rustup show active-toolchain
@@ -36,11 +38,54 @@ jobs:
 
   specification:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Check documentation control topology
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=""
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base="${{ github.event.before }}"
+          fi
+          DOCS_CONTROL_BASE="$base" python3 tools/docs_control_check.py
+
+      - name: Check delivered diff whitespace
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=""
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base="${{ github.event.before }}"
+          fi
+          if [[ -n "$base" && ! "$base" =~ ^0+$ ]] && git cat-file -e "$base^{commit}"; then
+            git diff --check "$base" HEAD --
+          else
+            git show --check --format= HEAD
+          fi
+
+      - name: Check inquiry harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check .claude/hooks/ic-run.js
+          node --check .claude/hooks/ic-append.js
+          node --check tools/harness_control_check.js
+          bash -n .claude/hooks/ic-trace
+          bash -n .claude/hooks/ic-guard
+          bash -n .claude/hooks/ic-inject
+          bash -n .claude/hooks/ic-stop
+          node tools/harness_control_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
@@ -51,7 +96,9 @@ jobs:
           url="https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%400.17.0/tectonic-0.17.0-x86_64-unknown-linux-gnu.tar.gz"
           sha256="1a715688baf591e650c8aeb160ae934e181685eecbb38b317de30b269ac5d606"
 
-          curl --fail --location --silent --show-error "$url" --output "$archive"
+          curl --fail --location --silent --show-error \
+            --retry 4 --retry-all-errors --connect-timeout 20 --max-time 180 \
+            "$url" --output "$archive"
           echo "$sha256  $archive" | sha256sum --check -
           mkdir -p "$binary_dir"
           tar --extract --gzip --file "$archive" --directory "$binary_dir"
@@ -66,7 +113,7 @@ jobs:
           tectonic -X compile \
             --keep-logs \
             --outdir target/tex \
-            Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex \
+            Inquiry_Calculus_v2_0.tex \
             2>&1 | tee target/tex/tectonic-driver.log
 
           reference_errors='undefined references?|reference .* undefined|multiply[- ]defined labels?|label .* multiply defined|duplicate labels?|destination with the same identifier'

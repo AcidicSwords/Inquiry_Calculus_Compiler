@@ -1,137 +1,133 @@
 ---
 name: inquire
-description: Run consequential work in this repository through the inquiry loop - probe actuality, name the live obligation, seal a prediction, act, check against the seal, classify the residual, and stop in a named state. Use for any change to crates/, migrations/, fixtures/, or the authority documents; for debugging; and for design decisions. The PreToolUse gate refuses mutations until a prediction is sealed, so start here.
+description: Run consequential repository work through the Inquiry Calculus engineering clock. Use before changes to code, tests, migrations, authority documents, control files, delivery, consequential debugging, or design.
 ---
 
 # Inquire
 
-The loop this repository's own calculus specifies, applied to working in it.
+Read references/software-engineering-binding.md before a consequential design or debugging
+decision. AGENTS.md owns the full repository protocol; this skill gives the mechanically recorded
+sequence.
 
-Read `references/calculus-engineering-map.md` before any consequential design or
-debugging decision. It is the reasoning content; this file is the sequence.
+Use an actual POSIX Bash. On Windows, prefer Git Bash; do not rely on an unavailable WSL alias.
 
-## Ledger first
+## Open a collision-safe trace
 
-```bash
-.claude/hooks/ic-trace init <slug>
-.claude/hooks/ic-trace status
-```
+    .claude/hooks/ic-trace init <slug>
+    .claude/hooks/ic-trace ensure \
+      task=... authority=... invariants=...
 
-Every record is append-only and parent-linked. Nothing is ever rewritten — that
-is what makes a sealed prediction a prediction rather than a story told
-afterwards.
+The ignored trace is derived engineering evidence, not canonical event history.
 
-## The loop
+If the explicit user task authorizes a revision to AGENTS.md, the canonical TeX, the stable plan,
+the inquiry harness, or the CI acceptance/checker surface, record that predecessor authority before
+mutation:
 
-**1. ENSURE — probe, don't recall.**
-Read the files, run `git status`, check the actual state. Remembered state is
-not actuality, and your own earlier summary is not the source.
+    .claude/hooks/ic-trace control \
+      authority=... residual=... predecessor=... scope=...
 
-```bash
-.claude/hooks/ic-trace ensure task=... authority=... invariants=...
-```
+An autonomous candidate may not create this authority for itself.
+For more than one protected group, use an exact comma-separated set drawn from
+`canonical,plan,agents,harness,ci`; near matches and negative names do not authorize a group.
+Routine README orientation, Frontier, conformance, decision, and failure ratchets remain ordinary
+consequential changes: they require an open sealed cycle, but not a separate control grant.
+`init` cannot abandon an open sealed cycle or a checked residual without its terminal stop; close
+the trace lawfully first.
 
-**2. FRONTIER — name the one obligation this serves.**
-From `IMPLEMENTATION_FRONTIER.md`. If the work serves none, that is the finding:
-stop and say the scope is unjustified rather than proceeding.
+## Run the clock
 
-**3. STOP? — is an ending already justified?**
-`Satisfied | Equivalent | Impossible | Blocked | Unknown | ResourceBounded`.
-Do not continue merely because continuing is customary.
+1. **SPECIFY** the task contract, authority, protected horizon, invariants, and discriminator.
+2. **INSPECT** fresh repository and external actuality. An explicit task may temporarily supersede
+   the persistent Frontier; otherwise use the one delimited live block.
+3. **CONTRAST** current and required observables.
+4. **TRACE** the smallest responsible relational path. Several live loci require a separator.
+5. **EXPERIMENT** by naming the smallest wrong implementation and sealing a prediction:
 
-**4. DIFFERENCE — state it in five lines.**
+       .claude/hooks/ic-trace seal \
+         should_change=... invariants=... discriminator=... wrong_impl=...
 
-```text
-current observable:
-required observable:
-protected difference:
-scope / applicability / grain / horizon:
-independent discriminator:
-```
+6. **UPDATE** from the preserved return, not the pre-return story.
+7. **CHANGE** only the smallest authorized reversible region.
+8. **VERIFY** with targeted checks, then required broad gates.
+9. **CHALLENGE** sufficiency and necessity.
+10. **MINIMIZE** by safe ablation.
+11. **RATCHET** only durable evidence and replace the live Frontier residual when it changes.
 
-**5. LOCUS — the smallest boundary that accounts for it.**
-If several candidates remain live, build a separator *before* editing anything.
-A repository search yields candidates, not culprits: confirm the forward path
-from candidate to behavior.
+Record a consequential answer with all recurrence coordinates:
 
-**6. CHALLENGE — the smallest wrong implementation your check must reject.**
-Name it explicitly. If you cannot, the check is decoration.
+    .claude/hooks/ic-trace question \
+      q=... mode=Pure \
+      answer=... branch=... \
+      occurrence=... continuation=... \
+      bindings=... horizon=... coverage=... \
+      authority=... evidence=...
 
-**7. CONSEQUENTIAL? — gate the deep pass.**
-Run the full reciprocal challenge only when the answer could change
-architecture, meaning, or acceptance. The economy law forbids ceremony whose
-every outcome leads to the same continuation.
+The occurrence identifies the checked Ask/engineering question use; continuation identifies the
+answer-dependent branch program. Use explicit values such as none only when that coordinate truly
+does not apply.
 
-**8. SEAL — required before any mutation.**
+An optional derived route occurrence may be recorded:
 
-```bash
-.claude/hooks/ic-trace seal \
-  should_change=... invariants=... discriminator=... wrong_impl=...
-```
+    .claude/hooks/ic-trace route \
+      source_occurrence=... answer=... \
+      successor_occurrence=... provenance=...
 
-The gate refuses Edit, Write, and mutating Bash until this exists. Seal what you
-actually expect; the ledger will not let you revise it afterwards.
+This projects the trace; it does not create a second semantic history.
 
-**9. ACT, then preserve the return before reading it.**
+## Preserve raw returns
 
-```bash
-cargo test --locked --workspace --all-features > /tmp/ic-raw.txt 2>&1
-.claude/hooks/ic-trace raw cmd='cargo test ...' file=/tmp/ic-raw.txt
-```
+For a safe raw return:
 
-**10. CHECK — the return against the seal, not against your intent.**
+    command > temporary-file 2>&1
+    .claude/hooks/ic-trace raw cmd=... file=temporary-file sensitive=false
 
-```bash
-.claude/hooks/ic-trace check verdict=... coverage=...
-```
+The trace copies the bytes into ignored digest-addressed storage before interpretation.
 
-State what the check distinguished. It establishes exactly that and no more.
+For credentials, personal data, or another sensitive return, never copy the bytes:
 
-**11. RESIDUAL — one of nine, never pass/fail.**
+    .claude/hooks/ic-trace raw \
+      cmd=... digest=<safe-sha256> sensitive=true
 
-```bash
-.claude/hooks/ic-trace residual class=<none|persists|regression|wrong_locus|
-  missing_dep|weak_discriminator|env_failure|unknown|resource> next=...
-```
+Then record the independent interpretation:
 
-**12. SUBTRACT — is there a smaller protected-equivalent realization?**
-Remove a part; rerun the discriminator. Keep it only when a check witnesses its
-necessity.
+    .claude/hooks/ic-trace check verdict=... coverage=...
+    .claude/hooks/ic-trace residual class=... next=...
 
-**13. RECORDS.** `DECISIONS.jsonl` for accepted choices with a reopen condition.
-`FAILURES.jsonl` for observed failures that constrain later work.
-`IMPLEMENTATION_FRONTIER.md` when the strongest obligation moves.
-`CONFORMANCE_STATUS.md` only to the extent an executable fixture demonstrates.
+The enforced order is `seal -> one or more raw returns -> one or more checks -> residual`.
+No residual can close a prediction before an actual return and check, and a second seal cannot
+replace an open cycle.
 
-**14. STOP — name the state.**
+Residual classes are:
 
-```bash
-.claude/hooks/ic-trace stop state=<one of six> warrant=...
-```
-
-`Satisfied` requires a warrant from whoever owns the affected contract — for
-anything touching an accepted contract, that is the user, not me. `Unknown` is a
-lawful, reportable result.
+    none | persists | regression | wrong_locus | missing_dep |
+    weak_discriminator | env_failure | unknown | resource
 
 ## Standing prohibitions
 
-- Departure must be **positive**: a concrete incompatible pair. Failed search,
-  failed equality, and boundary projection are not witnesses.
-- `Unknown ≠ Negative`. Not found is not absent.
-- `coverage_sem ≠ coverage_exec`. Handled is not exercised.
-- Return **fiber** ≠ selected return. Ask what else the same evidence admits.
-- No self-warrant. I am not the independent check on my own change.
-- Generation ≠ actuality ≠ check ≠ warrant.
+- Positive departure requires a supported incompatible pair; failed search or projection is not a
+  witness.
+- Unknown is not Negative.
+- Semantic coverage is not execution coverage.
+- The whole return fiber is not a selected return.
+- Generation, actuality, checking, and warrant remain separate.
+- No self-warrant and no fabricated singleton.
 - Never weaken a valid test to make a candidate pass.
 - Never edit the harness to get past the harness.
+- Do not declare scope unjustified merely because an explicit user task differs from the persistent
+  Frontier.
 
-## When the gate refuses
+## Close
 
-It is doing its job. The refusal names the missing record. Supply it — do not
-look for a route around it. Routes around it are what the self-protection rule
-exists to close, and the ledger makes any detour legible in the diff.
+Update only the record that owns the resulting fact:
 
-## Scope
+- demonstrated behavior -> CONFORMANCE_STATUS.md;
+- accepted choice -> append DECISIONS.jsonl;
+- actual durable constraint -> append FAILURES.jsonl;
+- next residual -> replace IMPLEMENTATION_FRONTIER.md live block.
 
-Agent tooling lives in `.claude/` only. Nothing here enters `crates/`: `ic-cli`
-is a reserved semantic boundary, and a trace linter is not semantics.
+Then, after the checked residual:
+
+    .claude/hooks/ic-trace stop state=<state> warrant=...
+
+Use only Satisfied, Equivalent, Impossible, Blocked, Unknown, or ResourceBounded. Equivalent closes
+one branch; only Satisfied closes the task.

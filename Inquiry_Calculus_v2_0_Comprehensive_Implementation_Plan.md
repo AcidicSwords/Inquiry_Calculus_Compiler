@@ -1,21 +1,28 @@
-# Inquiry Calculus v1.1 — Comprehensive Implementation Plan
-## Successor Reciprocal-Boundary / Positive-Negation Edition
+# Inquiry Calculus v2.0 — Comprehensive Implementation Plan
+## Typed Relational Inquiry, Interrogative Succession, and Regenerative Control
 
-**Status:** Current implementation-facing specification
+**Status:** Stable forward implementation plan
 
-**Standing semantic authority:** Inquiry Calculus v1.1 together with its canonical additions, modified only by the successor reciprocal-boundary semantics established in the present implementation inquiry
+**Standing semantic authority:** `Inquiry_Calculus_v2_0.tex`
 
-**Predecessor:** `Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md` as recorded by Git commit `49dc381ac230326aa28be6c157ece0d21a31eaa2`
+**Ancestry:** The v1.1 canonical specification, paired-actuality addition,
+interrogative-succession extension, predecessor implementation plan, and their
+derivations remain recoverable through Git. They are compatibility and regression
+ancestry, not competing active authorities.
 
-**Supersession rule:** This stable-path document supersedes the predecessor as the current implementation-facing plan. The predecessor remains retrievable from Git as ancestry and regression evidence; no competing live predecessor-plan path is retained.
-
-**Purpose:** Specify the smallest complete implementation architecture that realizes the standing calculus after the reciprocal-boundary correction without introducing semantic machinery not required by the calculus.
+**Purpose:** Specify one architecture, phase order, and completion contract for the
+smallest complete implementation of Inquiry Calculus v2.0. Moving repository state,
+fixture status, provider availability, failures, and the live work cursor
+belong only to the frontier and evidence ledgers.
 
 ---
 
 # 0. Executive statement
 
-The implementation architecture remains fundamentally the one established for Inquiry Calculus v1.1:
+Inquiry Calculus v2.0 is a well-typed relational inquiry programming language. Its
+implementation conservatively continues the v1.1 substrate while making
+interrogative succession, realized actuality, and regenerative control one coherent
+language/compiler stack:
 
 - relations are the semantic substrate;
 - forms are typed and recursively reifiable;
@@ -31,11 +38,7 @@ The implementation architecture remains fundamentally the one established for In
 - representation and probe bases may grow;
 - self-revision remains predecessor-judged and cannot self-warrant.
 
-The major successor correction is concentrated in the reciprocal-boundary core.
-
-The predecessor architecture began from reciprocal relations or boundary projections and then compiled path-preserving round trips. That preserved answer dependence and branch provenance, but it still treated "the other side" as already supplied by the reciprocal distinction.
-
-The successor semantics makes the missing dependency explicit:
+The reciprocal-boundary subprogram retains the positive-negation correction:
 
 \[
 \boxed{
@@ -88,7 +91,7 @@ O_Y
 }
 \]
 
-The implementation recursion further established several corrections required to make this conception exact:
+The architecture preserves the following exact constraints:
 
 1. **Typed negation is not Boolean complement.** It is a role played by an ordinary oriented typed relation with positive exteriority evidence and explicit semantic coverage.
 
@@ -117,9 +120,11 @@ The implementation recursion further established several corrections required to
 
 12. **The sixfold is still a derived view over ordinary typed questions, fibers, resolutions, and actual events.** No dedicated authoritative sixfold history or runtime species is required.
 
-These corrections do not replace the rest of the implementation plan. They give the existing separator, representation-growth, probe-invention, actuality, history, folding, binding-extension, and self-revision mechanisms their canonical reciprocal generator.
+These constraints do not create a second controller. They specialize the same
+question, actuality, separator, representation-growth, folding, binding-extension,
+and self-revision machinery used by the rest of the language.
 
-The current implementation center is therefore:
+The reciprocal subprogram is therefore:
 
 \[
 \boxed{
@@ -149,13 +154,178 @@ The current implementation center is therefore:
 
 No Boolean complement, symmetric "other side", scalar similarity metric, hidden exterior oracle, or state-changing `Redet` primitive belongs in the implementation.
 
+The language/compiler spine is:
+
+```text
+surface interrogative / domain-native syntax
+-> elaboration
+-> derived interrogative operators, roots, and route annotations
+-> conservative interrogative lowering
+-> typed open relation / OpenQuery
+-> source IProg: Return | Ask
+-> runtime IR: Return | Branch | Probe
+-> RawReturn / ActualEvent
+-> resolution / support / check / warrant / standing
+-> protected residual / successor live-question frontier
+```
+
+The single high-level control recurrence is:
+
+\[
+\boxed{
+\mathsf{BIND}
+\to
+\mathsf{OPEN}
+\to
+\mathsf{VARY}
+\to
+\mathsf{RETURN}
+\to
+\mathsf{DETERMINE}
+\to
+\mathsf{REFACTOR}
+\circlearrowleft
+}
+\]
+
+- **BIND** establishes carriers, relations, arrangement, scope, applicability,
+  grain, authority, bindings, and protected horizon.
+- **OPEN** exposes the smallest consequential unresolved relational position or an
+  explicit discharge obligation.
+- **VARY** constructs or admits a lawful contrast, alternative, transformation,
+  breaker, or reciprocal exterior candidate.
+- **RETURN** obtains the required pure, generated, actual, checked, or warranted
+  return without collapsing discharge modes.
+- **DETERMINE** establishes exactly what the return supports under declared
+  coverage and provenance.
+- **REFACTOR** refines, folds, reopens, reconstructs, reorients, or rebinds the
+  representation and produces the successor bound state.
+
+These names are a derived control grammar, not runtime opcodes. The interrogative
+root family
+
+\[
+\Omega_Q=
+\{
+\mathsf{Expose},
+\mathsf{Orient},
+\mathsf{Factor},
+\mathsf{Polarize},
+\mathsf{Vary},
+\mathsf{Ground}
+\}
+\]
+
+is an algebra of available derived operators, not another sequence or wheel.
+Positive-negation traversal, separator inquiry, cue reconstruction, method folding,
+and the software-engineering clock are specializations, projections, bindings, or
+renderings of this recurrence.
+
+## 0.1 Project completion contract
+
+The plan distinguishes four stable completion levels. Repository evidence decides
+whether a level has been reached; this plan records only its requirements.
+
+### `REFERENCE_CALCULUS_COMPLETE`
+
+Required:
+
+- constitutional v2.0 semantics and the conservative v1.1 embedding are executable;
+- typed source-to-runtime lowering preserves relations, bindings, modes, supported
+  answer sets, continuation identity, and actuality obligations;
+- determination, positive departure, same-use reciprocal return, standing,
+  separators, cues, folds, bridges, method contracts, cross-binding rules, and
+  predecessor-judged revision have executable evidence at declared scopes;
+- one complete inquiry cycle and every required derived view cold-replay from
+  accepted roots without provider redispatch or hidden pre-restart state;
+- no unrepresented semantic step is required to execute the complete successor
+  chain.
+
+### `SELF_HOSTED_INQUIRY_CONTROLLER_COMPLETE`
+
+Required in addition to reference-calculus completion:
+
+- the implemented calculus, not a prose scheduler, constructs and evaluates the
+  live question frontier;
+- `Formable`, `Applicable`, `Executable`, `Answerable`, `Productive`, `ResolvedQ`,
+  `Ready`, `RequiredDischarge`, coverage, residuals, and declared resource order
+  constrain selection;
+- whole proof-carrying supported-answer records drive occurrence-indexed `QSucc` and reconstruct the
+  next frontier;
+- an LLM remains a `Generate`/provider capability inside the controller and cannot
+  supply actuality, checking, warrant, or standing by generation alone;
+- roots, operational interrogatives, route labels, and learned methods lower
+  transparently to ordinary relations, questions, and first-order `IProg`;
+- residual-to-question-to-answer-to-successor recurrence is executable and cold
+  replayable, and every route/method fold remains regenerable and reopenable.
+
+### `THESIS_EVALUATION_COMPLETE`
+
+Required after the self-hosted controller is available:
+
+- compare calculus-controlled inquiry with a conventional instruction/tool-loop
+  agent using the same LLM, tools, task set, and comparable resource budgets;
+- record unsupported promotion, `Unknown`-to-negative collapse, premature singleton
+  selection, raw-return loss, context/replay drift, separator discovery,
+  recurrence/fold reuse, post-compression regression, task quality, and resource
+  cost;
+- state scope, uncertainty, and negative results. Architecture alone never warrants
+  the project's empirical thesis.
+
+### `ADAPTIVE_ROUTING_EXPERIMENTAL`
+
+Only after measured protected benefit from the self-hosted controller may Phase 19
+add learned question policy, latent-capability routing, masks, adapters/experts,
+vector or approximate retrieval, parallelism, or distribution. These remain
+implementation/learning realizations unless an executable breaker and independent
+semantic warrant establish otherwise.
+
 ---
 
-# 1. Authority and relationship to v1.1
+# 1. Authority, v1.1 embedding, and implementation continuity
 
-This document is not a replacement calculus.
+This plan implements `Inquiry_Calculus_v2_0.tex`; it does not define semantics.
+Inquiry Calculus v1.1 is conservatively embedded in v2.0:
 
-It is the implementation successor obtained by correcting the generative interpretation of reciprocal distinction while preserving every v1.1 structure not broken by that correction.
+\[
+\boxed{
+\operatorname{Embed}_{1.1\to2.0}:
+\mathcal L_{1.1}\hookrightarrow\mathcal L_{2.0}.
+}
+\]
+
+The embedding preserves, without authority strengthening:
+
+```text
+v1.1 typed relation                  -> same semantic relation
+v1.1 question ?_I R[beta]            -> same semantic question
+v1.1 supported answer                -> same answer semantics
+v1.1 Return | Ask source program     -> same source program
+v1.1 Code(A)                         -> typed nonexecuting Code(A), with versioned partial interpretation
+v1.1 discharge modes                 -> unchanged authority discipline
+v1.1 ActualEvent / RawReturn         -> unchanged actuality authority
+v1.1 standing                        -> unchanged least-fixed-point discipline
+v1.1 positive-negation recurrence    -> unchanged reciprocal semantics
+v1.1 folds / bridges / revision      -> preserved ancestry and judgment
+```
+
+The v2.0 interrogative authoring layer must conservatively lower:
+
+\[
+\boxed{
+\operatorname{Lower}_Q(K_{v2})
+\in
+\mathsf{IProg}_{v1.1}
+}
+\]
+
+for every admitted derived root, macro, and route annotation. A major-version
+boundary does not authorize semantic strengthening by accident.
+
+Implementation does not restart at the version boundary. Existing executable
+evidence for conservatively embedded behavior remains evidence at exactly its
+demonstrated scope and coverage. Do not rename Rust types merely to contain `v2`,
+and do not refactor working code solely to mirror document headings.
 
 The following remain standing:
 
@@ -256,7 +426,10 @@ Determines_{\mathcal H}(W,x)
 }
 \]
 
-The successor gives this criterion a stronger reciprocal interpretation: a web determines \(x\) exactly when its remaining lawful fillings contain only one protected source class. Positive-negation inquiry explores forms outside the current determination and asks what source structure survives the reciprocal return.
+V2.0 retains the reciprocal interpretation: a web determines \(x\) exactly when
+its remaining lawful fillings contain only one protected source class.
+Positive-negation inquiry explores forms outside the live determination and asks
+what source structure survives the reciprocal return.
 
 ---
 
@@ -295,7 +468,7 @@ removal would lose regeneration, continuation behavior, warrant provenance, or
 reopening.  This is an optimization discipline, not a universal scalar objective or a
 claim that one global minimum exists.
 
-The positive-negation successor adds a second implementation discipline:
+The v2.0 reciprocal semantics adds a second implementation discipline:
 
 \[
 \boxed{
@@ -448,11 +621,13 @@ Any representation that fuses these without an explicit equivalence licence is d
 
 # 5. Implementation classes
 
-Every component belongs to one of three classes.
+Every named component carries one of the v2.0 statuses `CONSTITUTIONAL`,
+`CANONICAL-RESTATED`, `DERIVED`, `BINDING-SUPPLIED`, or `IMPLEMENTATION-ONLY`.
+Moving a construct into one file or one crate never promotes its status.
 
-## 5.1 Constitutional machinery
+## 5.1 Constitutional and canonical-restated contracts
 
-Required for semantics:
+Required to realize the standing language:
 
 - type universe;
 - typed forms;
@@ -478,6 +653,13 @@ Required for semantics:
 
 Rebuildable where practical:
 
+- Ask/continuation occurrence identity and occurrence-indexed `QSucc`;
+- static question-relation and dynamic route views;
+- `Formable`, `Applicable`, `Executable`, `Answerable`, `Productive`, `ResolvedQ`,
+  `Ready`, and `RequiredDischarge` predicates;
+- unlock, live-question frontier, and local interrogative fixed point;
+- transparent interrogative roots and operational macros;
+- question-route occurrence, regeneration, ablation, and fold views;
 - active view;
 - boundary chart;
 - negation frontier;
@@ -491,9 +673,30 @@ Rebuildable where practical:
 - affected-fold index;
 - transported cross-binding view.
 
-## 5.3 Research/optimization gates
+## 5.3 Binding-supplied structure
 
-Current remaining gates include:
+Admitted only through an explicit binding contract:
+
+- domain types, native relations, causal/intervention laws, and succession;
+- provider and tool capabilities;
+- decoders, checkers, warrant routes, and native methods;
+- cost, risk, probability, resource, and nondominance orders;
+- adjoints, weakest-condition transformers, inverse/uniqueness laws, and concurrency
+  semantics.
+
+## 5.4 Implementation-only structure
+
+Allowed only when erasure or regeneration preserves semantics:
+
+- content-addressed encodings and database indexes;
+- caches, lookup tables, scheduling metadata, and optimization annotations;
+- root/route labels and renderer hints;
+- derived-view materializations with accepted-root provenance;
+- backend adapters, tracing, metrics, and deployment layout.
+
+## 5.5 Deferred and conditional gates
+
+The following require their stated breaker or stronger theorem before promotion:
 
 - exact admission/minimization rule for the source determination presentation \(W_D(x)\);
 - open-ended negation/generator fairness;
@@ -586,6 +789,10 @@ pub struct RelationUseRef(ArtifactRef);
 pub struct QueryRef(ArtifactRef);
 pub struct IProgRef(ArtifactRef);
 pub struct ProgramRef(ArtifactRef);
+pub struct CodeRef(ArtifactRef);
+pub struct SourceConfigRef(ArtifactRef);
+pub struct AskOccurrenceRef(ArtifactRef);
+pub struct SupportedAnswerRef(ArtifactRef);
 pub struct EventRef(ArtifactRef);
 pub struct ClaimRef(ArtifactRef);
 pub struct BindingVersionRef(ArtifactRef);
@@ -622,9 +829,6 @@ enum TyIR {
     Unit,
     Bool,
     Nat,
-    Int,
-    Text,
-    Bytes,
 
     Named {
         binding: BindingVersionRef,
@@ -632,10 +836,16 @@ enum TyIR {
         version: ArtifactRef,
     },
 
-    Product(Vec<TypeRef>),
-    Sum(Vec<TypeRef>),
+    Product {
+        left: TypeRef,
+        right: TypeRef,
+    },
+    Sum {
+        left: TypeRef,
+        right: TypeRef,
+    },
     List(TypeRef),
-    FiniteSet(TypeRef),
+    Finite(TypeRef),
 
     Sigma {
         domain: TypeRef,
@@ -647,17 +857,46 @@ enum TyIR {
         family: TypeExprRef,
     },
 
-    Code {
-        input: TypeRef,
-        output: TypeRef,
-    },
-
     Raw(TypeRef),
     Result(TypeRef),
+    IProg(TypeRef),
+    Prog(TypeRef),
+    Code(TypeRef),
 }
 ```
 
-No dynamically typed semantic escape hatch.
+No dynamically typed semantic escape hatch. `IProg(A)` is first-order source syntax,
+`Prog(A)` is executable runtime syntax, and unary `Code(A)` is nonexecuting
+reified program syntax with versioned partial interpretation. Quotation does not
+execute or warrant code.
+
+Represent reified program code and its version boundary explicitly:
+
+```rust
+enum CodeIR {
+    Source {
+        result_type: TypeRef,
+        program: IProgRef,
+    },
+    Runtime {
+        result_type: TypeRef,
+        program: ProgramRef,
+    },
+}
+
+fn quote_iprog(program: IProgRef) -> CodeRef;
+fn quote_program(program: ProgramRef) -> CodeRef;
+
+fn interpret_code(
+    binding: BindingVersionRef,
+    compiler_version: ArtifactRef,
+    code: CodeRef,
+) -> Result<InterpretedProgramRef, CodeInterpretationError>;
+```
+
+Interpretation checks the quoted result type and admitted binding/compiler version.
+A version mismatch is an undefined interpretation, never execution, generation, or
+warrant.
 
 ---
 
@@ -779,11 +1018,13 @@ Use first-order inspectable syntax.
 ```rust
 enum IProgIR {
     Return {
-        value: TermExprRef,
+        value: TypedFormRef,
     },
 
     Ask {
-        question: QuestionExprRef,
+        question: QueryRef,
+        environment: Vec<ProgramBinding>,
+        answer_slot: TypeSymbol,
         continuation: IProgRef,
     },
 }
@@ -791,7 +1032,114 @@ enum IProgIR {
 
 No arbitrary Rust closures.
 
-The actual answer may construct the later question.
+```rust
+struct SourceConfigIR {
+    result_type: TypeRef,
+    program: IProgRef,
+    environment: Vec<ProgramBinding>,
+    binding_version: BindingVersionRef,
+    compiler_version: ArtifactRef,
+    provenance: ProvenanceRef,
+}
+
+struct AskOccurrenceIR {
+    source_config: SourceConfigRef,
+    structural_position: ProgramPositionRef,
+    question: QueryRef,
+    environment: Vec<ProgramBinding>,
+    answer_slot: TypeSymbol,
+    continuation: IProgRef,
+    binding_version: BindingVersionRef,
+    compiler_version: ArtifactRef,
+    provenance: ProvenanceRef,
+}
+```
+
+The occurrence checker re-walks the exact source program and rejects a question,
+structural position, slot, environment, binding/compiler version, provenance, or
+continuation copied from another occurrence. `structural_position` is validated by
+walking the stored first-order syntax; the environment and structural provenance are
+derived at that position, and the answer slot plus continuation are re-typechecked
+capture-safely. No field is trusted merely because its reference exists.
+
+Represent a supported answer as proof-carrying first-order data:
+
+```rust
+enum AnswerSetPresentationIR {
+    FiniteCanonical { members: NonEmptyVec<TypedFormRef> },
+    Intensional {
+        membership: RelationUseRef,
+        extensional_identity: AnswerSetEqualityRef,
+    },
+}
+
+struct NonEmptyAnswerSetIR {
+    question: QueryRef,
+    presentation: AnswerSetPresentationIR,
+    nonempty_witness: TypedFormRef,
+}
+
+struct SupportedAnswerIR {
+    question: QueryRef,
+    route: RouteRef,
+    evidence: SupportEnvironmentRef,
+    members: NonEmptyAnswerSetRef,
+    coverage: CoverageRef,
+    component_provenance: ComponentProvenanceMapRef,
+    support_witness: SupportWitnessRef,
+}
+```
+
+The whole record may construct the later question. Its semantic member projection is
+written `|S_hat|`. A partial supported answer must not be reduced to a
+caller-selected singleton, and equal member projections do not erase different route,
+coverage, evidence, or provenance identities.
+
+The witness checker is indexed by that exact tuple. Finite members are canonically
+sorted and duplicate-free; an infinite or binding-native nonempty subset is not
+narrowed to a `Vec` for host convenience.
+
+Dynamic succession is indexed by a checked `Ask` occurrence or continuation
+identity:
+
+\[
+\boxed{
+\operatorname{QSucc}(\mathfrak a,\widehat S,q')
+\iff
+\operatorname{HeadQ}(\kappa_{\mathfrak a}(\widehat S),q').
+}
+\]
+
+Here \(\mathfrak a\) reifies the source-program identity, structural `Ask` position,
+explicit environment/bindings, semantic question, and checked continuation. It is
+derived from ordinary program identity and provenance; it is not a semantic
+primitive or runtime effect. Two occurrences may expose the same semantic question
+and receive the same proof-carrying supported answer while their checked continuations lawfully expose
+different successor questions. Therefore no learned route, replay recipe, or
+controller fingerprint may identify dynamic succession by `(q, S_hat)` alone.
+
+`LiftQ_F(S_hat, question_family, coverage)` is a finite, coverage-indexed dependent
+product. For a nonempty `F` contained in `|S_hat|`, its open positions are the
+dependent sum of every child port `(a, i)` for `a` in `F`; its answer carrier is the
+dependent product of the child answer carriers; and a completion is admitted exactly
+when every tagged child completion is admitted. It retains every parent tag and child
+support route and inherits each child port's exact discharge mode. It rejects
+arbitrary member selection, completion/port index mismatch, and common-mode collapse.
+Whole-parent coverage requires a checked proof that `F == |S_hat|`; otherwise every
+unmaterialized parent member remains explicitly `Unknown` and the result cannot be
+used as a complete family.
+
+Required operations include:
+
+```text
+AskQuestion
+AskContinuation
+HeadQ
+QSucc
+LiftQ_F with finite coverage certificate
+capture-safe proof-carrying-answer substitution
+successor-question reconstruction
+```
 
 This remains essential to the reciprocal sixfold.
 
@@ -799,7 +1147,7 @@ This remains essential to the reciprocal sixfold.
 
 # 14. The source determination presentation
 
-The successor semantics requires an explicit source determination presentation:
+The v2.0 reciprocal semantics requires an explicit source determination presentation:
 
 \[
 W_D^X(x).
@@ -1816,7 +2164,7 @@ Reorientation is an inquiry transformation, not proof of reciprocal symmetry.
 
 ---
 
-# 38. Successor sixfold semantics
+# 38. Dependent sixfold semantics
 
 The six roles remain:
 
@@ -1867,57 +2215,44 @@ No context-free `Close_D(Ξ)` claim is sufficient.
 
 # 39. Sixfold source program
 
-A schematic source program is:
+The normative source expansion is canonical definition `def:recip-program`; do not
+maintain a second scalar/lambda formulation. Compile it as ordinary first-order
+`IProgIR::Ask` nodes with explicit answer slots, environments, and named continuation
+references. Every dependent edge uses `LiftQ_F` and consumes the whole proof-carrying
+parent answer.
 
-\[
-\boxed{
-\begin{aligned}
-\mathsf{Recip}(D,S_X)
-={}&
-\mathsf{Ask}
-(
-?O_X[N_i^X(S_X,O_X)],
-\lambda O_X.\\
-&
-\mathsf{Ask}
-(
-?R_X[
-R_X\in Ret_i^X(O_X)
-],
-\lambda R_X.\\
-&
-\mathsf{Ask}
-(
-?S_Y[
-Seed_Y(O_X,S_Y)
-],
-\lambda S_Y.\\
-&
-\mathsf{Ask}
-(
-?O_Y[
-N_j^Y(S_Y,O_Y)
-],
-\lambda O_Y.\\
-&
-\mathsf{Ask}
-(
-?R_Y[
-R_Y\in Ret_j^Y(O_Y)
-],
-\lambda R_Y.\\
-&
-\mathsf{Return}_I(
-\Xi_D,
-Residuals(\Xi_D)
-)))))).
-\end{aligned}
-}
-\]
+Its checked question-family dependency graph is:
 
-In practice the generator emits candidate programs for applicable \(N_i,N_j\) rather than embedding one global relation.
+```text
+admitted source DeterminationPresentation W_X
+-> applicable admitted NegationUse_X
+-> positive exterior plus DepartureWitness_X
+-> exact same-use ReturnFiber_X
+-> selected return membership AND whole-fiber RecoveryProfile_X
+-> supported Seed_X_to_Y with provenance
+-> warranted DeterminationPresentation W_Y
+-> independently applicable admitted NegationUse_Y
+-> positive exterior plus DepartureWitness_Y
+-> exact same-use ReturnFiber_Y
+-> selected return membership AND whole-fiber RecoveryProfile_Y
+-> complete dependent occurrence and residuals
+-> downstream-only GammaOutcome check
+```
 
-No new runtime opcode is required.
+The fiber question is `Pure`; the recovery and Gamma questions are `Check`; the
+presentation-admission question is `Warrant`; every other port preserves its relation
+use's declared mode. `RecoveryProfile` is indexed by source web, protected horizon,
+use, exterior, entire fiber, semantic coverage, execution coverage, occurrence
+evidence, and provenance. `GammaOutcome` is a tagged compatibility certificate,
+incompatibility witness, or `Unknown` coverage residual—`Check` is never encoded as a
+result value.
+
+No step selects one member of a non-singleton answer. A finite `F` strictly smaller
+than the parent member projection leaves every uncovered branch `Unknown` and cannot
+construct a complete sixfold. The second orientation is admitted independently from
+the supported seed presentation. `Gamma` cannot fill a missing role. The expansion
+adds no source constructor, host closure, runtime opcode, or authoritative sixfold
+record.
 
 ---
 
@@ -2295,6 +2630,25 @@ Derived uses include:
 
 No special `NegateQuestion`, `ReturnQuestion`, or `SixfoldQuestion` primitive is required.
 
+The v2.0 interrogative root family is a transparent derived algebra over these
+constructors and the ordinary relation language:
+
+```text
+Expose     -> expose typed ports of an admitted relation
+Orient     -> expose a relation in a forward or converse orientation
+Factor     -> join/expose/hide a represented path or composition
+Polarize   -> open an admitted breaker, separator, or positive-negation field
+Vary       -> open a binding-supplied transformation relation
+Ground     -> open typed support, Check, or Warrant relations
+```
+
+Classical formula negation used by a logical breaker is not contextual typed
+negation and does not create a `NegationUse`. `Why`, `How`, `WhyNot`, `WhatIf`,
+`Ablate`, `Construct`, `Backchain`, `Contrast`, and `Localize` are surface
+renderings or transparent macros. Root and route annotations must erase under
+conservative lowering; none becomes a source constructor, runtime opcode, discharge
+authority, or semantic fact.
+
 ---
 
 # 49. Generator regimes remain distinct from materialization and policy
@@ -2319,7 +2673,71 @@ An open family uses the same fairness machinery as any other open generator; do 
 
 # 50. Adaptive omission remains consequence-relative
 
-A reciprocal role or negation route may be skipped only when it cannot change the current protected residual or discharge another live obligation.
+A reciprocal role, root, question, or route may be skipped only when it cannot
+change the live protected residual and is not required to discharge another open
+obligation.
+
+Keep the derived availability predicates distinct:
+
+\[
+\boxed{
+\mathsf{Formable}
+\neq
+\mathsf{Applicable}
+\neq
+\mathsf{Executable}
+\neq
+\mathsf{Answerable}
+\neq
+\mathsf{Productive}
+\neq
+\mathsf{ResolvedQ}.
+}
+\]
+
+`Productive` identifies a discretionary question whose lawful supported answers can
+lead to protected-different continuations. It is not the only lawful reason to ask.
+`RequiredDischarge` identifies an exact open program/standing obligation whose
+declared `Probe`, `Check`, `Warrant`, support, reconstruction, or other discharge
+must occur even when no two discretionary answer branches are live. The obligation
+retains its source and authority provenance and cannot be asserted by scheduling
+policy.
+
+For the executable controller context, derive:
+
+\[
+\boxed{
+\mathsf{LiveQFrontier}
+=
+ND^{req}_{\preceq,\Sigma}\{\mathfrak a:
+WF(\mathfrak a)
+\land Applicable(q_{\mathfrak a})
+\land Executable(q_{\mathfrak a})
+\land(Productive(\Sigma,\mathfrak a)
+      \lor\exists d.\,RequiredDischarge(\Sigma,\mathfrak a,d))
+\}.
+}
+\]
+
+For every candidate occurrence set `C`, the required-safe operator is exactly
+
+\[
+ND^{req}_{\preceq,\Sigma}(C)
+=
+Req_\Sigma(C)\cup ND_\preceq(C).
+\]
+
+An unexecutable required obligation remains an explicit `Blocked`, `Unknown`,
+resource, representation, or authority residual; it is not silently removed. A
+question may be answer-resolved while its required actuality/check/warrant route is
+still undischarged.
+
+The frontier is keyed by checked Ask occurrence, not normalized question. The
+required-safe nondominance operator retains every occurrence with an undischarged
+dependency even when a cheaper candidate strictly dominates it; substitution by a
+retained occurrence requires a typed same-dependency discharge proof. Ordinary
+nondominance is computed over the full candidate set, so a required occurrence still
+removes an optional occurrence that it strictly dominates.
 
 The semantic frontier remains present even when traversal omits it.
 
@@ -2358,7 +2776,7 @@ RepresentationGap.
 
 Do not search forever in the same language.
 
-Positive-negation inquiry is now one canonical source of such witnessed gaps.
+Positive-negation inquiry is one canonical source of such witnessed gaps.
 
 ---
 
@@ -2450,7 +2868,7 @@ Therefore generative inquiry can change its future question language:
 
 \[
 \boxed{
-\iota_Q:
+\operatorname{EmbedQ}:
 Q^\infty(\Sigma_t)
 \hookrightarrow
 Q^\infty(\Sigma_{t+1})
@@ -2458,7 +2876,7 @@ Q^\infty(\Sigma_{t+1})
 \]
 
 Strict inclusion requires a well-typed successor question outside the image of
-\(\iota_Q\).  Definitional replacement or rebinding need not preserve old question
+\(\operatorname{EmbedQ}\).  Definitional replacement or rebinding need not preserve old question
 constructors, so it carries no unqualified monotonicity claim.
 
 This is the implementation mechanism for open-ended inquiry.
@@ -2556,6 +2974,43 @@ enum Terminator {
 }
 ```
 
+For every runtime program lowered from a source `Ask`, retain and verify:
+
+```rust
+struct PortLoweringIR {
+    port: Symbol,
+    mode: DischargeMode,
+    route: RouteRef,
+    operator: Option<ProbeOperatorRef>,
+    resolution_route: ResolutionPathRef,
+    provenance: ProvenanceRef,
+}
+
+struct SourceAskLoweringIR {
+    source_config: SourceConfigRef,
+    ask_occurrence: AskOccurrenceRef,
+    port_lowerings: NonEmptyVec<PortLoweringIR>,
+    program_resolver: ResolutionProcedureRef,
+    runtime_program: ProgramRef,
+    compiler_version: ArtifactRef,
+}
+```
+
+The verifier re-walks the source question and requires exactly one lowering for every
+open port, with its declared mode. At execution it builds a port-indexed discharge
+bundle. A Probe component contains exact `EventFor`, source-port-to-operator,
+operator/request, event-to-raw-return, and resolution-route evidence; Pure, Generate,
+Check, and Warrant components retain their own typed result, authority, route,
+versions, and provenance without manufacturing an event. The bundle may contain
+zero, one, or several ordinary events, and shared events require an explicit checked
+multi-port lowering.
+
+The program-wide resolver validates relation-wide correlations after every component
+is available. Only
+`Supported(SupportedAnswerRef)` may compile the checked source continuation; the
+other four resolution constructors route to their own residual/stop and may not use
+`resume` to bypass that gate.
+
 No new `Negate`, `ReturnFromNegation`, `Redet`, or `Sixfold` runtime opcode.
 
 All reciprocal operations compile from ordinary typed questions and fibers.
@@ -2595,9 +3050,22 @@ A prompt renderer for positive-negation inquiry must preserve:
 
 The renderer must not paraphrase a partial certified opposition into "all alternatives to \(x\)."
 
+Controlled interrogative rendering must round-trip to the same normalized open
+relation and preserve:
+
+- converse fiber versus strict inverse;
+- existential preimage versus universal guarantee/adjoint;
+- generic backward relation versus same-use reciprocal return;
+- exact versus partial coverage;
+- open-port discharge mode and relation identity.
+
+An implementation-only root/route annotation may guide wording or bounded search,
+but erasing it must recover the accepted ordinary `OpenQuery`/`IProg`. A surface
+interrogative never strengthens authority or supplies a hidden semantic predicate.
+
 ---
 
-# 59. Actuality and paired history
+# 59. Realized inquiry occurrence and one authoritative history
 
 One authoritative occurrence record:
 
@@ -2609,6 +3077,7 @@ struct ActualEvent {
 
     state_before: StateRef,
 
+    source_ask_occurrence: Option<AskOccurrenceRef>,
     question: QueryRef,
     distinction: Option<DistinctionRef>,
 
@@ -2624,33 +3093,141 @@ struct ActualEvent {
 
     binding_version: BindingVersionRef,
 
+    compiler_version: ArtifactRef,
+
     backend_version: ArtifactRef,
 
     provenance: ProvenanceRef,
 }
 ```
 
+The general source occurrence is derived from a port-indexed bundle, not one scalar
+event:
+
+```rust
+struct PortDischargeEvidenceIR {
+    port: Symbol,
+    mode: DischargeMode,
+    route: RouteRef,
+    resolution_path: ResolutionPathRef,
+    binding_version: BindingVersionRef,
+    compiler_version: ArtifactRef,
+    provenance: ProvenanceRef,
+    payload: PortDischargePayloadIR,
+}
+
+enum PortDischargePayloadIR {
+    Pure { result: TypedFormRef },
+    Generate { proposal: TypedFormRef },
+    Probe {
+        operator: ProbeOperatorRef,
+        event: EventRef,
+        raw_return: ReturnRef,
+    },
+    Check { result: TypedFormRef },
+    Warrant { result: TypedFormRef },
+}
+
+struct DischargeBundleIR {
+    ask_occurrence: AskOccurrenceRef,
+    components: NonEmptyVec<PortDischargeEvidenceIR>,
+}
+
+enum NextSourceControlIR {
+    Ask {
+        source_config: SourceConfigRef,
+        occurrence: AskOccurrenceRef,
+    },
+    Return(TypedFormRef),
+}
+
+struct ResolvedOccurrenceIR {
+    source_config: SourceConfigRef,
+    ask_occurrence: AskOccurrenceRef,
+    discharge_bundle: DischargeBundleIR,
+    program_resolver: ResolutionProcedureRef,
+    supported_answer: SupportedAnswerRef,
+    continuation: IProgRef,
+    next: NextSourceControlIR,
+}
+```
+
+The bundle checker covers every open port exactly once, enforces agreement between its declared
+mode and evidence payload, and checks the exact route, resolution path, binding/compiler versions,
+and provenance retained by every component. It preserves each Probe
+event/request/raw-return/path chain independently. A
+`ResolvedOccurrenceIR` exists only when the program-wide resolver returns
+`Supported(supported_answer)`, the continuation is the exact occurrence continuation
+after whole-answer capture-safe substitution, and pure normalization checks `next`.
+The other four resolution outcomes retain their residual/stop but cannot inhabit this
+record.
+
 A generated exterior and an actualized exterior are not interchangeable.
 
-The paired history remains:
+`source_ask_occurrence` is `Some` for every event lowered from a source
+`Ask`. Replay must verify exact occurrence, question, request/operator,
+binding/compiler versions, ledger membership, and provenance. Direct or legacy
+runtime probes may use `None`; equality of question/operator/raw bytes/endpoints
+does not substitute for the occurrence link.
 
-\[
-Q\xrightarrow{\alpha}R\xrightarrow{\kappa}Q.
-\]
+`EventFor(event, ask_occurrence)` rechecks the source occurrence, semantic question,
+exact request/operator, raw-return reference, binding/compiler versions, ledger
+membership, and provenance. The resolver additionally checks that its raw input is
+the payload named by that event's `raw_return` reference.
 
-The positive-negation successor gives this an additional interpretation:
+The old compressed alternation `q -> r -> q'` must lower to the non-collapse
+occurrence chain:
 
 \[
 \boxed{
-\text{open distinction}
-\to
-\text{positive determination}
-\to
-\text{new distinction}.
+\mathfrak a_t
+\xrightarrow{\mathsf{discharge}}
+\mathcal D_t
+\xrightarrow{\mathsf{resolve}}
+\zeta_t=\mathsf{Supported}(\widehat S_t)
+\xrightarrow{\kappa_t}
+\mathsf{NextSourceControl}_t.
 }
 \]
 
-No new history species.
+Here:
+
+- \(\mathfrak a_t\) is the checked `Ask`/probe occurrence and its source-program,
+  environment, binding, operator, and continuation identity;
+- \(\mathcal D_t\) is the complete port-indexed discharge bundle; every Probe
+  component contains immutable ordinary `ActualEvent`, `RawReturn`, operator, port,
+  and resolution-path provenance, while non-Probe components manufacture no event;
+- \(\widehat S_t\) is the whole proof-carrying supported answer obtained through an
+  explicit program-wide five-way resolution gate, with \(|\widehat S_t|\) its
+  nonempty semantic member projection;
+- \(\kappa_t\) is the checked first-order continuation belonging to \(\mathfrak a_t\).
+
+Raw provider bytes never select a semantic continuation directly. Actuality,
+interpretation, supported answer, and control succession remain different relations.
+
+Question traces, raw-return traces, supported-answer traces, alternating traces,
+paired actuality, sufficient presents, cue views, route/method occurrences, and
+reacquisition indexes are derived projections over accepted source-program,
+artifact, event, resolution, and continuation ancestry. They are not independent
+authoritative stores.
+
+Preserve these distinctions:
+
+```text
+ledger order != binding-supplied causal order
+resume != replay
+same endpoint != same event/path/provenance
+active sufficient present != authoritative history
+derived route graph != second history
+```
+
+Resume continues one checked occurrence from an admitted return. Replay reconstructs
+the occurrence and derived continuations from accepted roots after restart without a
+new external actualization. Endpoint or answer equality cannot erase event,
+resolution-path, or continuation provenance.
+
+No new history species or history database is introduced absent an executable
+irreducibility breaker.
 
 ---
 
@@ -2666,9 +3243,34 @@ enum ResolutionPathIR {
     Compose { first: ResolutionPathRef, second: ResolutionPathRef },
     Program { program: ProgramRef },
 }
+
+enum ResolutionOutcomeIR {
+    Supported(SupportedAnswerRef),
+    ExactEmpty(EmptyCertificateRef),
+    Undefined(ResolutionResidualRef),
+    Unsupported(SupportResidualRef),
+    Unknown(CoverageResidualRef),
+}
 ```
 
-Partial answers remain partial.
+`ResolutionPathIR` denotes a typed relation, not a scalar host function:
+
+```text
+Run(path) : input_type <-> output_type
+Run(Identity, a, b) iff a == b
+Run(Compose(p1, p2), a, c) iff exists b. Run(p1, a, b) and Run(p2, b, c)
+```
+
+`Relation` and `Program` edges may have zero, one, or many related outputs. The
+candidate set for a question is every related output that also satisfies its
+completion relation. Absence of a related output plus a typed path residual is
+`Undefined`; an exhaustive checked empty candidate set is `ExactEmpty`; neither is
+inferred from scalar failure or cardinality alone.
+
+Each payload checker is indexed by the exact question, event/raw return, resolution
+path, versions, route, and coverage. `ExactEmpty` requires exhaustive admitted
+coverage; `Unsupported` retains decoded candidates and failed support obligations;
+`Unknown` retains uncovered regions. Partial answers remain partial.
 
 A partial exterior answer becomes a partial section/fiber and cannot silently become an exact sixfold role.
 
@@ -2698,7 +3300,8 @@ A generated candidate may be active without standing.
 
 # 62. Active view and recurrent crawl
 
-Question-conditioned retrieval remains recurrent:
+Question-conditioned retrieval is a derived `REFACTOR -> BIND -> OPEN`
+specialization of the master recurrence:
 
 \[
 cue_n
@@ -2714,23 +3317,35 @@ cue_{n+1}.
 
 Positive-negation and return-fiber residuals simply provide new cue/question forms to the same process.
 
-No `NegationMemory` subsystem.
+It is an access/index view, not another controller or history. No `NegationMemory`
+subsystem.
 
 ---
 
-# 63. Cue reconstruction and reciprocal inquiry
+# 63. General route reconstruction and actuality specialization
 
-Cue reconstruction:
+Define question/answer route reconstruction once over checked occurrences and whole
+supported sets. For example, the supported-answer cue between an occurrence and a
+successor question is:
 
 \[
-q_t
-\to
-\square
-\to
-q_{t+1}
+\operatorname{Cue}_S(\mathfrak a_t,q_{t+1})
+=
+\{\widehat S:
+\operatorname{QSucc}(\mathfrak a_t,\widehat S,q_{t+1})
+\}.
 \]
 
-solves a missing historical filling from retained relational constraints.
+The reciprocal construction opens a missing question occurrence from neighboring
+supported-answer and checked-continuation constraints. A filler is regenerable only
+when its residual fiber collapses to one protected class under declared coverage.
+Otherwise its surviving classes become a separator residual.
+
+The paired-actuality specialization additionally requires the event, raw return,
+resolution path, supported answer, source continuation, and binding provenance from
+Section 59. Regeneration of a semantic supported answer does not imply reconstruction
+of the historical raw bytes, event identity, or resolution path unless those
+protected signatures also factor through the cue.
 
 Reciprocal inquiry:
 
@@ -2746,7 +3361,10 @@ opens outward and asks what source information returns.
 
 They are complementary uses of the same relation/fiber machinery.
 
-Do not identify them, but implement them through the same generic solvers and separator engine.
+Do not identify them, but implement them through the same generic hole/fiber solvers
+and separator engine. Define route learning, ablation, compression, and reopening
+once; actuality contributes historical provenance rather than a second learning
+theory.
 
 ---
 
@@ -3129,38 +3747,67 @@ A failure to find a departure witness under partial coverage is not a proof of i
 
 ---
 
-# 73. Recurrent inquiry controller
+# 73. Regenerative inquiry controller
 
-One bounded iteration:
+The controller implements the one `BIND -> OPEN -> VARY -> RETURN -> DETERMINE ->
+REFACTOR` recurrence. One bounded iteration is:
 
 ```text
-1. reconstruct accepted presentation
-2. refresh standing
-3. identify current source question/determination
-4. materialize the source DeterminationPresentation
-5. construct active view / retrieve relevant structure
-6. derive applicable NegationUse family
-7. derive tagged NegationFrontier
-8. construct candidate positive-negation IProgs
-9. select one lawfully
-10. lower through Return/Branch/Probe
-11. actualize if required
-12. preserve raw return
-13. resolve supported exterior filling
-14. derive use-specific reverse return fiber
-15. compute local recovery / residual ambiguity
-16. seed/reorient if reciprocal continuation remains live
-17. repeat positive-negation/return on reciprocal side
-18. construct sixfold residuals
-19. apply Gamma compatibility
-20. send unresolved protected differences to SeparatorProblem
-21. detect representation/probe gaps when separators are inexpressible
-22. update claims/support
-23. reconcile standing semantics only if warranted actuality requires it
-24. fire unlocks/reopen folds
-25. generate next residual question
-26. decrement fuel
+1. BIND
+   reconstruct accepted artifacts, source program, event ancestry, standing,
+   explicit environments, bindings, scope, applicability, grain, horizon,
+   coverage, resource order, and protected residual
+
+2. OPEN
+   derive Formable / Applicable / Executable / Answerable / Productive /
+   ResolvedQ / Ready and exact RequiredDischarge provenance
+   construct the nondominated LiveQFrontier
+   retain blocked, resource, authority, and representation obligations
+
+3. VARY
+   use ordinary relations and transparent roots/macros to form the smallest
+   continuation-relevant question; when reciprocal inquiry is live, derive the
+   exact DeterminationPresentation, tagged NegationUse, and positive departure
+   obligations rather than inventing an exterior
+
+4. RETURN
+   lower the selected source Ask through Return / Branch / Probe
+   preserve any ActualEvent and RawReturn before resolution
+   discharge each open port only through its declared mode
+
+5. DETERMINE
+   resolve through explicit paths while preserving every supported completion
+   return Supported(proof-carrying answer), ExactEmpty, Undefined, Unsupported,
+   or Unknown without collapsing those outcomes
+   derive exactly supported standing, recovery, coverage, and residual claims
+
+6. REFACTOR
+   only for Supported(S_hat), bind the whole answer record capture-safely and
+   compute QSucc from the checked Ask/continuation occurrence
+   for every other resolution outcome, preserve its typed residual or justified
+   stop and do not invoke the source continuation
+   reconstruct the successor program and live frontier
+   refine, fold, reopen, regenerate, reorient, or rebind as warranted
+   send ambiguity to the generic SeparatorProblem
+   treat inexpressible witnessed distinctions as representation/probe/binding gaps
+   change standing semantics only through separate checked and warranted revision
+
+7. recur only across a new return, occurrence, distinction, representation,
+   repository state, authority state, or strictly reduced finite frontier;
+   fingerprint the occurrence/context and decrement fuel
 ```
+
+Positive-negation sixfold traversal is one dependent `VARY -> RETURN -> DETERMINE ->
+REFACTOR` specialization. It retains same-use fibers, recovery, seed/reorientation,
+independent reciprocal admission, residuals, and downstream-only `Gamma`; it is not a
+second controller.
+
+A local interrogative fixed point holds only under declared root, binding,
+effectivity, coverage, horizon, and resource bounds when every relevant question is
+determined, factorable/redundant, inapplicable, nonproductive with no required
+discharge, explicitly blocked/resource-bounded, or dependent on a represented
+extension obligation. A new separator, probe, binding, representation, protected
+horizon, or required discharge reopens it.
 
 Stop states remain:
 
@@ -3175,9 +3822,11 @@ ResourceBounded
 
 ---
 
-# 74. Revised conformance suite
+# 74. Stable acceptance fixture requirements
 
-The successor requires all predecessor constitutional fixtures plus the following reciprocal-boundary suite.
+V2.0 requires every conservatively embedded predecessor fixture plus the following
+reciprocal-boundary and interrogative obligations. Status and evidence belong only
+in `CONFORMANCE_STATUS.md`; listing an obligation here makes no conformance claim.
 
 ## 74.1 Determination and departure
 
@@ -3185,7 +3834,7 @@ The successor requires all predecessor constitutional fixtures plus the followin
 2. Unrelated retained facts are not automatically constitutive.
 3. Same-carrier exact cell exclusion has a constitutive separator witness.
 4. Exact finite cell exclusion and constitutive separator existence coincide.
-5. The 65,536-case finite feature fixture has zero mismatches.
+5. The 65,536-case finite feature fixture must produce zero mismatches.
 6. Unknown observation does not establish departure.
 7. Raw signature difference caused only by unknown remains unresolved.
 8. Protected non-equivalence alone does not establish departure.
@@ -3234,7 +3883,7 @@ The successor requires all predecessor constitutional fixtures plus the followin
 42. Raw containment recovery is only a special case.
 43. A source web can be partially recovered without unique source regeneration.
 44. Family schema recovery may succeed where each member signature fails.
-45. The three-state joint-recovery witness passes.
+45. The three-state joint-recovery witness satisfies its declared recovery law.
 46. Adding a return-signature coordinate refines but does not coarsen exact family observational equivalence.
 47. Historical local recovery is not retroactively strengthened by later learned negation uses.
 
@@ -3274,8 +3923,8 @@ The successor requires all predecessor constitutional fixtures plus the followin
 
 ## 74.8 Cross-cutting derived breakers
 
-These are additional later-phase obligations, not new reciprocal roles and not Phase 0
-passes:
+These are additional later-phase obligations, not new reciprocal roles or Phase 0
+acceptance requirements:
 
 1. Exact deterministic factorization agrees with kernel inclusion, while incomplete
    coverage cannot return `Exact`.
@@ -3299,11 +3948,72 @@ passes:
 11. Query-distribution change reopens the consequence-subspace certificate; sampled or
     floating-rank estimates remain working/approximate without certified bounds.
 
+## 74.9 Interrogative succession, control, and realized occurrence
+
+These named obligations are owned by the phases identified in Section 75:
+
+1. `QSUCC-OCC-001` — the same semantic `q` and same whole proof-carrying `S_hat`
+   under two checked `Ask` continuations yield their distinct lawful successors (Phase 3).
+2. `QSUCC-PARTIAL-001` — a proof-carrying answer with a partial member projection constructs a successor without
+   implicit singleton selection (Phase 3).
+3. `QSTATIC-DYNAMIC-001` — a static refinement, converse, or complementary relation
+   does not manufacture a realized route edge (Phases 3 and 9).
+4. `QREADY-UNLOCK-001` — readiness is false before an exact supported prerequisite
+   and true afterward, with the changed prerequisite identified (Phase 9).
+5. `QREADY-NONUNLOCK-001` — adjacency without a readiness change is rejected as
+   `Unlock` (Phase 9).
+6. `QCONVERSE-NOT-INVERSE-001` — a many-to-one reverse fiber remains
+   non-singleton absent a uniqueness contract (Phases 2 and 10).
+7. `QADJOINT-001` — a weakest-condition or adjoint pair requires a checked
+   binding-supplied law (Phases 10 and 15).
+8. `QRECIP-PROV-001` — a generic backward question with the wrong use identity is
+   not same-use reciprocal return (Phases 4 and 10).
+9. `QFRONTIER-REQDISCHARGE-001` — a required `Probe`, `Check`, `Warrant`, support,
+   or reconstruction occurrence remains live without two discretionary answer branches
+   and despite strict cost domination by another candidate; an optional occurrence
+   strictly dominated by a required occurrence is removed
+   (Phase 9).
+10. `QIFP-LOCAL-001` — a finite declared root/effectivity frontier closes only under
+    its declared coverage and explicit residual exits (Phase 9).
+11. `QIFP-REOPEN-001` — a new separator, probe, representation, binding, horizon, or
+    discharge obligation reopens local closure (Phases 9 and 14).
+12. `QROUTE-REGEN-001` — a missing question or answer position regenerates only when
+    its residual fiber collapses protectedly with provenance intact (Phases 8 and 16).
+13. `QROUTE-ABLATE-001` — a route node is removable only when typing, authority,
+    provenance, protected behavior, and reopening regenerate (Phase 16).
+14. `QRENDER-001` — controlled wording preserves existential converse/preimage,
+    universal guarantee/adjoint, and same-use reciprocal return distinctions
+    (Phase 10).
+15. `QLOWER-001` — erasing root/route annotations yields an accepted ordinary typed
+    relation/question/`IProg` in the conservatively embedded substrate, with unchanged modes and actuality obligations
+    (Phases 3 and 10).
+16. `QACTUAL-SEPARATION-001` — two checked `Ask` occurrences with equal semantic
+    question, compiled operator, raw bytes, and semantic member projection but
+    protected-different continuations produce events linked to distinct occurrence
+    references; formation independently rejects a forged structural position, question,
+    answer slot, environment, continuation, binding/compiler version, or provenance
+    field; cold replay reconstructs the corresponding occurrence-specific successor and
+    a mixed-port case retains separate port-indexed route/path/event chains, including
+    two ports sharing one explicitly checked event without collapsing their evidence, with zero redispatch,
+    while rejecting a missing/swapped occurrence, request/operator, raw-return, version,
+    ledger-membership, or provenance link
+    (Phases 6--8).
+17. `QLIFT-ALLPATHS-001` — non-singleton dependent stages preserve every tagged
+    supported path and child discharge mode; a proper finite materialization leaves
+    every uncovered parent member `Unknown` and cannot claim whole-family coverage
+    (Phases 3--4).
+18. `QRESOLUTION-GATE-001` — all five resolution constructors retain distinct
+    checked payloads and only `Supported` enters the source continuation or constructs
+    `ResolvedOccurrenceIR`; a non-singleton relational `Run`/`Compose` result retains every
+    compatible completion and rejects first-output selection (Phases 7--8).
+19. `QCODE-TYPING-001` — typed source/runtime quotation and binding/compiler-version
+    interpretation reject mismatched versions without execution or warrant (Phases 3 and 5).
+
 All predecessor typing, compiler, actuality, history, standing, fold, binding, and self-revision fixtures remain required.
 
 ---
 
-# 75. Revised build phases
+# 75. Build phases
 
 ## Phase 0 — repository authority and scaffolding
 
@@ -3355,11 +4065,24 @@ answer binders
 capture-safe substitution
 program normalization
 pure registered operations
+checked Ask/continuation occurrence identity
+SourceConfigIR / AskOccurrenceIR validation
+AskQuestion / AskContinuation / HeadQ
+occurrence-indexed QSucc
+partial-supported-set successor reconstruction
+proof-carrying support-witness validation
+LiftQ all-path and per-child-mode preservation
+source Code quotation
+conservative derived-annotation erasure
 ```
+
+`QSucc` is a derived relation over source-program identity and explicit environments,
+not a new source constructor. The phase must reject `(q, S_hat)` as sufficient dynamic
+route identity when two checked continuations differ.
 
 ## Phase 4 — determination, departure, typed negation, and reciprocal return
 
-This phase replaces the predecessor's simple reciprocal-compilation phase.
+This phase implements the dependent positive-negation and reciprocal-return contract.
 
 Implement:
 
@@ -3399,7 +4122,7 @@ scalar near-negation metric
 authoritative sixfold store
 ```
 
-Phase 4 gates are the reciprocal conformance fixtures above.
+Phase 4 acceptance is governed by the reciprocal fixture obligations above.
 
 ## Phase 5 — runtime machine
 
@@ -3412,6 +4135,8 @@ Branch
 Probe
 verifier
 suspension/resume
+runtime Code quotation and binding/compiler-version-indexed partial interpretation
+SourceAskLoweringIR verifier
 ```
 
 ## Phase 6 — persistence and actuality
@@ -3422,6 +4147,7 @@ Implement:
 SQLite journal
 content-addressed store
 ActualEvent
+checked Ask/probe occurrence linkage
 request-before-dispatch
 raw-return persistence
 crash/restart
@@ -3435,6 +4161,9 @@ Implement:
 ResolutionPathIR
 decoder contracts
 partial/ambiguous results
+Supported | ExactEmpty | Undefined | Unsupported | Unknown separation
+question-indexed outcome certificate/residual payload validation
+event-linked resolution provenance
 HoleIR
 FiberIR
 ProtectedCompletionFieldIR
@@ -3445,12 +4174,24 @@ ProtectedCompletionFieldIR
 Implement:
 
 ```text
-question trace
-return trace
-missing return fiber
-missing question reconstruction
-event-path provenance
+one-authority occurrence projection:
+  AskOccurrence -> port-indexed DischargeBundle
+  -> per-Probe ActualEvent/RawReturn/ResolutionPath
+  -> ResolutionOutcome == Supported(whole proof-carrying SuppAns)
+  -> checked continuation -> NextSourceControl(Ask | Return)
+exact ActualEvent.source_ask_occurrence linkage
+mixed-port route/event separation and exact whole-question resolution gate
+derived question/raw-return/supported-answer/alternating trace views
+equal question/operator/raw/endpoint with distinct Ask occurrence/continuation provenance
+resume versus replay
+missing supported-answer fiber
+missing question-occurrence reconstruction
+cold regeneration from accepted roots without redispatch
 ```
+
+Do not add question, return, route, method, or memory history authorities. Paired
+actuality specializes the general route/hole laws with ordinary historical
+provenance.
 
 ## Phase 9 — active views and recurrent memory access
 
@@ -3463,7 +4204,17 @@ occlusion licences
 access routes
 activation witnesses
 CrawlState
+Formable / Applicable / Executable / Answerable
+Productive / ResolvedQ / Ready / RequiredDischarge
+LiveQFrontier under declared resource preorder
+local interrogative fixed point
+question-conditioned reopening
+explicit blocked/resource/authority/extension residuals
 ```
+
+The executable frontier retains `(Productive OR RequiredDischarge)`. A local fixed
+point cannot close over an executable undischarged obligation, and incomplete
+coverage returns `Unknown` rather than nonproductivity or resolution.
 
 ## Phase 10 — LLM/backend compiler
 
@@ -3480,9 +4231,14 @@ admitted/runnable/usable method classification
 typed method resolution after raw-return preservation
 MockProvider
 one real provider
+controlled interrogative rendering and elaboration
+implementation-only root/route annotations
+renderer round-trip and conservative Lower_Q
 ```
 
-Add reciprocal renderer fixtures ensuring coverage/authority are not silently strengthened.
+The renderer must preserve relation identity, bound/open ports, modes, exact versus
+partial coverage, converse/preimage versus universal guarantee, and same-use
+reciprocal provenance. Surface wording and root labels cannot strengthen authority.
 
 ## Phase 11 — standing
 
@@ -3504,6 +4260,9 @@ SeparatorProblem
 GeneratorRegime
 GeneratedInquiry
 deterministic QuestionPolicy
+transparent Expose / Orient / Factor / Polarize / Vary / Ground macros
+answer-conditioned residual-question generation
+erasable route classifications
 ```
 
 Consume:
@@ -3520,6 +4279,10 @@ typed method residuals
 
 through the same interface.
 
+Static question relations do not create dynamic route edges. `Polarize` uses the
+admitted logical breaker, separator, or positive-negation relation and never acts as
+a Boolean contextual-negation fallback.
+
 Add `MethodBridgeIR` and one residual-handler/reentry vertical slice compiled through
 first-order `IProg`; do not add a method-specific runtime effect or authoritative
 suspension table.
@@ -3527,6 +4290,18 @@ suspension table.
 ## Phase 13 — cue planning
 
 Implement exact finite and working approximate cue planning.
+
+Admission of every candidate cue must preserve:
+
+```text
+support and exact support route
+applicability and binding
+semantic/execution coverage
+answer and occurrence provenance
+required-discharge relevance
+protected productivity or separator role
+declared resource preorder
+```
 
 For finite exact residual fields, expose a sufficient discriminator basis check:
 
@@ -3541,6 +4316,9 @@ total, deterministic, and exactly covered.  Under incomplete generation or cover
 return a nondominated working frontier plus `Unknown` residuals rather than claiming a
 minimum or impossibility.
 
+A concrete unseparated protected pair returns to `SeparatorProblem`; absence from a
+finite materialized cue catalog does not establish a representation gap.
+
 ## Phase 14 — representation-gap detection
 
 Implement:
@@ -3551,7 +4329,13 @@ ExactNoSeparatorWithinRegime
 RepresentationGap
 FreshWithinRegime
 ProposedRegimeExtension
+representation/probe unlock witness
+local-IFP reopening witness
 ```
+
+A lawful extension must identify which prior question was non-formable or
+non-executable and which exact new capability changes that status. Mere generation or
+adjacency is not `Unlock`.
 
 ## Phase 15 — binding extension and bridges
 
@@ -3564,7 +4348,13 @@ rebinding
 BindingBridgeIR
 targeted reopening
 conservative question-language embedding and strict-growth witness
+typed question/route transport
+formability effects of extension or rebinding
 ```
+
+Transport questions and learned routes only through typed bridges preserving their
+relations, ports, modes, bindings, applicability, and protected interpretation. Noun
+similarity or surface analogy is not a bridge.
 
 ## Phase 16 — method learning and folds
 
@@ -3573,6 +4363,10 @@ Implement:
 ```text
 operator occurrences
 method folds
+derived QRouteOcc over source/event/resolution/continuation ancestry
+candidate question methods
+route ablation and transparent expansion
+missing question/supported-answer regeneration
 RecoveryContract
 CompressionLicence
 directional approximation soundness
@@ -3582,6 +4376,11 @@ optional exact linear consequence-subspace certificate for a live numeric bindin
 Unlock
 Reopen
 ```
+
+Method/route names remain provenance and authoring aids, not dispatch policy or
+semantic authority. A route fold is retained only when its expansion regenerates
+typing, applicability, authority, failure exits, protected behavior, provenance, and
+reopening.
 
 ## Phase 17 — conservative cross-binding standing lift
 
@@ -3596,7 +4395,10 @@ recompute before broader promotion
 
 ## Phase 18 — predecessor-judged self-revision
 
-Implement candidate patches and locked predecessor acceptance.
+Implement candidate patches and locked predecessor acceptance. Reify controller,
+question, frontier, root/macro, compiler, and route structures as ordinary typed
+forms when they become objects of inquiry. A candidate controller revision remains
+predecessor-judged and cannot use its own route policy or recurrence as its warrant.
 
 ## Phase 19 — measured breadth only
 
@@ -3604,6 +4406,7 @@ Only after witnessed need:
 
 ```text
 learned question policy
+learned frontier/routing policy and latent-capability masks
 fair open-ended generation
 vector retrieval
 parallel semantic scheduling
@@ -3611,11 +4414,14 @@ PostgreSQL
 distributed effects
 ```
 
+Every Phase 19 addition requires measured protected strict gain against the
+self-hosted reference controller and remains removable without changing semantics.
+
 ---
 
-# 76. Revised vertical slices
+# 76. Required vertical slices
 
-## Slice A — positive-negation reciprocal recurrence
+## Slice A — positive-negation reciprocal specialization
 
 Demonstrate:
 
@@ -3643,8 +4449,9 @@ Add:
 ```text
 Prompt/BackendRequest
 -> RawReturn
--> Resolution
 -> ActualEvent
+-> ResolutionPath
+-> whole proof-carrying supported answer
 -> Claim
 -> independent support
 -> Standing
@@ -3694,6 +4501,26 @@ Reopen while preserving history.
 Use the same inquiry language on a reified implementation/specification claim.
 
 Candidate successor cannot change its own predecessor judge.
+
+## Slice I — occurrence-indexed self-hosted inquiry
+
+Demonstrate and cold-replay:
+
+```text
+protected residual / explicit discharge obligation
+-> LiveQFrontier with Productive OR RequiredDischarge
+-> checked Ask occurrence
+-> transparent root/macro lowering
+-> ActualEvent + immutable RawReturn where required
+-> explicit resolution path + whole proof-carrying supported answer
+-> occurrence-indexed QSucc
+-> successor residual/frontier or justified local IFP
+```
+
+Use two checked continuations sharing the same semantic question and proof-carrying answer to
+prove that route identity cannot collapse to `(q, S_hat)`. Replay invokes the external
+provider zero additional times and regenerates the same protected continuation and
+provenance identities from accepted roots.
 
 ---
 
@@ -3752,11 +4579,16 @@ negation-use provenance
 semantic negation coverage
 partial binding
 answer-dependent IProg
+checked Ask/continuation occurrence identity
+whole supported-answer preservation
+occurrence-indexed QSucc
 raw return preservation
 actual event ancestry
+resolution-path provenance
 use-specific reverse return
 protected recovery
 residual separator generation
+required-discharge frontier behavior
 standing separation
 binding version
 fold recovery/reopening
@@ -3788,53 +4620,24 @@ Each requires a witnessed protected need.
 
 ---
 
-# 80. Implementation-agent protocol
+# 80. Engineering execution authority
 
-Add to `AGENTS.md`:
+`AGENTS.md` owns contributor/agent execution discipline and the enforced engineering
+harness. This plan owns architecture, phase dependencies, stable obligations, and
+completion criteria; it does not duplicate the engineering clock or carry a live
+work queue.
+
+The implementation must nevertheless preserve these architectural non-collapse
+laws at every phase boundary:
 
 ```text
-FOR EVERY CONSEQUENTIAL CHANGE:
-
-1. Reconstruct current accepted semantic state.
-2. Read IMPLEMENTATION_FRONTIER.md.
-3. Identify the strongest live obligation.
-4. State the protected observable consequence.
-5. State the smallest executable fixture.
-6. Check whether existing typed relations/operators already regenerate it.
-7. Preserve the relation/generation/actuality/warrant boundaries.
-8. For reciprocal work, identify:
-   - source determination presentation
-   - departure witness
-   - negation-use identity
-   - semantic coverage
-   - execution coverage
-   - return fiber
-   - protected recovery
-9. Never infer exteriority from failed equality or failed search.
-10. Never infer exhaustive negation from a partial sound relation.
-11. Never erase NegationUse provenance from an exterior occurrence.
-12. Never mutate standing semantics from a merely generated exterior.
-13. Prefer generic SeparatorProblem over subsystem-specific residual logic.
-14. Preserve raw returns and actual history.
-15. Classify failure before changing architecture.
-16. Run targeted fixture.
-17. Run completed phase gates.
-18. Cold-replay semantic/history changes.
-19. Remove redundant machinery.
-20. Update decisions/failures/frontier.
-21. Commit code, fixtures, and evidence together.
-
-NEVER:
-
-- add Boolean complement as a default negation rule;
-- treat unknown as negative;
-- treat boundary projection as proof of reciprocal exteriority;
-- treat one stable return sample as exact return closure;
-- use a source relation to construct the return fiber it is supposed to test;
-- use a new negation relation to warrant its own exteriority;
-- collapse multiple negation uses into an untagged union;
-- reinterpret historical events using later negation/frontier knowledge;
-- let a candidate patch define its own acceptance criteria.
+generation != actuality != resolution != checking != warrant != standing
+semantic question != Ask occurrence != compiled operator != ActualEvent
+semantic coverage != execution coverage
+static question relation != realized route edge
+same endpoint != same event/path/continuation provenance
+derived trace/fold/frontier != authoritative history
+candidate successor != its predecessor judge
 ```
 
 ---
@@ -3869,13 +4672,18 @@ fold/reopening effects
 Every change:
 
 ```text
-cargo fmt --check
-cargo clippy --all-targets --all-features -- -D warnings
-cargo test
-migration test
-canonical artifact test
-type/IR verifier
+cargo fmt --all --check
+cargo check --workspace --all-features --locked
+cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+cargo test --workspace --all-features --locked
+embedded migration/replay checks when affected
+canonical artifact and type/IR verification
+documentation-control check
+git diff --check
 ```
+
+The specification job compiles only `Inquiry_Calculus_v2_0.tex` and rejects fatal
+errors, unresolved references, duplicate labels, and stale active-authority names.
 
 Reciprocal-core changes additionally:
 
@@ -3899,6 +4707,18 @@ cold replay
 historical version locality
 ```
 
+Interrogative/controller changes:
+
+```text
+occurrence-indexed QSucc breaker
+partial-supported-set preservation
+Productive OR RequiredDischarge frontier
+static/dynamic route separation
+local IFP closure and reopening
+root/route annotation erasure and conservative Lower_Q
+raw actuality -> resolution -> supported answer -> continuation separation
+```
+
 Binding changes:
 
 ```text
@@ -3914,6 +4734,9 @@ old-event immutability
 Every reciprocal inquiry should expose references for:
 
 ```text
+checked Ask/continuation occurrence and explicit environment
+semantic question and live residual/frontier
+Productive or exact RequiredDischarge reason
 source determination presentation
 departure witness route
 negation use
@@ -3921,6 +4744,8 @@ semantic negation coverage
 generator/execution coverage
 positive exterior occurrence
 raw return/event
+resolution path and whole proof-carrying supported answer
+occurrence-indexed successor question
 return fiber
 protected recovery profile
 seed bridge
@@ -3947,6 +4772,9 @@ Which source relations are recovered?
 What remains ambiguous?
 Why was this reciprocal route selected?
 What historical event actualized it?
+Which resolution path supports the answer set?
+Which checked continuation generated the successor question?
+Was the question productive, required for discharge, or both?
 What residual question was generated?
 ```
 
@@ -4003,13 +4831,13 @@ Physical migration must not change semantic identity or history.
 
 ---
 
-# 86. Current research gates
+# 86. Deferred and conditional implementation gates
 
 ## 86.1 Determination-presentation admission
 
-This is now the principal unresolved reciprocal-semantic gate.
-
-The system needs the smallest lawful \(W_D(x)\) that may define the current determination for departure judgment.
+The system requires a lawful \(W_D(x)\) that defines the live determination for
+departure judgment without importing unrelated facts or omitting constitutive
+support.
 
 Unsafe extremes:
 
@@ -4021,158 +4849,76 @@ too-small hand-selected web
     -> genuine departures disappear
 ```
 
-Current safe implementation:
-
-> use the claim-local support/dependency web of the standing determination occupying the source role; retain exact provenance; permit later regenerative minimization only as a reversible compression.
-
-The unresolved comparison is among:
+Admissible implementation candidates include:
 
 - all standing related constraints;
 - minimal regeneratively sufficient webs;
 - claim/support-local determination presentations;
 - possibly a family of admissible presentations when minima are nonunique.
 
-This does not block implementation of the rest of the successor core.
+Every admitted presentation must be explicit, supported, versioned, indexed by
+scope/applicability/grain/horizon, and exactly traceable to its standing source
+determination. A claim-local support/dependency presentation is the reversible
+baseline. Regenerative minimization is a separate fold with recovery and reopening,
+not a prerequisite for reciprocal execution. A stronger canonical admission or
+unique-minimum rule requires an executable breaker and accepted theorem.
 
 ## 86.2 Cross-binding standing lift
 
-Retain conservative rule until stronger theorem.
+Retain the Phase 17 conservative rule until a stronger accepted theorem preserves
+old scope, applicability, grain, horizon, support, and historical locality.
 
 ## 86.3 Open-ended generator completeness
 
-Do not claim universal finite negative/question basis.
+Do not claim a universal finite negative, separator, root, or question basis.
+Resource-bounded exhaustion remains `Unknown` or `ResourceBounded` outside declared
+exact coverage.
 
 ## 86.4 Learned policy
 
-Question/negation-route policy is optimization only.
+Question, root, negation-route, and frontier policy is Phase 19 optimization only.
+It cannot become semantic authority, suppress required discharge, or warrant itself.
 
 ## 86.5 Retrieval basis
 
-Add vectors only after measured protected miss.
+Add vectors or approximate retrieval only after an exact-route protected miss and a
+measured strict-gain fixture. Preserve exact references, replay, and `Unknown`.
 
-## 86.6 Final post-research integration
+## 86.6 General transition authority and protected erasure
 
-The research crawl closed at a local fixed point on 25 August 2026. Its final corpus is preserved
-under `research/final-2026-08-25/` and compacted for implementation by
-`PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md`. It is derived breaker and regression ancestry, not
-semantic authority, a competing plan, or a chronology to implement.
+Do not promote operational crashes, attempts, route labels, or state transitions into
+new semantic actuality or authority species. A generalized transition authority or
+protected-erasure binding remains deferred until an accepted semantic/binding
+contract supplies its types, evidence route, non-collapse laws, and predecessor
+judgment.
 
-Classify its surviving implementation pressure as follows:
-
-| Class | Forward consequence |
-|---|---|
-| `ALREADY_DEMONSTRATED` | Typed semantic kernel, finite departure and reciprocal slice, immutable artifacts/events, typed request-before-dispatch, exact backend-request checking, and one crash-safe injected provider call remain established by current tests. |
-| `CURRENT_FIXTURE` | `RPL-001`--`RPL-005`, `CYCLE-001`, `TRACE-001`, and `PRESENT-001` are demonstrated. The local Ollama `qwen3.5:9b` transport/decode prefix of `PROVIDER-001` is demonstrated. The current fixture completes its typed multi-answer admission, resumption, and zero-redispatch cold replay. |
-| `PHASE_LOCAL_CONSTRAINT` | Apply research breakers only at their responsible Phase 6--18 boundary: actuality, resolution, paired provenance, sufficient presents, provider separation, shared standing, transparent separator/method/fold/bridge compositions, conservative lift, and predecessor-judged revision. |
-| `FUTURE_OPTIMIZATION` | Learned routing, latent masks, vectors, parallelism, distribution, and other breadth remain Phase 19 experiments requiring measured protected gain. |
-| `SEMANTIC_REOPEN_CANDIDATE` | General transition authority and protected-erasure bindings require explicit semantic or binding authority before implementation. |
-| `REJECTED_OVERCLAIM` | Research names do not authorize new opcodes, semantic crash attempts, a universal parallel/composition operator, a memory database, an `M001..M066` hierarchy, separate authority/sixfold engines, or an immediate `ic-machine` crate. |
-
-The demonstrated cold-replay sequence is:
+Cold replay must satisfy the stable dependency:
 
 ```text
 completed effect token
 -> rechecked BackendRequest / ActualEvent / RawReturn after restart
+-> exact source Ask occurrence linkage when source-derived
 -> ResolutionPath / FiniteDecoder
--> Decoded | Undefined | Unknown
--> exact Probe observation support and least-fixed-point standing
--> complete AdmittedFiniteAnswerSet
--> reloaded source Ask and capture-safe binding
--> regenerated ProgramIR / ProbeSuspension / ContinuationLowering
--> admitted resumption
--> next Ask or Return
+-> Supported | ExactEmpty | Undefined | Unsupported | Unknown
+   Supported -> exact Probe observation support and least-fixed-point standing
+             -> whole proof-carrying supported answer
+             -> reloaded source Ask and capture-safe binding
+             -> regenerated ProgramIR / ProbeSuspension / ContinuationLowering
+             -> admitted resumption -> next Ask or Return
+   ExactEmpty | Undefined | Unsupported | Unknown
+             -> constructor-specific typed residual or justified stop
+             -> never the source continuation
 ```
 
 No pre-crash derived object or provider redispatch may supply the replay. Regenerate lowering from
 accepted source/compiler identities and versions first. A persistable compile/replay recipe is
 authorized only if a fresh-process breaker proves that an exact mapping is otherwise unrecoverable.
 
-The current provider sequence is:
-
-```text
-checked content-addressed local Ollama request
--> narrow ProbeProvider transport using installed qwen3.5:9b
--> versioned Ollama HTTP status + exact body RawReturn
--> ordinary ActualEvent committed before interpretation
--> schema-response decoder preserving every completion
--> exact independent support routes and standing reconstruction
--> complete supported answer, source binding, and admitted resumption
--> file-backed restart and zero-redispatch regeneration
-```
-
-The local transport prefix passes deterministic success/failure tests and one live schema-constrained
-probe. The installed model returned two distinct candidates, and `dispatch_probe` committed the raw
-frame and event before the decoder inspected either candidate. The OpenAI transport/decoder and
-`ic.openai-decoded-text/v1` replay fixtures remain valid secondary evidence; its live HTTP 401 is
-recorded as `F-0001` but no longer blocks the active provider sequence. Local candidates now also
-regenerate as `ic.ollama-decoded-text/v1` values from only raw return and decoder-version roots.
-Post-return observation
-support remains separate from pre-dispatch query support, while exact standing closure and
-raw-return coverage remain mandatory.
-
-The deterministic `PROVIDER-001D` fixture now takes a committed Ollama-shaped event through
-post-return values, typed forms, complete candidates, distinct support, exact standing, binding,
-resumption, and file-backed zero-redispatch replay. `PROVIDER-001E` adds the required fresh local
-Ollama call and creates none of those semantic artifacts before its raw event is committed.
-
-`PROVIDER-001E` now passes against the installed `qwen3.5:9b`: one fresh dispatch commits the
-raw return/event before the entire typed answer/resumption chain is built, and a file-backed restart
-replays it with no second provider call. The next phase-local work is `TRACE-002`, a finite
-multi-event paired-actuality and sufficient-present/reopening traversal.
-
-`TRACE-002A` is its completed derived-order prerequisite: ledger membership must cover each paired
-event exactly once, and causal order remains explicit `Unknown` unless a separate, acyclic declared
-candidate edge set is supplied. Ledger append order never generates that candidate edge set or a
-second authoritative history.
-
-`TRACE-002` now demonstrates the finite two-event vertical slice. It appends and cold-replays a
-second ordinary event, regenerates separate paired source/return traces, retains causal order as
-`Unknown`, folds the event identities under a current protected continuation, and exposes an exact
-event-sensitive reopen witness. The next Phase 8/9 residual is a derived sufficient-present
-update/recovery view over an explicit new ledger event, with no mutable memory or causal store.
-
-That Phase 8/9 update/recovery view now passes. It preserves every old presentation and protected
-observation row under a strict history extension, regenerates an updated present when possible,
-and returns a positive reopen separator when the appended history splits it. `SEPARATOR-001` now
-passes: the complete positive reopen witness has derived canonical identity, supplies the residual
-of the existing generic `SeparatorProblem`, retains a checked generated inquiry route and the whole
-admitted answer set, and regenerates the same first-order continuation after restart without
-redispatch. `METHOD-BRIDGE-001` now also passes: one canonical oriented `MethodBridge` rechecks both
-`MethodContract`s, the source-declared residual schema, exact answer-selected transport `IProg`,
-typed guard, and input-reconstruction `IProg`; the two-event fixture cold reloads equal reentry,
-rejects undeclared residuals and rival transports, and regenerates a new protected reopen witness.
-The next executable step is `CUE-PLANNING-001`: admit each exact finite cue's support,
-applicability, coverage, and answer provenance before applying the existing sufficient-basis and
-nondominated-frontier checks. Incomplete admission remains `Unknown`, while a concrete
-unseparated pair re-enters the generic separator. The finite declared resource order does not
-establish global minimality or exhaustiveness.
-
-Later phase constraints are deliberately local:
-
-- Phase 8 preserves ledger order versus causal order, resume versus replay, and endpoint versus
-  event/path provenance.
-- Phase 9 derives question-conditioned sufficient presents without adding a second mutable memory;
-  consequence sufficiency, recursive update, recoverability, bounded active size, loss, and standing
-  remain distinct.
-- Phase 10 keeps question, surface plan, backend request, provider return, decoded answer, and
-  standing claim separate; an LLM remains a provider/generator and cannot self-warrant.
-- Phase 11 keeps one typed least-fixed-point standing engine; authority admission is an ordinary
-  typed standing problem, not a second authority subsystem.
-- Phases 12--16 compile transparent `OpenQuery`/`IProg` methods and supported residual-to-method
-  relations; method names are provenance, not dispatch, and no research macro becomes an opcode.
-- Phase 15 distinguishes inquiry-control composition from binding-native semantic composition; no
-  universal `Parallel` is introduced.
-- Phase 17 retains the conservative cross-binding lift already stated by this plan.
-- Phase 18 remains predecessor-judged and restart/reconstructive until accepted semantic authority
-  promotes a broader transition-authority rule.
-- Phase 19 alone hosts measured learned routing, vector, parallel, distributed, and latent-mask
-  experiments.
-
 ---
 
-# 87. Current relative fixed point
+# 87. Stable architectural laws
 
-The following are now sufficiently settled for implementation.
+The following laws constrain every phase and completion level.
 
 \[
 \boxed{
@@ -4344,16 +5090,60 @@ The following are now sufficiently settled for implementation.
 }
 \]
 
+\[
+\boxed{
+\text{dynamic question succession is indexed by the checked Ask/continuation occurrence}.
+}
+\]
+
+\[
+\boxed{
+\text{live question frontier}
+=
+\text{productive questions}
+\cup
+\text{required discharge}.
+}
+\]
+
+\[
+\boxed{
+\text{raw actuality}
+\neq
+\text{resolution}
+\neq
+\text{supported answer}
+\neq
+\text{control succession}.
+}
+\]
+
+\[
+\boxed{
+\text{roots are derived operators; the regenerative recurrence is control}.
+}
+\]
+
+\[
+\boxed{
+\text{there is one authoritative event/program/artifact ancestry and only derived trace views}.
+}
+\]
+
 ---
 
-# 88. Definition of the first complete successor implementation
+# 88. Completion dependency and cold-replay closure
 
-The successor reference implementation is complete when one repository can execute and cold-replay:
+The four completion levels in Section 0.1 are cumulative except that Phase 19 remains
+conditional experimentation. `REFERENCE_CALCULUS_COMPLETE` requires one repository
+to execute and cold-replay the following dependency without hidden semantic state:
 
 \[
 \boxed{
 \begin{aligned}
 &\text{typed forms and relations}\\
+&\to
+\text{derived roots/macros conservatively lowered to an occurrence-indexed Ask}\\
 &\to
 \text{standing source determination presentation}\\
 &\to
@@ -4383,7 +5173,11 @@ The successor reference implementation is complete when one repository can execu
 &\to
 \text{representation/probe extension if required}\\
 &\to
-\text{raw actuality and paired history}\\
+\text{raw actuality / resolution / whole supported answer / QSucc}\\
+&\to
+\text{successor residual and live question frontier}\\
+&\to
+\text{derived paired actuality and route views over one history}\\
 &\to
 \text{standing}\\
 &\to
@@ -4403,67 +5197,92 @@ No step may be supplied by:
 - untyped "other" selector;
 - opaque LLM judgment;
 - mutable provider session;
+- raw-return bytes selecting a semantic continuation;
+- `(q, S_hat)` used as dynamic route identity without its checked occurrence;
+- productivity used to suppress an explicit required discharge;
+- a root or route label treated as a semantic opcode;
+- a derived trace, present, route graph, or fold treated as another history;
 - semantic union that loses negation-use provenance;
 - state-changing return without revision evidence.
 
+`SELF_HOSTED_INQUIRY_CONTROLLER_COMPLETE` additionally requires the implemented
+calculus to construct and close or reopen this successor frontier itself. Thesis
+evaluation begins only after that controller is executable; adaptive routing remains
+conditional on measured benefit.
+
 ---
 
-# 89. Remaining implementation order from the current state
+# 89. Stable phase dependency
 
-The phase definitions in Section 75 remain the single build map. Repository actuality has already
-demonstrated the Phase 0 foundation, substantial typed kernels across Phases 1--7 and 11--16, one
-finite reciprocal vertical slice, complete finite cold replay, paired actuality, and an exact finite
-sufficient-present/reopening witness. Do not replay that chronology merely because the plan retains
-its full specification.
-
-Advance the current implementation in this order:
+Section 75 is the single build map. The frontier selects one executable obligation
+from that map based on repository actuality; this plan does not record the cursor.
+The stable dependency is:
 
 ```text
-1. TRACE-002
-   finite multi-event ordinary history -> paired source/return projections
-   -> causal/order separator -> sufficient present -> positive reopening witness
+Phases 0--2
+  repository, identity, typed forms, relations, OpenQuery
 
-2. Phase 8/9 generalization
-   multi-event causal inquiry traces -> derived active/access/reserve views
-   -> recurrent fold/reopen with exact provenance and recovery boundaries
+Phase 3
+  first-order IProg and occurrence-indexed question succession
 
-3. Phase 11/12 executable standing and separator recurrence
-   supported residual -> deterministic transparent inquiry policy
-   -> bounded Unknown or next executable question
+Phases 4--7 and 11
+  reciprocal semantics, runtime, actuality, resolution, and standing
 
-4. Phases 13--16 regenerative learning
-   minimal cue basis -> materialization/representation gap
-   -> lawful probe/binding extension -> reusable method/fold with reopening witness
+Phases 8--10
+  one-history occurrence projections, live frontier, and controlled compiler/provider
 
-5. Phase 17
-   conservative cross-binding standing lift with history locality
+Phases 12--16
+  separator recurrence, cue basis, representation gaps, bridges, and transparent folds
 
-6. Phase 18
-   replayable predecessor-judged self-revision and cold reconstruction
+Phase 17
+  conservative cross-binding standing lift
 
-7. Phase 19
-   only measured optimizations that demonstrate protected strict gain
+Phase 18
+  replayable predecessor-judged revision
 
-8. completion closure
-   run every canonical fixture, complete successor chain, and full cold replay;
-   subtract unnecessary architecture and reconcile all state documents
+reference-calculus closure
+  complete successor chain, cold replay, ablation, and acceptance reconciliation
+
+self-hosted controller closure
+  residual -> LiveQFrontier -> occurrence -> supported answer -> QSucc -> residual
+
+thesis evaluation
+  controlled empirical comparison at comparable resources
+
+Phase 19
+  measured optional optimization only after self-hosted evidence
 ```
 
-At every step, `IMPLEMENTATION_FRONTIER.md` names exactly one strongest executable obligation and
-`CONFORMANCE_STATUS.md` marks only demonstrated behavior. The unsettled determination-presentation
-minimization rule remains isolated behind explicit provenance/status rather than delaying unrelated
-work. `ic-machine`, new authoritative storage, new opcodes, and provider frameworks remain deferred
-until an executable breaker establishes their necessity.
+Phases may be exercised by vertical slices before every neighboring phase is globally
+complete, but a later slice never implies completion of an earlier phase or of the
+whole project. `ic-machine`, new authoritative storage, new opcodes, provider
+frameworks, and distributed scheduling remain deferred until an executable breaker
+establishes irreducible need.
 
 ---
 
-# 90. Compact successor invariant
+# 90. Compact v2.0 implementation invariant
 
-The implementation may use the following as the compressed statement of the successor architecture:
+The implementation may use the following as the compressed statement of the v2.0 architecture:
 
 \[
 \boxed{
 \begin{minipage}{0.92\linewidth}
+Inquiry Calculus v2.0 is a well-typed relational inquiry programming language.
+A question is an open typed relation, and a source program is a first-order
+answer-dependent `Return`/`Ask` structure. Dynamic question succession is derived
+from the checked `Ask` occurrence, its explicit environment, the whole supported
+answer set, and its continuation; semantic `(q,S)` alone is not route identity.
+The live frontier retains both protectedly productive questions and exact required
+discharge obligations. Roots and operational interrogatives are transparent derived
+operators that lower to the ordinary language.
+
+An actual inquiry occurrence preserves the checked occurrence, immutable raw
+return/event, resolution path, supported semantic answer set, and continuation as
+distinct identities. Resume is not replay, endpoint equality is not path identity,
+and derived traces, sufficient presents, route graphs, cues, and folds remain views
+over one accepted artifact/source-program/event ancestry rather than new histories.
+
 A live determination is represented by an explicit, supported relational
 presentation.  Its exterior is not presumed from a boundary projection and is
 not obtained by Boolean complement.  A candidate is positively established as
@@ -4507,55 +5326,74 @@ question/probe/representation can express a witnessed protected distinction,
 the result is a representation or binding gap.  Recurrent separators may be
 reified as attributes, methods, probes, or representation coordinates; admitted
 extensions enlarge the later question language.  Actual question--return
-history remains authoritative, folds remain reopenable, standing remains
-independently warranted, and self-revision remains predecessor-judged.
+occurrences remain reconstructible from authoritative ancestry, folds remain
+reopenable, standing remains independently warranted, and self-revision remains
+predecessor-judged. All control returns through the one derived
+`BIND -> OPEN -> VARY -> RETURN -> DETERMINE -> REFACTOR` recurrence.
 \end{minipage}
 }
 \]
 
 ---
 
-# 91. Principal continuation
+# 91. Conditional determination-presentation contract
 
-The reciprocal-boundary semantics is now sufficiently specified for implementation except for one authority question:
+Departure judgment requires an explicit answer to:
 
 \[
 \boxed{
 \textbf{WHAT EXACT RELATIONAL PRESENTATION IS LICENSED TO COUNT AS
-THE CURRENT DETERMINATION \(W_D(x)\) FOR DEPARTURE JUDGMENT?}
+THE LIVE DETERMINATION \(W_D(x)\) FOR DEPARTURE JUDGMENT?}
 }
 \]
 
-The current safe implementation answer is:
-
-> the explicitly supported claim/dependency web of the standing determination currently occupying the source role, with every constitutive relation traceable to that standing claim; do not absorb all known facts about the source. Treat regenerative minimization as a later reversible compression rather than as a precondition for constructing the first implementation.
-
-The next research pass should test whether the eventual canonical object must be:
+The implementation boundary must be capable of representing:
 
 1. one minimal regeneratively sufficient web;
 2. a family of incomparable sufficient webs;
 3. a claim-local support/dependency presentation;
 4. a quotient/fold over such a family.
 
-Until that distinction is settled, the implementation can proceed using explicit claim-local determination presentations with full provenance and reopening.
+A claim-local support/dependency presentation with full provenance is the smallest
+reversible baseline. Do not absorb every standing fact merely because it mentions the
+source, and do not require an unproved unique global minimum. Any minimization or
+quotient is a separately licensed fold that preserves support, applicability, scope,
+grain, horizon, recovery, and reopening.
+
+The accepted decision ledger selects among these representations for a concrete
+implementation scope. A future theorem may strengthen the contract only through the
+ordinary breaker, evidence, and predecessor-judgment path; the live selection itself
+does not belong in this plan.
 
 ---
 
 # 92. Final implementation directive
 
-Implement the successor from the smallest structure that regenerates its protected behavior:
+Implement v2.0 from the smallest structure that regenerates its protected behavior:
 
 \[
 \boxed{
 \textbf{REPRESENT THE LIVE DETERMINATION;
+OPEN THE SMALLEST CONSEQUENTIAL QUESTION OR REQUIRED DISCHARGE;
+RETAIN THE CHECKED ASK/CONTINUATION OCCURRENCE;
 WITNESS DEPARTURE POSITIVELY;
 USE COVERAGE-INDEXED TYPED OPPOSITION;
 RETAIN THE OPPOSITION ROUTE;
 RETURN THROUGH ITS REVERSE SECTION;
 MEASURE WHAT THE RETURN ACTUALLY RECOVERS;
 REORIENT AND REPEAT;
+PRESERVE RAW ACTUALITY BEFORE RESOLUTION;
+BIND THE WHOLE PROOF-CARRYING SUPPORTED ANSWER RECORD;
+DERIVE THE SUCCESSOR FRONTIER THROUGH OCCURRENCE-INDEXED QSUCC;
 TURN SURVIVING DIFFERENCE INTO A SEPARATOR;
 EXTEND REPRESENTATION ONLY WHEN THE CURRENT LANGUAGE CANNOT EXPRESS IT;
+FOLD ONLY WHAT REGENERATES AND REOPEN ON A NEW DISTINCTION;
 AND NEVER LET GENERATION, HISTORY, OR REVISION CLAIM MORE WARRANT THAN
 THEIR EXPLICIT ROUTES PROVIDE.}
 }
+\]
+
+Every step instantiates the one `BIND -> OPEN -> VARY -> RETURN -> DETERMINE ->
+REFACTOR` recurrence. If a proposed component cannot lower to, instantiate, or
+constrain that architecture—and its removal loses no protected capability—it does
+not belong in the reference implementation.

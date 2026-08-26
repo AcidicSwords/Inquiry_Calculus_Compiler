@@ -13,9 +13,39 @@ set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PAYLOAD="$(cat)"
 
-case "$PAYLOAD" in
-    *'"stop_hook_active":true'*) exit 0 ;;
-esac
+block() {
+    printf '{"decision":"block","reason":"%s"}\n' \
+        "$(printf '%b' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
+             | awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }')"
+    exit 0
+}
+
+if ! printf '%s' "$PAYLOAD" | node -e '
+    const fs = require("node:fs");
+    try {
+      const value = JSON.parse(fs.readFileSync(0, "utf8"));
+      if (value === null || Array.isArray(value) || typeof value !== "object") {
+        process.exit(1);
+      }
+    } catch {
+      process.exit(1);
+    }
+  '; then
+    block "Malformed stop-hook payload; lawful cycle closure cannot be established."
+fi
+
+stop_hook_active="$(printf '%s' "$PAYLOAD" |
+    awk -v want="stop_hook_active" -f "$HERE/ic-json.awk")"
+[ "$stop_hook_active" = "true" ] && exit 0
+
+if ! trace_status="$(bash "$HERE/ic-trace" status 2>&1)"; then
+    reason="The active inquiry trace is malformed or unreadable, so cycle closure cannot be established safely.\n\n${trace_status}\n\nPreserve the malformed trace as ancestry and initialize a new trace; do not rewrite it."
+    block "$reason"
+fi
+
+if bash "$HERE/ic-trace" stop-pending >/dev/null 2>&1; then
+    block "A checked residual has no terminal stop record. Record the lawful stop state with a nonempty warrant before ending the turn."
+fi
 
 bash "$HERE/ic-trace" open >/dev/null 2>&1 || exit 0
 
