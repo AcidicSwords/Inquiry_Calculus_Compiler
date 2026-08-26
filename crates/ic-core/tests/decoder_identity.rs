@@ -981,7 +981,7 @@ fn determination_support_requires_one_checked_claim_targeted_standing_environmen
 }
 
 #[test]
-fn departure_witness_requires_its_shared_source_presentation_support_to_stand() {
+fn departure_witness_requires_its_source_presentation_support_to_stand() {
     let mut fixture = fixture();
     let binding = BindingVersionRef::from_artifact_ref(artifact(0x10));
     let scope = ScopeRef::from_artifact_ref(artifact(0x16));
@@ -1044,6 +1044,19 @@ fn departure_witness_requires_its_shared_source_presentation_support_to_stand() 
             environment.as_support_ref(),
             None,
         ));
+    let evidence_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(fixture.relation),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("relation-targeted evidence environment must canonicalize"),
+    );
     let context = |mode| {
         RelationUseContext::new(
             scope,
@@ -1051,7 +1064,7 @@ fn departure_witness_requires_its_shared_source_presentation_support_to_stand() 
             grain,
             horizon,
             mode,
-            environment.as_support_ref(),
+            evidence_environment.as_support_ref(),
             None,
         )
     };
@@ -1107,7 +1120,7 @@ fn departure_witness_requires_its_shared_source_presentation_support_to_stand() 
         source_answer,
         candidate_answer,
         incompatibility,
-        environment.as_support_ref(),
+        SupportRef::from_artifact_ref(artifact(0x97)),
         scope,
         applicability,
         grain,

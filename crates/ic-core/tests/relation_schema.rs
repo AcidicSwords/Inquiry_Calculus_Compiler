@@ -626,7 +626,10 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
     );
     assert!(witness.check(&catalog).is_ok());
 
-    let mismatched_witness_support = DepartureWitness::new(
+    // A presentation's claim-targeted support and an evidence use's relation-targeted support
+    // remain distinct routes. Collapsing them would make the later support resolvers demand one
+    // environment target both a claim and a relation.
+    let independent_witness_support = DepartureWitness::new(
         distinction,
         source,
         candidate,
@@ -641,53 +644,7 @@ fn departure_witness_check_requires_the_declared_presentation_and_context() {
         applicability,
         grain,
     );
-    assert!(matches!(
-        mismatched_witness_support.check(&catalog),
-        Err(DepartureWitnessCheckError::PresentationMismatch("support"))
-    ));
-
-    let mismatched_support_observation = catalog.insert_relation_use(RelationUse::new(
-        relation,
-        vec![
-            PortBinding::new(
-                TypeSymbol::new("left").expect("port name must be valid"),
-                source,
-            ),
-            PortBinding::new(
-                TypeSymbol::new("right").expect("port name must be valid"),
-                source_answer,
-            ),
-        ],
-        RelationUseContext::new(
-            scope,
-            applicability,
-            grain,
-            horizon,
-            DischargeMode::Probe,
-            SupportRef::from_artifact_ref(artifact(0x39)),
-            None,
-        ),
-    ));
-    let mismatched_use_support = DepartureWitness::new(
-        distinction,
-        source,
-        candidate,
-        presentation,
-        mismatched_support_observation,
-        candidate_observation,
-        source_answer,
-        candidate_answer,
-        incompatibility,
-        support,
-        scope,
-        applicability,
-        grain,
-    );
-    assert!(matches!(
-        mismatched_use_support.check(&catalog),
-        Err(DepartureWitnessCheckError::RelationUseSupportMismatch(reference))
-            if reference == mismatched_support_observation
-    ));
+    assert!(independent_witness_support.check(&catalog).is_ok());
 
     let wrong_source = DepartureWitness::new(
         distinction,

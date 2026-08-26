@@ -82,10 +82,10 @@ The protected difference is visible in the accepted sources:
   source and candidate observation uses, their typed fillings, incompatibility use, support,
   scope, applicability, and grain. Its checker rehashes every resolved identity, type-checks its
   forms, requires the presentation's source and indexed context, and rejects relation uses with
-  different scope/applicability/grain/horizon or support. The witness support must match its
-  presentation support. A separate derived check resolves that shared presentation support as an
-  exact claim-targeted environment and requires its target claim in a declared least-fixed-point
-  `Standing` result. Each source/candidate observation use must also
+  different scope/applicability/grain/horizon. A separate derived check resolves the presentation
+  support as an exact claim-targeted environment and requires its target claim in a declared
+  least-fixed-point `Standing` result. Evidence-use support remains separate because existing
+  relation-use support is relation-targeted. Each source/candidate observation use must also
   bind its declared form and answer, and the incompatibility use must bind the two declared
   answers. Each of the three evidence uses must additionally declare an evidence route other than
   `Generate`: a generator proposes a provisional filling and can never supply positive departure
@@ -94,8 +94,9 @@ The protected difference is visible in the accepted sources:
   This is a check on the *declared* route only. A use that declares `Probe` while nothing was
   probed still passes, so the discharge mode is not yet evidence that the route was taken.
   Constructing or checking it evaluates no relation and proves neither claim/source-form
-  denotation, web relevance, non-circularity, incompatibility, nor exteriority. The standing link
-  remains relative to declared closure inputs and does not turn them into actuality or warrant.
+  denotation, web relevance, non-circularity, incompatibility, nor exteriority. It does not yet
+  connect evidence-use support to standing. The presentation standing link remains relative to
+  declared closure inputs and does not turn them into actuality or warrant.
 - The derived `compare_finite_observation_cells` checker now supplies the exact finite
   cell-exclusion discriminator: an observed unequal coordinate gives a separator; no separator
   with any unknown coordinate remains `Unknown`; a completely observed equal table is only a

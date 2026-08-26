@@ -271,9 +271,6 @@ impl DepartureWitness {
         if self.grain != presentation.grain() {
             return Err(DepartureWitnessCheckError::PresentationMismatch("grain"));
         }
-        if self.support != presentation.support() {
-            return Err(DepartureWitnessCheckError::PresentationMismatch("support"));
-        }
         for form in [
             self.source,
             self.candidate,
@@ -342,11 +339,6 @@ impl DepartureWitness {
                     use_ref,
                 ));
             }
-            if relation_use.support() != self.support {
-                return Err(DepartureWitnessCheckError::RelationUseSupportMismatch(
-                    use_ref,
-                ));
-            }
             // A generator proposes a provisional filling; it never supports one.
             // Admitting a `Generate` route here would let a merely generated
             // answer stand as positive departure evidence, which is the exact
@@ -391,12 +383,13 @@ impl DepartureWitness {
     }
 }
 
-/// Revalidates a positive-departure witness and requires its shared source presentation support
-/// to target a claim in one declared least-fixed-point standing result.
+/// Revalidates a positive-departure witness and requires its source presentation support to target
+/// a claim in one declared least-fixed-point standing result.
 ///
 /// This is intentionally a narrow association. It does not evaluate observations or
-/// incompatibility, interpret the target claim as the source form, prove web relevance or
-/// non-circularity, or turn declared closure inputs into actuality or warrant.
+/// incompatibility, connect individual relation-use support routes to standing, interpret the
+/// target claim as the source form, prove web relevance or non-circularity, or turn declared
+/// closure inputs into actuality or warrant.
 pub fn check_departure_witness_standing_support<C: DepartureStandingCatalog>(
     witness: &DepartureWitness,
     standing: &Standing,
@@ -527,8 +520,6 @@ pub enum DepartureWitnessCheckError {
     },
     #[error("relation use {0} does not match the departure witness context")]
     RelationUseContextMismatch(RelationUseRef),
-    #[error("relation use {0} does not name the departure witness's shared support")]
-    RelationUseSupportMismatch(RelationUseRef),
     #[error(
         "{claim} relation use {relation_use} declares Generate, which proposes rather than supports"
     )]
