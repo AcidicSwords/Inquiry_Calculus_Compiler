@@ -4120,6 +4120,11 @@ raw return/event before the entire typed answer/resumption chain is built, and a
 replays it with no second provider call. The next phase-local work is `TRACE-002`, a finite
 multi-event paired-actuality and sufficient-present/reopening traversal.
 
+`TRACE-002A` is its completed derived-order prerequisite: ledger membership must cover each paired
+event exactly once, and causal order remains explicit `Unknown` unless a separate, acyclic declared
+candidate edge set is supplied. Ledger append order never generates that candidate edge set or a
+second authoritative history.
+
 Later phase constraints are deliberately local:
 
 - Phase 8 preserves ledger order versus causal order, resume versus replay, and endpoint versus

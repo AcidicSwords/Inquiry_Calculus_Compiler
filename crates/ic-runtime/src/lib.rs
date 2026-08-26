@@ -41,7 +41,10 @@ pub use replay::{
     ColdReplayedProbe, FiniteProbeReplayError, ReplayObservation, replay_completed_finite_probe,
 };
 use thiserror::Error;
-pub use trace::{PairedActualityTrace, PairedActualityTraceError, QuestionTrace, ReturnTrace};
+pub use trace::{
+    PairedActualityTrace, PairedActualityTraceError, PairedActualityTraversal,
+    PairedActualityTraversalError, QuestionTrace, ReturnTrace, TraversalCausalOrder,
+};
 
 /// A stable target within one inspected runtime program.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]

@@ -175,6 +175,13 @@ The strongest executable obligation is now `TRACE-002`:
 > return projections, and a positive reopening witness without creating a second authoritative
 > history or mutable memory store.
 
+`TRACE-002A` now supplies the first derived traversal boundary: a traversal has exact, duplicate-free
+ledger membership over paired event traces, while causal order is either explicit `Unknown` or a
+separately declared, internally acyclic candidate edge set. A declared causal direction may differ
+from ledger order; neither form creates causal actuality or storage. The remaining `TRACE-002`
+fixture must still construct and cold-replay more than one ordinary event, derive both paired
+projections, factor its sufficient present, and reopen it with a positive separator.
+
 Do not weaken support, pre-warrant generated output, choose a singleton implicitly, or add a
 provider framework, scheduler, model policy, credential store, semantic opcode, table, or crate.
 OpenAI live acceptance is independent and may be rerun only after `F-0001`'s reopen condition changes.

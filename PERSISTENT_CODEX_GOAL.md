@@ -121,6 +121,11 @@ now runs that whole sequence against the installed model itself. The next obliga
 use a finite multi-event traversal to extend paired actuality and sufficient-present/reopening while
 keeping ordinary history authoritative and all traces/presents derived.
 
+`TRACE-002A` is now established as a narrow prerequisite: derived traversal membership is exactly
+ledger-covered, while causal order is explicitly `Unknown` or separately declared and acyclic. It
+does not infer a causal edge from ledger order. The unresolved work remains the complete multi-event
+cold-replay traversal and its sufficient-present/reopening witness.
+
 Do not let a provider or credential residual collapse transport actuality into semantic `Unknown`,
 and do not predeclare support for an unpredictable content-addressed return. If the existing support
 contract creates such a cycle, make that exact cycle the breaker and implement only the smallest
