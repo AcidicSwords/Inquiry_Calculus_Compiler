@@ -6,46 +6,43 @@ Repository actuality must be probed before acting. The current residual was deri
 
 ## Immediate demonstrated predecessor
 
-`METHOD-BRIDGE-001` established a cold-replayable, content-addressed `MethodBridge` whose source-declared residual selects an exact first-order continuation, typed guard, and input-reconstruction program. It rejects undeclared residuals and rival transports, preserves method names only as provenance, and adds no dispatch policy, opcode, table, warrant, or second history.
+`CUE-PLANNING-001` established a cold-replayable exact finite cue admission boundary. A complete signature participates in basis and finite resource-frontier checking only after its method/ports, applicability and binding, whole-field coverage question, exact claim- and relation-targeted standing routes, and actual answer provenance are rechecked. Incomplete evidence remains `Unknown`; generated semantics remain unadmitted; and an insufficient admitted basis retains its concrete separator and generic reentry path.
 
 ## Strongest live obligation
 
-Admit each exact finite cue before it participates in cue-basis sufficiency or resource-frontier selection.
+Represent and check the source `Ask` occurrence whose continuation makes question succession dynamic.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: CUE-PLANNING-001
-plan_phase: 13
-goal: Require checked support, applicability, declared coverage, and answer provenance for every exact finite cue used by the existing basis and nondominated-frontier checkers.
-protected_difference: A structurally valid cue signature is not an admissible cue; incomplete admission is Unknown, while a positively unseparated pair retains its concrete separator.
-discriminator: Accept a fully admitted sufficient cue basis, reject unsupported or context-borrowing cues, return Unknown for incomplete admission, and route a witnessed ambiguous pair through the generic SeparatorProblem path.
-horizon: one finite exact declared cue field, one binding and signature context, caller-supplied finite candidate set and resource preorder
-relevant_decisions: D-0014, D-0057, D-0058, D-0069, D-0124
-relevant_failures: none
-if_pass: QSUCC-OCC-001 occurrence-indexed v2.0 successor identity
-if_fail: reopen the earliest failed support, applicability, coverage, answer-provenance, or exact-signature relation; do not weaken cue sufficiency
+id: QSUCC-OCC-001
+plan_phase: 3
+goal: Add checked content-addressed SourceConfig and AskOccurrence identities, then derive question succession from the exact occurrence, whole supported answer, and first-order continuation rather than from the semantic question and answer alone.
+protected_difference: Two checked Ask occurrences may carry the same semantic question and the same whole proof-carrying supported answer while their distinct continuations yield different lawful successor questions.
+discriminator: Construct two source configurations with equal q and equal supported answer but different checked continuations; preserve two occurrence identities and successor results, and reject a copied position, environment, slot, continuation, binding/compiler version, or provenance field.
+horizon: one binding, one result type, two finite first-order source programs, one equal admitted supported-answer value, pure normalization only until the next Ask or Return
+relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0131, D-0133
+relevant_failures: F-0003
+if_pass: QSUCC-PARTIAL-001 proof-carrying partial-member successor reconstruction
+if_fail: reopen the smallest SourceConfig, structural-position, environment-replay, capture-safety, provenance, or continuation-identity relation; do not add a scheduler or transition opcode
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Start from the existing exact finite protected signature, cue signatures, sufficient-basis checker, finite resource preorder, generic separator problem, and demonstrated method bridge.
+Start from the canonical `IProg::Ask` representation, explicit environment, capture-safe answer binding, admitted finite supported answer, and existing question identities.
 
-Construct two otherwise identical cue candidates:
+Construct two checked source programs whose live `Ask` nodes have the same question and accept the same complete supported-answer value, but whose named continuations normalize to different next questions. Derive a checked `SourceConfig` and `AskOccurrence` for each by re-walking the exact first-order syntax. Bind the same supported answer to both and derive their distinct successors.
 
-1. one whose exact support route stands, whose applicability and finite coverage match the declared field, and whose answer provenance resolves every table entry; and
-2. one that is structurally well formed but has one unsupported, inapplicable, uncovered, foreign, or unresolved provenance obligation.
+Then copy one occurrence field at a time across the pair. The checker must reject the foreign structural position, environment, answer slot, continuation, binding/compiler version, or structural provenance instead of accepting the copied occurrence because the question matches.
 
-The admitted cue may participate in exact basis and nondominated-frontier checks. The second must not. Missing evidence returns `Unknown`, never negative evidence. If the admitted basis still merges a protectedly distinct pair, preserve that exact pair and its equal cue answers as the residual that re-enters the generic separator route.
-
-The smallest wrong implementation would accept a cue because its finite table is total, borrow another cue's support or coverage, collapse incomplete admission to rejection, or discard the concrete ambiguous pair.
+The smallest wrong implementation would key dynamic succession by `(q, answer)` and collapse both continuations to one route.
 
 ## Prohibitions at this boundary
 
-- Do not infer support, applicability, coverage, or answer provenance from structural validity.
-- Do not pre-warrant generated output or choose a singleton completion.
-- Do not claim exhaustive generation, global minimality, impossibility, or a unique optimum from caller-supplied finite candidates.
-- Do not add a scheduler, model policy, semantic opcode, table, crate, credential store, or second history.
-- Do not alter canonical identity or persistence merely to materialize this derived admission.
+- Do not add `QSucc`, question roots, or routes as runtime opcodes or authoritative history.
+- Do not identify semantic question identity with one source occurrence.
+- Do not trust caller-supplied structural positions, environments, versions, provenance, slots, or continuations without re-walking and rechecking the source syntax.
+- Do not select a singleton from the supported answer or erase its proof/evidence identity.
+- Do not add a scheduler, controller, table, crate, credential store, or second history.
 
 ## Exit
 
-On pass, update conformance and any warranted append-only decision, replace the live block with its successor residual, and continue. On failure, preserve the actual return and reopen the earliest implicated relation rather than broadening the architecture.
+On pass, update conformance and any warranted append-only decision, replace the live block with `QSUCC-PARTIAL-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated occurrence-checking relation rather than broadening the architecture.

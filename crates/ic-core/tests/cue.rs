@@ -1,8 +1,10 @@
 use ic_core::{
-    ApplicabilityRef, ArtifactRef, BindingVersionRef, ExactFiniteCueBasisCandidate,
-    ExactFiniteCueBasisError, ExactFiniteCueBasisResult, ExactFiniteCueFrontierError,
-    ExactFiniteSignature, FiniteResourcePreorder, GrainRef, HorizonRef, ScopeRef, SignatureContext,
-    TypeRef, check_exact_finite_cue_basis, select_nondominated_exact_finite_cue_bases,
+    ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ArtifactRef, BindingVersionRef,
+    EXACT_FINITE_CUE_ARTIFACT_KIND, EXACT_FINITE_CUE_SCHEMA_VERSION, ExactFiniteCue,
+    ExactFiniteCueBasisCandidate, ExactFiniteCueBasisError, ExactFiniteCueBasisResult,
+    ExactFiniteCueError, ExactFiniteCueFrontierError, ExactFiniteSignature, FiniteResourcePreorder,
+    GrainRef, HorizonRef, MethodRef, ScopeRef, SignatureContext, TypeRef, TypeSymbol,
+    check_exact_finite_cue_basis, select_nondominated_exact_finite_cue_bases,
 };
 
 fn artifact(value: u8) -> ArtifactRef {
@@ -164,4 +166,53 @@ fn finite_resource_preorder_rejects_invalid_orders_and_candidates() {
             cue_count: 1,
         })
     );
+}
+
+#[test]
+fn exact_finite_cue_semantics_round_trip_with_typed_roles_and_reject_malformed_data() {
+    let cue = ExactFiniteCue::new(
+        MethodRef::from_artifact_ref(artifact(40)),
+        TypeSymbol::new("candidate").expect("domain port must be valid"),
+        TypeSymbol::new("answer").expect("answer port must be valid"),
+        TypeRef::from_artifact_ref(artifact(41)),
+        signature(context(2), &[(10, 20), (11, 21)]),
+    );
+    let envelope = cue.envelope().expect("exact cue must encode");
+    assert_eq!(
+        ExactFiniteCue::from_envelope(&envelope).expect("exact cue must decode"),
+        cue
+    );
+    assert!(
+        cue.referenced_artifacts()
+            .contains(&cue.method().as_artifact_ref())
+    );
+    let payload = cue.canonical_payload().expect("exact cue must encode");
+    assert!(matches!(
+        ExactFiniteCue::decode_payload(&payload[..payload.len() - 1]),
+        Err(ExactFiniteCueError::TruncatedPayload)
+    ));
+    let mut trailing = payload.clone();
+    trailing.push(0);
+    assert!(matches!(
+        ExactFiniteCue::decode_payload(&trailing),
+        Err(ExactFiniteCueError::TrailingPayloadBytes(1))
+    ));
+    let wrong_kind = ArtifactEnvelope::from_canonical_payload(
+        ArtifactKind::new("ic.separator-problem").expect("kind must be valid"),
+        EXACT_FINITE_CUE_SCHEMA_VERSION,
+        payload.clone(),
+    );
+    assert!(matches!(
+        ExactFiniteCue::from_envelope(&wrong_kind),
+        Err(ExactFiniteCueError::UnexpectedArtifactKind { .. })
+    ));
+    let wrong_schema = ArtifactEnvelope::from_canonical_payload(
+        ArtifactKind::new(EXACT_FINITE_CUE_ARTIFACT_KIND).expect("kind must be valid"),
+        EXACT_FINITE_CUE_SCHEMA_VERSION + 1,
+        payload,
+    );
+    assert!(matches!(
+        ExactFiniteCue::from_envelope(&wrong_schema),
+        Err(ExactFiniteCueError::UnsupportedSchemaVersion(_))
+    ));
 }

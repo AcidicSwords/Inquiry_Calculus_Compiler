@@ -9,7 +9,532 @@ use std::collections::BTreeSet;
 
 use thiserror::Error;
 
-use crate::{ArtifactRef, ExactFiniteSignature, SignatureContext};
+use crate::{
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, ClaimCheckError, ClaimError,
+    ClaimRef, DischargeMode, ExactDeterminationError, ExactFiniteSignature, MethodContract,
+    MethodContractCheckError, MethodContractError, MethodRef, RelationCheckError, RelationError,
+    RelationRef, SignatureContext, Standing, SupportEnvironmentArtifactCheckError,
+    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef,
+    SupportSubjectRef, TypeCheckError, TypeError, TypeRef, TypeSymbol, TypedFormRef,
+};
+
+/// Canonical artifact kind for exact finite cue answer semantics.
+pub const EXACT_FINITE_CUE_ARTIFACT_KIND: &str = "ic.exact-finite-cue";
+/// Payload schema version for exact finite cue answer semantics.
+pub const EXACT_FINITE_CUE_SCHEMA_VERSION: u32 = 1;
+
+/// One exact finite answer table for a typed method used as a discriminator.
+///
+/// This is a declaration, not admission. The method provides the reusable typed discriminator;
+/// the table identifies its exact answers over one finite protected field. Standing support and
+/// coverage are established separately by a claim whose subject is this artifact identity.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ExactFiniteCue {
+    method: MethodRef,
+    domain_port: TypeSymbol,
+    answer_port: TypeSymbol,
+    answer_type: TypeRef,
+    signature: ExactFiniteSignature,
+}
+
+impl ExactFiniteCue {
+    #[must_use]
+    pub const fn new(
+        method: MethodRef,
+        domain_port: TypeSymbol,
+        answer_port: TypeSymbol,
+        answer_type: TypeRef,
+        signature: ExactFiniteSignature,
+    ) -> Self {
+        Self {
+            method,
+            domain_port,
+            answer_port,
+            answer_type,
+            signature,
+        }
+    }
+
+    #[must_use]
+    pub const fn method(&self) -> MethodRef {
+        self.method
+    }
+
+    #[must_use]
+    pub const fn domain_port(&self) -> &TypeSymbol {
+        &self.domain_port
+    }
+
+    #[must_use]
+    pub const fn answer_port(&self) -> &TypeSymbol {
+        &self.answer_port
+    }
+
+    #[must_use]
+    pub const fn answer_type(&self) -> TypeRef {
+        self.answer_type
+    }
+
+    #[must_use]
+    pub const fn signature(&self) -> &ExactFiniteSignature {
+        &self.signature
+    }
+
+    pub fn canonical_payload(&self) -> Result<Vec<u8>, ExactFiniteCueError> {
+        let mut encoded = Vec::new();
+        cue_reference(&mut encoded, self.method.as_artifact_ref());
+        let context = self.signature.context();
+        for dependency in [
+            context.binding().as_artifact_ref(),
+            context.scope().as_artifact_ref(),
+            context.applicability().as_artifact_ref(),
+            context.grain().as_artifact_ref(),
+            context.horizon().as_artifact_ref(),
+            context.domain().as_artifact_ref(),
+            self.answer_type.as_artifact_ref(),
+        ] {
+            cue_reference(&mut encoded, dependency);
+        }
+        cue_text(&mut encoded, self.domain_port.as_str())?;
+        cue_text(&mut encoded, self.answer_port.as_str())?;
+        cue_count(&mut encoded, self.signature.values().len())?;
+        for (domain, answer) in self.signature.values() {
+            cue_reference(&mut encoded, *domain);
+            cue_reference(&mut encoded, *answer);
+        }
+        Ok(encoded)
+    }
+
+    pub fn decode_payload(payload: &[u8]) -> Result<Self, ExactFiniteCueError> {
+        let mut cursor = CueCursor::new(payload);
+        let method = MethodRef::from_artifact_ref(cursor.reference()?);
+        let context = SignatureContext::new(
+            crate::BindingVersionRef::from_artifact_ref(cursor.reference()?),
+            crate::ScopeRef::from_artifact_ref(cursor.reference()?),
+            crate::ApplicabilityRef::from_artifact_ref(cursor.reference()?),
+            crate::GrainRef::from_artifact_ref(cursor.reference()?),
+            crate::HorizonRef::from_artifact_ref(cursor.reference()?),
+            TypeRef::from_artifact_ref(cursor.reference()?),
+        );
+        let answer_type = TypeRef::from_artifact_ref(cursor.reference()?);
+        let domain_port =
+            TypeSymbol::new(cursor.text()?).map_err(|_| ExactFiniteCueError::InvalidPortName)?;
+        let answer_port =
+            TypeSymbol::new(cursor.text()?).map_err(|_| ExactFiniteCueError::InvalidPortName)?;
+        let entry_count = cursor.count()?;
+        let mut entries = Vec::with_capacity(entry_count);
+        for _ in 0..entry_count {
+            entries.push((cursor.reference()?, cursor.reference()?));
+        }
+        if !cursor.finished() {
+            return Err(ExactFiniteCueError::TrailingPayloadBytes(
+                cursor.remaining(),
+            ));
+        }
+        let signature = ExactFiniteSignature::new(context, entries)?;
+        Ok(Self::new(
+            method,
+            domain_port,
+            answer_port,
+            answer_type,
+            signature,
+        ))
+    }
+
+    pub fn envelope(&self) -> Result<ArtifactEnvelope, ExactFiniteCueError> {
+        Ok(ArtifactEnvelope::from_canonical_payload(
+            ArtifactKind::new(EXACT_FINITE_CUE_ARTIFACT_KIND)?,
+            EXACT_FINITE_CUE_SCHEMA_VERSION,
+            self.canonical_payload()?,
+        ))
+    }
+
+    pub fn artifact_ref(&self) -> Result<ArtifactRef, ExactFiniteCueError> {
+        Ok(self.envelope()?.artifact_ref()?)
+    }
+
+    pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, ExactFiniteCueError> {
+        if envelope.kind().as_str() != EXACT_FINITE_CUE_ARTIFACT_KIND {
+            return Err(ExactFiniteCueError::UnexpectedArtifactKind {
+                expected: EXACT_FINITE_CUE_ARTIFACT_KIND,
+                actual: envelope.kind().as_str().to_owned(),
+            });
+        }
+        if envelope.schema_version() != EXACT_FINITE_CUE_SCHEMA_VERSION {
+            return Err(ExactFiniteCueError::UnsupportedSchemaVersion(
+                envelope.schema_version(),
+            ));
+        }
+        Self::decode_payload(envelope.canonical_payload())
+    }
+
+    #[must_use]
+    pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
+        let context = self.signature.context();
+        let mut references = vec![
+            self.method.as_artifact_ref(),
+            context.binding().as_artifact_ref(),
+            context.scope().as_artifact_ref(),
+            context.applicability().as_artifact_ref(),
+            context.grain().as_artifact_ref(),
+            context.horizon().as_artifact_ref(),
+            context.domain().as_artifact_ref(),
+            self.answer_type.as_artifact_ref(),
+        ];
+        for (domain, answer) in self.signature.values() {
+            references.push(*domain);
+            references.push(*answer);
+        }
+        references
+    }
+}
+
+/// Catalog boundary for exact finite cue admission.
+pub trait ExactFiniteCueCatalog: SupportEnvironmentCatalog {
+    fn resolve_method(&self, reference: MethodRef) -> Option<MethodContract>;
+}
+
+/// A fully checked exact cue with both reusable-relation and answer-semantics support routes.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct AdmittedExactFiniteCue {
+    cue: ExactFiniteCue,
+    coverage_claim: ClaimRef,
+    cue_support: SupportEnvironmentRef,
+    relation_support: SupportEnvironmentRef,
+}
+
+impl AdmittedExactFiniteCue {
+    #[must_use]
+    pub const fn cue(&self) -> &ExactFiniteCue {
+        &self.cue
+    }
+
+    #[must_use]
+    pub const fn signature(&self) -> &ExactFiniteSignature {
+        self.cue.signature()
+    }
+
+    #[must_use]
+    pub const fn coverage_claim(&self) -> ClaimRef {
+        self.coverage_claim
+    }
+
+    #[must_use]
+    pub const fn cue_support(&self) -> SupportEnvironmentRef {
+        self.cue_support
+    }
+
+    #[must_use]
+    pub const fn relation_support(&self) -> SupportEnvironmentRef {
+        self.relation_support
+    }
+}
+
+/// Admission result preserving incomplete support or execution evidence as `Unknown`.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ExactFiniteCueAdmission {
+    Admitted(Box<AdmittedExactFiniteCue>),
+    Unknown {
+        cue: ArtifactRef,
+        residual: ExactFiniteCueUnknown,
+    },
+}
+
+/// Positive descriptions of the missing evidence that prevents exact cue admission.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ExactFiniteCueUnknown {
+    RelationSupportIncomplete,
+    CueCoverageSupportIncomplete,
+    GeneratedAnswerSemantics,
+    MissingProbeProvenance,
+}
+
+/// Checks and admits one exact cue through its exact claim- and relation-targeted standing routes.
+///
+/// The coverage claim must name the cue artifact as its subject and originate from the method's
+/// relation. The method's relation and the cue claim must each close through the exact supplied
+/// environment. A generated method never supplies admitted exact answer semantics, and a probe
+/// method requires preserved raw-return and resolution-path provenance. Missing standing,
+/// closure, or probe provenance remains `Unknown` rather than negative evidence.
+pub fn admit_exact_finite_cue<C: ExactFiniteCueCatalog>(
+    cue: ExactFiniteCue,
+    coverage_claim: ClaimRef,
+    cue_support: SupportEnvironmentRef,
+    relation_support: SupportEnvironmentRef,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<ExactFiniteCueAdmission, ExactFiniteCueCheckError> {
+    let cue_ref = cue.artifact_ref()?;
+    let method = check_exact_finite_cue_structure(&cue, catalog)?;
+
+    let claim = catalog.resolve_claim(coverage_claim).ok_or(
+        ExactFiniteCueCheckError::UnresolvedCoverageClaim(coverage_claim),
+    )?;
+    let calculated_claim = claim.claim_ref()?;
+    if calculated_claim != coverage_claim {
+        return Err(ExactFiniteCueCheckError::CoverageClaimIdentityMismatch {
+            reference: coverage_claim,
+            calculated: calculated_claim,
+        });
+    }
+    claim.check(catalog)?;
+    if claim.subject() != cue_ref {
+        return Err(ExactFiniteCueCheckError::CoverageClaimSubjectMismatch {
+            cue: cue_ref,
+            subject: claim.subject(),
+        });
+    }
+    let source_query = catalog.resolve_open_query(claim.source_question()).ok_or(
+        ExactFiniteCueCheckError::UnresolvedSourceQuestion(claim.source_question()),
+    )?;
+    if source_query.relation() != method.relation() {
+        return Err(ExactFiniteCueCheckError::SourceRelationMismatch {
+            method: method.relation(),
+            claim: source_query.relation(),
+        });
+    }
+    let context = cue.signature.context();
+    let source_context = source_query.context();
+    if source_context.scope() != context.scope() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch(
+            "source question scope",
+        ));
+    }
+    if source_context.applicability() != context.applicability() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch(
+            "source question applicability",
+        ));
+    }
+    if source_context.grain() != context.grain() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch(
+            "source question grain",
+        ));
+    }
+    if source_context.horizon() != context.horizon() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch(
+            "source question horizon",
+        ));
+    }
+    for port in [&cue.domain_port, &cue.answer_port] {
+        source_query
+            .open_ports()
+            .iter()
+            .find(|open| open.port() == port)
+            .ok_or_else(|| {
+                ExactFiniteCueCheckError::CoverageSourcePortNotOpen(port.as_str().to_owned())
+            })?;
+    }
+    if claim.scope() != context.scope() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch("claim scope"));
+    }
+    if claim.applicability() != context.applicability() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch(
+            "claim applicability",
+        ));
+    }
+
+    check_support_environment(
+        cue_support,
+        SupportSubjectRef::Claim(coverage_claim),
+        context,
+        catalog,
+    )?;
+    check_support_environment(
+        relation_support,
+        SupportSubjectRef::Relation(method.relation()),
+        context,
+        catalog,
+    )?;
+
+    if !standing.contains_relation(method.relation())
+        || !standing.closes_through(
+            SupportSubjectRef::Relation(method.relation()),
+            relation_support,
+        )
+    {
+        return Ok(ExactFiniteCueAdmission::Unknown {
+            cue: cue_ref,
+            residual: ExactFiniteCueUnknown::RelationSupportIncomplete,
+        });
+    }
+    if !standing.contains(coverage_claim)
+        || !standing.closes_through(SupportSubjectRef::Claim(coverage_claim), cue_support)
+    {
+        return Ok(ExactFiniteCueAdmission::Unknown {
+            cue: cue_ref,
+            residual: ExactFiniteCueUnknown::CueCoverageSupportIncomplete,
+        });
+    }
+    if method.authority() == DischargeMode::Generate {
+        return Ok(ExactFiniteCueAdmission::Unknown {
+            cue: cue_ref,
+            residual: ExactFiniteCueUnknown::GeneratedAnswerSemantics,
+        });
+    }
+    if method.authority() == DischargeMode::Probe
+        && (claim.supporting_returns().is_empty() || claim.resolution_paths().is_empty())
+    {
+        return Ok(ExactFiniteCueAdmission::Unknown {
+            cue: cue_ref,
+            residual: ExactFiniteCueUnknown::MissingProbeProvenance,
+        });
+    }
+    Ok(ExactFiniteCueAdmission::Admitted(Box::new(
+        AdmittedExactFiniteCue {
+            cue,
+            coverage_claim,
+            cue_support,
+            relation_support,
+        },
+    )))
+}
+
+/// Applies the exact sufficient-basis theorem only to already admitted cues.
+pub fn check_admitted_exact_finite_cue_basis(
+    cues: &[AdmittedExactFiniteCue],
+    protected: &ExactFiniteSignature,
+) -> Result<ExactFiniteCueBasisResult, ExactFiniteCueBasisError> {
+    let signatures: Vec<_> = cues.iter().map(|cue| cue.signature().clone()).collect();
+    check_exact_finite_cue_basis(&signatures, protected)
+}
+
+/// Selects a finite nondominated frontier only from already admitted exact cues.
+pub fn select_nondominated_admitted_exact_finite_cue_bases(
+    cues: &[AdmittedExactFiniteCue],
+    protected: &ExactFiniteSignature,
+    candidates: &[ExactFiniteCueBasisCandidate],
+    resources: &FiniteResourcePreorder,
+) -> Result<ExactFiniteCueFrontier, ExactFiniteCueFrontierError> {
+    let signatures: Vec<_> = cues.iter().map(|cue| cue.signature().clone()).collect();
+    select_nondominated_exact_finite_cue_bases(&signatures, protected, candidates, resources)
+}
+
+fn check_exact_finite_cue_structure<C: ExactFiniteCueCatalog>(
+    cue: &ExactFiniteCue,
+    catalog: &C,
+) -> Result<MethodContract, ExactFiniteCueCheckError> {
+    if cue.domain_port == cue.answer_port {
+        return Err(ExactFiniteCueCheckError::IdenticalPorts);
+    }
+    let method = catalog
+        .resolve_method(cue.method)
+        .ok_or(ExactFiniteCueCheckError::UnresolvedMethod(cue.method))?;
+    let calculated_method = method.method_ref()?;
+    if calculated_method != cue.method {
+        return Err(ExactFiniteCueCheckError::MethodIdentityMismatch {
+            reference: cue.method,
+            calculated: calculated_method,
+        });
+    }
+    method.check(catalog)?;
+    let relation = catalog.resolve_relation_schema(method.relation()).ok_or(
+        ExactFiniteCueCheckError::UnresolvedRelation(method.relation()),
+    )?;
+    let context = cue.signature.context();
+    if relation.binding() != context.binding() {
+        return Err(ExactFiniteCueCheckError::BindingMismatch);
+    }
+    if method.applicability() != context.applicability() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch(
+            "method applicability",
+        ));
+    }
+    let domain_type = relation
+        .ports()
+        .iter()
+        .find(|port| port.name() == &cue.domain_port)
+        .map(|port| port.ty())
+        .ok_or_else(|| {
+            ExactFiniteCueCheckError::UnknownPort(cue.domain_port.as_str().to_owned())
+        })?;
+    let answer_type = relation
+        .ports()
+        .iter()
+        .find(|port| port.name() == &cue.answer_port)
+        .map(|port| port.ty())
+        .ok_or_else(|| {
+            ExactFiniteCueCheckError::UnknownPort(cue.answer_port.as_str().to_owned())
+        })?;
+    if domain_type != context.domain() {
+        return Err(ExactFiniteCueCheckError::PortTypeMismatch {
+            port: cue.domain_port.as_str().to_owned(),
+            expected: domain_type,
+            actual: context.domain(),
+        });
+    }
+    if answer_type != cue.answer_type {
+        return Err(ExactFiniteCueCheckError::PortTypeMismatch {
+            port: cue.answer_port.as_str().to_owned(),
+            expected: answer_type,
+            actual: cue.answer_type,
+        });
+    }
+    for (domain, answer) in cue.signature.values() {
+        check_cue_form(*domain, domain_type, catalog)?;
+        check_cue_form(*answer, answer_type, catalog)?;
+    }
+    Ok(method)
+}
+
+fn check_cue_form<C: ExactFiniteCueCatalog>(
+    reference: ArtifactRef,
+    expected: TypeRef,
+    catalog: &C,
+) -> Result<(), ExactFiniteCueCheckError> {
+    let typed_ref = TypedFormRef::from_artifact_ref(reference);
+    let form = catalog
+        .resolve_typed_form(typed_ref)
+        .ok_or(ExactFiniteCueCheckError::UnresolvedTypedForm(typed_ref))?;
+    let calculated = form.typed_form_ref()?;
+    if calculated != typed_ref {
+        return Err(ExactFiniteCueCheckError::TypedFormIdentityMismatch {
+            reference: typed_ref,
+            calculated,
+        });
+    }
+    form.check(catalog)?;
+    if form.ty() != expected {
+        return Err(ExactFiniteCueCheckError::TypedFormTypeMismatch {
+            reference: typed_ref,
+            expected,
+            actual: form.ty(),
+        });
+    }
+    Ok(())
+}
+
+fn check_support_environment<C: ExactFiniteCueCatalog>(
+    reference: SupportEnvironmentRef,
+    expected_target: SupportSubjectRef,
+    context: SignatureContext,
+    catalog: &C,
+) -> Result<(), ExactFiniteCueCheckError> {
+    let environment = catalog.resolve_support_environment(reference).ok_or(
+        ExactFiniteCueCheckError::UnresolvedSupportEnvironment(reference),
+    )?;
+    let calculated = environment.support_environment_ref()?;
+    if calculated != reference {
+        return Err(
+            ExactFiniteCueCheckError::SupportEnvironmentIdentityMismatch {
+                reference,
+                calculated,
+            },
+        );
+    }
+    environment.check(catalog)?;
+    if environment.target() != expected_target {
+        return Err(ExactFiniteCueCheckError::SupportTargetMismatch);
+    }
+    if environment.scope() != context.scope() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch("support scope"));
+    }
+    if environment.applicability() != context.applicability() {
+        return Err(ExactFiniteCueCheckError::ContextMismatch(
+            "support applicability",
+        ));
+    }
+    Ok(())
+}
 
 /// A concrete protectedly distinct pair that every supplied cue answers identically.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -402,4 +927,200 @@ pub enum ExactFiniteCueFrontierError {
 
     #[error(transparent)]
     CueBasis(#[from] ExactFiniteCueBasisError),
+}
+
+/// Canonical encoding failures for exact finite cue declarations.
+#[derive(Debug, Error)]
+pub enum ExactFiniteCueError {
+    #[error(transparent)]
+    Artifact(#[from] ArtifactError),
+    #[error(transparent)]
+    Signature(#[from] ExactDeterminationError),
+    #[error("exact-finite-cue payload is truncated")]
+    TruncatedPayload,
+    #[error("exact-finite-cue payload length overflows")]
+    PayloadLengthOverflow,
+    #[error("exact-finite-cue payload has {0} trailing bytes")]
+    TrailingPayloadBytes(usize),
+    #[error("exact-finite-cue text is malformed UTF-8")]
+    MalformedUtf8,
+    #[error("exact-finite-cue port name is invalid")]
+    InvalidPortName,
+    #[error("exact-finite-cue text is too long: {0} bytes")]
+    TextTooLong(usize),
+    #[error("exact-finite-cue table is too large: {0} rows")]
+    TooManyEntries(usize),
+    #[error("expected artifact kind {expected:?}, got {actual:?}")]
+    UnexpectedArtifactKind {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("unsupported exact-finite-cue schema version {0}")]
+    UnsupportedSchemaVersion(u32),
+}
+
+/// Structural and standing-admission failures for exact finite cues.
+#[derive(Debug, Error)]
+pub enum ExactFiniteCueCheckError {
+    #[error(transparent)]
+    Cue(#[from] ExactFiniteCueError),
+    #[error(transparent)]
+    Method(#[from] MethodContractError),
+    #[error(transparent)]
+    MethodCheck(#[from] MethodContractCheckError),
+    #[error(transparent)]
+    Claim(#[from] ClaimError),
+    #[error(transparent)]
+    ClaimCheck(#[from] ClaimCheckError),
+    #[error(transparent)]
+    Support(#[from] SupportEnvironmentArtifactError),
+    #[error(transparent)]
+    SupportCheck(#[from] SupportEnvironmentArtifactCheckError),
+    #[error(transparent)]
+    Relation(#[from] RelationError),
+    #[error(transparent)]
+    RelationCheck(#[from] RelationCheckError),
+    #[error(transparent)]
+    Type(#[from] TypeError),
+    #[error(transparent)]
+    TypeCheck(#[from] TypeCheckError),
+    #[error("method {0} is unavailable")]
+    UnresolvedMethod(MethodRef),
+    #[error("method {reference} hashes to {calculated}, not its claimed identity")]
+    MethodIdentityMismatch {
+        reference: MethodRef,
+        calculated: MethodRef,
+    },
+    #[error("method relation {0} is unavailable")]
+    UnresolvedRelation(RelationRef),
+    #[error("cue binding does not match the method relation binding")]
+    BindingMismatch,
+    #[error("cue uses the same relation port for domain and answer")]
+    IdenticalPorts,
+    #[error("cue relation has no port named {0:?}")]
+    UnknownPort(String),
+    #[error("cue port {port:?} has type {actual}, expected {expected}")]
+    PortTypeMismatch {
+        port: String,
+        expected: TypeRef,
+        actual: TypeRef,
+    },
+    #[error("typed cue value {0} is unavailable")]
+    UnresolvedTypedForm(TypedFormRef),
+    #[error("typed cue value {reference} hashes to {calculated}")]
+    TypedFormIdentityMismatch {
+        reference: TypedFormRef,
+        calculated: TypedFormRef,
+    },
+    #[error("typed cue value {reference} has type {actual}, expected {expected}")]
+    TypedFormTypeMismatch {
+        reference: TypedFormRef,
+        expected: TypeRef,
+        actual: TypeRef,
+    },
+    #[error("coverage claim {0} is unavailable")]
+    UnresolvedCoverageClaim(ClaimRef),
+    #[error("coverage claim {reference} hashes to {calculated}")]
+    CoverageClaimIdentityMismatch {
+        reference: ClaimRef,
+        calculated: ClaimRef,
+    },
+    #[error("coverage claim subject {subject} does not name exact cue {cue}")]
+    CoverageClaimSubjectMismatch {
+        cue: ArtifactRef,
+        subject: ArtifactRef,
+    },
+    #[error("coverage claim source question {0} is unavailable")]
+    UnresolvedSourceQuestion(crate::QueryRef),
+    #[error("coverage claim relation {claim} does not match method relation {method}")]
+    SourceRelationMismatch {
+        method: RelationRef,
+        claim: RelationRef,
+    },
+    #[error("coverage source question does not leave cue port {0:?} open")]
+    CoverageSourcePortNotOpen(String),
+    #[error("support environment {0} is unavailable")]
+    UnresolvedSupportEnvironment(SupportEnvironmentRef),
+    #[error("support environment {reference} hashes to {calculated}")]
+    SupportEnvironmentIdentityMismatch {
+        reference: SupportEnvironmentRef,
+        calculated: SupportEnvironmentRef,
+    },
+    #[error("support environment targets the wrong standing subject")]
+    SupportTargetMismatch,
+    #[error("cue context mismatch: {0}")]
+    ContextMismatch(&'static str),
+}
+
+fn cue_reference(encoded: &mut Vec<u8>, reference: ArtifactRef) {
+    encoded.extend_from_slice(reference.as_bytes());
+}
+
+fn cue_text(encoded: &mut Vec<u8>, value: &str) -> Result<(), ExactFiniteCueError> {
+    let length =
+        u32::try_from(value.len()).map_err(|_| ExactFiniteCueError::TextTooLong(value.len()))?;
+    encoded.extend_from_slice(&length.to_be_bytes());
+    encoded.extend_from_slice(value.as_bytes());
+    Ok(())
+}
+
+fn cue_count(encoded: &mut Vec<u8>, value: usize) -> Result<(), ExactFiniteCueError> {
+    let count = u32::try_from(value).map_err(|_| ExactFiniteCueError::TooManyEntries(value))?;
+    encoded.extend_from_slice(&count.to_be_bytes());
+    Ok(())
+}
+
+struct CueCursor<'a> {
+    bytes: &'a [u8],
+    position: usize,
+}
+
+impl<'a> CueCursor<'a> {
+    const fn new(bytes: &'a [u8]) -> Self {
+        Self { bytes, position: 0 }
+    }
+
+    fn take(&mut self, length: usize) -> Result<&'a [u8], ExactFiniteCueError> {
+        let end = self
+            .position
+            .checked_add(length)
+            .ok_or(ExactFiniteCueError::PayloadLengthOverflow)?;
+        let bytes = self
+            .bytes
+            .get(self.position..end)
+            .ok_or(ExactFiniteCueError::TruncatedPayload)?;
+        self.position = end;
+        Ok(bytes)
+    }
+
+    fn reference(&mut self) -> Result<ArtifactRef, ExactFiniteCueError> {
+        let bytes: [u8; 32] = self
+            .take(32)?
+            .try_into()
+            .expect("exact 32-byte cue reference slice");
+        Ok(ArtifactRef::from_bytes(bytes))
+    }
+
+    fn count(&mut self) -> Result<usize, ExactFiniteCueError> {
+        let bytes: [u8; 4] = self
+            .take(4)?
+            .try_into()
+            .expect("exact four-byte cue count slice");
+        Ok(u32::from_be_bytes(bytes) as usize)
+    }
+
+    fn text(&mut self) -> Result<String, ExactFiniteCueError> {
+        let length = self.count()?;
+        let bytes = self.take(length)?;
+        let text = std::str::from_utf8(bytes).map_err(|_| ExactFiniteCueError::MalformedUtf8)?;
+        Ok(text.to_owned())
+    }
+
+    const fn finished(&self) -> bool {
+        self.position == self.bytes.len()
+    }
+
+    const fn remaining(&self) -> usize {
+        self.bytes.len() - self.position
+    }
 }

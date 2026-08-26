@@ -69,9 +69,13 @@ pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,
 };
 pub use cue::{
-    ExactFiniteCueBasisCandidate, ExactFiniteCueBasisError, ExactFiniteCueBasisResult,
-    ExactFiniteCueFrontier, ExactFiniteCueFrontierError, FiniteCueSeparator,
-    FiniteResourcePreorder, InsufficientExactFiniteCueBasis, check_exact_finite_cue_basis,
+    AdmittedExactFiniteCue, EXACT_FINITE_CUE_ARTIFACT_KIND, EXACT_FINITE_CUE_SCHEMA_VERSION,
+    ExactFiniteCue, ExactFiniteCueAdmission, ExactFiniteCueBasisCandidate,
+    ExactFiniteCueBasisError, ExactFiniteCueBasisResult, ExactFiniteCueCatalog,
+    ExactFiniteCueCheckError, ExactFiniteCueError, ExactFiniteCueFrontier,
+    ExactFiniteCueFrontierError, ExactFiniteCueUnknown, FiniteCueSeparator, FiniteResourcePreorder,
+    InsufficientExactFiniteCueBasis, admit_exact_finite_cue, check_admitted_exact_finite_cue_basis,
+    check_exact_finite_cue_basis, select_nondominated_admitted_exact_finite_cue_bases,
     select_nondominated_exact_finite_cue_bases,
 };
 pub use decoder::{

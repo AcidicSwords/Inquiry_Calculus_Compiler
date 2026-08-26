@@ -15,8 +15,10 @@ use std::{
 use ic_core::{
     ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef, ArtifactEnvelope,
     ArtifactKind, ArtifactRef, BackendRef, BackendRequest, BindingVersionRef, BoundaryChart,
-    BoundaryRef, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    CoverageRef, DeclaredSupportClosure, DischargeMode, EffectivityRef, EventRef,
+    BoundaryRef, ClaimArtifact, ClaimRef, ClaimStatus, CompletionCandidate,
+    CompletionCandidateCatalog, CompletionCandidateRef, CoverageRef, DeclaredSupportClosure,
+    DischargeMode, EffectivityRef, EventRef, ExactFiniteCue, ExactFiniteCueAdmission,
+    ExactFiniteCueCatalog, ExactFiniteCueCheckError, ExactFiniteCueUnknown,
     ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFinitePresentUpdate,
     ExactFiniteSignature, ExactFiniteSufficientPresent, ExactFiniteSufficientPresentResult,
     ExactProtectedContinuation, ExtensionDomainRef, FiniteAnswerBindingError, FiniteDecoder,
@@ -34,19 +36,21 @@ use ic_core::{
     SeparatorProblemRef, SignatureContext, StateRef, StructureViewRef, SupportEnvironmentArtifact,
     SupportEnvironmentCatalog, SupportEnvironmentRef, SupportSubjectRef, SurfacePlan, TyIR,
     TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
-    admit_finite_supported_answers, bind_finite_ask_continuation,
-    challenge_exact_finite_sufficient_present, decode_actual_event,
-    derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
-    match_decoded_observation_use, standing_from_declared_support,
+    admit_exact_finite_cue, admit_finite_supported_answers, bind_finite_ask_continuation,
+    challenge_exact_finite_sufficient_present, check_admitted_exact_finite_cue_basis,
+    decode_actual_event, derive_exact_finite_sufficient_present,
+    extend_exact_finite_sufficient_present, match_decoded_observation_use,
+    standing_from_declared_support,
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, MethodBridgeReentryError, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText,
-    OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError, PairedActualityTrace,
-    PairedActualityTraversal, ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn,
-    ReplayObservation, RuntimeCatalog, Terminator, TraversalCausalOrder, dispatch_probe,
-    materialize_ollama_decoded_texts, replay_completed_finite_probe,
-    replay_completed_finite_separator_inquiry, route_separator_through_method_bridge,
+    MachineStep, MethodBridgeReentryError, MethodCuePlanning, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
+    OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
+    PairedActualityTrace, PairedActualityTraversal, ProbeDispatchContext, ProbeProvider, ProgramIR,
+    ProviderReturn, ReplayObservation, RuntimeCatalog, Terminator, TraversalCausalOrder,
+    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
+    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
+    route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -107,6 +111,7 @@ struct Catalog {
     separator_problems: BTreeMap<SeparatorProblemRef, SeparatorProblem>,
     formulas: BTreeMap<FormulaRef, FormulaArtifact>,
     methods: BTreeMap<MethodRef, MethodContract>,
+    claims: BTreeMap<ClaimRef, ClaimArtifact>,
 }
 
 impl Catalog {
@@ -191,6 +196,12 @@ impl Catalog {
     fn insert_method(&mut self, value: MethodContract) -> MethodRef {
         let reference = value.method_ref().expect("method must encode");
         self.methods.insert(reference, value);
+        reference
+    }
+
+    fn insert_claim(&mut self, value: ClaimArtifact) -> ClaimRef {
+        let reference = value.claim_ref().expect("claim must encode");
+        self.claims.insert(reference, value);
         reference
     }
 }
@@ -288,8 +299,8 @@ impl ObservationResultCatalog for Catalog {
 }
 
 impl SupportEnvironmentCatalog for Catalog {
-    fn resolve_claim(&self, _reference: ic_core::ClaimRef) -> Option<ic_core::ClaimArtifact> {
-        None
+    fn resolve_claim(&self, reference: ClaimRef) -> Option<ClaimArtifact> {
+        self.claims.get(&reference).cloned()
     }
 
     fn resolve_support_environment(
@@ -328,6 +339,12 @@ impl GeneratedInquiryCatalog for Catalog {
 }
 
 impl MethodBridgeCatalog for Catalog {
+    fn resolve_method(&self, reference: MethodRef) -> Option<MethodContract> {
+        self.methods.get(&reference).cloned()
+    }
+}
+
+impl ExactFiniteCueCatalog for Catalog {
     fn resolve_method(&self, reference: MethodRef) -> Option<MethodContract> {
         self.methods.get(&reference).cloned()
     }
@@ -2871,6 +2888,536 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
     )
     .await;
 
+    let cue_domain_port = TypeSymbol::new("candidate").expect("cue domain port must be valid");
+    let cue_answer_port = TypeSymbol::new("cue_answer").expect("cue answer port must be valid");
+    let cue_relation_value = RelationSchema::new(
+        catalog
+            .schemas
+            .get(&roots.relation)
+            .expect("source relation must remain loaded")
+            .binding(),
+        vec![
+            RelationPort::new(cue_domain_port.clone(), roots.unit),
+            RelationPort::new(cue_answer_port.clone(), roots.unit),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: stored_ref(&store, b"multi-event-cue-relation-contract").await,
+        },
+        Vec::new(),
+        vec![problem_ref.as_artifact_ref()],
+    );
+    let cue_relation_envelope = cue_relation_value
+        .envelope()
+        .expect("cue relation must encode");
+    let cue_relation = RelationRef::from_artifact_ref(
+        persist(
+            &store,
+            &cue_relation_envelope,
+            &cue_relation_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_schema(cue_relation_value), cue_relation);
+    let cue_relation_support_value = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Relation(cue_relation),
+        Vec::new(),
+        vec![roots.raw_return],
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        query.context().applicability(),
+        query.context().scope(),
+    )
+    .expect("cue relation support must canonicalize");
+    let cue_relation_support_envelope = cue_relation_support_value
+        .envelope()
+        .expect("cue relation support must encode");
+    let cue_relation_support = SupportEnvironmentRef::from_artifact_ref(
+        persist(
+            &store,
+            &cue_relation_support_envelope,
+            &cue_relation_support_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_support(cue_relation_support_value),
+        cue_relation_support
+    );
+    let cue_query_value = OpenQuery::new(
+        cue_relation,
+        Vec::new(),
+        vec![
+            OpenPort::new(cue_domain_port.clone(), DischargeMode::Probe),
+            OpenPort::new(cue_answer_port.clone(), DischargeMode::Probe),
+        ],
+        RelationUseContext::new(
+            query.context().scope(),
+            query.context().applicability(),
+            query.context().grain(),
+            query.context().horizon(),
+            DischargeMode::Probe,
+            cue_relation_support.as_support_ref(),
+            None,
+        ),
+    );
+    let cue_query_envelope = cue_query_value.envelope().expect("cue query must encode");
+    let cue_query = QueryRef::from_artifact_ref(
+        persist(
+            &store,
+            &cue_query_envelope,
+            &cue_query_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_query(cue_query_value), cue_query);
+    let cue_method = MethodContract::new(
+        cue_relation,
+        query.context().applicability(),
+        stored_ref(&store, b"multi-event-cue-method-law").await,
+        method_coverage,
+        DischargeMode::Probe,
+        method_extension,
+        method_backend,
+        None,
+        None,
+        Vec::new(),
+        vec![cue_query.as_artifact_ref(), problem_ref.as_artifact_ref()],
+    )
+    .expect("cue method must canonicalize");
+    let cue_method_envelope = cue_method.envelope().expect("cue method must encode");
+    let cue_method_ref = MethodRef::from_artifact_ref(
+        persist(
+            &store,
+            &cue_method_envelope,
+            &cue_method.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_method(cue_method.clone()), cue_method_ref);
+    let cue_signature_context = SignatureContext::new(
+        catalog
+            .schemas
+            .get(&cue_relation)
+            .expect("cue relation must remain loaded")
+            .binding(),
+        query.context().scope(),
+        query.context().applicability(),
+        query.context().grain(),
+        query.context().horizon(),
+        roots.unit,
+    );
+    let cue_value = ExactFiniteCue::new(
+        cue_method_ref,
+        cue_domain_port,
+        cue_answer_port,
+        roots.unit,
+        ExactFiniteSignature::new(
+            cue_signature_context,
+            vec![
+                (
+                    roots.answer_a.as_artifact_ref(),
+                    roots.answer_a.as_artifact_ref(),
+                ),
+                (
+                    roots.answer_b.as_artifact_ref(),
+                    roots.answer_b.as_artifact_ref(),
+                ),
+            ],
+        )
+        .expect("cue signature must be exact over both live candidates"),
+    );
+    cue_method
+        .check(&catalog)
+        .expect("cue method relation must check");
+    let cue_envelope = cue_value.envelope().expect("exact cue must encode");
+    let cue_ref = persist(&store, &cue_envelope, &cue_value.referenced_artifacts()).await;
+    let cue_claim_value = ClaimArtifact::new(
+        cue_ref,
+        cue_query,
+        vec![roots.raw_return],
+        vec![roots.decoded_path],
+        query.context().scope(),
+        query.context().applicability(),
+        ClaimStatus::Checked,
+    )
+    .expect("cue coverage claim must canonicalize");
+    let cue_claim_envelope = cue_claim_value
+        .envelope()
+        .expect("cue coverage claim must encode");
+    let cue_claim = ClaimRef::from_artifact_ref(
+        persist(
+            &store,
+            &cue_claim_envelope,
+            &cue_claim_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_claim(cue_claim_value), cue_claim);
+    let cue_support_value = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Claim(cue_claim),
+        Vec::new(),
+        vec![roots.raw_return],
+        vec![cue_ref],
+        Vec::new(),
+        Vec::new(),
+        query.context().applicability(),
+        query.context().scope(),
+    )
+    .expect("cue coverage support must canonicalize");
+    let cue_support_envelope = cue_support_value
+        .envelope()
+        .expect("cue coverage support must encode");
+    let cue_support = SupportEnvironmentRef::from_artifact_ref(
+        persist(
+            &store,
+            &cue_support_envelope,
+            &cue_support_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_support(cue_support_value), cue_support);
+    let relation_only_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            cue_relation_support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &catalog,
+    )
+    .expect("cue relation support must close independently");
+    assert!(matches!(
+        admit_exact_finite_cue(
+            cue_value.clone(),
+            cue_claim,
+            cue_support,
+            cue_relation_support,
+            &relation_only_standing,
+            &catalog,
+        ),
+        Ok(ExactFiniteCueAdmission::Unknown {
+            residual: ExactFiniteCueUnknown::CueCoverageSupportIncomplete,
+            ..
+        })
+    ));
+    let cue_standing = standing_from_declared_support(
+        Vec::new(),
+        &[
+            DeclaredSupportClosure::for_subjects(
+                cue_relation_support,
+                Vec::new(),
+                true,
+                true,
+                false,
+            ),
+            DeclaredSupportClosure::for_subjects(cue_support, Vec::new(), true, true, false),
+        ],
+        &catalog,
+    )
+    .expect("cue relation and exact answer semantics must close through their own routes");
+    assert!(matches!(
+        admit_exact_finite_cue(
+            cue_value.clone(),
+            cue_claim,
+            cue_relation_support,
+            cue_relation_support,
+            &cue_standing,
+            &catalog,
+        ),
+        Err(ExactFiniteCueCheckError::SupportTargetMismatch)
+    ));
+    let ExactFiniteCueAdmission::Admitted(live_cue) = admit_exact_finite_cue(
+        cue_value.clone(),
+        cue_claim,
+        cue_support,
+        cue_relation_support,
+        &cue_standing,
+        &catalog,
+    )
+    .expect("typed cue references and contexts must check") else {
+        panic!("fully supported exact cue must admit")
+    };
+    let live_cue = *live_cue;
+    let generated_method = MethodContract::new(
+        cue_relation,
+        query.context().applicability(),
+        stored_ref(&store, b"multi-event-generated-cue-method-law").await,
+        method_coverage,
+        DischargeMode::Generate,
+        method_extension,
+        method_backend,
+        None,
+        None,
+        Vec::new(),
+        vec![cue_query.as_artifact_ref()],
+    )
+    .expect("generated cue method must canonicalize");
+    let generated_method_envelope = generated_method
+        .envelope()
+        .expect("generated cue method must encode");
+    let generated_method_ref = MethodRef::from_artifact_ref(
+        persist(
+            &store,
+            &generated_method_envelope,
+            &generated_method.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_method(generated_method),
+        generated_method_ref
+    );
+    let generated_cue = ExactFiniteCue::new(
+        generated_method_ref,
+        live_cue.cue().domain_port().clone(),
+        live_cue.cue().answer_port().clone(),
+        roots.unit,
+        live_cue.signature().clone(),
+    );
+    let generated_cue_envelope = generated_cue
+        .envelope()
+        .expect("generated cue semantics must encode");
+    let generated_cue_ref = persist(
+        &store,
+        &generated_cue_envelope,
+        &generated_cue.referenced_artifacts(),
+    )
+    .await;
+    let generated_claim_value = ClaimArtifact::new(
+        generated_cue_ref,
+        cue_query,
+        vec![roots.raw_return],
+        vec![roots.decoded_path],
+        query.context().scope(),
+        query.context().applicability(),
+        ClaimStatus::Checked,
+    )
+    .expect("generated cue claim must canonicalize");
+    let generated_claim_envelope = generated_claim_value
+        .envelope()
+        .expect("generated cue claim must encode");
+    let generated_claim = ClaimRef::from_artifact_ref(
+        persist(
+            &store,
+            &generated_claim_envelope,
+            &generated_claim_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_claim(generated_claim_value), generated_claim);
+    let generated_support_value = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Claim(generated_claim),
+        Vec::new(),
+        vec![roots.raw_return],
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        query.context().applicability(),
+        query.context().scope(),
+    )
+    .expect("generated cue support must canonicalize");
+    let generated_support_envelope = generated_support_value
+        .envelope()
+        .expect("generated cue support must encode");
+    let generated_support = SupportEnvironmentRef::from_artifact_ref(
+        persist(
+            &store,
+            &generated_support_envelope,
+            &generated_support_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_support(generated_support_value),
+        generated_support
+    );
+    let generated_standing = standing_from_declared_support(
+        Vec::new(),
+        &[
+            DeclaredSupportClosure::for_subjects(
+                cue_relation_support,
+                Vec::new(),
+                true,
+                true,
+                false,
+            ),
+            DeclaredSupportClosure::for_subjects(generated_support, Vec::new(), true, true, false),
+        ],
+        &catalog,
+    )
+    .expect("generated cue evidence may stand without becoming exact semantics");
+    assert!(matches!(
+        admit_exact_finite_cue(
+            generated_cue,
+            generated_claim,
+            generated_support,
+            cue_relation_support,
+            &generated_standing,
+            &catalog,
+        ),
+        Ok(ExactFiniteCueAdmission::Unknown {
+            residual: ExactFiniteCueUnknown::GeneratedAnswerSemantics,
+            ..
+        })
+    ));
+
+    let unproven_probe_claim_value = ClaimArtifact::new(
+        cue_ref,
+        cue_query,
+        Vec::new(),
+        Vec::new(),
+        query.context().scope(),
+        query.context().applicability(),
+        ClaimStatus::Checked,
+    )
+    .expect("unproven probe claim must remain representable");
+    let unproven_probe_claim_envelope = unproven_probe_claim_value
+        .envelope()
+        .expect("unproven probe claim must encode");
+    let unproven_probe_claim = ClaimRef::from_artifact_ref(
+        persist(
+            &store,
+            &unproven_probe_claim_envelope,
+            &unproven_probe_claim_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_claim(unproven_probe_claim_value),
+        unproven_probe_claim
+    );
+    let unproven_probe_support_value = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Claim(unproven_probe_claim),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        query.context().applicability(),
+        query.context().scope(),
+    )
+    .expect("unproven probe support must remain representable");
+    let unproven_probe_support_envelope = unproven_probe_support_value
+        .envelope()
+        .expect("unproven probe support must encode");
+    let unproven_probe_support = SupportEnvironmentRef::from_artifact_ref(
+        persist(
+            &store,
+            &unproven_probe_support_envelope,
+            &unproven_probe_support_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_support(unproven_probe_support_value),
+        unproven_probe_support
+    );
+    let unproven_probe_standing = standing_from_declared_support(
+        Vec::new(),
+        &[
+            DeclaredSupportClosure::for_subjects(
+                cue_relation_support,
+                Vec::new(),
+                true,
+                true,
+                false,
+            ),
+            DeclaredSupportClosure::for_subjects(
+                unproven_probe_support,
+                Vec::new(),
+                true,
+                true,
+                false,
+            ),
+        ],
+        &catalog,
+    )
+    .expect("declared standing cannot manufacture missing probe provenance");
+    assert!(matches!(
+        admit_exact_finite_cue(
+            cue_value.clone(),
+            unproven_probe_claim,
+            unproven_probe_support,
+            cue_relation_support,
+            &unproven_probe_standing,
+            &catalog,
+        ),
+        Ok(ExactFiniteCueAdmission::Unknown {
+            residual: ExactFiniteCueUnknown::MissingProbeProvenance,
+            ..
+        })
+    ));
+    let cue_protected = ExactFiniteSignature::new(
+        cue_signature_context,
+        vec![
+            (
+                roots.answer_a.as_artifact_ref(),
+                roots.event.as_artifact_ref(),
+            ),
+            (
+                roots.answer_b.as_artifact_ref(),
+                second_event.as_artifact_ref(),
+            ),
+        ],
+    )
+    .expect("protected cue target must cover both live candidates");
+    assert!(matches!(
+        check_admitted_exact_finite_cue_basis(std::slice::from_ref(&live_cue), &cue_protected),
+        Ok(ic_core::ExactFiniteCueBasisResult::Sufficient)
+    ));
+    let live_empty_cue_plan = plan_method_reentry_with_admitted_cues(
+        live_method_reentry.clone(),
+        Vec::new(),
+        &cue_protected,
+    )
+    .expect("an empty admitted basis must return its concrete residual");
+    assert!(matches!(
+        &live_empty_cue_plan,
+        MethodCuePlanning::Residual {
+            reentry,
+            separator,
+            ..
+        } if reentry.separator().separator().problem() == problem_ref
+            && [
+                (
+                    separator.first_domain(),
+                    separator.first_protected_value(),
+                ),
+                (
+                    separator.second_domain(),
+                    separator.second_protected_value(),
+                ),
+            ]
+            .into_iter()
+            .collect::<std::collections::BTreeSet<_>>()
+                == [
+                    (
+                        roots.answer_a.as_artifact_ref(),
+                        roots.event.as_artifact_ref(),
+                    ),
+                    (
+                        roots.answer_b.as_artifact_ref(),
+                        second_event.as_artifact_ref(),
+                    ),
+                ]
+                .into_iter()
+                .collect::<std::collections::BTreeSet<_>>()
+    ));
+    let live_cue_plan = plan_method_reentry_with_admitted_cues(
+        live_method_reentry.clone(),
+        vec![live_cue.clone()],
+        &cue_protected,
+    )
+    .expect("the admitted cue must discharge the protected finite pair");
+    assert!(matches!(
+        &live_cue_plan,
+        MethodCuePlanning::Sufficient { reentry, cues }
+            if reentry == &live_method_reentry && cues == std::slice::from_ref(&live_cue)
+    ));
+
     store.close().await;
     let reopened = ArtifactStore::open(&url)
         .await
@@ -2941,6 +3488,76 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
     )
     .expect("successor reopen witness must decode after restart");
     assert_eq!(decoded_next_reopen, next_reopen);
+    let cold_cue_relation = RelationSchema::from_envelope(
+        &load_envelope(&reopened, cue_relation.as_artifact_ref()).await,
+    )
+    .expect("cue relation must decode after restart");
+    assert_eq!(cold_catalog.insert_schema(cold_cue_relation), cue_relation);
+    let cold_cue_relation_support = SupportEnvironmentArtifact::from_envelope(
+        &load_envelope(&reopened, cue_relation_support.as_artifact_ref()).await,
+    )
+    .expect("cue relation support must decode after restart");
+    assert_eq!(
+        cold_catalog.insert_support(cold_cue_relation_support),
+        cue_relation_support
+    );
+    let cold_cue_query =
+        OpenQuery::from_envelope(&load_envelope(&reopened, cue_query.as_artifact_ref()).await)
+            .expect("cue source question must decode after restart");
+    assert_eq!(cold_catalog.insert_query(cold_cue_query), cue_query);
+    let cold_cue_method = MethodContract::from_envelope(
+        &load_envelope(&reopened, cue_method_ref.as_artifact_ref()).await,
+    )
+    .expect("cue method must decode after restart");
+    assert_eq!(cold_catalog.insert_method(cold_cue_method), cue_method_ref);
+    let cold_cue = ExactFiniteCue::from_envelope(&load_envelope(&reopened, cue_ref).await)
+        .expect("exact cue must decode after restart");
+    assert_eq!(cold_cue, cue_value);
+    let cold_cue_claim =
+        ClaimArtifact::from_envelope(&load_envelope(&reopened, cue_claim.as_artifact_ref()).await)
+            .expect("cue coverage claim must decode after restart");
+    assert_eq!(cold_catalog.insert_claim(cold_cue_claim), cue_claim);
+    let cold_cue_support = SupportEnvironmentArtifact::from_envelope(
+        &load_envelope(&reopened, cue_support.as_artifact_ref()).await,
+    )
+    .expect("cue coverage support must decode after restart");
+    assert_eq!(cold_catalog.insert_support(cold_cue_support), cue_support);
+    let cold_cue_standing = standing_from_declared_support(
+        Vec::new(),
+        &[
+            DeclaredSupportClosure::for_subjects(
+                cue_relation_support,
+                Vec::new(),
+                true,
+                true,
+                false,
+            ),
+            DeclaredSupportClosure::for_subjects(cue_support, Vec::new(), true, true, false),
+        ],
+        &cold_catalog,
+    )
+    .expect("cold cue support routes must reconstruct standing");
+    let ExactFiniteCueAdmission::Admitted(cold_admitted_cue) = admit_exact_finite_cue(
+        cold_cue,
+        cue_claim,
+        cue_support,
+        cue_relation_support,
+        &cold_cue_standing,
+        &cold_catalog,
+    )
+    .expect("cold cue admission must recheck every stored dependency") else {
+        panic!("cold exact cue must remain admitted")
+    };
+    let cold_admitted_cue = *cold_admitted_cue;
+    assert_eq!(cold_admitted_cue, live_cue);
+    assert_eq!(
+        check_admitted_exact_finite_cue_basis(
+            std::slice::from_ref(&cold_admitted_cue),
+            &cue_protected,
+        )
+        .expect("cold admitted cue basis must check"),
+        ic_core::ExactFiniteCueBasisResult::Sufficient
+    );
     let cold_source = cold_catalog
         .resolve_iprog(roots.source)
         .expect("source must reload after restart");
@@ -3040,6 +3657,20 @@ async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the
         route_separator_through_method_bridge(cold_separator, cold_bridge, &cold_catalog)
             .expect("cold replay must reenter through the decoded transparent method bridge");
     assert_eq!(cold_method_reentry, live_method_reentry);
+    let cold_empty_cue_plan = plan_method_reentry_with_admitted_cues(
+        cold_method_reentry.clone(),
+        Vec::new(),
+        &cue_protected,
+    )
+    .expect("cold empty cue basis must preserve its concrete residual");
+    let cold_cue_plan = plan_method_reentry_with_admitted_cues(
+        cold_method_reentry,
+        vec![cold_admitted_cue],
+        &cue_protected,
+    )
+    .expect("cold admitted cue must discharge the same protected pair");
+    assert_eq!(cold_empty_cue_plan, live_empty_cue_plan);
+    assert_eq!(cold_cue_plan, live_cue_plan);
     let cold_first_trace =
         PairedActualityTrace::derive(cold_first.actuality().event(), cold_first.resumption())
             .expect("first cold trace must derive");

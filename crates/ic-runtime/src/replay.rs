@@ -6,13 +6,15 @@
 //! lowering after restart; none is accepted as historical actuality.
 
 use ic_core::{
-    ActualDecodeError, ActualDecodeResult, CompletionCandidateRef, DecodedObservationError,
-    FiniteAnswerBindingError, FiniteDecoder, FiniteSupportedAnswerCatalog,
-    FiniteSupportedAnswerError, GeneratedInquiry, GeneratedInquiryBindingError,
-    GeneratedInquiryCatalog, IProgArtifact, IProgCatalog, IProgRef, MethodBridge,
-    MethodBridgeCatalog, MethodBridgeCheckError, RelationUseRef, ResolutionPathRef, Standing,
-    admit_finite_supported_answers, bind_finite_ask_continuation,
-    bind_generated_inquiry_continuation, decode_actual_event, match_decoded_observation_use,
+    ActualDecodeError, ActualDecodeResult, AdmittedExactFiniteCue, CompletionCandidateRef,
+    DecodedObservationError, ExactFiniteCueBasisError, ExactFiniteCueBasisResult,
+    ExactFiniteSignature, FiniteAnswerBindingError, FiniteCueSeparator, FiniteDecoder,
+    FiniteSupportedAnswerCatalog, FiniteSupportedAnswerError, GeneratedInquiry,
+    GeneratedInquiryBindingError, GeneratedInquiryCatalog, IProgArtifact, IProgCatalog, IProgRef,
+    MethodBridge, MethodBridgeCatalog, MethodBridgeCheckError, RelationUseRef, ResolutionPathRef,
+    Standing, admit_finite_supported_answers, bind_finite_ask_continuation,
+    bind_generated_inquiry_continuation, check_admitted_exact_finite_cue_basis,
+    decode_actual_event, match_decoded_observation_use,
 };
 use ic_store::{ArtifactStore, DispatchToken, ReplayedExternalEffect, StoreError};
 use thiserror::Error;
@@ -63,6 +65,36 @@ pub struct ColdReplayedSeparatorInquiry {
 pub struct MethodBridgeReentry {
     separator: ColdReplayedSeparatorInquiry,
     bridge: MethodBridge,
+}
+
+/// Result of applying only admitted exact cues to one replayed method reentry.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum MethodCuePlanning {
+    Sufficient {
+        reentry: MethodBridgeReentry,
+        cues: Vec<AdmittedExactFiniteCue>,
+    },
+    Residual {
+        reentry: MethodBridgeReentry,
+        cues: Vec<AdmittedExactFiniteCue>,
+        separator: FiniteCueSeparator,
+    },
+}
+
+impl MethodCuePlanning {
+    #[must_use]
+    pub const fn reentry(&self) -> &MethodBridgeReentry {
+        match self {
+            Self::Sufficient { reentry, .. } | Self::Residual { reentry, .. } => reentry,
+        }
+    }
+
+    #[must_use]
+    pub fn cues(&self) -> &[AdmittedExactFiniteCue] {
+        match self {
+            Self::Sufficient { cues, .. } | Self::Residual { cues, .. } => cues,
+        }
+    }
 }
 
 impl MethodBridgeReentry {
@@ -237,6 +269,29 @@ where
         });
     }
     Ok(MethodBridgeReentry { separator, bridge })
+}
+
+/// Applies the exact finite cue theorem to a replayed generic separator/method path.
+///
+/// A sufficient result closes only this protected finite branch. An insufficient result retains
+/// the concrete unseparated pair together with the full generic separator problem, generation
+/// route, admitted answer, and method bridge that must receive the residual. No scheduler or
+/// method-name policy is introduced.
+pub fn plan_method_reentry_with_admitted_cues(
+    reentry: MethodBridgeReentry,
+    cues: Vec<AdmittedExactFiniteCue>,
+    protected: &ExactFiniteSignature,
+) -> Result<MethodCuePlanning, ExactFiniteCueBasisError> {
+    match check_admitted_exact_finite_cue_basis(&cues, protected)? {
+        ExactFiniteCueBasisResult::Sufficient => {
+            Ok(MethodCuePlanning::Sufficient { reentry, cues })
+        }
+        ExactFiniteCueBasisResult::Insufficient { separator } => Ok(MethodCuePlanning::Residual {
+            reentry,
+            cues,
+            separator,
+        }),
+    }
 }
 
 /// Distinct replay exits; operational, resolution, support, source, and lowering failures never
