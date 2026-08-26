@@ -12,25 +12,26 @@ use ic_core::{
     EventRef, ExactFiniteSignature, FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION,
     FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError,
     FiniteDecoderOutcome, FiniteDepartureAdmissionError, FiniteDepartureEvidence,
-    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
-    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgIR, IProgRef,
-    NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery,
-    OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError,
-    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef,
-    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, ReciprocalOccurrence,
-    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
-    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
-    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
-    ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef, SeedReorientation,
-    SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext, StateRef,
-    StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
+    FiniteSupportedAnswerError, FiniteTypedIncompatibilityUseCatalog, FormulaArtifact,
+    FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
+    GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
+    IProgArtifact, IProgCatalog, IProgIR, IProgRef, NegationCoverage, NegationUse, NegationUseRef,
+    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence,
+    OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding, ProbeContractRef,
+    ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef, ProvenanceRef, QueryRef,
+    RawReturn, RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR,
+    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
+    RelationUseContext, RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError,
+    ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef, ReturnClosure,
+    RoleComparison, RouteRef, ScopeRef, SeedReorientation, SelectedReturn, SeparatorProblem,
+    SeparatorProblemRef, SignatureContext, Standing, StateRef, StructureViewRef,
+    SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
     SupportSubjectRef, TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
     TypeRef, TypeSymbol, TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable,
     TypedFiniteNegationExtension, TypedFiniteObservation,
     TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
-    admit_finite_negation_extension, admit_probed_finite_departure,
+    admit_finite_negation_extension, admit_finite_supported_answers, admit_probed_finite_departure,
     check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     match_decoded_observation_use, resolve_departure_witness_evidence_support,
@@ -1613,6 +1614,9 @@ fn decoded_probe_observation(
 struct FiniteDepartureScenario {
     catalog: Catalog,
     admitted: AdmittedFiniteDeparture,
+    standing: Standing,
+    source_observation: DecodedObservationUse,
+    candidate_observation: DecodedObservationUse,
     distinction: ic_core::DistinctionRef,
     presentation: DeterminationPresentationRef,
     source: TypedFormRef,
@@ -1896,8 +1900,11 @@ fn build_finite_departure_scenario(
     let TypedFiniteOrientedIncompatibilityUseResult::Incompatible(oriented) = oriented else {
         panic!("listed observed pair must produce positive incompatibility")
     };
-    let evidence =
-        FiniteDepartureEvidence::new(source_observation, candidate_observation, oriented);
+    let evidence = FiniteDepartureEvidence::new(
+        source_observation.clone(),
+        candidate_observation.clone(),
+        oriented,
+    );
     let admitted = admit_probed_finite_departure(&witness, &standing, &evidence, &fixture.catalog)
         .map_err(Box::new)?;
     let witness_ref = fixture.catalog.insert_departure(witness);
@@ -1905,6 +1912,9 @@ fn build_finite_departure_scenario(
     Ok(FiniteDepartureScenario {
         catalog: fixture.catalog,
         admitted,
+        standing,
+        source_observation,
+        candidate_observation,
         distinction,
         presentation,
         source,
@@ -2253,6 +2263,165 @@ fn finite_departure_requires_positive_probed_supported_relevant_non_circular_evi
     assert!(matches!(
         finite_departure_scenario(false, true),
         Err(error) if matches!(*error, FiniteDepartureAdmissionError::SourceObservationNotRelevant { .. })
+    ));
+}
+
+#[test]
+fn finite_supported_answers_require_exact_decoded_probe_and_standing_route_coverage() {
+    let mut scenario = build_finite_departure_scenario(true, true)
+        .expect("the probe-backed observation fixture must admit");
+    let decoded = scenario.source_observation.decoded().clone();
+    let admitted = admit_finite_supported_answers(
+        decoded.clone(),
+        vec![scenario.source_observation.clone()],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("the exact decoded candidate has one standing Probe support route");
+    assert_eq!(admitted.decoded(), &decoded);
+    assert_eq!(admitted.candidates(), decoded.candidates());
+    assert_eq!(admitted.event(), decoded.event());
+    assert_eq!(admitted.raw_return(), scenario.admitted.source_raw_return());
+    assert_eq!(admitted.observations().len(), 1);
+    assert_eq!(admitted.observations()[0], scenario.source_observation);
+    assert_eq!(admitted.support().len(), 1);
+
+    let query = scenario
+        .catalog
+        .queries
+        .get(&decoded.query())
+        .expect("decoded query must remain available")
+        .clone();
+    let alternate_answer = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x39),
+    ));
+    let alternate_candidate = query
+        .plug(
+            vec![PortBinding::new(
+                query.open_ports()[0].port().clone(),
+                alternate_answer,
+            )],
+            &scenario.catalog,
+        )
+        .expect("alternate completion must fill the same question");
+    let alternate_candidate_ref = scenario
+        .catalog
+        .insert_candidate(alternate_candidate.clone());
+    let alternate_use = scenario.catalog.insert_relation_use(RelationUse::new(
+        query.relation(),
+        alternate_candidate.bindings().to_vec(),
+        *query.context(),
+    ));
+    let decoder = FiniteDecoder::new(
+        decoded.query(),
+        scenario.raw_type,
+        vec![FiniteDecoderEntry::Decoded {
+            raw_return: scenario.admitted.source_raw_return(),
+            candidates: vec![
+                scenario.source_observation.candidate(),
+                alternate_candidate_ref,
+            ],
+        }],
+    )
+    .expect("two decoded candidates must remain one supported partial answer");
+    let decoder_ref = scenario.catalog.insert_decoder(decoder.clone());
+    let path = scenario.catalog.insert_path(ResolutionPath::new(
+        scenario.raw_type,
+        scenario.answer_type,
+        ResolutionPathIR::Decode {
+            decoder: decoder_ref.as_decoder_ref(),
+        },
+    ));
+    let event = scenario
+        .catalog
+        .events
+        .get(&decoded.event())
+        .expect("decoded event must remain available")
+        .clone();
+    let ActualDecodeResult::Decoded(two_candidates) =
+        decode_actual_event(&event, &decoder, path, &scenario.catalog)
+            .expect("the same actual return must decode to both candidates")
+    else {
+        panic!("listed candidates must decode")
+    };
+    let first_observation = match_decoded_observation_use(
+        &two_candidates,
+        scenario.source_observation.candidate(),
+        scenario.source_observation.observation(),
+        &scenario.catalog,
+    )
+    .expect("the original observation remains one completion");
+    let alternate_observation = match_decoded_observation_use(
+        &two_candidates,
+        alternate_candidate_ref,
+        alternate_use,
+        &scenario.catalog,
+    )
+    .expect("the alternate completion has its own matching observation");
+    let partial = admit_finite_supported_answers(
+        two_candidates.clone(),
+        vec![first_observation.clone(), alternate_observation],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("all decoded supported alternatives must remain in the answer set");
+    assert_eq!(partial.candidates().len(), 2);
+    assert!(partial.candidates().contains(&alternate_candidate_ref));
+    assert!(matches!(
+        admit_finite_supported_answers(
+            two_candidates,
+            vec![first_observation],
+            &scenario.standing,
+            &scenario.catalog,
+        ),
+        Err(FiniteSupportedAnswerError::CandidateCoverageMismatch)
+    ));
+
+    assert!(matches!(
+        admit_finite_supported_answers(
+            decoded.clone(),
+            Vec::new(),
+            &scenario.standing,
+            &scenario.catalog,
+        ),
+        Err(FiniteSupportedAnswerError::CandidateCoverageMismatch)
+    ));
+    assert!(matches!(
+        admit_finite_supported_answers(
+            decoded.clone(),
+            vec![
+                scenario.source_observation.clone(),
+                scenario.source_observation.clone(),
+            ],
+            &scenario.standing,
+            &scenario.catalog,
+        ),
+        Err(FiniteSupportedAnswerError::DuplicateCandidate(candidate))
+            if candidate == scenario.source_observation.candidate()
+    ));
+    assert!(matches!(
+        admit_finite_supported_answers(
+            decoded.clone(),
+            vec![scenario.candidate_observation.clone()],
+            &scenario.standing,
+            &scenario.catalog,
+        ),
+        Err(FiniteSupportedAnswerError::ForeignDecodedResult(candidate))
+            if candidate == scenario.candidate_observation.candidate()
+    ));
+
+    let ungrounded = standing_from_declared_support(Vec::new(), &[], &scenario.catalog)
+        .expect("empty standing is defined");
+    assert!(matches!(
+        admit_finite_supported_answers(
+            decoded,
+            vec![scenario.source_observation],
+            &ungrounded,
+            &scenario.catalog,
+        ),
+        Err(FiniteSupportedAnswerError::RelationSupport(_))
     ));
 }
 

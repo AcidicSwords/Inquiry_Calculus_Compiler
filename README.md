@@ -86,11 +86,15 @@ Rust closure or executable runtime program. The environment is part of the progr
 declared dependency list, so a continuation has no hidden host-state capture.
 Structural checking revalidates every named type, typed form, open query, environment value, and
 continuation identity; `Return` values and continuations must share the enclosing result type.
-The answer slot remains syntax until Phase 6/7 actuality and resolution provide an explicit
-supported-answer-set representation. A `CompletionCandidate` now has canonical identity as one
-element of the answer carrier, but is not such a supported answer set. Substitution,
-normalization, registered pure operations, and execution remain deferred rather than being
-simulated with an unsupported candidate.
+The answer slot remains syntax, but the Phase 6/7 boundary now has a derived finite
+supported-answer-set representation. `AdmittedFiniteAnswerSet` replays one event-linked finite
+decode and retains the entire nonempty decoded set, one exact `Probe` observation use and one
+closing relation-support route per completion, plus the preserved event and raw-return identities.
+Missing, duplicate, foreign, non-probe, unsupported, or raw-return-disconnected observations
+reject. A multi-completion decoded result remains a partial supported answer and cannot be
+silently reduced to a convenient singleton. The result is finite-route-relative derived evidence,
+not a canonical artifact, warrant, standing mutation, or continuation choice. Capture-safe answer
+substitution, normalization, registered pure operations, and execution remain deferred.
 
 Phase 5 has a first-order structural `ProgramIR` in `ic-runtime`: typed `Return`, nonempty
 internal `Branch`, and `Probe` suspension/resume blocks. Verification rechecks typed returns,
@@ -228,8 +232,10 @@ Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, 
 program routes each preserve their input/output types and referenced route identity. A complete
 query filling now has independent canonical identity before it is admitted into any result.
 Checking revalidates types and exact composition interfaces, including cycle rejection. It does
-not run a decoder, relation, or program; name a supported answer set; resolve a raw return; or
-turn a partial result into an exact answer.
+not run a decoder, relation, or program; resolve a raw return by itself; or turn a partial result
+into an exact answer. The derived finite admission described above is the first supported-answer
+bridge over the narrower event-linked decoder and standing-route boundary; general route execution
+and first-order answer-dependent continuation binding remain open.
 
 Phase 11 now has a canonical `ClaimArtifact`: it retains an opaque proposition/payload identity,
 source question, preserved raw-return references, resolution paths, scope, applicability, and a

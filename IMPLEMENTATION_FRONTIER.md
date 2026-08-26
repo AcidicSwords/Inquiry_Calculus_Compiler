@@ -10,9 +10,11 @@ identity and interface composition checking also pass. A complete typed query fi
 canonical checked identity, but not support status. A finite decoder table now preserves
 decoded/undefined/unknown results and can tie a single-open-port direct decoder route to an
 ordinary event record. Phase 6 now has canonical ordinary-event identity and append-only journal
-linkage. A derived structural view can now connect one preserved decoded candidate to its exact
-declared observation use; general supported-answer materialization remains reserved for the
-Phase 6/7 actuality-and-resolution boundary. Phase 11 now has canonical claim and candidate
+linkage. A derived finite supported-answer admission now replays one preserved decoded set and
+requires every completion to retain its exact `Probe` observation use, exact closing
+relation-support route, and the event's raw return. It preserves multi-completion partial answers
+without selecting a singleton. General continuation binding remains open at the Phase 3/5/6/7
+boundary. Phase 11 now has canonical claim and candidate
 support-environment identity with structural provenance checking. One typed least-fixed-point
 engine now carries claim and relation subjects, rejects mixed rootless cycles, retains exact
 closing-environment provenance, and keeps equal underlying digests separated by subject kind.
@@ -42,13 +44,15 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-After the finite reciprocal semantic slice, resolve the earliest executable actuality gap:
+After the finite reciprocal semantic slice and exact finite supported-answer admission, resolve
+the earliest executable continuation gap:
 
-> Given canonical first-order `IProg::Ask`, the verified `Return | Branch | Probe` runtime,
-> append-only `ActualEvent` history, and event-linked finite decoding, what is the smallest
-> cold-replayable answer-dependent execution bridge that preserves the raw return before decoding,
-> selects a continuation only from an admitted supported answer, and keeps proposal, actuality,
-> resolution, check, warrant, and standing visibly distinct?
+> Given canonical first-order `IProg::Ask`, an `AdmittedFiniteAnswerSet`, and the verified
+> `Return | Branch | Probe` runtime, what is the smallest capture-safe first-order binding and
+> lowering contract that supplies the entire supported set to the named answer slot, preserves a
+> multi-completion partial answer, and selects only continuations represented by inspectable data?
+> The bridge must remain cold-replayable from the preserved event/raw return and keep proposal,
+> actuality, resolution, check, warrant, and standing visibly distinct.
 
 The protected difference is visible in the accepted sources:
 
@@ -77,6 +81,14 @@ The protected difference is visible in the accepted sources:
   external decoder or actual dispatch, validate a multi-port answer carrier, establish relation membership,
   incompatibility, relevance, non-circularity, support-environment standing, warrant, departure,
   or exteriority.
+- `admit_finite_supported_answers` supplies the first derived supported-answer boundary. It
+  rechecks the ordinary event and exact finite decoder result, requires one matching `Probe`
+  observation use for every decoded completion, requires each use's exact support environment to
+  close in the typed least fixed point, and requires that environment to name the preserved raw
+  return. Missing, duplicate, foreign, non-probe, unsupported, and return-disconnected rows reject.
+  The full decoded set is retained: a two-completion decoder result remains one partial supported
+  answer rather than becoming an arbitrarily selected singleton. The result is not canonical
+  storage, a warrant, standing mutation, answer-slot substitution, or runtime continuation choice.
 - `match_decoded_observation_use` supplies the next derived structural boundary. It requires a
   preserved candidate from that decoded result and a declared relation use to rehash and agree
   exactly on query relation, complete named bindings, and the query's scope, applicability,

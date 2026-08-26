@@ -38,6 +38,7 @@ mod seed;
 mod separator;
 mod sixfold;
 mod standing;
+mod supported_answer;
 mod ty;
 
 pub use artifact::{
@@ -215,6 +216,10 @@ pub use standing::{
     SupportSubjectRef, resolve_determination_presentation_support, resolve_relation_use_support,
     standing, standing_determination_presentation_support, standing_from_declared_subject_support,
     standing_from_declared_support, standing_relation_use_support,
+};
+pub use supported_answer::{
+    AdmittedFiniteAnswerSet, FiniteSupportedAnswerCatalog, FiniteSupportedAnswerError,
+    admit_finite_supported_answers,
 };
 pub use ty::{
     BindingVersionRef, TYPE_ARTIFACT_KIND, TYPE_SCHEMA_VERSION, TYPED_FORM_ARTIFACT_KIND,
