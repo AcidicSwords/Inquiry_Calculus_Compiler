@@ -7,8 +7,10 @@ use crate::{
     DeterminationCatalog, DeterminationPresentationCheckError, DeterminationPresentationError,
     DeterminationPresentationRef, DeterminationSupportCatalog, DeterminationSupportError,
     DischargeMode, DistinctionRef, GrainRef, RelationCatalog, RelationUse, RelationUseCheckError,
-    RelationUseError, RelationUseRef, ResolvedDeterminationSupport, ScopeRef, Standing, SupportRef,
-    TypeCheckError, TypeError, TypedFormRef, standing_determination_presentation_support,
+    RelationUseError, RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError,
+    ResolvedDeterminationSupport, ResolvedRelationUseSupport, ScopeRef, Standing, SupportRef,
+    TypeCheckError, TypeError, TypedFormRef, resolve_relation_use_support,
+    standing_determination_presentation_support,
 };
 
 /// Canonical artifact kind for positive determination-relative departure witnesses.
@@ -76,6 +78,49 @@ pub trait DepartureCatalog: DeterminationCatalog + RelationCatalog {
 pub trait DepartureStandingCatalog: DepartureCatalog + DeterminationSupportCatalog {}
 
 impl<T> DepartureStandingCatalog for T where T: DepartureCatalog + DeterminationSupportCatalog {}
+
+/// The checked source needed to validate both a departure's source standing link and its three
+/// relation-targeted evidence-support routes.
+pub trait DepartureEvidenceSupportCatalog:
+    DepartureStandingCatalog + RelationUseSupportCatalog
+{
+}
+
+impl<T> DepartureEvidenceSupportCatalog for T where
+    T: DepartureStandingCatalog + RelationUseSupportCatalog
+{
+}
+
+/// Resolved support routes for one structurally checked positive-departure witness.
+///
+/// The source presentation and relation uses intentionally retain different support roles: the
+/// former is claim-targeted and the latter are relation-targeted.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ResolvedDepartureEvidenceSupport {
+    source_presentation: ResolvedDeterminationSupport,
+    source_observation: ResolvedRelationUseSupport,
+    candidate_observation: ResolvedRelationUseSupport,
+    incompatibility: ResolvedRelationUseSupport,
+}
+
+impl ResolvedDepartureEvidenceSupport {
+    #[must_use]
+    pub const fn source_presentation(&self) -> ResolvedDeterminationSupport {
+        self.source_presentation
+    }
+    #[must_use]
+    pub const fn source_observation(&self) -> ResolvedRelationUseSupport {
+        self.source_observation
+    }
+    #[must_use]
+    pub const fn candidate_observation(&self) -> ResolvedRelationUseSupport {
+        self.candidate_observation
+    }
+    #[must_use]
+    pub const fn incompatibility(&self) -> ResolvedRelationUseSupport {
+        self.incompatibility
+    }
+}
 
 impl DepartureWitness {
     #[allow(clippy::too_many_arguments)]
@@ -403,6 +448,30 @@ pub fn check_departure_witness_standing_support<C: DepartureStandingCatalog>(
     )?)
 }
 
+/// Resolves the evidence routes of a standing-source departure witness without making them
+/// standing evidence themselves.
+///
+/// Every relation use must name an exact relation-targeted support environment with matching
+/// context. This does not evaluate any observation, close a support route, establish that an
+/// incompatibility relation stands, prove relevance/non-circularity, or create actuality/warrant.
+pub fn resolve_departure_witness_evidence_support<C: DepartureEvidenceSupportCatalog>(
+    witness: &DepartureWitness,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<ResolvedDepartureEvidenceSupport, DepartureEvidenceSupportError> {
+    let source_presentation = check_departure_witness_standing_support(witness, standing, catalog)?;
+    let source_observation = resolve_relation_use_support(witness.source_observation(), catalog)?;
+    let candidate_observation =
+        resolve_relation_use_support(witness.candidate_observation(), catalog)?;
+    let incompatibility = resolve_relation_use_support(witness.incompatibility(), catalog)?;
+    Ok(ResolvedDepartureEvidenceSupport {
+        source_presentation,
+        source_observation,
+        candidate_observation,
+        incompatibility,
+    })
+}
+
 pub(crate) fn relation_use_binds_pair(
     relation_use: &RelationUse,
     left: TypedFormRef,
@@ -541,4 +610,13 @@ pub enum DepartureStandingCheckError {
     Witness(#[from] DepartureWitnessCheckError),
     #[error(transparent)]
     DeterminationSupport(#[from] DeterminationSupportError),
+}
+
+/// Errors from resolving a departure witness's source and evidence support routes.
+#[derive(Debug, Error)]
+pub enum DepartureEvidenceSupportError {
+    #[error(transparent)]
+    Standing(#[from] DepartureStandingCheckError),
+    #[error(transparent)]
+    RelationUse(#[from] RelationUseSupportError),
 }

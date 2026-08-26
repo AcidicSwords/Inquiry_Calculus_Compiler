@@ -5,24 +5,25 @@ use ic_core::{
     ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
     ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecoderRef,
-    DepartureCatalog, DepartureStandingCheckError, DepartureWitness, DeterminationCatalog,
-    DeterminationPresentation, DeterminationPresentationRef, DeterminationSupportError,
-    DischargeMode, EffectivityRef, EventRef, FINITE_DECODER_ARTIFACT_KIND,
-    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
-    FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorRegimeRef,
-    GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
-    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
-    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef, ProvenanceRef,
-    QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog,
-    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
-    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog,
-    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem,
-    SeparatorProblemRef, StateRef, StructureViewRef, SupportEnvironmentArtifact,
-    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
-    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef, TyIR,
-    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
-    check_departure_witness_standing_support, decode_actual_event, match_decoded_observation_use,
+    DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError, DepartureWitness,
+    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
+    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef,
+    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
+    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
+    FormulaArtifact, FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
+    GeneratedInquiryCheckError, GeneratorRegimeRef, GrainRef, HorizonRef, ObservationResultCatalog,
+    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
+    OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
+    ProtectedCompletionFieldRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog,
+    RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema,
+    RelationSignature, RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
+    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
+    ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem, SeparatorProblemRef, StateRef,
+    StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
+    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
+    SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
+    TypedForm, TypedFormRef, check_departure_witness_standing_support, decode_actual_event,
+    match_decoded_observation_use, resolve_departure_witness_evidence_support,
     resolve_determination_presentation_support, resolve_relation_use_support,
     standing_determination_presentation_support, standing_from_declared_support,
 };
@@ -1143,6 +1144,73 @@ fn departure_witness_requires_its_source_presentation_support_to_stand() {
     assert_eq!(resolved.presentation(), presentation);
     assert_eq!(resolved.environment(), environment);
     assert_eq!(resolved.claim(), claim);
+
+    let evidence =
+        resolve_departure_witness_evidence_support(&witness, &standing, &fixture.catalog).expect(
+            "each evidence use must resolve through its own relation-targeted support route",
+        );
+    assert_eq!(evidence.source_presentation(), resolved);
+    assert_eq!(
+        evidence.source_observation().relation_use(),
+        source_observation
+    );
+    assert_eq!(
+        evidence.source_observation().environment(),
+        evidence_environment
+    );
+    assert_eq!(
+        evidence.candidate_observation().relation_use(),
+        candidate_observation
+    );
+    assert_eq!(evidence.incompatibility().relation_use(), incompatibility);
+
+    let claim_targeted_source_observation = fixture.catalog.insert_relation_use(RelationUse::new(
+        fixture.relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port must be valid"),
+                source,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port must be valid"),
+                source_answer,
+            ),
+        ],
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Probe,
+            environment.as_support_ref(),
+            None,
+        ),
+    ));
+    let wrongly_targeted_evidence = DepartureWitness::new(
+        ic_core::DistinctionRef::from_artifact_ref(artifact(0x95)),
+        source,
+        candidate,
+        presentation,
+        claim_targeted_source_observation,
+        candidate_observation,
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        SupportRef::from_artifact_ref(artifact(0x97)),
+        scope,
+        applicability,
+        grain,
+    );
+    assert!(matches!(
+        resolve_departure_witness_evidence_support(
+            &wrongly_targeted_evidence,
+            &standing,
+            &fixture.catalog
+        ),
+        Err(DepartureEvidenceSupportError::RelationUse(
+            RelationUseSupportError::ClaimTargetIsNotRelationUseSupport
+        ))
+    ));
 }
 
 #[test]

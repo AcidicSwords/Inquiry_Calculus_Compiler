@@ -120,8 +120,9 @@ relation uses; requires the presentation's distinction, source, binding, scope, 
 grain, and horizon; and rejects an evidence use outside that context. A separate derived check can
 also require the presentation's exact claim-targeted support environment to target a claim in a
 declared least-fixed-point `Standing` result. Evidence-use support routes remain separate because
-they are relation-targeted; resolving their standing/admission relation is later work. It still
-does not evaluate an
+they are relation-targeted. A companion resolver verifies that all three name exact
+relation-targeted support environments with matching context, but it does not make those routes
+standing or admitted; that relation remains later work. It still does not evaluate an
 observation, establish incompatibility, or certify non-circular positive evidence. Each
 observation use must bind its claimed form/answer pair, and the incompatibility use must bind
 the two claimed answers; those structural links are not relation evaluation.

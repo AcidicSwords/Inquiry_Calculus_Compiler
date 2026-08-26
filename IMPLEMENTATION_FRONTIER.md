@@ -85,7 +85,9 @@ The protected difference is visible in the accepted sources:
   different scope/applicability/grain/horizon. A separate derived check resolves the presentation
   support as an exact claim-targeted environment and requires its target claim in a declared
   least-fixed-point `Standing` result. Evidence-use support remains separate because existing
-  relation-use support is relation-targeted. Each source/candidate observation use must also
+  relation-use support is relation-targeted. A companion derived resolver now rechecks that each
+  of the three uses names an exact matching relation-targeted environment, without making that
+  environment standing. Each source/candidate observation use must also
   bind its declared form and answer, and the incompatibility use must bind the two declared
   answers. Each of the three evidence uses must additionally declare an evidence route other than
   `Generate`: a generator proposes a provisional filling and can never supply positive departure
