@@ -12,13 +12,18 @@ use thiserror::Error;
 use crate::{
     ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef,
     ExactFiniteCueBasisError, ExactFiniteCueBasisResult, ExactFiniteSignature, FiniteCueSeparator,
-    GrainRef, HorizonRef, check_exact_finite_cue_basis,
+    GrainRef, HorizonRef, OpenQueryCatalog, OpenQueryCheckError, OpenQueryError, QueryRef,
+    RelationRef, check_exact_finite_cue_basis,
 };
 
 /// Canonical artifact kind for generic protected residual/separator problems.
 pub const SEPARATOR_PROBLEM_ARTIFACT_KIND: &str = "ic.separator-problem";
 /// Payload schema version for generic protected residual/separator problems.
 pub const SEPARATOR_PROBLEM_SCHEMA_VERSION: u32 = 1;
+/// Canonical artifact kind for generated-but-unselected separator inquiries.
+pub const GENERATED_INQUIRY_ARTIFACT_KIND: &str = "ic.generated-inquiry";
+/// Payload schema version for generated inquiry artifacts.
+pub const GENERATED_INQUIRY_SCHEMA_VERSION: u32 = 1;
 
 macro_rules! artifact_reference {
     ($name:ident) => {
@@ -60,6 +65,227 @@ artifact_reference!(ProtectedClassRef);
 artifact_reference!(StructureViewRef);
 artifact_reference!(GeneratorRegimeRef);
 artifact_reference!(EffectivityRef);
+
+/// A canonical candidate inquiry proposed for one separator problem through one declared route.
+///
+/// This is generation evidence only. It neither establishes that the route is lawful or
+/// executable, selects the question under policy, probes it, nor makes any result actual,
+/// supported, or warranted.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct GeneratedInquiry {
+    problem: SeparatorProblemRef,
+    generation_route: ArtifactRef,
+    question: QueryRef,
+}
+
+impl GeneratedInquiry {
+    #[must_use]
+    pub const fn new(
+        problem: SeparatorProblemRef,
+        generation_route: ArtifactRef,
+        question: QueryRef,
+    ) -> Self {
+        Self {
+            problem,
+            generation_route,
+            question,
+        }
+    }
+
+    #[must_use]
+    pub const fn problem(&self) -> SeparatorProblemRef {
+        self.problem
+    }
+    #[must_use]
+    pub const fn generation_route(&self) -> ArtifactRef {
+        self.generation_route
+    }
+    #[must_use]
+    pub const fn question(&self) -> QueryRef {
+        self.question
+    }
+
+    #[must_use]
+    pub fn canonical_payload(&self) -> Vec<u8> {
+        let mut encoded = Vec::with_capacity(96);
+        reference(&mut encoded, self.problem.as_artifact_ref());
+        reference(&mut encoded, self.generation_route);
+        reference(&mut encoded, self.question.as_artifact_ref());
+        encoded
+    }
+
+    pub fn decode_payload(payload: &[u8]) -> Result<Self, GeneratedInquiryError> {
+        if payload.len() < 96 {
+            return Err(GeneratedInquiryError::TruncatedPayload);
+        }
+        if payload.len() > 96 {
+            return Err(GeneratedInquiryError::TrailingPayloadBytes(
+                payload.len() - 96,
+            ));
+        }
+        let reference_at = |offset: usize| {
+            let bytes: [u8; 32] = payload[offset..offset + 32]
+                .try_into()
+                .expect("fixed generated-inquiry payload range must have 32 bytes");
+            ArtifactRef::from_bytes(bytes)
+        };
+        Ok(Self::new(
+            SeparatorProblemRef::from_artifact_ref(reference_at(0)),
+            reference_at(32),
+            QueryRef::from_artifact_ref(reference_at(64)),
+        ))
+    }
+
+    pub fn envelope(&self) -> Result<ArtifactEnvelope, GeneratedInquiryError> {
+        Ok(ArtifactEnvelope::from_canonical_payload(
+            ArtifactKind::new(GENERATED_INQUIRY_ARTIFACT_KIND)?,
+            GENERATED_INQUIRY_SCHEMA_VERSION,
+            self.canonical_payload(),
+        ))
+    }
+
+    pub fn generated_inquiry_ref(&self) -> Result<ArtifactRef, GeneratedInquiryError> {
+        Ok(self.envelope()?.artifact_ref()?)
+    }
+
+    pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, GeneratedInquiryError> {
+        if envelope.kind().as_str() != GENERATED_INQUIRY_ARTIFACT_KIND {
+            return Err(GeneratedInquiryError::UnexpectedArtifactKind {
+                expected: GENERATED_INQUIRY_ARTIFACT_KIND,
+                actual: envelope.kind().as_str().to_owned(),
+            });
+        }
+        if envelope.schema_version() != GENERATED_INQUIRY_SCHEMA_VERSION {
+            return Err(GeneratedInquiryError::UnsupportedSchemaVersion(
+                envelope.schema_version(),
+            ));
+        }
+        Self::decode_payload(envelope.canonical_payload())
+    }
+
+    #[must_use]
+    pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
+        vec![
+            self.problem.as_artifact_ref(),
+            self.generation_route,
+            self.question.as_artifact_ref(),
+        ]
+    }
+
+    /// Rechecks problem/query identity and shared binding, grain, and protected horizon.
+    pub fn check<C: GeneratedInquiryCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), GeneratedInquiryCheckError> {
+        let problem = catalog
+            .resolve_separator_problem(self.problem)
+            .ok_or(GeneratedInquiryCheckError::UnresolvedProblem(self.problem))?;
+        let calculated_problem = problem.separator_problem_ref()?;
+        if calculated_problem != self.problem {
+            return Err(GeneratedInquiryCheckError::ProblemIdentityMismatch {
+                reference: self.problem,
+                calculated: calculated_problem,
+            });
+        }
+        let question = catalog.resolve_open_query(self.question).ok_or(
+            GeneratedInquiryCheckError::UnresolvedQuestion(self.question),
+        )?;
+        let calculated_question = question.query_ref()?;
+        if calculated_question != self.question {
+            return Err(GeneratedInquiryCheckError::QuestionIdentityMismatch {
+                reference: self.question,
+                calculated: calculated_question,
+            });
+        }
+        question.check(catalog)?;
+        let schema = catalog.resolve_relation_schema(question.relation()).ok_or(
+            GeneratedInquiryCheckError::UnresolvedRelation(question.relation()),
+        )?;
+        if schema.binding() != problem.binding() {
+            return Err(GeneratedInquiryCheckError::BindingMismatch {
+                expected: problem.binding(),
+                actual: schema.binding(),
+            });
+        }
+        if question.context().grain() != problem.grain() {
+            return Err(GeneratedInquiryCheckError::GrainMismatch {
+                expected: problem.grain(),
+                actual: question.context().grain(),
+            });
+        }
+        if question.context().horizon() != problem.horizon() {
+            return Err(GeneratedInquiryCheckError::HorizonMismatch {
+                expected: problem.horizon(),
+                actual: question.context().horizon(),
+            });
+        }
+        Ok(())
+    }
+}
+
+/// The catalog boundary for a generated inquiry's structural validation.
+pub trait GeneratedInquiryCatalog: OpenQueryCatalog {
+    fn resolve_separator_problem(&self, reference: SeparatorProblemRef)
+    -> Option<SeparatorProblem>;
+}
+
+#[derive(Debug, Error)]
+pub enum GeneratedInquiryError {
+    #[error(transparent)]
+    Artifact(#[from] ArtifactError),
+    #[error("generated-inquiry payload is truncated")]
+    TruncatedPayload,
+    #[error("generated-inquiry payload has {0} trailing bytes")]
+    TrailingPayloadBytes(usize),
+    #[error("expected artifact kind {expected:?}, got {actual:?}")]
+    UnexpectedArtifactKind {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("unsupported generated-inquiry schema version {0}")]
+    UnsupportedSchemaVersion(u32),
+}
+
+#[derive(Debug, Error)]
+pub enum GeneratedInquiryCheckError {
+    #[error(transparent)]
+    Problem(#[from] SeparatorProblemError),
+    #[error(transparent)]
+    Query(#[from] OpenQueryError),
+    #[error(transparent)]
+    QueryCheck(#[from] OpenQueryCheckError),
+    #[error("separator problem {0} is unavailable")]
+    UnresolvedProblem(SeparatorProblemRef),
+    #[error("separator problem {reference} hashes to {calculated}, not its claimed identity")]
+    ProblemIdentityMismatch {
+        reference: SeparatorProblemRef,
+        calculated: SeparatorProblemRef,
+    },
+    #[error("open query {0} is unavailable")]
+    UnresolvedQuestion(QueryRef),
+    #[error("open query {reference} hashes to {calculated}, not its claimed identity")]
+    QuestionIdentityMismatch {
+        reference: QueryRef,
+        calculated: QueryRef,
+    },
+    #[error("relation schema {0} is unavailable")]
+    UnresolvedRelation(RelationRef),
+    #[error("generated inquiry binding {actual} differs from separator problem binding {expected}")]
+    BindingMismatch {
+        expected: BindingVersionRef,
+        actual: BindingVersionRef,
+    },
+    #[error("generated inquiry grain {actual} differs from separator problem grain {expected}")]
+    GrainMismatch {
+        expected: GrainRef,
+        actual: GrainRef,
+    },
+    #[error("generated inquiry horizon {actual} differs from separator problem horizon {expected}")]
+    HorizonMismatch {
+        expected: HorizonRef,
+        actual: HorizonRef,
+    },
+}
 
 /// A finite, caller-declared generator regime and its currently materialized route identities.
 ///

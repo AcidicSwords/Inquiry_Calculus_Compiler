@@ -309,6 +309,11 @@ The protected difference is visible in the accepted sources:
   generate or schedule a question, decide no-separator/representation-gap, or make a working
   generator exhaustive. Its opaque regime/structure/effectivity roles await the Phase 12/14
   contracts that give them evaluators.
+- `GeneratedInquiry` now preserves a candidate `OpenQuery` with one separator problem and one
+  declared generation-route identity. Its checker rehashes both artifacts and requires the query
+  relation's binding and query grain/horizon to match the problem. It does not establish that the
+  opaque route belongs to or is lawful in the generator regime, materialize the route, choose a
+  policy winner, execute the question, or support a return.
 
 Different answers determine whether a positive certificate can distinguish an actual supported
 departure from merely coexisting identifiers, failed work, and incomplete evidence. The decoded

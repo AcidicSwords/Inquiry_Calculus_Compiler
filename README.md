@@ -292,6 +292,11 @@ structure, generator regime, and effectivity. It is neither a generator nor a po
 produce a question, prove a residual, or turn an ungenerated separator into absence or
 impossibility.
 
+`GeneratedInquiry` now canonically records one generated candidate question for one separator
+problem and one declared generation-route identity. Its checker rehashes both inputs and requires
+their binding, grain, and protected horizon to agree. It does not establish route lawfulness or
+materialization, select a question, run a probe, or confer actuality, support, or warrant.
+
 `BoundaryChart` is now a derived, content-addressed local chart record. It retains the query,
 `X`/`Y`/boundary type references, projections, determination references, oriented use frontiers,
 seed, compatibility formula, optional traversal, grain, and horizon. It preserves missing fields

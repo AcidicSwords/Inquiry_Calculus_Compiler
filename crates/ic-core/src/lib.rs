@@ -171,7 +171,9 @@ pub use seed::{SeedReorientation, SeedReorientationError};
 pub use separator::{
     DeclaredFiniteGeneratorRegime, DeclaredFiniteGeneratorRegimeError,
     DeclaredRouteMaterialization, EffectivityRef, ExactFiniteRegimeRoute,
-    ExactFiniteRegimeSeparatorError, ExactFiniteRegimeSeparatorResult, GeneratorRegimeRef,
+    ExactFiniteRegimeSeparatorError, ExactFiniteRegimeSeparatorResult,
+    GENERATED_INQUIRY_ARTIFACT_KIND, GENERATED_INQUIRY_SCHEMA_VERSION, GeneratedInquiry,
+    GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratedInquiryError, GeneratorRegimeRef,
     MaterializationGap, MaterializationGapError, ProposedRegimeExtension,
     ProposedRegimeExtensionError, ProtectedClassRef, ProtectedCompletionFieldRef,
     SEPARATOR_PROBLEM_ARTIFACT_KIND, SEPARATOR_PROBLEM_SCHEMA_VERSION, SeparatorProblem,

@@ -6,21 +6,23 @@ use ic_core::{
     ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecoderRef,
     DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
-    DeterminationSupportError, DischargeMode, FINITE_DECODER_ARTIFACT_KIND,
+    DeterminationSupportError, DischargeMode, EffectivityRef, FINITE_DECODER_ARTIFACT_KIND,
     FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
     FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorRegimeRef,
     GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
-    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProvenanceRef, QueryRef,
-    RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort,
-    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
-    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog,
-    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, StateRef,
-    SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
-    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
-    SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
-    TypedForm, TypedFormRef, decode_actual_event, match_decoded_observation_use,
-    resolve_determination_presentation_support, resolve_relation_use_support,
-    standing_determination_presentation_support, standing_from_declared_support,
+    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef,
+    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
+    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
+    RelationUseContext, RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError,
+    ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef,
+    SeparatorProblem, SeparatorProblemRef, StateRef, StructureViewRef, SupportEnvironmentArtifact,
+    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef, TyIR,
+    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    decode_actual_event, match_decoded_observation_use, resolve_determination_presentation_support,
+    resolve_relation_use_support, standing_determination_presentation_support,
+    standing_from_declared_support,
 };
 
 #[derive(Clone, Default)]
@@ -40,6 +42,7 @@ struct Catalog {
     claims: BTreeMap<ClaimRef, ClaimArtifact>,
     support_environments: BTreeMap<SupportEnvironmentRef, SupportEnvironmentArtifact>,
     presentations: BTreeMap<DeterminationPresentationRef, DeterminationPresentation>,
+    separator_problems: BTreeMap<SeparatorProblemRef, SeparatorProblem>,
 }
 
 impl Catalog {
@@ -130,6 +133,14 @@ impl Catalog {
             .determination_presentation_ref()
             .expect("presentation must encode");
         self.presentations.insert(reference, presentation);
+        reference
+    }
+
+    fn insert_separator_problem(&mut self, problem: SeparatorProblem) -> SeparatorProblemRef {
+        let reference = problem
+            .separator_problem_ref()
+            .expect("separator problem must encode");
+        self.separator_problems.insert(reference, problem);
         reference
     }
 }
@@ -248,6 +259,15 @@ impl DeterminationCatalog for Catalog {
         reference: DeterminationPresentationRef,
     ) -> Option<DeterminationPresentation> {
         self.presentations.get(&reference).cloned()
+    }
+}
+
+impl GeneratedInquiryCatalog for Catalog {
+    fn resolve_separator_problem(
+        &self,
+        reference: SeparatorProblemRef,
+    ) -> Option<SeparatorProblem> {
+        self.separator_problems.get(&reference).copied()
     }
 }
 
@@ -481,6 +501,57 @@ fn finite_decoder_preserves_decoded_undefined_and_unknown_outcomes() {
     assert!(matches!(
         FiniteDecoder::decode_payload(&unknown_tag),
         Err(FiniteDecoderError::UnknownEntryTag(0xff))
+    ));
+}
+
+#[test]
+fn generated_inquiry_is_a_checked_problem_relative_candidate_not_a_policy_choice() {
+    let mut fixture = fixture();
+    let problem = fixture
+        .catalog
+        .insert_separator_problem(SeparatorProblem::new(
+            ProtectedCompletionFieldRef::from_artifact_ref(artifact(0x81)),
+            None,
+            GrainRef::from_artifact_ref(artifact(0x14)),
+            HorizonRef::from_artifact_ref(artifact(0x15)),
+            fixture.event.binding(),
+            StructureViewRef::from_artifact_ref(artifact(0x82)),
+            GeneratorRegimeRef::from_artifact_ref(artifact(0x83)),
+            EffectivityRef::from_artifact_ref(artifact(0x84)),
+        ));
+    let generated = GeneratedInquiry::new(problem, artifact(0x85), fixture.query);
+    generated
+        .check(&fixture.catalog)
+        .expect("query and residual must agree on binding, grain, and horizon");
+    assert_eq!(
+        GeneratedInquiry::from_envelope(&generated.envelope().expect("candidate must encode"))
+            .expect("candidate must decode"),
+        generated
+    );
+    assert_eq!(
+        generated.referenced_artifacts(),
+        vec![
+            problem.as_artifact_ref(),
+            artifact(0x85),
+            fixture.query.as_artifact_ref()
+        ]
+    );
+
+    let other_problem = fixture
+        .catalog
+        .insert_separator_problem(SeparatorProblem::new(
+            ProtectedCompletionFieldRef::from_artifact_ref(artifact(0x81)),
+            None,
+            GrainRef::from_artifact_ref(artifact(0x86)),
+            HorizonRef::from_artifact_ref(artifact(0x15)),
+            fixture.event.binding(),
+            StructureViewRef::from_artifact_ref(artifact(0x82)),
+            GeneratorRegimeRef::from_artifact_ref(artifact(0x83)),
+            EffectivityRef::from_artifact_ref(artifact(0x84)),
+        ));
+    assert!(matches!(
+        GeneratedInquiry::new(other_problem, artifact(0x85), fixture.query).check(&fixture.catalog),
+        Err(GeneratedInquiryCheckError::GrainMismatch { .. })
     ));
 }
 
