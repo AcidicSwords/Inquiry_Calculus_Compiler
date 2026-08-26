@@ -31,8 +31,9 @@ use ic_core::{
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
-    RuntimeCatalog, Terminator, dispatch_probe, replay_completed_finite_probe,
+    MachineStep, PairedActualityTrace, ProbeDispatchContext, ProbeProvider, ProgramIR,
+    ProviderReturn, ReplayObservation, RuntimeCatalog, Terminator, dispatch_probe,
+    replay_completed_finite_probe,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -306,9 +307,11 @@ struct ColdReplayRoots {
     observation_b: RelationUseRef,
     support: SupportEnvironmentRef,
     decoded_decoder: FiniteDecoderRef,
+    alternate_decoded_decoder: FiniteDecoderRef,
     undefined_decoder: FiniteDecoderRef,
     unknown_decoder: FiniteDecoderRef,
     decoded_path: ResolutionPathRef,
+    alternate_decoded_path: ResolutionPathRef,
     undefined_path: ResolutionPathRef,
     unknown_path: ResolutionPathRef,
     boundary: BoundaryRef,
@@ -320,6 +323,7 @@ struct ColdReplayRoots {
     continuation: IProgRef,
     event: EventRef,
     raw_return: RawReturnRef,
+    alternate_raw_return: RawReturnRef,
     compiler_version: ArtifactRef,
 }
 
@@ -338,7 +342,12 @@ impl ProbeProvider for CountingProvider {
     }
 }
 
-async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots, Arc<AtomicUsize>) {
+async fn persisted_cold_replay_fixture() -> (
+    PathBuf,
+    ColdReplayRoots,
+    Arc<AtomicUsize>,
+    PairedActualityTrace,
+) {
     let nonce = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("system clock must be after Unix epoch")
@@ -602,6 +611,49 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots, Arc<Atomi
         catalog.insert_decoder(decoded_decoder_value),
         decoded_decoder
     );
+    let alternate_raw = RawReturn::new(vec![0x99]);
+    let alternate_raw_return = RawReturnRef::from_artifact_ref(
+        store
+            .insert(
+                &alternate_raw
+                    .envelope()
+                    .expect("alternate raw return must encode"),
+            )
+            .await
+            .expect("alternate raw return must persist"),
+    );
+    assert_eq!(
+        catalog.insert_raw_return(alternate_raw),
+        alternate_raw_return
+    );
+    let alternate_decoded_decoder_value = FiniteDecoder::new(
+        query,
+        raw_type,
+        vec![
+            FiniteDecoderEntry::Decoded {
+                raw_return,
+                candidates: vec![candidate_a, candidate_b],
+            },
+            FiniteDecoderEntry::Undefined {
+                raw_return: alternate_raw_return,
+            },
+        ],
+    )
+    .expect("alternate finite decoder must encode");
+    let alternate_decoded_decoder = FiniteDecoderRef::from_artifact_ref(
+        persist(
+            &store,
+            &alternate_decoded_decoder_value
+                .envelope()
+                .expect("alternate decoder must encode"),
+            &alternate_decoded_decoder_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_decoder(alternate_decoded_decoder_value),
+        alternate_decoded_decoder
+    );
     let undefined_decoder_value = FiniteDecoder::new(
         query,
         raw_type,
@@ -657,6 +709,27 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots, Arc<Atomi
         .await,
     );
     assert_eq!(catalog.insert_path(decoded_path_value), decoded_path);
+    let alternate_decoded_path_value = ResolutionPath::new(
+        raw_type,
+        unit,
+        ResolutionPathIR::Decode {
+            decoder: alternate_decoded_decoder.as_decoder_ref(),
+        },
+    );
+    let alternate_decoded_path = ResolutionPathRef::from_artifact_ref(
+        persist(
+            &store,
+            &alternate_decoded_path_value
+                .envelope()
+                .expect("alternate decoded path must encode"),
+            &alternate_decoded_path_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_path(alternate_decoded_path_value),
+        alternate_decoded_path
+    );
     let undefined_path_value = ResolutionPath::new(
         raw_type,
         unit,
@@ -984,6 +1057,12 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots, Arc<Atomi
     .await
     .expect("live actual return must admit and resume the source continuation");
     assert_eq!(live.actuality().event_ref(), event);
+    let live_trace = PairedActualityTrace::derive(actual.event(), live.resumption())
+        .expect("live question and return must form one event-linked trace pair");
+    assert_eq!(live_trace.question().event(), live_trace.returned().event());
+    assert_eq!(live_trace.question().question(), query);
+    assert_eq!(live_trace.returned().path(), decoded_path);
+    assert_eq!(live_trace.returned().continuation(), continuation);
     assert!(matches!(
         runtime
             .step(live.resumption().state())
@@ -1010,9 +1089,11 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots, Arc<Atomi
             observation_b,
             support,
             decoded_decoder,
+            alternate_decoded_decoder,
             undefined_decoder,
             unknown_decoder,
             decoded_path,
+            alternate_decoded_path,
             undefined_path,
             unknown_path,
             boundary,
@@ -1024,9 +1105,11 @@ async fn persisted_cold_replay_fixture() -> (PathBuf, ColdReplayRoots, Arc<Atomi
             continuation,
             event,
             raw_return,
+            alternate_raw_return,
             compiler_version,
         },
         provider_calls,
+        live_trace,
     )
 }
 
@@ -1068,12 +1151,15 @@ async fn load_cold_replay_catalog(store: &ArtifactStore, roots: ColdReplayRoots)
                 .expect("persisted observation use must decode");
         assert_eq!(catalog.insert_relation_use(value), reference);
     }
-    let raw_return =
-        RawReturn::from_envelope(&load_envelope(store, roots.raw_return.as_artifact_ref()).await)
-            .expect("persisted raw return must decode");
-    assert_eq!(catalog.insert_raw_return(raw_return), roots.raw_return);
+    for reference in [roots.raw_return, roots.alternate_raw_return] {
+        let raw_return =
+            RawReturn::from_envelope(&load_envelope(store, reference.as_artifact_ref()).await)
+                .expect("persisted raw return must decode");
+        assert_eq!(catalog.insert_raw_return(raw_return), reference);
+    }
     for reference in [
         roots.decoded_decoder,
+        roots.alternate_decoded_decoder,
         roots.undefined_decoder,
         roots.unknown_decoder,
     ] {
@@ -1082,7 +1168,12 @@ async fn load_cold_replay_catalog(store: &ArtifactStore, roots: ColdReplayRoots)
                 .expect("persisted finite decoder must decode");
         assert_eq!(catalog.insert_decoder(value), reference);
     }
-    for reference in [roots.decoded_path, roots.undefined_path, roots.unknown_path] {
+    for reference in [
+        roots.decoded_path,
+        roots.alternate_decoded_path,
+        roots.undefined_path,
+        roots.unknown_path,
+    ] {
         let value =
             ResolutionPath::from_envelope(&load_envelope(store, reference.as_artifact_ref()).await)
                 .expect("persisted resolution path must decode");
@@ -1356,7 +1447,7 @@ fn admitted_answer_resumption_preserves_cold_replay_provenance_and_exact_lowerin
 
 #[tokio::test]
 async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
-    let (path, roots, provider_calls) = persisted_cold_replay_fixture().await;
+    let (path, roots, provider_calls, live_trace) = persisted_cold_replay_fixture().await;
     let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
     let store = ArtifactStore::open(&url)
         .await
@@ -1384,6 +1475,9 @@ async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
     let unknown_decoder = catalog
         .resolve_finite_decoder(roots.unknown_decoder)
         .expect("unknown finite decoder must reload");
+    let alternate_decoded_decoder = catalog
+        .resolve_finite_decoder(roots.alternate_decoded_decoder)
+        .expect("alternate finite decoder must reload");
     let standing = standing_from_declared_support(
         Vec::new(),
         &[DeclaredSupportClosure::for_subjects(
@@ -1478,6 +1572,44 @@ async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
     assert_eq!(
         replayed.resumption().binding().answer().candidates(),
         expected_candidates
+    );
+    let replayed_trace =
+        PairedActualityTrace::derive(replayed.actuality().event(), replayed.resumption())
+            .expect("cold replay must regenerate the event-linked trace pair");
+    assert_eq!(replayed_trace, live_trace);
+    let alternate_path_replay = replay_completed_finite_probe(
+        &store,
+        roots.token,
+        &alternate_decoded_decoder,
+        roots.alternate_decoded_path,
+        &observations,
+        &standing,
+        &source,
+        suspension,
+        lowering,
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("the same event and endpoint may resolve through another admitted path");
+    let alternate_path_trace = PairedActualityTrace::derive(
+        alternate_path_replay.actuality().event(),
+        alternate_path_replay.resumption(),
+    )
+    .expect("alternate path must still form a checked trace pair");
+    assert_eq!(alternate_path_trace.question(), replayed_trace.question());
+    assert_eq!(
+        alternate_path_trace.returned().resume_target(),
+        replayed_trace.returned().resume_target()
+    );
+    assert_eq!(
+        alternate_path_trace.returned().candidates(),
+        replayed_trace.returned().candidates()
+    );
+    assert_ne!(
+        alternate_path_trace.returned(),
+        replayed_trace.returned(),
+        "same event, candidates, and endpoint must retain distinct resolution provenance"
     );
     assert!(matches!(
         runtime

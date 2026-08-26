@@ -301,11 +301,18 @@ with the provider-call counter unchanged. The first finite slice needs no persis
 or new opcode; the next frontier is a derived paired question/return trace and the first exact
 question-conditioned sufficient-present/fold/reopen witness over the same event spine.
 
+`ic-runtime::PairedActualityTrace` now supplies that first derived trace boundary. It pairs only an
+exact admitted event and resumption, keeps question/source provenance separate from
+return/decoder/path/continuation provenance, and regenerates identically from cold replay. Two
+admitted resolution paths with the same event, completion set, and runtime endpoint remain distinct
+return traces. The next frontier is the sufficient-present fold/reopen witness; no trace is stored
+as a second history.
+
 The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
 the single connection and reopening the database preserves pending/complete operational state,
 canonical event identity, immutable raw bytes, and parent-linked order after embedded migrations
 are reapplied. This proves persistence, integrity, and the first finite execute/replay path only;
-general state-transition semantics, resolution, paired actuality, sufficient-present derivation,
+general state-transition semantics, multi-event paired actuality, sufficient-present derivation,
 and accepted-state reconstruction remain later contracts.
 
 Phase 7 has a typed, first-order `ResolutionPath`: identity, decoder, relation, composition, and

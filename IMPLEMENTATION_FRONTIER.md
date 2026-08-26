@@ -23,6 +23,11 @@ finite `Ask -> Probe -> actual return -> supported binding -> Return` cycle now 
 cold replays after file-backed restart: it reloads the exact request, ledger event, raw bytes,
 semantic inputs, source `Ask`, and compiler identities; regenerates the runtime lowering; and
 reaches the same protected continuation without redispatch.
+One derived paired-actuality view now separates the source/question projection from the
+raw-return/resolution/continuation projection while requiring both to name the same admitted
+ordinary event. It regenerates identically on cold replay, yet two resolution paths reaching the
+same candidates and runtime endpoint remain distinct return traces. The view adds no event,
+causal edge, replay occurrence, or stored history.
 The Phase 6 crash breaker now has a separate operational external-effect journal: durable
 preparation precedes any caller dispatch; unresolved restart state remains unknown and is never
 auto-retried; completion atomically installs the raw artifact, checked ordinary event, ledger edge,
@@ -94,19 +99,24 @@ compile/replay recipe.
 > and the next `Ask` or `Return`; then close the process and reproduce the same protected
 > continuation from serialized root references with zero redispatch.
 
-The strongest live obligation is now `TRACE-001`:
+`TRACE-001` is demonstrated for one finite admitted occurrence:
 
-> From a verified finite event spine containing a resumed successor occurrence, derive separate
-> question and return trace projections with exact event/path provenance. Reject the same terminal
-> state reached through a different event or resolution path as the same trace. Then use only
-> those authoritative roots to derive the smallest question-conditioned sufficient present,
-> demonstrate exact regeneration after restart, and reopen it when one new protected continuation
-> separates a previously folded class.
+> From a verified finite admitted event, derive separate question and return trace projections
+> with exact event/path provenance. The same historical trace regenerates after restart, while the
+> same terminal state reached through a different resolution path remains distinct.
 
-The first implementation should remain a derived finite view. It must not add a second mutable
+The strongest live obligation is now `PRESENT-001`:
+
+> Use only accepted artifacts, ordinary events, and the derived paired trace to construct the
+> smallest question-conditioned sufficient present for two finite history alternatives. Prove
+> exact protected continuation equivalence, regenerate the view after restart, and reopen the fold
+> when one newly protected continuation separates the previously equivalent histories.
+
+The first sufficient present should remain a derived finite view. It must not add a second mutable
 memory, conflate ledger order with causal or inquiry order, persist a derived trace merely for
-convenience, or claim universal bounded memory. If the fixture cannot regenerate from the event
-spine and accepted artifacts, record the exact missing basis before proposing storage.
+convenience, equate active with standing, or claim universal bounded memory. If it cannot
+regenerate from the event spine and accepted artifacts, record the exact missing basis before
+proposing storage.
 
 The protected difference is visible in the accepted sources:
 
