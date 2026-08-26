@@ -2814,6 +2814,125 @@ fn occurrence_indexed_successor_retains_every_member_of_a_supported_answer() {
 }
 
 #[test]
+// Test boundary QSTATIC-DYNAMIC-001:
+// F = static question relation or a common endpoint manufactures a realized QSucc route.
+// C = only one checked Ask occurrence plus its whole admitted answer and continuation derives it.
+// Omega/M = two finite questions sharing one ordinary relation, one Return-only source, one Ask.
+// P/V/E/U = existing Probe-supported answer and source re-walk; the absent occurrence is not
+// negative evidence and the fixture reopens for richer static question-relation representations.
+fn static_question_relation_does_not_manufacture_an_occurrence_successor() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite probe fixture must admit");
+    let answer = admit_finite_supported_answers(
+        scenario.source_observation.decoded().clone(),
+        vec![scenario.source_observation.clone()],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("the actual source answer must admit");
+    let source_question = answer.decoded().query();
+    let candidate_question = scenario.candidate_observation.decoded().query();
+    assert_ne!(source_question, candidate_question);
+    let source_query = scenario
+        .catalog
+        .queries
+        .get(&source_question)
+        .expect("source query must remain available")
+        .clone();
+    let candidate_query = scenario
+        .catalog
+        .queries
+        .get(&candidate_question)
+        .expect("candidate query must remain available")
+        .clone();
+    let static_relation = source_query.relation();
+    assert_eq!(
+        static_relation,
+        candidate_query.relation(),
+        "the two semantic questions may share an ordinary static relation anchor"
+    );
+
+    let static_root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.source,
+        },
+    ));
+    let static_source = SourceConfig::new(
+        scenario.answer_type,
+        static_root,
+        Vec::new(),
+        scenario.binding,
+        artifact(0x6a),
+        ProvenanceRef::from_artifact_ref(artifact(0x6b)),
+    )
+    .expect("a Return-only source remains a valid static source configuration");
+    scenario.catalog.insert_source_config(static_source.clone());
+    let static_occurrence = static_source
+        .ask_occurrences(&scenario.catalog)
+        .expect("a Return-only source must re-walk")
+        .into_iter()
+        .next();
+    assert!(
+        static_occurrence.is_none(),
+        "static relation identity creates neither an Ask occurrence nor a negative claim"
+    );
+
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.candidate,
+        },
+    ));
+    let actual_root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: source_question,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let actual_source = SourceConfig::new(
+        scenario.answer_type,
+        actual_root,
+        Vec::new(),
+        scenario.binding,
+        artifact(0x6c),
+        ProvenanceRef::from_artifact_ref(artifact(0x6d)),
+    )
+    .expect("actual source configuration must canonicalize");
+    scenario.catalog.insert_source_config(actual_source.clone());
+    let occurrence = actual_source
+        .ask_occurrences(&scenario.catalog)
+        .expect("Ask source must derive one occurrence")
+        .into_iter()
+        .next()
+        .expect("root must be Ask");
+    let successor = derive_question_successor(occurrence.clone(), answer, &scenario.catalog)
+        .expect("only the actual occurrence/answer/continuation tuple may derive QSucc");
+    assert!(matches!(
+        successor,
+        QuestionSuccessor::Return {
+            occurrence: retained,
+            value,
+            ..
+        } if retained == occurrence && value == scenario.candidate
+    ));
+    assert_eq!(
+        source_query.relation(),
+        static_relation,
+        "realized succession leaves the static relation anchor unchanged"
+    );
+    let _: fn(
+        AskOccurrence,
+        ic_core::AdmittedFiniteAnswerSet,
+        &Catalog,
+    ) -> Result<QuestionSuccessor, ic_core::QuestionSuccessorError> =
+        derive_question_successor::<Catalog>;
+}
+
+#[test]
 // Test boundary QSUCC-OCC-001:
 // F = successor identity collapses equal semantic questions and equal whole answers.
 // C = checked source configuration, source position, Ask fields, and first-order continuation.

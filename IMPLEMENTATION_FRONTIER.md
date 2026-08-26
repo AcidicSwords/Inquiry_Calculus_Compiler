@@ -2,43 +2,43 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `30f3c49`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `573681f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QSUCC-PARTIAL-001` established that one occurrence-indexed successor retains a complete two-member finite `AdmittedFiniteAnswerSet`: every candidate, decoded observation, standing support route, event, operator, and raw return remains present. A member may be inspected only as a projection after succession and cannot type-check as the successor answer. This adds no member-selection policy, runtime transition, scheduler, controller, table, or second history.
+`QSTATIC-DYNAMIC-001` established that a static common relation anchor between two semantic questions does not generate an `Ask` occurrence, answer, continuation, event, or route. A Return-only source remains nonnegative absence; only one separately checked `Ask` occurrence plus its whole event-linked answer and continuation derives `QSucc`. This adds no controller, scheduler, table, semantic transition, or second history.
 
 ## Strongest live obligation
 
-Prove that static relational structure does not manufacture a realized answer-conditioned successor route.
+Derive readiness only when an admitted answer supplies the exact missing dependency of a target question.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QSTATIC-DYNAMIC-001
-plan_phase: 3
-goal: Preserve a declared static relation/refinement or common anchor between questions while refusing to construct QSucc without one checked Ask occurrence, one whole admitted answer, and that occurrence's first-order continuation.
-protected_difference: Static semantic adjacency is not a realized route edge. Equal endpoints, a relation schema, or a generated route description cannot stand in for occurrence identity, Probe-linked supported answer, and checked continuation.
-discriminator: Construct one finite static question relation with no admitted answer-conditioned occurrence and show it cannot produce QSucc; separately construct the exact source Ask, whole admitted answer, and continuation, then derive only that realized successor while rejecting copied or mismatched route coordinates.
-horizon: one declared finite question pair, one ordinary source program, one event-linked admitted answer, one next Ask or Return
-relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0131, D-0134, D-0135, D-0136
+id: QREADY-UNLOCK-001
+plan_phase: 9
+goal: Derive a local readiness transition only when one whole admitted answer supplies the exact declared missing dependency of one target question, preserving the answer and dependency witness.
+protected_difference: Static relation, temporal adjacency, endpoint equality, or generic later execution is not an unlock. Readiness is a typed derived relation over a declared target and a changed exact dependency.
+discriminator: Construct one finite target with an explicit missing dependency that is false before the event-linked supported answer and true after that exact answer supplies it; preserve a same-shape nonunlock route whose answer does not satisfy the dependency and reject readiness there.
+horizon: one local finite source/target pair, one declared dependency, one admitted answer, one nonunlock foil, no global scheduler or frontier closure
+relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0131, D-0134, D-0135, D-0136, D-0137
 relevant_failures: F-0003
-if_pass: QREADY-UNLOCK-001 derive a readiness transition only when an admitted answer supplies the exact missing dependency
-if_fail: reopen the smallest static-relation, occurrence, supported-answer, continuation, or provenance distinction; do not add a controller, scheduler, route table, or semantic transition
+if_pass: QREADY-NONUNLOCK-001 reject temporal adjacency or later execution that does not change any declared readiness dependency
+if_fail: reopen the smallest target/dependency/readiness/answer/provenance relation; do not add a scheduler, controller, global question policy, or new transition opcode
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Start from two declared finite questions and any ordinary static relation, refinement, converse, or common anchor between them. Leave one source configuration without a supported answer or first-order `Ask` occurrence. The fixture must make the absence observable at the derived API boundary rather than translating it into a negative semantic claim.
+Start from one finite target question carrying one explicit missing dependency. Before the event-linked whole admitted answer, readiness must be false because that exact dependency is absent. After the answer supplies precisely that dependency, derive a local readiness result that preserves both answer and dependency witnesses.
 
-Then construct one ordinary source `Ask` occurrence, its event-linked whole admitted answer, and its explicit first-order continuation. Only this checked tuple may derive `QSucc`. Preserve the static relation as data while proving it does not add an occurrence, answer, continuation, event, or history edge.
+Construct a same-shape nonunlock foil: static adjacency and later execution may be present, but its answer supplies a different dependency. It must remain not ready. The fixture is local derived structure over existing source, support, and provenance artifacts; it must not require a scheduler, controller, global transition, or new history.
 
-The smallest wrong implementation derives a successor merely from static question relation data or a shared endpoint.
+The smallest wrong implementation treats temporal adjacency, endpoint equality, any answer, or an undeclared dependency as an unlock.
 
 ## Prohibitions at this boundary
 
-- Do not treat relation schema, refinement, converse, common anchor, generated route, or endpoint equality as a realized route edge.
-- Do not infer `Negative` from absent actuality or missing occurrence; retain the appropriate unavailable/unknown boundary.
-- Do not synthesize an answer, continuation, event, controller, scheduler, table, or second history to make the static case pass.
+- Do not treat relation schema, temporal adjacency, converse, common anchor, generated route, endpoint equality, or generic later execution as an unlock.
+- Do not infer readiness from absent actuality, missing evidence, or an answer that does not satisfy the declared dependency; retain the appropriate unavailable/unknown boundary.
+- Do not synthesize a controller, scheduler, global policy, transition opcode, table, or second history to make the local case pass.
 
 ## Exit
 
-On pass, update conformance and any warranted append-only decision, replace the live block with `QREADY-UNLOCK-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated static-versus-realized route relation rather than broadening the architecture.
+On pass, update conformance and any warranted append-only decision, replace the live block with `QREADY-NONUNLOCK-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated target/dependency/readiness/answer/provenance relation rather than broadening the architecture.

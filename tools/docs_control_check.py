@@ -103,6 +103,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "occurrence_indexed_successor_retains_every_member_of_a_supported_answer",
     ),
+    "QSTATIC-DYNAMIC-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "static_question_relation_does_not_manufacture_an_occurrence_successor",
+    ),
 }
 
 ERRORS: list[str] = []
