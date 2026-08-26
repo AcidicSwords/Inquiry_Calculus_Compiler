@@ -123,6 +123,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/adjunction.rs",
         "finite_adjoint_requires_its_binding_supplied_law_at_every_pair",
     ),
+    "QRECIP-PROV-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "independently_admitted_sides_form_one_reciprocal_occurrence_vertical_slice",
+    ),
 }
 
 ERRORS: list[str] = []

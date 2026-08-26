@@ -3466,6 +3466,12 @@ fn finite_negation_admission_requires_one_departure_per_use_tagged_incidence() {
 }
 
 #[test]
+// Test boundary QRECIP-PROV-001:
+// F = endpoint-compatible generic or foreign-use backward fiber is accepted as reciprocal return.
+// C = each return fiber retains the exact admitted exterior-producing use, departure, and coverage.
+// Omega/M = two independently admitted reciprocal sides plus one admitted foreign use reaching the
+// same X exterior. P/V/E/U = finite Probe-backed departures and occurrence checking; intensional
+// fibers, partial generator coverage, and cross-binding reciprocal transport remain open.
 fn independently_admitted_sides_form_one_reciprocal_occurrence_vertical_slice() {
     let mut scenario =
         build_finite_departure_scenario(true, true).expect("X departure must admit independently");
@@ -3625,6 +3631,64 @@ fn independently_admitted_sides_form_one_reciprocal_occurrence_vertical_slice() 
     occurrence
         .gamma_reachable()
         .expect("Gamma is reachable only after every role is filled");
+
+    let foreign_source = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x80),
+    ));
+    let foreign_source_answer = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x81),
+    ));
+    let foreign_candidate_answer = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x82),
+    ));
+    let (foreign_departure, foreign_presentation) = add_finite_departure(
+        &mut scenario,
+        ic_core::Orientation::X,
+        foreign_source,
+        exterior_x,
+        foreign_source_answer,
+        foreign_candidate_answer,
+        0x83,
+    );
+    let foreign_use = admit_singleton_negation_use(
+        &mut scenario,
+        foreign_departure,
+        foreign_presentation,
+        ic_core::Orientation::X,
+        foreign_source,
+        exterior_x,
+        NegationCoverage::CertifiedPartial,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0x84)),
+        0x85,
+    );
+    let foreign_fiber = foreign_use
+        .return_fiber(exterior_x)
+        .expect("the foreign admitted use reaches the same X exterior");
+    assert_eq!(foreign_fiber.exterior(), x_fiber.exterior());
+    assert_ne!(foreign_fiber.use_ref(), x_fiber.use_ref());
+    assert_ne!(foreign_fiber.sources(), x_fiber.sources());
+    let swapped_use = ReciprocalOccurrence::new(
+        seed,
+        foreign_fiber,
+        Some(foreign_source.as_artifact_ref()),
+        y_exterior,
+        y_fiber.clone(),
+        Some(source_y.as_artifact_ref()),
+    )
+    .expect("both selected returns belong to their supplied fibers");
+    assert!(matches!(
+        swapped_use.check(&scenario.catalog),
+        Err(ic_core::ReciprocalOccurrenceError::ReturnFiberUseMismatch(
+            "X"
+        ))
+    ));
+
     let before_y_return = ReciprocalOccurrence::new(
         seed,
         x_fiber,
