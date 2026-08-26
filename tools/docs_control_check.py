@@ -115,6 +115,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "exact_supported_dependency_is_required_for_local_question_readiness",
     ),
+    "QCONVERSE-NOT-INVERSE-001": (
+        "crates/ic-core/tests/fiber.rs",
+        "many_to_one_converse_preserves_the_whole_reverse_fiber_without_an_inverse",
+    ),
 }
 
 ERRORS: list[str] = []

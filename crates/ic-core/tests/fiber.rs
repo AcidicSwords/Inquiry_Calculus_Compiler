@@ -80,6 +80,40 @@ fn every_admitted_incidence_returns_its_source_through_the_same_use() {
 }
 
 #[test]
+// Test boundary QCONVERSE-NOT-INVERSE-001:
+// F = converse orientation silently selects one source as an inverse.
+// C = the exact reverse section retains every compatible source; selection remains separate.
+// Omega/M = one exhaustive finite many-to-one extension under one use tag.
+// P/V/E/U = exact enumeration and independent set equality; richer/intensional relations and
+// incomplete extension coverage remain open.
+fn many_to_one_converse_preserves_the_whole_reverse_fiber_without_an_inverse() {
+    let extension = asymmetric_extension(0x21);
+    let reverse = exact_return_fiber(&extension, artifact(B))
+        .expect("the common forward result has a reverse section");
+
+    assert_eq!(reverse.use_ref(), extension.use_ref());
+    assert_eq!(reverse.exterior(), artifact(B));
+    assert_eq!(
+        reverse.sources().iter().copied().collect::<Vec<_>>(),
+        vec![artifact(A), artifact(D)],
+        "converse is the complete two-member preimage, not a chosen inverse"
+    );
+
+    let choose_a =
+        SelectedReturn::select(reverse.clone(), artifact(A)).expect("a is one lawful selection");
+    let choose_d = SelectedReturn::select(reverse.clone(), artifact(D))
+        .expect("d is another lawful selection");
+    assert_ne!(choose_a.selected(), choose_d.selected());
+    assert_eq!(choose_a.fiber(), &reverse);
+    assert_eq!(choose_d.fiber(), &reverse);
+    assert_eq!(
+        choose_a.fiber().sources().len(),
+        2,
+        "selecting a return does not prove or create uniqueness"
+    );
+}
+
+#[test]
 fn the_same_exterior_through_two_uses_keeps_two_distinct_returns() {
     let first = asymmetric_extension(0x01);
     let second = FiniteNegationExtension::new(use_ref(0x02), vec![(artifact(C), artifact(B))])
