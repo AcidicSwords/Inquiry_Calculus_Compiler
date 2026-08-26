@@ -4125,6 +4125,12 @@ event exactly once, and causal order remains explicit `Unknown` unless a separat
 candidate edge set is supplied. Ledger append order never generates that candidate edge set or a
 second authoritative history.
 
+`TRACE-002` now demonstrates the finite two-event vertical slice. It appends and cold-replays a
+second ordinary event, regenerates separate paired source/return traces, retains causal order as
+`Unknown`, folds the event identities under a current protected continuation, and exposes an exact
+event-sensitive reopen witness. The next Phase 8/9 residual is a derived sufficient-present
+update/recovery view over an explicit new ledger event, with no mutable memory or causal store.
+
 Later phase constraints are deliberately local:
 
 - Phase 8 preserves ledger order versus causal order, resume versus replay, and endpoint versus

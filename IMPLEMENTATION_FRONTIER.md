@@ -178,9 +178,21 @@ The strongest executable obligation is now `TRACE-002`:
 `TRACE-002A` now supplies the first derived traversal boundary: a traversal has exact, duplicate-free
 ledger membership over paired event traces, while causal order is either explicit `Unknown` or a
 separately declared, internally acyclic candidate edge set. A declared causal direction may differ
-from ledger order; neither form creates causal actuality or storage. The remaining `TRACE-002`
-fixture must still construct and cold-replay more than one ordinary event, derive both paired
-projections, factor its sufficient present, and reopen it with a positive separator.
+from ledger order; neither form creates causal actuality or storage. Its required `TRACE-002`
+successor constructs and cold-replays more than one ordinary event, derives both paired projections,
+factors its sufficient present, and reopens it with a positive separator.
+
+`TRACE-002` is now demonstrated by two ordinary events. The second is durably prepared and
+dispatched with the first as its ledger parent, then each event is independently decoded, admitted,
+bound, and resumed. After file-backed restart, both completed effects, event records, source/runtime
+artifacts, paired traces, unknown-causal traversal, one-class sufficient present, and positive
+event-sensitive reopen witness regenerate with no additional provider call. The fixture treats the
+ledger edge only as ledger membership/append actuality; its causal reading remains `Unknown`.
+
+The strongest executable obligation is now `PHASE-8/9-FOLD-001`: make the demonstrated finite
+multi-event present usable as a derived sufficient-present update/recovery view across an explicit
+new ordinary event, while preserving its loss/reopen witness and without adding mutable memory,
+causal storage, or a second authoritative history.
 
 Do not weaken support, pre-warrant generated output, choose a singleton implicitly, or add a
 provider framework, scheduler, model policy, credential store, semantic opcode, table, or crate.

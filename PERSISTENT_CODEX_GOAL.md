@@ -126,6 +126,13 @@ ledger-covered, while causal order is explicitly `Unknown` or separately declare
 does not infer a causal edge from ledger order. The unresolved work remains the complete multi-event
 cold-replay traversal and its sufficient-present/reopening witness.
 
+`TRACE-002` now passes at its finite two-event scope. A second ordinary event follows the first in
+the authoritative ledger; both events independently replay through decode, support, binding, and
+resumption after restart. Their source/return projections, unknown-causal traversal, one-class
+current sufficient present, and event-sensitive reopen witness all regenerate without redispatch.
+The next residual is a derived sufficient-present update/recovery view over a newly appended event;
+it must preserve loss/reopening evidence without becoming mutable memory or causal history.
+
 Do not let a provider or credential residual collapse transport actuality into semantic `Unknown`,
 and do not predeclare support for an unpredictable content-addressed return. If the existing support
 contract creates such a cycle, make that exact cycle the breaker and implement only the smallest

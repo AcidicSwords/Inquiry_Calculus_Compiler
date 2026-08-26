@@ -36,9 +36,10 @@ use ic_core::{
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
     MachineStep, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaGenerateProvider,
-    OllamaHttpResponse, OllamaProviderError, PairedActualityTrace, ProbeDispatchContext,
-    ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation, RuntimeCatalog, Terminator,
-    dispatch_probe, materialize_ollama_decoded_texts, replay_completed_finite_probe,
+    OllamaHttpResponse, OllamaProviderError, PairedActualityTrace, PairedActualityTraversal,
+    ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
+    RuntimeCatalog, Terminator, TraversalCausalOrder, dispatch_probe,
+    materialize_ollama_decoded_texts, replay_completed_finite_probe,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -432,6 +433,75 @@ fn derive_fixture_sufficient_present(
     )
     .expect("new protected continuation context must agree") else {
         panic!("path-sensitive continuation must reopen the one-class fold")
+    };
+    (present, witness)
+}
+
+fn derive_event_sufficient_present(
+    roots: ColdReplayRoots,
+    query: &OpenQuery,
+    first: &PairedActualityTrace,
+    second: &PairedActualityTrace,
+    current_protected: ProtectedContinuationRef,
+    event_protected: ProtectedContinuationRef,
+) -> (
+    ExactFiniteSufficientPresent,
+    ExactFinitePresentReopenWitness,
+) {
+    let context = SignatureContext::new(
+        first.question().binding(),
+        query.context().scope(),
+        query.context().applicability(),
+        query.context().grain(),
+        query.context().horizon(),
+        roots.raw_type,
+    );
+    let histories = [
+        first.question().event().as_artifact_ref(),
+        second.question().event().as_artifact_ref(),
+    ];
+    let presentation = ExactFiniteSignature::new(
+        context,
+        histories
+            .iter()
+            .map(|history| (*history, roots.continuation.as_artifact_ref()))
+            .collect(),
+    )
+    .expect("two distinct event identities form an exact finite history domain");
+    let current_observation = ExactFiniteSignature::new(
+        context,
+        histories
+            .iter()
+            .map(|history| (*history, roots.answer_a.as_artifact_ref()))
+            .collect(),
+    )
+    .expect("the currently protected continuation is total over both events");
+    let ExactFiniteSufficientPresentResult::Sufficient(present) =
+        derive_exact_finite_sufficient_present(
+            presentation,
+            vec![ExactProtectedContinuation::new(
+                current_protected,
+                current_observation,
+            )],
+        )
+        .expect("event presentation and protected continuation contexts must agree")
+    else {
+        panic!("the current continuation must fold two event alternatives")
+    };
+    let event_observation = ExactFiniteSignature::new(
+        context,
+        histories
+            .iter()
+            .map(|history| (*history, *history))
+            .collect(),
+    )
+    .expect("event-sensitive continuation must be total over both events");
+    let ExactFinitePresentChallenge::Reopened(witness) = challenge_exact_finite_sufficient_present(
+        &present,
+        ExactProtectedContinuation::new(event_protected, event_observation),
+    )
+    .expect("new event-sensitive protected continuation context must agree") else {
+        panic!("event-sensitive continuation must reopen the folded present")
     };
     (present, witness)
 }
@@ -2240,6 +2310,321 @@ async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
 
     store.close().await;
     std::fs::remove_file(path).expect("temporary cold replay database must be removable");
+}
+
+#[tokio::test]
+async fn two_ordinary_events_cold_replay_as_one_derived_traversal_and_reopen_the_present() {
+    let (path, roots, provider_calls, first_live_trace, _, _) =
+        persisted_cold_replay_fixture().await;
+    let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
+    let store = ArtifactStore::open(&url)
+        .await
+        .expect("multi-event store must reopen");
+    store
+        .migrate()
+        .await
+        .expect("embedded migrations must remain repeatable");
+    let mut catalog = load_cold_replay_catalog(&store, roots).await;
+    let source = catalog
+        .resolve_iprog(roots.source)
+        .expect("source Ask must reload");
+    let decoder = catalog
+        .resolve_finite_decoder(roots.decoded_decoder)
+        .expect("decoder must reload");
+    let query =
+        OpenQueryCatalog::resolve_open_query(&catalog, roots.query).expect("query must reload");
+    let standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            roots.support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &catalog,
+    )
+    .expect("exact support must reconstruct before either event is replayed");
+    let runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: roots.operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    runtime
+        .verify(&catalog)
+        .expect("multi-event lowering must regenerate from source artifacts");
+    let MachineStep::Suspended(suspension) = runtime
+        .step(runtime.start())
+        .expect("regenerated entry must suspend")
+    else {
+        panic!("regenerated entry must be a probe suspension")
+    };
+    let observations = [
+        ReplayObservation::new(roots.candidate_a, roots.observation_a),
+        ReplayObservation::new(roots.candidate_b, roots.observation_b),
+    ];
+    let first_replayed = replay_completed_finite_probe(
+        &store,
+        roots.token,
+        &decoder,
+        roots.decoded_path,
+        &observations,
+        &standing,
+        &source,
+        suspension,
+        ContinuationLowering::new(roots.continuation, BlockTarget::new(1)),
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("first ordinary event must replay before extending the ledger");
+    let first_trace = PairedActualityTrace::derive(
+        first_replayed.actuality().event(),
+        first_replayed.resumption(),
+    )
+    .expect("first replay must reconstruct paired actuality");
+    assert_eq!(first_trace, first_live_trace);
+
+    let first_effect = store
+        .replay_completed_external_effect(roots.token)
+        .await
+        .expect("first completed effect must provide its checked request for the next dispatch");
+    let second_token = DispatchToken::from_bytes([0xc2; 32]);
+    let second_state_after =
+        StateRef::from_artifact_ref(stored_ref(&store, b"multi-event-second-state-after").await);
+    let second_context = ProbeDispatchContext::new(
+        Some(roots.event),
+        first_effect.event().state_after(),
+        None,
+        second_state_after,
+        first_effect.event().grain(),
+        RouteRef::from_artifact_ref(stored_ref(&store, b"multi-event-second-route").await),
+        first_effect.event().binding(),
+        ProvenanceRef::from_artifact_ref(
+            stored_ref(&store, b"multi-event-second-provenance").await,
+        ),
+    );
+    let mut provider = CountingProvider {
+        calls: Arc::clone(&provider_calls),
+        expected_body: first_effect.request().request_body(),
+        response: first_effect.raw_return().bytes().to_vec(),
+    };
+    let second_actual = dispatch_probe(
+        &store,
+        suspension,
+        second_token,
+        first_effect.request_ref(),
+        second_context,
+        &mut provider,
+    )
+    .await
+    .expect("second ordinary event must dispatch through the already checked request boundary");
+    let second_event = second_actual.event_ref();
+    assert_ne!(second_event, roots.event);
+    assert_eq!(second_actual.event().ledger_parent(), Some(roots.event));
+    assert_eq!(second_actual.raw_return_ref(), roots.raw_return);
+    catalog
+        .events
+        .insert(second_event, second_actual.event().clone());
+
+    let second_replayed = replay_completed_finite_probe(
+        &store,
+        second_token,
+        &decoder,
+        roots.decoded_path,
+        &observations,
+        &standing,
+        &source,
+        suspension,
+        ContinuationLowering::new(roots.continuation, BlockTarget::new(1)),
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("second ordinary event must independently admit and resume");
+    let second_trace = PairedActualityTrace::derive(
+        second_replayed.actuality().event(),
+        second_replayed.resumption(),
+    )
+    .expect("second replay must form a separate paired actuality trace");
+    assert_ne!(first_trace, second_trace);
+
+    let unknown_traversal = PairedActualityTraversal::new(
+        vec![first_trace.clone(), second_trace.clone()],
+        vec![roots.event, second_event],
+        TraversalCausalOrder::Unknown,
+    )
+    .expect("ordinary ledger membership must not require a causal assertion");
+    let declared_traversal = PairedActualityTraversal::new(
+        vec![first_trace.clone(), second_trace.clone()],
+        vec![roots.event, second_event],
+        TraversalCausalOrder::Declared(vec![(second_event, roots.event)]),
+    )
+    .expect("a separately declared causal candidate may differ from ledger order");
+    assert_eq!(
+        unknown_traversal.ledger_order(),
+        declared_traversal.ledger_order()
+    );
+    assert_ne!(
+        unknown_traversal.causal_order(),
+        declared_traversal.causal_order()
+    );
+
+    let current_protected = ProtectedContinuationRef::from_artifact_ref(
+        stored_ref(&store, b"multi-event-current-protected").await,
+    );
+    let event_protected = ProtectedContinuationRef::from_artifact_ref(
+        stored_ref(&store, b"multi-event-event-protected").await,
+    );
+    let (live_present, live_reopen) = derive_event_sufficient_present(
+        roots,
+        &query,
+        &first_trace,
+        &second_trace,
+        current_protected,
+        event_protected,
+    );
+    assert_eq!(live_present.class_count(), 1);
+
+    store.close().await;
+    let reopened = ArtifactStore::open(&url)
+        .await
+        .expect("multi-event store must cold reopen");
+    reopened
+        .migrate()
+        .await
+        .expect("cold migration must remain repeatable");
+    let mut cold_catalog = load_cold_replay_catalog(&reopened, roots).await;
+    let second_event_value = reopened
+        .get_actual_event(second_event)
+        .await
+        .expect("second ledger event must revalidate after restart")
+        .expect("second ledger event must remain present after restart");
+    cold_catalog.events.insert(second_event, second_event_value);
+    let cold_source = cold_catalog
+        .resolve_iprog(roots.source)
+        .expect("source must reload after restart");
+    let cold_decoder = cold_catalog
+        .resolve_finite_decoder(roots.decoded_decoder)
+        .expect("decoder must reload after restart");
+    let cold_query = OpenQueryCatalog::resolve_open_query(&cold_catalog, roots.query)
+        .expect("query must reload after restart");
+    let cold_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            roots.support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &cold_catalog,
+    )
+    .expect("support must reconstruct after restart");
+    let cold_runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: roots.operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    cold_runtime
+        .verify(&cold_catalog)
+        .expect("cold lowering must regenerate without a persisted runtime");
+    let MachineStep::Suspended(cold_suspension) = cold_runtime
+        .step(cold_runtime.start())
+        .expect("cold entry must suspend")
+    else {
+        panic!("cold entry must be a probe suspension")
+    };
+    let cold_first = replay_completed_finite_probe(
+        &reopened,
+        roots.token,
+        &cold_decoder,
+        roots.decoded_path,
+        &observations,
+        &cold_standing,
+        &cold_source,
+        cold_suspension,
+        ContinuationLowering::new(roots.continuation, BlockTarget::new(1)),
+        &cold_runtime,
+        &cold_catalog,
+    )
+    .await
+    .expect("first event must cold replay without redispatch");
+    let cold_second = replay_completed_finite_probe(
+        &reopened,
+        second_token,
+        &cold_decoder,
+        roots.decoded_path,
+        &observations,
+        &cold_standing,
+        &cold_source,
+        cold_suspension,
+        ContinuationLowering::new(roots.continuation, BlockTarget::new(1)),
+        &cold_runtime,
+        &cold_catalog,
+    )
+    .await
+    .expect("second event must cold replay without redispatch");
+    let cold_first_trace =
+        PairedActualityTrace::derive(cold_first.actuality().event(), cold_first.resumption())
+            .expect("first cold trace must derive");
+    let cold_second_trace =
+        PairedActualityTrace::derive(cold_second.actuality().event(), cold_second.resumption())
+            .expect("second cold trace must derive");
+    let cold_traversal = PairedActualityTraversal::new(
+        vec![cold_first_trace.clone(), cold_second_trace.clone()],
+        vec![roots.event, second_event],
+        TraversalCausalOrder::Unknown,
+    )
+    .expect("cold ledger traversal must reconstruct without causal inference");
+    let (cold_present, cold_reopen) = derive_event_sufficient_present(
+        roots,
+        &cold_query,
+        &cold_first_trace,
+        &cold_second_trace,
+        current_protected,
+        event_protected,
+    );
+    assert_eq!(cold_first_trace, first_trace);
+    assert_eq!(cold_second_trace, second_trace);
+    assert_eq!(cold_traversal, unknown_traversal);
+    assert_eq!(cold_present, live_present);
+    assert_eq!(cold_reopen, live_reopen);
+    assert_eq!(
+        provider_calls.load(Ordering::SeqCst),
+        2,
+        "both replayed events must use their committed returns rather than dispatch again"
+    );
+    reopened.close().await;
+    std::fs::remove_file(path).expect("temporary multi-event database must be removable");
 }
 
 #[tokio::test]
