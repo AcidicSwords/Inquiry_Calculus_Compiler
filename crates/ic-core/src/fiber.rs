@@ -1,8 +1,9 @@
 use std::collections::BTreeSet;
 
 use crate::{
-    ExactFiberRecovery, ExactFiberRecoveryError, ExactFiniteSignature, NegationUseRef,
-    RecoverySeparator, TaggedExteriorCatalog, TaggedExteriorClaim, TypedFormRef,
+    AdmittedFiniteDeparture, ExactFiberRecovery, ExactFiberRecoveryError, ExactFiniteSignature,
+    GeneratorCoverageRef, NegationCoverage, NegationUseRef, RecoverySeparator,
+    TaggedExteriorCatalog, TaggedExteriorClaim, TypedFormRef,
 };
 
 /// A caller-declared finite extension of one oriented negation relation.
@@ -419,6 +420,158 @@ impl TypedFiniteNegationExtension {
                 .collect(),
         }
     }
+}
+
+/// One finite use extension whose every declared incidence has an admitted positive departure.
+///
+/// This is a derived, finite-route-relative view rather than a canonical artifact or a claim that
+/// the declared list is globally exhaustive. It preserves the use's semantic coverage separately
+/// from each exterior occurrence's execution coverage. Private fields prevent a caller from
+/// manufacturing an admitted row from a declared pair alone.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct AdmittedFiniteNegationExtension {
+    extension: TypedFiniteNegationExtension,
+    semantic_coverage: NegationCoverage,
+    departures: Vec<AdmittedFiniteDeparture>,
+    exteriors: Vec<TaggedExteriorClaim>,
+}
+
+impl AdmittedFiniteNegationExtension {
+    /// Returns the immutable oriented use identity.
+    #[must_use]
+    pub const fn negation_use(&self) -> NegationUseRef {
+        self.extension.negation_use()
+    }
+
+    /// Returns the use's separately declared semantic coverage.
+    #[must_use]
+    pub const fn semantic_coverage(&self) -> NegationCoverage {
+        self.semantic_coverage
+    }
+
+    /// Returns the admitted event/raw-return provenance corresponding to the exterior rows.
+    #[must_use]
+    pub fn departures(&self) -> &[AdmittedFiniteDeparture] {
+        &self.departures
+    }
+
+    /// Returns every admitted, use-tagged exterior occurrence in the finite extension.
+    #[must_use]
+    pub fn exteriors(&self) -> &[TaggedExteriorClaim] {
+        &self.exteriors
+    }
+
+    /// Derives the entire same-use reverse section at one admitted exterior.
+    ///
+    /// Every source in this fiber has its own admitted departure because admission required exact
+    /// set equality between the finite declaration and supplied departure evidence.
+    pub fn return_fiber(
+        &self,
+        exterior: TypedFormRef,
+    ) -> Result<ExactReturnFiber, ReturnFiberError> {
+        exact_return_fiber(&self.extension.erase()?, exterior.as_artifact_ref())
+    }
+}
+
+/// Admits a finite negation extension pointwise from independently admitted departures.
+///
+/// The supplied evidence set must match the declared incidence set exactly. Each departure is
+/// re-resolved through its witness, converted to a tagged exterior with separate execution
+/// coverage, and checked against the exact use and pair. This discharges the use's soundness
+/// obligation for these finite rows only; it does not execute the soundness program, certify
+/// global semantic coverage, warrant the relation, mutate standing, or create authoritative
+/// history.
+pub fn admit_finite_negation_extension<C: TaggedExteriorCatalog>(
+    extension: TypedFiniteNegationExtension,
+    evidence: Vec<(AdmittedFiniteDeparture, GeneratorCoverageRef)>,
+    catalog: &C,
+) -> Result<AdmittedFiniteNegationExtension, FiniteNegationAdmissionError> {
+    extension
+        .check(catalog)
+        .map_err(|error| FiniteNegationAdmissionError::Extension(Box::new(error)))?;
+    let negation_use = catalog
+        .resolve_negation_use(extension.negation_use())
+        .ok_or(FiniteNegationAdmissionError::UnresolvedNegationUse(
+            extension.negation_use(),
+        ))?;
+
+    let mut admitted_pairs = BTreeSet::new();
+    let mut departures = Vec::with_capacity(evidence.len());
+    let mut exteriors = Vec::with_capacity(evidence.len());
+    for (departure, execution_coverage) in evidence {
+        let witness_ref = departure.witness();
+        let witness = catalog.resolve_departure_witness(witness_ref).ok_or(
+            FiniteNegationAdmissionError::UnresolvedDepartureWitness(witness_ref),
+        )?;
+        let calculated = witness
+            .departure_witness_ref()
+            .map_err(|error| FiniteNegationAdmissionError::DepartureEncoding(Box::new(error)))?;
+        if calculated != witness_ref {
+            return Err(
+                FiniteNegationAdmissionError::DepartureWitnessIdentityMismatch {
+                    reference: witness_ref,
+                    calculated,
+                },
+            );
+        }
+        let pair = (witness.source(), witness.candidate());
+        if !admitted_pairs.insert(pair) {
+            return Err(FiniteNegationAdmissionError::DuplicateDeparture(pair));
+        }
+        let exterior = TaggedExteriorClaim::new(
+            extension.negation_use(),
+            pair.0,
+            pair.1,
+            witness_ref,
+            execution_coverage,
+        );
+        check_declared_incidence(&exterior, &extension, catalog)
+            .map_err(|error| FiniteNegationAdmissionError::Incidence(Box::new(error)))?;
+        departures.push(departure);
+        exteriors.push(exterior);
+    }
+
+    for pair in extension.incidences() {
+        if !admitted_pairs.contains(pair) {
+            return Err(FiniteNegationAdmissionError::MissingDeparture(*pair));
+        }
+    }
+    if admitted_pairs.len() != extension.incidences().len() {
+        return Err(FiniteNegationAdmissionError::EvidenceOutsideExtension);
+    }
+
+    Ok(AdmittedFiniteNegationExtension {
+        extension,
+        semantic_coverage: negation_use.semantic_coverage(),
+        departures,
+        exteriors,
+    })
+}
+
+/// Errors from pointwise finite negation-extension admission.
+#[derive(Debug, thiserror::Error)]
+pub enum FiniteNegationAdmissionError {
+    #[error(transparent)]
+    Extension(Box<TypedNegationExtensionError>),
+    #[error(transparent)]
+    DepartureEncoding(Box<crate::DepartureWitnessError>),
+    #[error(transparent)]
+    Incidence(Box<DeclaredIncidenceError>),
+    #[error("negation use {0} is unavailable")]
+    UnresolvedNegationUse(NegationUseRef),
+    #[error("departure witness {0} is unavailable")]
+    UnresolvedDepartureWitness(crate::DepartureWitnessRef),
+    #[error("departure witness {reference} hashes to {calculated}, not its claimed identity")]
+    DepartureWitnessIdentityMismatch {
+        reference: crate::DepartureWitnessRef,
+        calculated: crate::DepartureWitnessRef,
+    },
+    #[error("more than one admitted departure was supplied for incidence {0:?}")]
+    DuplicateDeparture((TypedFormRef, TypedFormRef)),
+    #[error("declared incidence {0:?} has no admitted departure")]
+    MissingDeparture((TypedFormRef, TypedFormRef)),
+    #[error("admitted departure evidence contains an incidence outside the declared extension")]
+    EvidenceOutsideExtension,
 }
 
 /// The candidate field of one source under one use.

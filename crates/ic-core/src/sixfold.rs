@@ -231,6 +231,11 @@ impl ReciprocalOccurrence {
                 y: y_negation.distinction(),
             });
         }
+        if x_negation.orientation() == y_negation.orientation() {
+            return Err(ReciprocalOccurrenceError::OrientationDidNotReverse(
+                x_negation.orientation(),
+            ));
+        }
 
         Ok(())
     }
@@ -269,4 +274,6 @@ pub enum ReciprocalOccurrenceError {
         x: DistinctionRef,
         y: DistinctionRef,
     },
+    #[error("the reciprocal negation use retained orientation {0:?} instead of reversing it")]
+    OrientationDidNotReverse(crate::Orientation),
 }

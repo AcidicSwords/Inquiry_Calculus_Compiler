@@ -1,31 +1,37 @@
 use std::collections::BTreeMap;
 
 use ic_core::{
-    ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef,
-    ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
-    ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
+    ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog,
+    AdmittedFiniteDeparture, AdmittedFiniteNegationExtension, ApplicabilityRef, ArtifactRef,
+    BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError, ClaimRef,
+    ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse,
     DecoderRef, DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError,
     DepartureWitness, DeterminationCatalog, DeterminationPresentation,
     DeterminationPresentationRef, DeterminationSupportError, DischargeMode, EffectivityRef,
-    EventRef, FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
-    FiniteDepartureAdmissionError, FiniteDepartureEvidence, FiniteTypedIncompatibilityUseCatalog,
-    FormulaArtifact, FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
-    GeneratedInquiryCheckError, GeneratorRegimeRef, GrainRef, HorizonRef, ObservationResultCatalog,
-    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
-    OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
-    ProtectedCompletionFieldRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog,
-    RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema,
-    RelationSignature, RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
+    EventRef, ExactFiniteSignature, FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION,
+    FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError,
+    FiniteDecoderOutcome, FiniteDepartureAdmissionError, FiniteDepartureEvidence,
+    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
+    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgIR, IProgRef,
+    NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery,
+    OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError,
+    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef,
+    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, ReciprocalOccurrence,
+    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
+    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
     RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
-    ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem, SeparatorProblemRef, StateRef,
+    ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef, SeedReorientation,
+    SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext, StateRef,
     StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
-    SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
-    TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable, TypedFiniteObservation,
+    SupportSubjectRef, TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
+    TypeRef, TypeSymbol, TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable,
+    TypedFiniteNegationExtension, TypedFiniteObservation,
     TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
-    admit_probed_finite_departure, check_departure_witness_standing_support,
+    admit_finite_negation_extension, admit_probed_finite_departure,
+    check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     match_decoded_observation_use, resolve_departure_witness_evidence_support,
     resolve_determination_presentation_support, resolve_relation_use_support,
@@ -51,6 +57,9 @@ struct Catalog {
     claims: BTreeMap<ClaimRef, ClaimArtifact>,
     support_environments: BTreeMap<SupportEnvironmentRef, SupportEnvironmentArtifact>,
     presentations: BTreeMap<DeterminationPresentationRef, DeterminationPresentation>,
+    departures: BTreeMap<ic_core::DepartureWitnessRef, DepartureWitness>,
+    negation_uses: BTreeMap<NegationUseRef, NegationUse>,
+    programs: BTreeMap<IProgRef, IProgArtifact>,
     separator_problems: BTreeMap<SeparatorProblemRef, SeparatorProblem>,
 }
 
@@ -142,6 +151,28 @@ impl Catalog {
             .determination_presentation_ref()
             .expect("presentation must encode");
         self.presentations.insert(reference, presentation);
+        reference
+    }
+
+    fn insert_departure(&mut self, departure: DepartureWitness) -> ic_core::DepartureWitnessRef {
+        let reference = departure
+            .departure_witness_ref()
+            .expect("departure witness must encode");
+        self.departures.insert(reference, departure);
+        reference
+    }
+
+    fn insert_negation_use(&mut self, negation_use: NegationUse) -> NegationUseRef {
+        let reference = negation_use
+            .negation_use_ref()
+            .expect("negation use must encode");
+        self.negation_uses.insert(reference, negation_use);
+        reference
+    }
+
+    fn insert_program(&mut self, program: IProgArtifact) -> IProgRef {
+        let reference = program.iprog_ref().expect("inquiry program must encode");
+        self.programs.insert(reference, program);
         reference
     }
 
@@ -286,6 +317,25 @@ impl DepartureCatalog for Catalog {
 impl FiniteTypedIncompatibilityUseCatalog for Catalog {
     fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
         self.relation_uses.get(&reference).cloned()
+    }
+}
+
+impl TaggedExteriorCatalog for Catalog {
+    fn resolve_negation_use(&self, reference: NegationUseRef) -> Option<NegationUse> {
+        self.negation_uses.get(&reference).cloned()
+    }
+
+    fn resolve_departure_witness(
+        &self,
+        reference: ic_core::DepartureWitnessRef,
+    ) -> Option<DepartureWitness> {
+        self.departures.get(&reference).cloned()
+    }
+}
+
+impl IProgCatalog for Catalog {
+    fn resolve_iprog(&self, reference: IProgRef) -> Option<IProgArtifact> {
+        self.programs.get(&reference).cloned()
     }
 }
 
@@ -1560,10 +1610,28 @@ fn decoded_probe_observation(
         .expect("decoded completion must match its declared observation use")
 }
 
-fn finite_departure_scenario(
+struct FiniteDepartureScenario {
+    catalog: Catalog,
+    admitted: AdmittedFiniteDeparture,
+    distinction: ic_core::DistinctionRef,
+    presentation: DeterminationPresentationRef,
+    source: TypedFormRef,
+    candidate: TypedFormRef,
+    answer_type: TypeRef,
+    raw_type: TypeRef,
+    observation_relation: RelationRef,
+    claim_query: QueryRef,
+    binding: BindingVersionRef,
+    scope: ScopeRef,
+    applicability: ApplicabilityRef,
+    grain: GrainRef,
+    horizon: HorizonRef,
+}
+
+fn build_finite_departure_scenario(
     source_observation_is_relevant: bool,
     observation_supports_candidate_return: bool,
-) -> Result<ic_core::AdmittedFiniteDeparture, Box<FiniteDepartureAdmissionError>> {
+) -> Result<FiniteDepartureScenario, Box<FiniteDepartureAdmissionError>> {
     let mut fixture = fixture();
     let binding = BindingVersionRef::from_artifact_ref(artifact(0x10));
     let scope = ScopeRef::from_artifact_ref(artifact(0xa0));
@@ -1830,8 +1898,339 @@ fn finite_departure_scenario(
     };
     let evidence =
         FiniteDepartureEvidence::new(source_observation, candidate_observation, oriented);
-    admit_probed_finite_departure(&witness, &standing, &evidence, &fixture.catalog)
-        .map_err(Box::new)
+    let admitted = admit_probed_finite_departure(&witness, &standing, &evidence, &fixture.catalog)
+        .map_err(Box::new)?;
+    let witness_ref = fixture.catalog.insert_departure(witness);
+    assert_eq!(witness_ref, admitted.witness());
+    Ok(FiniteDepartureScenario {
+        catalog: fixture.catalog,
+        admitted,
+        distinction,
+        presentation,
+        source,
+        candidate,
+        answer_type: fixture.answer_type,
+        raw_type: fixture.raw_type,
+        observation_relation: fixture.relation,
+        claim_query: fixture.query,
+        binding,
+        scope,
+        applicability,
+        grain,
+        horizon,
+    })
+}
+
+fn finite_departure_scenario(
+    source_observation_is_relevant: bool,
+    observation_supports_candidate_return: bool,
+) -> Result<AdmittedFiniteDeparture, Box<FiniteDepartureAdmissionError>> {
+    build_finite_departure_scenario(
+        source_observation_is_relevant,
+        observation_supports_candidate_return,
+    )
+    .map(|scenario| scenario.admitted)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn add_finite_departure(
+    scenario: &mut FiniteDepartureScenario,
+    orientation: ic_core::Orientation,
+    source: TypedFormRef,
+    candidate: TypedFormRef,
+    source_answer: TypedFormRef,
+    candidate_answer: TypedFormRef,
+    tag: u8,
+) -> (AdmittedFiniteDeparture, DeterminationPresentationRef) {
+    let source_return = scenario
+        .catalog
+        .insert_raw_return(RawReturn::new(vec![tag, 1]));
+    let candidate_return = scenario
+        .catalog
+        .insert_raw_return(RawReturn::new(vec![tag, 2]));
+    let incompatibility_relation = scenario.catalog.insert_schema(RelationSchema::new(
+        scenario.binding,
+        vec![
+            port("source", scenario.answer_type),
+            port("candidate", scenario.answer_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: artifact(tag.wrapping_add(3)),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let source_environment = scenario.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(scenario.observation_relation),
+            Vec::new(),
+            vec![source_return],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            scenario.applicability,
+            scenario.scope,
+        )
+        .expect("source route must canonicalize"),
+    );
+    let candidate_environment = scenario.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(scenario.observation_relation),
+            Vec::new(),
+            vec![candidate_return],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            scenario.applicability,
+            scenario.scope,
+        )
+        .expect("candidate route must canonicalize"),
+    );
+    let incompatibility_environment = scenario.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(incompatibility_relation),
+            vec![scenario.observation_relation.as_artifact_ref()],
+            vec![source_return, candidate_return],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            scenario.applicability,
+            scenario.scope,
+        )
+        .expect("incompatibility route must canonicalize"),
+    );
+    let claim = scenario.catalog.insert_claim(
+        ClaimArtifact::new(
+            source.as_artifact_ref(),
+            scenario.claim_query,
+            Vec::new(),
+            Vec::new(),
+            scenario.scope,
+            scenario.applicability,
+            ClaimStatus::Checked,
+        )
+        .expect("source claim must canonicalize"),
+    );
+    let presentation_environment = scenario.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Claim(claim),
+            vec![scenario.observation_relation.as_artifact_ref()],
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            scenario.applicability,
+            scenario.scope,
+        )
+        .expect("presentation route must canonicalize"),
+    );
+    let presentation = scenario
+        .catalog
+        .insert_presentation(DeterminationPresentation::new(
+            scenario.distinction,
+            orientation,
+            source,
+            ic_core::RelationalWebRef::from_artifact_ref(artifact(tag.wrapping_add(4))),
+            scenario.binding,
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            presentation_environment.as_support_ref(),
+            None,
+        ));
+    let source_observation = decoded_probe_observation(
+        &mut scenario.catalog,
+        scenario.observation_relation,
+        source,
+        source_answer,
+        scenario.answer_type,
+        scenario.raw_type,
+        source_return,
+        presentation,
+        source_environment,
+        scenario.scope,
+        scenario.applicability,
+        scenario.grain,
+        scenario.horizon,
+        scenario.binding,
+        tag.wrapping_add(10),
+    );
+    let candidate_observation = decoded_probe_observation(
+        &mut scenario.catalog,
+        scenario.observation_relation,
+        candidate,
+        candidate_answer,
+        scenario.answer_type,
+        scenario.raw_type,
+        candidate_return,
+        presentation,
+        candidate_environment,
+        scenario.scope,
+        scenario.applicability,
+        scenario.grain,
+        scenario.horizon,
+        scenario.binding,
+        tag.wrapping_add(30),
+    );
+    let incompatibility = scenario.catalog.insert_relation_use(RelationUse::new(
+        incompatibility_relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("source").expect("port must be valid"),
+                source_answer,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("candidate").expect("port must be valid"),
+                candidate_answer,
+            ),
+        ],
+        RelationUseContext::new(
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            DischargeMode::Check,
+            incompatibility_environment.as_support_ref(),
+            None,
+        ),
+    ));
+    let witness = DepartureWitness::new(
+        scenario.distinction,
+        source,
+        candidate,
+        presentation,
+        source_observation.observation(),
+        candidate_observation.observation(),
+        source_answer,
+        candidate_answer,
+        incompatibility,
+        SupportRef::from_artifact_ref(artifact(tag.wrapping_add(5))),
+        scenario.scope,
+        scenario.applicability,
+        scenario.grain,
+    );
+    let standing = standing_from_declared_support(
+        Vec::new(),
+        &[
+            DeclaredSupportClosure::for_subjects(source_environment, Vec::new(), true, true, false),
+            DeclaredSupportClosure::for_subjects(
+                candidate_environment,
+                Vec::new(),
+                true,
+                true,
+                false,
+            ),
+            DeclaredSupportClosure::for_subjects(
+                incompatibility_environment,
+                vec![SupportSubjectRef::Relation(scenario.observation_relation)],
+                true,
+                true,
+                false,
+            ),
+            DeclaredSupportClosure::for_subjects(
+                presentation_environment,
+                vec![SupportSubjectRef::Relation(scenario.observation_relation)],
+                true,
+                true,
+                false,
+            ),
+        ],
+        &scenario.catalog,
+    )
+    .expect("reciprocal evidence routes must close");
+    let table = TypedFiniteIncompatibilityTable::new(vec![(source_answer, candidate_answer)])
+        .expect("one pair must be valid");
+    let oriented = check_typed_finite_oriented_incompatibility_use(
+        &table,
+        &scenario.catalog,
+        incompatibility,
+        TypedFiniteIncompatibilityRoles::new(
+            TypeSymbol::new("source").expect("port must be valid"),
+            TypeSymbol::new("candidate").expect("port must be valid"),
+        )
+        .expect("roles must be distinct"),
+        TypedFiniteObservation::Observed(source_answer),
+        TypedFiniteObservation::Observed(candidate_answer),
+    )
+    .expect("incompatibility must check");
+    let TypedFiniteOrientedIncompatibilityUseResult::Incompatible(oriented) = oriented else {
+        panic!("listed observed pair must be incompatible")
+    };
+    let evidence =
+        FiniteDepartureEvidence::new(source_observation, candidate_observation, oriented);
+    let admitted = admit_probed_finite_departure(&witness, &standing, &evidence, &scenario.catalog)
+        .expect("reciprocal departure must admit independently");
+    let reference = scenario.catalog.insert_departure(witness);
+    assert_eq!(reference, admitted.witness());
+    (admitted, presentation)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn admit_singleton_negation_use(
+    scenario: &mut FiniteDepartureScenario,
+    departure: AdmittedFiniteDeparture,
+    presentation: DeterminationPresentationRef,
+    orientation: ic_core::Orientation,
+    source: TypedFormRef,
+    candidate: TypedFormRef,
+    semantic_coverage: NegationCoverage,
+    execution_coverage: GeneratorCoverageRef,
+    tag: u8,
+) -> AdmittedFiniteNegationExtension {
+    let relation = scenario.catalog.insert_schema(RelationSchema::new(
+        scenario.binding,
+        vec![
+            port("source", scenario.answer_type),
+            port("candidate", scenario.answer_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: artifact(tag),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let relation_use = scenario.catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![PortBinding::new(
+            TypeSymbol::new("source").expect("port must be valid"),
+            source,
+        )],
+        RelationUseContext::new(
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            DischargeMode::Check,
+            SupportRef::from_artifact_ref(artifact(tag.wrapping_add(1))),
+            None,
+        ),
+    ));
+    let soundness = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return { value: source },
+    ));
+    let negation_use = scenario.catalog.insert_negation_use(NegationUse::new(
+        relation_use,
+        scenario.distinction,
+        orientation,
+        presentation,
+        relation,
+        soundness,
+        semantic_coverage,
+        scenario.applicability,
+        scenario.scope,
+        scenario.grain,
+        scenario.horizon,
+        vec![artifact(tag.wrapping_add(2))],
+    ));
+    admit_finite_negation_extension(
+        TypedFiniteNegationExtension::declare(negation_use, vec![(source, candidate)])
+            .expect("singleton incidence must be unique"),
+        vec![(departure, execution_coverage)],
+        &scenario.catalog,
+    )
+    .expect("singleton use must have its admitted departure")
 }
 
 #[test]
@@ -1854,5 +2253,375 @@ fn finite_departure_requires_positive_probed_supported_relevant_non_circular_evi
     assert!(matches!(
         finite_departure_scenario(false, true),
         Err(error) if matches!(*error, FiniteDepartureAdmissionError::SourceObservationNotRelevant { .. })
+    ));
+}
+
+#[test]
+fn finite_negation_admission_requires_one_departure_per_use_tagged_incidence() {
+    let mut scenario = build_finite_departure_scenario(true, true)
+        .expect("positive finite departure must be available");
+    let relation = scenario.catalog.insert_schema(RelationSchema::new(
+        scenario.binding,
+        vec![
+            port("source", scenario.answer_type),
+            port("candidate", scenario.answer_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0xd0),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let relation_use = scenario.catalog.insert_relation_use(RelationUse::new(
+        relation,
+        vec![PortBinding::new(
+            TypeSymbol::new("source").expect("port must be valid"),
+            scenario.source,
+        )],
+        RelationUseContext::new(
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            DischargeMode::Check,
+            SupportRef::from_artifact_ref(artifact(0xd1)),
+            None,
+        ),
+    ));
+    let soundness = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.source,
+        },
+    ));
+    let use_ref = scenario.catalog.insert_negation_use(NegationUse::new(
+        relation_use,
+        scenario.distinction,
+        ic_core::Orientation::X,
+        scenario.presentation,
+        relation,
+        soundness,
+        NegationCoverage::CertifiedPartial,
+        scenario.applicability,
+        scenario.scope,
+        scenario.grain,
+        scenario.horizon,
+        Vec::new(),
+    ));
+    let extension =
+        TypedFiniteNegationExtension::declare(use_ref, vec![(scenario.source, scenario.candidate)])
+            .expect("one incidence must be unique");
+    let execution_coverage = GeneratorCoverageRef::from_artifact_ref(artifact(0xd2));
+    let admitted = admit_finite_negation_extension(
+        extension,
+        vec![(scenario.admitted.clone(), execution_coverage)],
+        &scenario.catalog,
+    )
+    .expect("every declared incidence has an admitted departure");
+    assert_eq!(admitted.negation_use(), use_ref);
+    assert_eq!(
+        admitted.semantic_coverage(),
+        NegationCoverage::CertifiedPartial
+    );
+    assert_eq!(admitted.exteriors().len(), 1);
+    assert_eq!(admitted.departures(), [scenario.admitted.clone()]);
+    assert_eq!(
+        admitted.exteriors()[0].execution_coverage(),
+        execution_coverage
+    );
+    let fiber = admitted
+        .return_fiber(scenario.candidate)
+        .expect("the admitted incidence has a same-use reverse section");
+    assert_eq!(fiber.use_ref(), use_ref);
+    assert!(fiber.contains(scenario.source.as_artifact_ref()));
+
+    let other_source = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0xd3),
+    ));
+    let other_candidate = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0xd4),
+    ));
+    let unsupported_row = TypedFiniteNegationExtension::declare(
+        use_ref,
+        vec![
+            (scenario.source, scenario.candidate),
+            (other_source, other_candidate),
+        ],
+    )
+    .expect("rows must be unique");
+    assert!(matches!(
+        admit_finite_negation_extension(
+            unsupported_row,
+            vec![(scenario.admitted.clone(), execution_coverage)],
+            &scenario.catalog,
+        ),
+        Err(ic_core::FiniteNegationAdmissionError::MissingDeparture(pair))
+            if pair == (other_source, other_candidate)
+    ));
+
+    let second_use = scenario.catalog.insert_negation_use(NegationUse::new(
+        relation_use,
+        scenario.distinction,
+        ic_core::Orientation::X,
+        scenario.presentation,
+        relation,
+        soundness,
+        NegationCoverage::WorkingOpen,
+        scenario.applicability,
+        scenario.scope,
+        scenario.grain,
+        scenario.horizon,
+        vec![artifact(0xd5)],
+    ));
+    let second = admit_finite_negation_extension(
+        TypedFiniteNegationExtension::declare(
+            second_use,
+            vec![(scenario.source, scenario.candidate)],
+        )
+        .expect("one incidence must be unique"),
+        vec![(scenario.admitted.clone(), execution_coverage)],
+        &scenario.catalog,
+    )
+    .expect("the same departure may support a separately tagged compatible use");
+    let second_fiber = second
+        .return_fiber(scenario.candidate)
+        .expect("the second use has its own reverse section");
+    assert_ne!(fiber.use_ref(), second_fiber.use_ref());
+    assert_eq!(fiber.exterior(), second_fiber.exterior());
+
+    let duplicate =
+        TypedFiniteNegationExtension::declare(use_ref, vec![(scenario.source, scenario.candidate)])
+            .expect("one incidence must be unique");
+    assert!(matches!(
+        admit_finite_negation_extension(
+            duplicate,
+            vec![
+                (scenario.admitted.clone(), execution_coverage),
+                (scenario.admitted, execution_coverage),
+            ],
+            &scenario.catalog,
+        ),
+        Err(ic_core::FiniteNegationAdmissionError::DuplicateDeparture(pair))
+            if pair == (scenario.source, scenario.candidate)
+    ));
+}
+
+#[test]
+fn independently_admitted_sides_form_one_reciprocal_occurrence_vertical_slice() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("X departure must admit independently");
+    let x_departure = scenario.admitted.clone();
+    let x_witness = x_departure.witness();
+    let x_presentation = scenario.presentation;
+    let source_x = scenario.source;
+    let exterior_x = scenario.candidate;
+    let x_use = admit_singleton_negation_use(
+        &mut scenario,
+        x_departure,
+        x_presentation,
+        ic_core::Orientation::X,
+        source_x,
+        exterior_x,
+        NegationCoverage::CertifiedPartial,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0x41)),
+        0x42,
+    );
+
+    let source_y = exterior_x;
+    let exterior_y = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x45),
+    ));
+    let y_source_answer = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x46),
+    ));
+    let y_candidate_answer = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x47),
+    ));
+    let (y_departure, y_presentation) = add_finite_departure(
+        &mut scenario,
+        ic_core::Orientation::Y,
+        source_y,
+        exterior_y,
+        y_source_answer,
+        y_candidate_answer,
+        0x50,
+    );
+    assert_ne!(x_witness, y_departure.witness());
+    let y_use = admit_singleton_negation_use(
+        &mut scenario,
+        y_departure,
+        y_presentation,
+        ic_core::Orientation::Y,
+        source_y,
+        exterior_y,
+        NegationCoverage::CertifiedPartial,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0x48)),
+        0x49,
+    );
+
+    let x_exterior = x_use.exteriors()[0];
+    let y_exterior = y_use.exteriors()[0];
+    let seed_relation = scenario.catalog.insert_schema(RelationSchema::new(
+        scenario.binding,
+        vec![
+            port("exterior", scenario.answer_type),
+            port("reciprocal_source", scenario.answer_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x60),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let seed_use = scenario.catalog.insert_relation_use(RelationUse::new(
+        seed_relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("exterior").expect("port must be valid"),
+                exterior_x,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("reciprocal_source").expect("port must be valid"),
+                source_y,
+            ),
+        ],
+        RelationUseContext::new(
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            DischargeMode::Check,
+            SupportRef::from_artifact_ref(artifact(0x61)),
+            None,
+        ),
+    ));
+    let seed = SeedReorientation::new(x_exterior, seed_use, source_y);
+    seed.check(&scenario.catalog)
+        .expect("the supported seed preserves the X use and reorients to Y");
+
+    let x_fiber = x_use
+        .return_fiber(exterior_x)
+        .expect("X return is the reverse section of the admitted X use");
+    let y_fiber = y_use
+        .return_fiber(exterior_y)
+        .expect("Y return is the reverse section of the admitted Y use");
+    let signatures = SignatureContext::new(
+        scenario.binding,
+        scenario.scope,
+        scenario.applicability,
+        scenario.grain,
+        scenario.horizon,
+        scenario.answer_type,
+    );
+    let x_signature = ExactFiniteSignature::new(
+        signatures,
+        vec![(source_x.as_artifact_ref(), artifact(0x62))],
+    )
+    .expect("X signature domain must be unique");
+    let y_signature = ExactFiniteSignature::new(
+        signatures,
+        vec![(source_y.as_artifact_ref(), artifact(0x63))],
+    )
+    .expect("Y signature domain must be unique");
+    let x_selection = SelectedReturn::select(x_fiber.clone(), source_x.as_artifact_ref())
+        .expect("X selection must belong to the entire fiber");
+    let y_selection = SelectedReturn::select(y_fiber.clone(), source_y.as_artifact_ref())
+        .expect("Y selection must belong to the entire fiber");
+    assert!(matches!(
+        check_return_closure(&x_selection, &x_signature).expect("X domain is the whole fiber"),
+        ReturnClosure::Closed { .. }
+    ));
+    assert!(matches!(
+        check_return_closure(&y_selection, &y_signature).expect("Y domain is the whole fiber"),
+        ReturnClosure::Closed { .. }
+    ));
+
+    let occurrence = ReciprocalOccurrence::new(
+        seed,
+        x_fiber.clone(),
+        Some(source_x.as_artifact_ref()),
+        y_exterior,
+        y_fiber.clone(),
+        Some(source_y.as_artifact_ref()),
+    )
+    .expect("selected returns must belong to their fibers");
+    occurrence
+        .check(&scenario.catalog)
+        .expect("the Y side is independent, reversed, seeded, and same-distinction");
+    assert_eq!(
+        occurrence.residuals(),
+        [
+            RoleComparison::Coincident,
+            RoleComparison::Coincident,
+            RoleComparison::Undecided,
+            RoleComparison::Coincident,
+        ]
+    );
+    occurrence
+        .gamma_reachable()
+        .expect("Gamma is reachable only after every role is filled");
+    let before_y_return = ReciprocalOccurrence::new(
+        seed,
+        x_fiber,
+        Some(source_x.as_artifact_ref()),
+        y_exterior,
+        y_fiber,
+        None,
+    )
+    .expect("an unselected return remains an explicit partial occurrence");
+    assert!(matches!(
+        before_y_return.gamma_reachable(),
+        Err(ic_core::GammaError::RoleMissing("R_Y"))
+    ));
+    assert_eq!(before_y_return.selected_return_y(), None);
+
+    let (same_orientation_departure, same_orientation_presentation) = add_finite_departure(
+        &mut scenario,
+        ic_core::Orientation::X,
+        source_y,
+        exterior_y,
+        y_source_answer,
+        y_candidate_answer,
+        0x70,
+    );
+    let same_orientation_use = admit_singleton_negation_use(
+        &mut scenario,
+        same_orientation_departure,
+        same_orientation_presentation,
+        ic_core::Orientation::X,
+        source_y,
+        exterior_y,
+        NegationCoverage::CertifiedPartial,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0x71)),
+        0x72,
+    );
+    let same_orientation_exterior = same_orientation_use.exteriors()[0];
+    let same_orientation_fiber = same_orientation_use
+        .return_fiber(exterior_y)
+        .expect("the pointwise admitted row still has its own fiber");
+    let not_reciprocal = ReciprocalOccurrence::new(
+        seed,
+        x_use
+            .return_fiber(exterior_x)
+            .expect("X fiber remains derivable"),
+        Some(source_x.as_artifact_ref()),
+        same_orientation_exterior,
+        same_orientation_fiber,
+        Some(source_y.as_artifact_ref()),
+    )
+    .expect("all selected returns are members");
+    assert!(matches!(
+        not_reciprocal.check(&scenario.catalog),
+        Err(ic_core::ReciprocalOccurrenceError::OrientationDidNotReverse(ic_core::Orientation::X))
     ));
 }

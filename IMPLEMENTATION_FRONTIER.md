@@ -22,7 +22,10 @@ close for the standing claim. A derived finite departure checker now joins those
 two preserved probe events, decoded observation uses, direct source-presentation relevance, and
 one positively listed oriented incompatibility pair. The admission remains relative to declared
 finite closure and coverage inputs and creates no canonical artifact, warrant, negation incidence,
-or exterior.
+or standing mutation. A pointwise finite negation admission now requires an admitted departure
+for every declared incidence, retains semantic and execution coverage separately, and exposes
+same-use fibers only over the fully matched finite set. Two independently admitted opposite sides
+now pass one seed/recovery/residual/`Gamma` vertical slice; a same-orientation second side rejects.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -39,13 +42,13 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-Before treating an admitted departure as incidence under a later negation use, resolve:
+After the finite reciprocal semantic slice, resolve the earliest executable actuality gap:
 
-> Given one checked `AdmittedFiniteDeparture`, a structurally checked oriented `NegationUse`, and
-> the existing declared finite extension, what is the smallest derived incidence boundary that
-> preserves immutable use identity and separate semantic/execution coverage, rejects an extension
-> row unsupported by the admitted departure, and can feed the tagged exterior/same-use return
-> machinery without making declaration, generation, or projection into actuality?
+> Given canonical first-order `IProg::Ask`, the verified `Return | Branch | Probe` runtime,
+> append-only `ActualEvent` history, and event-linked finite decoding, what is the smallest
+> cold-replayable answer-dependent execution bridge that preserves the raw return before decoding,
+> selects a continuation only from an admitted supported answer, and keeps proposal, actuality,
+> resolution, check, warrant, and standing visibly distinct?
 
 The protected difference is visible in the accepted sources:
 
@@ -90,6 +93,20 @@ The protected difference is visible in the accepted sources:
   `NoWitness`, reversed roles, generated routes, projection, or search failure. The result remains
   ephemeral and finite-route-relative: it is not a warrant, canonical certificate, exhaustive
   semantic coverage, negation incidence, exterior, return, or reconciliation.
+- `AdmittedFiniteNegationExtension` is the first pointwise finite negation admission. Its evidence
+  set must equal the typed extension's incidence set: each row resolves an independently admitted
+  departure, becomes a use-tagged exterior, and retains an occurrence-side execution-coverage
+  identity distinct from the use's semantic coverage. Missing, duplicate, foreign-pair, or
+  wrong-use evidence rejects. Same-use reverse fibers are derived from that fully matched finite
+  set. This discharges soundness only for the listed rows and neither executes the declared
+  soundness program nor certifies global coverage or warrant.
+- The admitted reciprocal vertical fixture constructs distinct X- and Y-side probe events,
+  departure witnesses, and pointwise negation admissions; carries `O_X` through an explicit seed;
+  checks singleton entire-fiber recovery on both same-use reverse sections; retains selected
+  returns and residuals; and reaches `Gamma` only after both returns exist. The reciprocal checker
+  now rejects two uses with the same orientation as well as different distinctions. The fixture
+  remains a derived finite semantic composition, not a runtime execution, semantic reconciliation,
+  or second history.
 - Determination checking rehashes and checks the typed source, requires its binding to match the
   presentation, and recursively checks an optional predecessor. An ancestry edge may change the
   web or support, but not distinction, orientation, source, binding, scope, applicability, grain,
@@ -339,12 +356,13 @@ The protected difference is visible in the accepted sources:
   opaque route belongs to or is lawful in the generator regime, materialize the route, choose a
   policy winner, execute the question, or support a return.
 
-The finite positive-departure discriminator now rejects missing event-return coverage, missing
-source-determination relevance, nonstanding exact routes, generated observations, and every
-finite incompatibility outcome except a positive oriented listed pair. The next discriminator
-must ensure a negation incidence cannot borrow that admission across a different use, candidate,
-source presentation, or coverage contract, and that the derived reciprocal machinery consumes
-only the admitted same-use occurrence.
+The finite reciprocal discriminator now rejects unsupported extension rows, use-tag borrowing,
+same-orientation pseudo-reciprocity, incomplete role filling before `Gamma`, and return selection
+outside the entire same-use fiber. The earliest cross-cutting residual is execution: source
+`IProg`, runtime suspension, event append, decode, supported-answer admission, and continuation
+selection still exist as disconnected checked structures. The next implementation must connect
+them without allowing a generated candidate, raw return, decoded set, or passing check to promote
+itself into support, warrant, or standing.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
 `T_t(X) = Ingress ∪ { λ : some declared environment for λ is closed against X }` from the empty

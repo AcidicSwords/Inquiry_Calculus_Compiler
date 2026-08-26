@@ -140,6 +140,16 @@ warrant, negation incidence, exterior, or reconciliation. Unknown, unlisted, gen
 unsupported, reversed, projection-derived, and failed-search inputs cannot construct its required
 positive evidence.
 
+`AdmittedFiniteNegationExtension` now applies that result pointwise to one typed finite negation
+extension. Every declared `(source, candidate)` row must have its own admitted departure; extra,
+missing, or duplicate evidence rejects. The result keeps the use's semantic coverage separate
+from each tagged exterior's execution-coverage identity and derives return fibers only from the
+fully matched finite set. A vertical fixture composes two independently admitted opposite
+orientations through a checked seed, entire-fiber recovery, selected returns, residuals, and
+downstream-only `Gamma`; a same-orientation second side rejects. This is finite-route-relative
+derived evidence, not global coverage, standing revision, reconciliation, or authoritative
+history.
+
 For the exact finite special case, a derived cell comparator can expose one observed unequal
 coordinate, retain `Unknown` when the table lacks a positive separator, and distinguish fully
 observed equality only within that table. Its 65,536-pair binary fixture is a mathematical

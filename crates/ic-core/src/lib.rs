@@ -102,10 +102,11 @@ pub use factorization::{
     determine_through_exact, determine_through_exact_family,
 };
 pub use fiber::{
-    DeclaredIncidenceError, ExactNegationField, ExactReturnFiber, FiberRecoveryError,
-    FiniteNegationExtension, ReturnClosure, ReturnFiberError, SelectedReturn,
-    TypedFiniteNegationExtension, TypedNegationExtensionError, check_declared_incidence,
-    check_fiber_recovery, check_return_closure, exact_return_fiber,
+    AdmittedFiniteNegationExtension, DeclaredIncidenceError, ExactNegationField, ExactReturnFiber,
+    FiberRecoveryError, FiniteNegationAdmissionError, FiniteNegationExtension, ReturnClosure,
+    ReturnFiberError, SelectedReturn, TypedFiniteNegationExtension, TypedNegationExtensionError,
+    admit_finite_negation_extension, check_declared_incidence, check_fiber_recovery,
+    check_return_closure, exact_return_fiber,
 };
 pub use finite_cell::{
     FiniteCellComparison, FiniteCellError, FiniteCellSeparator, FiniteIncompatibilityError,
