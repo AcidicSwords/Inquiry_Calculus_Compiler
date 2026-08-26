@@ -297,6 +297,12 @@ problem and one declared generation-route identity. Its checker rehashes both in
 their binding, grain, and protected horizon to agree. It does not establish route lawfulness or
 materialization, select a question, run a probe, or confer actuality, support, or warrant.
 
+Phase 16 now has a canonical `CompressionLicense` boundary. It preserves the folded/quotiented
+artifact, protected horizon and continuations, scope, evidence, residual, recovery contract, and
+unlock conditions. Exact and approximate licences have different identities; the latter must name
+an explicit distortion contract. This records a claimed licence, not a proof of regeneration,
+recovery, approximation soundness, or an authorized active fold.
+
 `BoundaryChart` is now a derived, content-addressed local chart record. It retains the query,
 `X`/`Y`/boundary type references, projections, determination references, oriented use frontiers,
 seed, compatibility formula, optional traversal, grain, and horizon. It preserves missing fields

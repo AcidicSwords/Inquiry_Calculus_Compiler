@@ -367,6 +367,11 @@ witness for conservative observational extension. It rechecks named query/schema
 one declared scope and horizon, but does not establish transport for every old question,
 preservation of interpretations, a binding admission, or any inclusion under rebinding.
 
+Phase 16 now has canonical `CompressionLicense` identity. It keeps exact and directionally
+approximate licences distinct and preserves evidence/recovery/unlock references without evaluating
+them. Regeneration, recovery, compression admission, approximation soundness, and actual reopen
+effects remain separate live contracts.
+
 ## Known later questions
 
 These are recorded now but do not outrank the Phase 4 determination boundary:

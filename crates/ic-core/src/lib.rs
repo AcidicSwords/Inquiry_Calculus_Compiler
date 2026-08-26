@@ -7,6 +7,7 @@ mod artifact;
 mod boundary;
 mod bridge;
 mod claim;
+mod compression;
 mod context;
 mod cue;
 mod decoder;
@@ -48,6 +49,11 @@ pub use bridge::{BindingBridgeCheckError, BindingBridgeError, BindingBridgeIR, B
 pub use claim::{
     CLAIM_ARTIFACT_KIND, CLAIM_SCHEMA_VERSION, ClaimArtifact, ClaimCatalog, ClaimCheckError,
     ClaimError, ClaimStatus,
+};
+pub use compression::{
+    COMPRESSION_LICENSE_ARTIFACT_KIND, COMPRESSION_LICENSE_SCHEMA_VERSION, CompressionKind,
+    CompressionLicense, CompressionLicenseError, CompressionLicenseRef, DistortionContractRef,
+    FoldOrQuotientRef, ProtectedContinuationRef, RecoveryContractRef, UnlockConditionRef,
 };
 pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,
