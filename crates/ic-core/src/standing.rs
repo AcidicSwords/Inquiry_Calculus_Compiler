@@ -469,6 +469,14 @@ pub fn standing_determination_presentation_support<C: DeterminationSupportCatalo
             resolved.claim(),
         ));
     }
+    if !standing.closes_through(
+        SupportSubjectRef::Claim(resolved.claim()),
+        resolved.environment(),
+    ) {
+        return Err(DeterminationSupportError::EnvironmentDidNotClose(
+            resolved.environment(),
+        ));
+    }
     Ok(resolved)
 }
 
@@ -542,6 +550,37 @@ pub fn resolve_relation_use_support<C: RelationUseSupportCatalog>(
         relation_use: relation_use_ref,
         environment: environment_ref,
     })
+}
+
+/// Requires the exact relation-targeted environment named by a relation use to close in one
+/// declared least-fixed-point standing result.
+///
+/// This establishes standing of the represented relation through that exact route. It does not
+/// evaluate the relation use, prove that its bound tuple occurs, independently discharge declared
+/// closure inputs, or confer actuality or warrant.
+pub fn standing_relation_use_support<C: RelationUseSupportCatalog>(
+    relation_use_ref: RelationUseRef,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<ResolvedRelationUseSupport, RelationUseSupportError> {
+    let resolved = resolve_relation_use_support(relation_use_ref, catalog)?;
+    let environment = catalog
+        .resolve_support_environment(resolved.environment())
+        .ok_or(RelationUseSupportError::UnresolvedEnvironment(
+            resolved.environment(),
+        ))?;
+    let SupportSubjectRef::Relation(relation) = environment.target() else {
+        return Err(RelationUseSupportError::ClaimTargetIsNotRelationUseSupport);
+    };
+    if !standing.contains_relation(relation) {
+        return Err(RelationUseSupportError::RelationIsNotStanding(relation));
+    }
+    if !standing.closes_through(environment.target(), resolved.environment()) {
+        return Err(RelationUseSupportError::EnvironmentDidNotClose(
+            resolved.environment(),
+        ));
+    }
+    Ok(resolved)
 }
 
 fn checked_relation<C: SupportEnvironmentCatalog>(
@@ -788,6 +827,10 @@ pub enum RelationUseSupportError {
     },
     #[error("support environment context differs from relation use at {0}")]
     ContextMismatch(&'static str),
+    #[error("relation {0} is absent from the declared standing result")]
+    RelationIsNotStanding(RelationRef),
+    #[error("support environment {0} did not close in the declared standing result")]
+    EnvironmentDidNotClose(SupportEnvironmentRef),
 }
 
 #[derive(Debug, Error)]
@@ -822,6 +865,8 @@ pub enum DeterminationSupportError {
     ContextMismatch(&'static str),
     #[error("claim {0} is absent from the declared standing result")]
     ClaimIsNotStanding(ClaimRef),
+    #[error("support environment {0} did not close in the declared standing result")]
+    EnvironmentDidNotClose(SupportEnvironmentRef),
 }
 
 /// One explicitly declared assessment of the closure conditions not evaluable by this phase.
@@ -833,6 +878,7 @@ pub enum DeterminationSupportError {
 pub struct DeclaredSupportClosure {
     environment: SupportEnvironmentRef,
     standing_premises: BTreeSet<ClaimRef>,
+    standing_subjects: BTreeSet<SupportSubjectRef>,
     applicable: bool,
     checks_discharged: bool,
     invalidated: bool,
@@ -847,9 +893,43 @@ impl DeclaredSupportClosure {
         checks_discharged: bool,
         invalidated: bool,
     ) -> Self {
+        let standing_premises: BTreeSet<_> = standing_premises.into_iter().collect();
+        let standing_subjects = standing_premises
+            .iter()
+            .copied()
+            .map(SupportSubjectRef::Claim)
+            .collect();
         Self {
             environment,
-            standing_premises: standing_premises.into_iter().collect(),
+            standing_premises,
+            standing_subjects,
+            applicable,
+            checks_discharged,
+            invalidated,
+        }
+    }
+
+    /// Declares closure over typed claim and relation subjects without collapsing their kinds.
+    #[must_use]
+    pub fn for_subjects(
+        environment: SupportEnvironmentRef,
+        standing_subjects: Vec<SupportSubjectRef>,
+        applicable: bool,
+        checks_discharged: bool,
+        invalidated: bool,
+    ) -> Self {
+        let standing_subjects: BTreeSet<_> = standing_subjects.into_iter().collect();
+        let standing_premises = standing_subjects
+            .iter()
+            .filter_map(|subject| match subject {
+                SupportSubjectRef::Claim(claim) => Some(*claim),
+                SupportSubjectRef::Relation(_) => None,
+            })
+            .collect();
+        Self {
+            environment,
+            standing_premises,
+            standing_subjects,
             applicable,
             checks_discharged,
             invalidated,
@@ -864,6 +944,12 @@ impl DeclaredSupportClosure {
     pub const fn standing_premises(&self) -> &BTreeSet<ClaimRef> {
         &self.standing_premises
     }
+
+    /// Returns every typed subject that must stand before this route closes.
+    #[must_use]
+    pub const fn standing_subjects(&self) -> &BTreeSet<SupportSubjectRef> {
+        &self.standing_subjects
+    }
 }
 
 /// Builds the existing least-fixed-point problem from checked canonical support records and
@@ -873,6 +959,25 @@ pub fn standing_from_declared_support<C: SupportEnvironmentCatalog>(
     closures: &[DeclaredSupportClosure],
     catalog: &C,
 ) -> Result<Standing, DeclaredStandingError> {
+    standing_from_declared_subject_support(
+        ingress.into_iter().map(SupportSubjectRef::Claim).collect(),
+        closures,
+        catalog,
+    )
+}
+
+/// Builds a least-fixed-point standing result over typed claim and relation subjects.
+///
+/// Closure flags remain caller declarations. This function checks subject identities, exact
+/// premise membership, and canonical route provenance before applying the shared fixed point.
+pub fn standing_from_declared_subject_support<C: SupportEnvironmentCatalog>(
+    ingress: Vec<SupportSubjectRef>,
+    closures: &[DeclaredSupportClosure],
+    catalog: &C,
+) -> Result<Standing, DeclaredStandingError> {
+    for subject in &ingress {
+        check_support_subject(catalog, *subject)?;
+    }
     let mut environments = Vec::with_capacity(closures.len());
     for closure in closures {
         let environment = catalog
@@ -888,11 +993,8 @@ pub fn standing_from_declared_support<C: SupportEnvironmentCatalog>(
             });
         }
         environment.check(catalog)?;
-        let SupportSubjectRef::Claim(claim) = environment.target() else {
-            return Err(DeclaredStandingError::RelationTargetCannotEnterClaimStanding);
-        };
-        for premise in closure.standing_premises() {
-            checked_claim(catalog, *premise)?;
+        for premise in closure.standing_subjects() {
+            check_support_subject(catalog, *premise)?;
             if !environment.premises().contains(&premise.as_artifact_ref()) {
                 return Err(DeclaredStandingError::PremiseNotNamedByEnvironment {
                     environment: closure.environment,
@@ -900,15 +1002,36 @@ pub fn standing_from_declared_support<C: SupportEnvironmentCatalog>(
                 });
             }
         }
-        let mut declared =
-            SupportEnvironment::new(claim, closure.standing_premises().iter().copied().collect())
-                .with_applicability(closure.applicable)
-                .with_checks_discharged(closure.checks_discharged)
-                .invalidated(closure.invalidated);
-        declared = declared.with_open_dependencies(environment.open_dependencies().to_vec());
+        let declared = SupportEnvironment::for_subjects(
+            environment.target(),
+            closure.standing_subjects().iter().copied().collect(),
+        )
+        .with_canonical_environment(closure.environment)
+        .with_applicability(closure.applicable)
+        .with_checks_discharged(closure.checks_discharged)
+        .invalidated(closure.invalidated)
+        .with_open_dependencies(environment.open_dependencies().to_vec());
         environments.push(declared);
     }
-    Ok(standing(&StandingProblem::new(ingress, environments)))
+    Ok(standing(&StandingProblem::for_subjects(
+        ingress,
+        environments,
+    )))
+}
+
+fn check_support_subject<C: SupportEnvironmentCatalog>(
+    catalog: &C,
+    subject: SupportSubjectRef,
+) -> Result<(), SupportEnvironmentArtifactCheckError> {
+    match subject {
+        SupportSubjectRef::Claim(claim) => {
+            checked_claim(catalog, claim)?;
+        }
+        SupportSubjectRef::Relation(relation) => {
+            checked_relation(catalog, relation)?;
+        }
+    }
+    Ok(())
 }
 
 #[derive(Debug, Error)]
@@ -924,16 +1047,14 @@ pub enum DeclaredStandingError {
         reference: SupportEnvironmentRef,
         calculated: SupportEnvironmentRef,
     },
-    #[error("a relation-targeted environment cannot enter claim standing")]
-    RelationTargetCannotEnterClaimStanding,
-    #[error("standing premise {premise} is not named by support environment {environment}")]
+    #[error("standing premise {premise:?} is not named by support environment {environment}")]
     PremiseNotNamedByEnvironment {
         environment: SupportEnvironmentRef,
-        premise: ClaimRef,
+        premise: SupportSubjectRef,
     },
 }
 
-/// One candidate support route for a claim.
+/// One candidate support route for a typed claim or relation subject.
 ///
 /// The specification's `Closed_X(E, lambda)` has five conditions. Two of them are decided here
 /// against the standing set as it grows -- the premises requiring standing, and the emptiness of
@@ -947,8 +1068,10 @@ pub enum DeclaredStandingError {
 /// engine decides what follows from the declarations, not whether they are true.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct SupportEnvironment {
-    claim: ClaimRef,
-    premises: BTreeSet<ClaimRef>,
+    target: SupportSubjectRef,
+    premises: BTreeSet<SupportSubjectRef>,
+    claim_premises: BTreeSet<ClaimRef>,
+    canonical_environment: Option<SupportEnvironmentRef>,
     open_dependencies: BTreeSet<ArtifactRef>,
     applicable: bool,
     checks_discharged: bool,
@@ -959,14 +1082,50 @@ impl SupportEnvironment {
     /// Declares one support route whose premises must themselves stand.
     #[must_use]
     pub fn new(claim: ClaimRef, premises: Vec<ClaimRef>) -> Self {
+        let claim_premises: BTreeSet<_> = premises.into_iter().collect();
         Self {
-            claim,
-            premises: premises.into_iter().collect(),
+            target: SupportSubjectRef::Claim(claim),
+            premises: claim_premises
+                .iter()
+                .copied()
+                .map(SupportSubjectRef::Claim)
+                .collect(),
+            claim_premises,
+            canonical_environment: None,
             open_dependencies: BTreeSet::new(),
             applicable: true,
             checks_discharged: true,
             invalidated: false,
         }
+    }
+
+    /// Declares one typed support route over claim and relation premises.
+    #[must_use]
+    pub fn for_subjects(target: SupportSubjectRef, premises: Vec<SupportSubjectRef>) -> Self {
+        let premises: BTreeSet<_> = premises.into_iter().collect();
+        let claim_premises = premises
+            .iter()
+            .filter_map(|subject| match subject {
+                SupportSubjectRef::Claim(claim) => Some(*claim),
+                SupportSubjectRef::Relation(_) => None,
+            })
+            .collect();
+        Self {
+            target,
+            premises,
+            claim_premises,
+            canonical_environment: None,
+            open_dependencies: BTreeSet::new(),
+            applicable: true,
+            checks_discharged: true,
+            invalidated: false,
+        }
+    }
+
+    #[must_use]
+    const fn with_canonical_environment(mut self, environment: SupportEnvironmentRef) -> Self {
+        self.canonical_environment = Some(environment);
+        self
     }
 
     /// Records dependencies the route requires but neither supplies nor independently discharges.
@@ -1001,14 +1160,36 @@ impl SupportEnvironment {
     }
 
     /// Returns the claim this route supports.
+    ///
+    /// # Panics
+    ///
+    /// Panics when called on a relation-targeted route. New subject-generic code should use
+    /// [`Self::target`] instead; this accessor is retained for claim-only callers.
     #[must_use]
     pub const fn claim(&self) -> ClaimRef {
-        self.claim
+        match self.target {
+            SupportSubjectRef::Claim(claim) => claim,
+            SupportSubjectRef::Relation(_) => {
+                panic!("relation-targeted support route has no claim target")
+            }
+        }
+    }
+
+    /// Returns the typed subject this route supports.
+    #[must_use]
+    pub const fn target(&self) -> SupportSubjectRef {
+        self.target
     }
 
     /// Returns the premises that must themselves stand.
     #[must_use]
     pub const fn premises(&self) -> &BTreeSet<ClaimRef> {
+        &self.claim_premises
+    }
+
+    /// Returns every typed premise that must itself stand.
+    #[must_use]
+    pub const fn subject_premises(&self) -> &BTreeSet<SupportSubjectRef> {
         &self.premises
     }
 
@@ -1020,7 +1201,7 @@ impl SupportEnvironment {
 
     /// Decides `Closed_X(E, lambda)` against a standing set.
     #[must_use]
-    pub fn is_closed(&self, standing: &BTreeSet<ClaimRef>) -> bool {
+    pub fn is_closed(&self, standing: &BTreeSet<SupportSubjectRef>) -> bool {
         !self.invalidated
             && self.applicable
             && self.checks_discharged
@@ -1040,14 +1221,42 @@ impl SupportEnvironment {
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct StandingProblem {
     ingress: BTreeSet<ClaimRef>,
+    subjects: BTreeSet<SupportSubjectRef>,
     environments: Vec<SupportEnvironment>,
 }
 
 impl StandingProblem {
     #[must_use]
     pub fn new(ingress: Vec<ClaimRef>, environments: Vec<SupportEnvironment>) -> Self {
+        let ingress: BTreeSet<_> = ingress.into_iter().collect();
         Self {
-            ingress: ingress.into_iter().collect(),
+            subjects: ingress
+                .iter()
+                .copied()
+                .map(SupportSubjectRef::Claim)
+                .collect(),
+            ingress,
+            environments,
+        }
+    }
+
+    /// Declares a standing problem over typed claim and relation ingress subjects.
+    #[must_use]
+    pub fn for_subjects(
+        subjects: Vec<SupportSubjectRef>,
+        environments: Vec<SupportEnvironment>,
+    ) -> Self {
+        let subjects: BTreeSet<_> = subjects.into_iter().collect();
+        let ingress = subjects
+            .iter()
+            .filter_map(|subject| match subject {
+                SupportSubjectRef::Claim(claim) => Some(*claim),
+                SupportSubjectRef::Relation(_) => None,
+            })
+            .collect();
+        Self {
+            ingress,
+            subjects,
             environments,
         }
     }
@@ -1056,6 +1265,12 @@ impl StandingProblem {
     #[must_use]
     pub const fn ingress(&self) -> &BTreeSet<ClaimRef> {
         &self.ingress
+    }
+
+    /// Returns every typed grounded ingress subject.
+    #[must_use]
+    pub const fn ingress_subjects(&self) -> &BTreeSet<SupportSubjectRef> {
+        &self.subjects
     }
 
     /// Returns every declared support route.
@@ -1068,8 +1283,12 @@ impl StandingProblem {
 /// The result of the fixed-point computation.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Standing {
+    subjects: BTreeSet<SupportSubjectRef>,
     claims: BTreeSet<ClaimRef>,
+    relations: BTreeSet<RelationRef>,
     admitted_by: BTreeMap<ClaimRef, usize>,
+    admitted_subject_by: BTreeMap<SupportSubjectRef, usize>,
+    closed_environments: BTreeMap<SupportSubjectRef, BTreeSet<SupportEnvironmentRef>>,
     rounds: usize,
 }
 
@@ -1080,10 +1299,34 @@ impl Standing {
         &self.claims
     }
 
+    /// Returns every relation that stands.
+    #[must_use]
+    pub const fn relations(&self) -> &BTreeSet<RelationRef> {
+        &self.relations
+    }
+
+    /// Returns every typed subject in the fixed point.
+    #[must_use]
+    pub const fn subjects(&self) -> &BTreeSet<SupportSubjectRef> {
+        &self.subjects
+    }
+
     /// Reports whether one claim stands.
     #[must_use]
     pub fn contains(&self, claim: ClaimRef) -> bool {
         self.claims.contains(&claim)
+    }
+
+    /// Reports whether one typed subject stands.
+    #[must_use]
+    pub fn contains_subject(&self, subject: SupportSubjectRef) -> bool {
+        self.subjects.contains(&subject)
+    }
+
+    /// Reports whether one relation stands.
+    #[must_use]
+    pub fn contains_relation(&self, relation: RelationRef) -> bool {
+        self.relations.contains(&relation)
     }
 
     /// Returns the index of the route that first admitted a claim, when one did.
@@ -1093,6 +1336,30 @@ impl Standing {
     #[must_use]
     pub fn admitted_by(&self, claim: ClaimRef) -> Option<usize> {
         self.admitted_by.get(&claim).copied()
+    }
+
+    /// Returns the index of the route that first admitted a typed subject.
+    #[must_use]
+    pub fn subject_admitted_by(&self, subject: SupportSubjectRef) -> Option<usize> {
+        self.admitted_subject_by.get(&subject).copied()
+    }
+
+    /// Returns the index of the route that first admitted a relation, when one did.
+    #[must_use]
+    pub fn relation_admitted_by(&self, relation: RelationRef) -> Option<usize> {
+        self.subject_admitted_by(SupportSubjectRef::Relation(relation))
+    }
+
+    /// Reports whether an exact canonical support environment closes for a standing subject.
+    #[must_use]
+    pub fn closes_through(
+        &self,
+        subject: SupportSubjectRef,
+        environment: SupportEnvironmentRef,
+    ) -> bool {
+        self.closed_environments
+            .get(&subject)
+            .is_some_and(|environments| environments.contains(&environment))
     }
 
     /// Returns how many iterations the fixed point took to close.
@@ -1114,20 +1381,25 @@ impl Standing {
 /// grounded, that a declared check ran, or that an applicability condition holds.
 #[must_use]
 pub fn standing(problem: &StandingProblem) -> Standing {
-    let mut claims: BTreeSet<ClaimRef> = problem.ingress().iter().copied().collect();
+    let mut subjects: BTreeSet<SupportSubjectRef> =
+        problem.ingress_subjects().iter().copied().collect();
     let mut admitted_by = BTreeMap::new();
+    let mut admitted_subject_by = BTreeMap::new();
     let mut rounds = 0;
 
     loop {
         rounds += 1;
         let mut grew = false;
         for (index, environment) in problem.environments().iter().enumerate() {
-            if claims.contains(&environment.claim()) {
+            if subjects.contains(&environment.target()) {
                 continue;
             }
-            if environment.is_closed(&claims) {
-                claims.insert(environment.claim());
-                admitted_by.insert(environment.claim(), index);
+            if environment.is_closed(&subjects) {
+                subjects.insert(environment.target());
+                admitted_subject_by.insert(environment.target(), index);
+                if let SupportSubjectRef::Claim(claim) = environment.target() {
+                    admitted_by.insert(claim, index);
+                }
                 grew = true;
             }
         }
@@ -1136,9 +1408,40 @@ pub fn standing(problem: &StandingProblem) -> Standing {
         }
     }
 
+    let claims = subjects
+        .iter()
+        .filter_map(|subject| match subject {
+            SupportSubjectRef::Claim(claim) => Some(*claim),
+            SupportSubjectRef::Relation(_) => None,
+        })
+        .collect();
+    let relations = subjects
+        .iter()
+        .filter_map(|subject| match subject {
+            SupportSubjectRef::Claim(_) => None,
+            SupportSubjectRef::Relation(relation) => Some(*relation),
+        })
+        .collect();
+    let mut closed_environments: BTreeMap<_, BTreeSet<_>> = BTreeMap::new();
+    for environment in problem.environments() {
+        if subjects.contains(&environment.target())
+            && environment.is_closed(&subjects)
+            && let Some(reference) = environment.canonical_environment
+        {
+            closed_environments
+                .entry(environment.target())
+                .or_default()
+                .insert(reference);
+        }
+    }
+
     Standing {
+        subjects,
         claims,
+        relations,
         admitted_by,
+        admitted_subject_by,
+        closed_environments,
         rounds,
     }
 }

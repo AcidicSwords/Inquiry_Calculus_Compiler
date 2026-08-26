@@ -26,6 +26,7 @@ use ic_core::{
     match_decoded_observation_use, resolve_departure_witness_evidence_support,
     resolve_determination_presentation_support, resolve_relation_use_support,
     standing_determination_presentation_support, standing_from_declared_support,
+    standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -821,7 +822,7 @@ fn support_environment_identity_preserves_candidate_support_without_closure() {
             &fixture.catalog,
         ),
         Err(DeclaredStandingError::PremiseNotNamedByEnvironment { premise, .. })
-            if premise == claim
+            if premise == SupportSubjectRef::Claim(claim)
     ));
     let mismatched_context = SupportEnvironmentArtifact::new(
         SupportSubjectRef::Claim(claim),
@@ -1137,8 +1138,11 @@ fn departure_witness_requires_its_source_presentation_support_to_stand() {
     ));
 
     let closure = DeclaredSupportClosure::new(environment, Vec::new(), true, true, false);
-    let standing = standing_from_declared_support(Vec::new(), &[closure], &fixture.catalog)
-        .expect("the declared closed route reaches its claim in the least fixed point");
+    let evidence_closure =
+        DeclaredSupportClosure::for_subjects(evidence_environment, Vec::new(), true, true, false);
+    let standing =
+        standing_from_declared_support(Vec::new(), &[closure, evidence_closure], &fixture.catalog)
+            .expect("the declared closed route reaches its claim in the least fixed point");
     let resolved = check_departure_witness_standing_support(&witness, &standing, &fixture.catalog)
         .expect("a checked witness must retain the source presentation's standing support link");
     assert_eq!(resolved.presentation(), presentation);
@@ -1163,6 +1167,52 @@ fn departure_witness_requires_its_source_presentation_support_to_stand() {
         candidate_observation
     );
     assert_eq!(evidence.incompatibility().relation_use(), incompatibility);
+    for evidence_use in [source_observation, candidate_observation, incompatibility] {
+        let admitted = standing_relation_use_support(evidence_use, &standing, &fixture.catalog)
+            .expect("the exact relation-targeted evidence route must close in standing");
+        assert_eq!(admitted.environment(), evidence_environment);
+    }
+
+    let unclosed_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(fixture.relation),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            vec![artifact(0x99)],
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("second relation-targeted environment must canonicalize"),
+    );
+    let unclosed_use = fixture.catalog.insert_relation_use(RelationUse::new(
+        fixture.relation,
+        vec![
+            PortBinding::new(
+                TypeSymbol::new("known").expect("port must be valid"),
+                source,
+            ),
+            PortBinding::new(
+                TypeSymbol::new("answer").expect("port must be valid"),
+                source_answer,
+            ),
+        ],
+        RelationUseContext::new(
+            scope,
+            applicability,
+            grain,
+            horizon,
+            DischargeMode::Probe,
+            unclosed_environment.as_support_ref(),
+            None,
+        ),
+    ));
+    assert!(matches!(
+        standing_relation_use_support(unclosed_use, &standing, &fixture.catalog),
+        Err(RelationUseSupportError::EnvironmentDidNotClose(reference))
+            if reference == unclosed_environment
+    ));
 
     let claim_targeted_source_observation = fixture.catalog.insert_relation_use(RelationUse::new(
         fixture.relation,

@@ -13,10 +13,13 @@ ordinary event record. Phase 6 now has canonical ordinary-event identity and app
 linkage. A derived structural view can now connect one preserved decoded candidate to its exact
 declared observation use; general supported-answer materialization remains reserved for the
 Phase 6/7 actuality-and-resolution boundary. Phase 11 now has canonical claim and candidate
-support-environment identity with structural provenance checking. Relation uses can structurally
-resolve matching relation-targeted environments through `SupportRef`, and a determination
-presentation can structurally resolve a claim-targeted environment whose target occurs in a
-declared standing result. Neither link evaluates opaque closure roles or admits web relevance.
+support-environment identity with structural provenance checking. One typed least-fixed-point
+engine now carries claim and relation subjects, rejects mixed rootless cycles, retains exact
+closing-environment provenance, and keeps equal underlying digests separated by subject kind.
+Relation uses can require their exact relation-targeted environment to close for the standing
+relation, and a determination presentation can require its exact claim-targeted environment to
+close for the standing claim. These links remain relative to declared closure inputs and neither
+evaluates opaque closure roles nor admits web relevance.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -35,9 +38,9 @@ inferring them from opaque payload bytes.
 
 Before admitting a departure witness as evidence for a later negation use, resolve:
 
-> Given a canonical candidate support environment and an oriented typed finite incompatibility
-> pair, what is the smallest claim-targeted admission boundary that can establish standing,
-> determination relevance, and non-circularity without turning failed search,
+> Given event-linked typed observations, exact standing support routes, and an oriented typed
+> finite incompatibility pair, what is the smallest derived admission boundary that can establish
+> determination relevance and non-circular positive departure without turning failed search,
 > projection, incomplete coverage, or caller-declared data into exteriority or silently collapsing
 > semantic and execution coverage?
 
@@ -85,9 +88,10 @@ The protected difference is visible in the accepted sources:
   different scope/applicability/grain/horizon. A separate derived check resolves the presentation
   support as an exact claim-targeted environment and requires its target claim in a declared
   least-fixed-point `Standing` result. Evidence-use support remains separate because existing
-  relation-use support is relation-targeted. A companion derived resolver now rechecks that each
-  of the three uses names an exact matching relation-targeted environment, without making that
-  environment standing. Each source/candidate observation use must also
+  relation-use support is relation-targeted. A companion derived resolver rechecks that each of
+  the three uses names an exact matching relation-targeted environment. The shared typed standing
+  engine can now require that exact environment to close for its relation without collapsing it
+  into the claim-targeted route. Each source/candidate observation use must also
   bind its declared form and answer, and the incompatibility use must bind the two declared
   answers. Each of the three evidence uses must additionally declare an evidence route other than
   `Generate`: a generator proposes a provisional filling and can never supply positive departure
@@ -96,9 +100,9 @@ The protected difference is visible in the accepted sources:
   This is a check on the *declared* route only. A use that declares `Probe` while nothing was
   probed still passes, so the discharge mode is not yet evidence that the route was taken.
   Constructing or checking it evaluates no relation and proves neither claim/source-form
-  denotation, web relevance, non-circularity, incompatibility, nor exteriority. It does not yet
-  connect evidence-use support to standing. The presentation standing link remains relative to
-  declared closure inputs and does not turn them into actuality or warrant.
+  denotation, web relevance, non-circularity, incompatibility, nor exteriority. Both claim and
+  relation standing links remain relative to declared closure inputs and do not turn them into
+  actuality or warrant.
 - The derived `compare_finite_observation_cells` checker now supplies the exact finite
   cell-exclusion discriminator: an observed unequal coordinate gives a separator; no separator
   with any unknown coordinate remains `Unknown`; a completely observed equal table is only a

@@ -126,8 +126,10 @@ grain, and horizon; and rejects an evidence use outside that context. A separate
 also require the presentation's exact claim-targeted support environment to target a claim in a
 declared least-fixed-point `Standing` result. Evidence-use support routes remain separate because
 they are relation-targeted. A companion resolver verifies that all three name exact
-relation-targeted support environments with matching context, but it does not make those routes
-standing or admitted; that relation remains later work. It still does not evaluate an
+relation-targeted support environments with matching context. The shared least-fixed-point engine
+can now carry claim and relation subjects without collapsing their kinds, and a derived check can
+require each evidence use's exact environment to be one of the routes that closes for its standing
+relation. This remains relative to declared closure inputs and still does not evaluate an
 observation, establish incompatibility, or certify non-circular positive evidence. Each
 observation use must bind its claimed form/answer pair, and the incompatibility use must bind
 the two claimed answers; those structural links are not relation evaluation.
@@ -229,14 +231,17 @@ opaque checkers, evaluate assumptions or open dependencies, assert closure, or a
 claim as standing. A derived relation-use link can resolve only a matching relation-targeted
 environment through its exact `SupportRef`, scope, and applicability; that link is not admission.
 
-`standing_from_declared_support` now checks a claim-targeted environment and every declared
-standing premise before translating it into the existing least-fixed-point input. Applicability,
-checker success, and invalidation remain an explicit assessment; it is not proof, warrant, or an
+`standing_from_declared_support` preserves its claim-only interface, while the subject-aware
+variant checks claim and relation targets and typed premises before applying one shared
+least-fixed-point operator. Claim and relation subjects remain distinct even when their underlying
+digests coincide. The result retains the exact canonical environments that close for each subject,
+so one route cannot borrow another route's standing. Applicability, checker success, and
+invalidation remain explicit assessments; this is not proof, warrant, relation evaluation, or an
 independent-ingress validator.
 
 A determination presentation can now resolve the exact claim-targeted environment named by its
 `SupportRef`, require matching scope/applicability, and require that target claim to occur in the
-declared least-fixed-point standing result. This does not assert that the opaque claim payload
+declared least-fixed-point standing result through that exact environment. This does not assert that the opaque claim payload
 denotes the presentation source form, that the web is admitted or relevant, or that caller-declared
 closure conditions are independently grounded.
 

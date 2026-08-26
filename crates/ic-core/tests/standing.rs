@@ -1,4 +1,7 @@
-use ic_core::{ArtifactRef, ClaimRef, StandingProblem, SupportEnvironment, standing};
+use ic_core::{
+    ArtifactRef, ClaimRef, RelationRef, StandingProblem, SupportEnvironment, SupportSubjectRef,
+    standing,
+};
 
 fn artifact(byte: u8) -> ArtifactRef {
     ArtifactRef::from_bytes([byte; 32])
@@ -6,6 +9,10 @@ fn artifact(byte: u8) -> ArtifactRef {
 
 fn claim(byte: u8) -> ClaimRef {
     ClaimRef::from_artifact_ref(artifact(byte))
+}
+
+fn relation(byte: u8) -> RelationRef {
+    RelationRef::from_artifact_ref(artifact(byte))
 }
 
 const ROOT: u8 = 0x01;
@@ -139,4 +146,55 @@ fn one_closed_route_suffices_when_another_is_blocked() {
         vec![SupportEnvironment::new(claim(DERIVED), vec![claim(ROOT)]).with_applicability(false)],
     );
     assert!(!standing(&only_blocked).contains(claim(DERIVED)));
+}
+
+#[test]
+fn mixed_claim_relation_standing_preserves_kinds_and_rejects_rootless_cycles() {
+    let claim_subject = SupportSubjectRef::Claim(claim(LEFT));
+    let relation_subject = SupportSubjectRef::Relation(relation(RIGHT));
+    let cycle = StandingProblem::for_subjects(
+        Vec::new(),
+        vec![
+            SupportEnvironment::for_subjects(claim_subject, vec![relation_subject]),
+            SupportEnvironment::for_subjects(relation_subject, vec![claim_subject]),
+        ],
+    );
+    let ungrounded = standing(&cycle);
+    assert!(ungrounded.subjects().is_empty());
+    assert!(!ungrounded.contains(claim(LEFT)));
+    assert!(!ungrounded.contains_relation(relation(RIGHT)));
+
+    let grounded =
+        StandingProblem::for_subjects(vec![relation_subject], cycle.environments().to_vec());
+    let result = standing(&grounded);
+    assert!(result.contains_subject(claim_subject));
+    assert!(result.contains_subject(relation_subject));
+    assert!(result.contains(claim(LEFT)));
+    assert!(result.contains_relation(relation(RIGHT)));
+    assert_eq!(
+        result.claims().iter().copied().collect::<Vec<_>>(),
+        vec![claim(LEFT)]
+    );
+    assert_eq!(
+        result.relations().iter().copied().collect::<Vec<_>>(),
+        vec![relation(RIGHT)]
+    );
+    assert_eq!(result.subject_admitted_by(relation_subject), None);
+    assert_eq!(result.relation_admitted_by(relation(RIGHT)), None);
+    assert_eq!(result.subject_admitted_by(claim_subject), Some(0));
+}
+
+#[test]
+fn standing_subject_kind_separates_equal_underlying_digests() {
+    let shared = artifact(0xA5);
+    let claim_subject = SupportSubjectRef::Claim(ClaimRef::from_artifact_ref(shared));
+    let relation_subject = SupportSubjectRef::Relation(RelationRef::from_artifact_ref(shared));
+    let result = standing(&StandingProblem::for_subjects(
+        vec![claim_subject, relation_subject],
+        Vec::new(),
+    ));
+
+    assert_eq!(result.subjects().len(), 2);
+    assert!(result.contains_subject(claim_subject));
+    assert!(result.contains_subject(relation_subject));
 }
