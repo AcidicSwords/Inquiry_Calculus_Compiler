@@ -28,6 +28,12 @@ raw-return/resolution/continuation projection while requiring both to name the s
 ordinary event. It regenerates identically on cold replay, yet two resolution paths reaching the
 same candidates and runtime endpoint remain distinct return traces. The view adds no event,
 causal edge, replay occurrence, or stored history.
+An exact finite sufficient-present checker now treats the present as a signature over declared
+history alternatives and requires every protected continuation to factor through it. In the first
+fixture, two path-distinct traces fold into one class because the current continuation is constant;
+that one-class quotient regenerates after restart. A newly protected path-sensitive continuation
+returns the exact merged pair as a reopen witness. The result is derived checker data, not active
+mutable memory, standing, a compression licence, or a universal bounded-size claim.
 The Phase 6 crash breaker now has a separate operational external-effect journal: durable
 preparation precedes any caller dispatch; unresolved restart state remains unknown and is never
 auto-retried; completion atomically installs the raw artifact, checked ordinary event, ledger edge,
@@ -105,18 +111,24 @@ compile/replay recipe.
 > with exact event/path provenance. The same historical trace regenerates after restart, while the
 > same terminal state reached through a different resolution path remains distinct.
 
-The strongest live obligation is now `PRESENT-001`:
+`PRESENT-001` is demonstrated:
 
 > Use only accepted artifacts, ordinary events, and the derived paired trace to construct the
 > smallest question-conditioned sufficient present for two finite history alternatives. Prove
 > exact protected continuation equivalence, regenerate the view after restart, and reopen the fold
 > when one newly protected continuation separates the previously equivalent histories.
 
-The first sufficient present should remain a derived finite view. It must not add a second mutable
-memory, conflate ledger order with causal or inquiry order, persist a derived trace merely for
-convenience, equate active with standing, or claim universal bounded memory. If it cannot
-regenerate from the event spine and accepted artifacts, record the exact missing basis before
-proposing storage.
+The strongest live obligation is now `PROVIDER-001`:
+
+> Place one real LLM provider behind the existing checked `ProbeProvider` boundary, preserve the
+> exact HTTP/provider return before interpretation, and drive one typed question to a
+> multi-completion supported answer without singleton forcing. Provider configuration and failure
+> remain operational; neither generation nor transport success supplies support or warrant.
+
+Implement the smallest provider-specific adapter and versioned request contract that a real return
+requires. Do not add a provider framework, scheduler, model policy, credential store, or semantic
+opcode. Keep the existing offline mock/replay suite deterministic; gate a live network fixture on
+explicitly available credentials and preserve its raw return without committing secrets.
 
 The protected difference is visible in the accepted sources:
 

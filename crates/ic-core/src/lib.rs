@@ -39,6 +39,7 @@ mod seed;
 mod separator;
 mod sixfold;
 mod standing;
+mod sufficient_present;
 mod supported_answer;
 mod ty;
 
@@ -222,6 +223,12 @@ pub use standing::{
     SupportSubjectRef, resolve_determination_presentation_support, resolve_relation_use_support,
     standing, standing_determination_presentation_support, standing_from_declared_subject_support,
     standing_from_declared_support, standing_relation_use_support,
+};
+pub use sufficient_present::{
+    ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFiniteSufficientPresent,
+    ExactFiniteSufficientPresentError, ExactFiniteSufficientPresentResult,
+    ExactProtectedContinuation, challenge_exact_finite_sufficient_present,
+    derive_exact_finite_sufficient_present,
 };
 pub use supported_answer::{
     AdmittedFiniteAnswerSet, BoundFiniteAskContinuation, FiniteAnswerBindingError,

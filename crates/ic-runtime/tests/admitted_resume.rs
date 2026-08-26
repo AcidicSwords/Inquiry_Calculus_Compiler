@@ -14,19 +14,23 @@ use ic_core::{
     ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef, ArtifactEnvelope,
     ArtifactKind, ArtifactRef, BackendRequest, BindingVersionRef, BoundaryChart, BoundaryRef,
     CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    DeclaredSupportClosure, DischargeMode, EventRef, FiniteAnswerBindingError, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderRef, FiniteSupportedAnswerError,
-    FormulaArtifact, FormulaCatalog, FormulaRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog,
-    IProgCheckError, IProgIR, IProgRef, ObservationResultCatalog, OpenPort, OpenQuery,
-    OpenQueryCatalog, OperatorOccurrenceCatalog, PortBinding, ProbeContractRef, ProbeOperator,
-    ProbeOperatorRef, ProgramBinding, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog,
-    RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema,
-    RelationSignature, RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
-    ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef,
+    DeclaredSupportClosure, DischargeMode, EventRef, ExactFinitePresentChallenge,
+    ExactFinitePresentReopenWitness, ExactFiniteSignature, ExactFiniteSufficientPresent,
+    ExactFiniteSufficientPresentResult, ExactProtectedContinuation, FiniteAnswerBindingError,
+    FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderRef,
+    FiniteSupportedAnswerError, FormulaArtifact, FormulaCatalog, FormulaRef, GrainRef, HorizonRef,
+    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, ObservationResultCatalog,
+    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrenceCatalog, PortBinding,
+    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedContinuationRef,
+    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
+    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
+    RelationUseContext, RelationUseRef, RelationUseSupportCatalog, ResolutionCatalog,
+    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SignatureContext,
     StateRef, SupportEnvironmentArtifact, SupportEnvironmentCatalog, SupportEnvironmentRef,
     SupportSubjectRef, SurfacePlan, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef,
     TypeSymbol, TypedForm, TypedFormRef, admit_finite_supported_answers,
-    bind_finite_ask_continuation, decode_actual_event, match_decoded_observation_use,
+    bind_finite_ask_continuation, challenge_exact_finite_sufficient_present, decode_actual_event,
+    derive_exact_finite_sufficient_present, match_decoded_observation_use,
     standing_from_declared_support,
 };
 use ic_runtime::{
@@ -324,7 +328,82 @@ struct ColdReplayRoots {
     event: EventRef,
     raw_return: RawReturnRef,
     alternate_raw_return: RawReturnRef,
+    current_protected: ProtectedContinuationRef,
+    path_protected: ProtectedContinuationRef,
     compiler_version: ArtifactRef,
+}
+
+fn derive_fixture_sufficient_present(
+    roots: ColdReplayRoots,
+    query: &OpenQuery,
+    primary: &PairedActualityTrace,
+    alternate: &PairedActualityTrace,
+) -> (
+    ExactFiniteSufficientPresent,
+    ExactFinitePresentReopenWitness,
+) {
+    let context = SignatureContext::new(
+        primary.question().binding(),
+        query.context().scope(),
+        query.context().applicability(),
+        query.context().grain(),
+        query.context().horizon(),
+        roots.raw_type,
+    );
+    let histories = [
+        primary.returned().path().as_artifact_ref(),
+        alternate.returned().path().as_artifact_ref(),
+    ];
+    let presentation = ExactFiniteSignature::new(
+        context,
+        histories
+            .iter()
+            .map(|history| (*history, roots.continuation.as_artifact_ref()))
+            .collect(),
+    )
+    .expect("two distinct replay paths form an exact finite history domain");
+    let current_observation = ExactFiniteSignature::new(
+        context,
+        histories
+            .iter()
+            .map(|history| (*history, roots.answer_a.as_artifact_ref()))
+            .collect(),
+    )
+    .expect("current protected continuation is total over both histories");
+    let ExactFiniteSufficientPresentResult::Sufficient(present) =
+        derive_exact_finite_sufficient_present(
+            presentation,
+            vec![ExactProtectedContinuation::new(
+                roots.current_protected,
+                current_observation,
+            )],
+        )
+        .expect("present and protected observation contexts must agree")
+    else {
+        panic!("the folded endpoint must determine the current continuation")
+    };
+    assert_eq!(
+        present.class_count(),
+        1,
+        "one class is the coarsest quotient"
+    );
+
+    let path_observation = ExactFiniteSignature::new(
+        context,
+        histories
+            .iter()
+            .map(|history| (*history, *history))
+            .collect(),
+    )
+    .expect("path-sensitive continuation is total over both histories");
+    let ExactFinitePresentChallenge::Reopened(witness) = challenge_exact_finite_sufficient_present(
+        &present,
+        ExactProtectedContinuation::new(roots.path_protected, path_observation),
+    )
+    .expect("new protected continuation context must agree") else {
+        panic!("path-sensitive continuation must reopen the one-class fold")
+    };
+    (present, witness)
 }
 
 struct CountingProvider {
@@ -347,6 +426,8 @@ async fn persisted_cold_replay_fixture() -> (
     ColdReplayRoots,
     Arc<AtomicUsize>,
     PairedActualityTrace,
+    ExactFiniteSufficientPresent,
+    ExactFinitePresentReopenWitness,
 ) {
     let nonce = SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -803,6 +884,12 @@ async fn persisted_cold_replay_fixture() -> (
     let probe_contract =
         ProbeContractRef::from_artifact_ref(stored_ref(&store, b"probe-contract").await);
     let compiler_version = stored_ref(&store, b"compiler-version").await;
+    let current_protected = ProtectedContinuationRef::from_artifact_ref(
+        stored_ref(&store, b"current-protected-continuation").await,
+    );
+    let path_protected = ProtectedContinuationRef::from_artifact_ref(
+        stored_ref(&store, b"path-protected-continuation").await,
+    );
     let operator_value = ProbeOperator::new(
         query,
         boundary,
@@ -1063,6 +1150,71 @@ async fn persisted_cold_replay_fixture() -> (
     assert_eq!(live_trace.question().question(), query);
     assert_eq!(live_trace.returned().path(), decoded_path);
     assert_eq!(live_trace.returned().continuation(), continuation);
+    let alternate_decoder_value = catalog
+        .resolve_finite_decoder(alternate_decoded_decoder)
+        .expect("live alternate decoder must remain available");
+    let alternate_live = replay_completed_finite_probe(
+        &store,
+        token,
+        &alternate_decoder_value,
+        alternate_decoded_path,
+        &observations,
+        &standing,
+        &source_value,
+        suspension,
+        ContinuationLowering::new(continuation, BlockTarget::new(1)),
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("live actuality must admit through the alternate exact path");
+    let alternate_live_trace =
+        PairedActualityTrace::derive(actual.event(), alternate_live.resumption())
+            .expect("alternate live path must form a checked trace pair");
+    let live_roots = ColdReplayRoots {
+        token,
+        unit,
+        raw_type,
+        answer_a,
+        answer_b,
+        relation,
+        query,
+        wrong_query,
+        candidate_a,
+        candidate_b,
+        observation_a,
+        observation_b,
+        support,
+        decoded_decoder,
+        alternate_decoded_decoder,
+        undefined_decoder,
+        unknown_decoder,
+        decoded_path,
+        alternate_decoded_path,
+        undefined_path,
+        unknown_path,
+        boundary,
+        operator,
+        rival_operator,
+        source,
+        wrong_source,
+        capture_source,
+        continuation,
+        event,
+        raw_return,
+        alternate_raw_return,
+        current_protected,
+        path_protected,
+        compiler_version,
+    };
+    let live_query = OpenQueryCatalog::resolve_open_query(&catalog, query)
+        .expect("live query must remain available");
+    let (live_present, live_reopen) = derive_fixture_sufficient_present(
+        live_roots,
+        &live_query,
+        &live_trace,
+        &alternate_live_trace,
+    );
     assert!(matches!(
         runtime
             .step(live.resumption().state())
@@ -1074,42 +1226,11 @@ async fn persisted_cold_replay_fixture() -> (
 
     (
         path,
-        ColdReplayRoots {
-            token,
-            unit,
-            raw_type,
-            answer_a,
-            answer_b,
-            relation,
-            query,
-            wrong_query,
-            candidate_a,
-            candidate_b,
-            observation_a,
-            observation_b,
-            support,
-            decoded_decoder,
-            alternate_decoded_decoder,
-            undefined_decoder,
-            unknown_decoder,
-            decoded_path,
-            alternate_decoded_path,
-            undefined_path,
-            unknown_path,
-            boundary,
-            operator,
-            rival_operator,
-            source,
-            wrong_source,
-            capture_source,
-            continuation,
-            event,
-            raw_return,
-            alternate_raw_return,
-            compiler_version,
-        },
+        live_roots,
         provider_calls,
         live_trace,
+        live_present,
+        live_reopen,
     )
 }
 
@@ -1447,7 +1568,8 @@ fn admitted_answer_resumption_preserves_cold_replay_provenance_and_exact_lowerin
 
 #[tokio::test]
 async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
-    let (path, roots, provider_calls, live_trace) = persisted_cold_replay_fixture().await;
+    let (path, roots, provider_calls, live_trace, live_present, live_reopen) =
+        persisted_cold_replay_fixture().await;
     let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
     let store = ArtifactStore::open(&url)
         .await
@@ -1610,6 +1732,22 @@ async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
         alternate_path_trace.returned(),
         replayed_trace.returned(),
         "same event, candidates, and endpoint must retain distinct resolution provenance"
+    );
+    let reloaded_query = OpenQueryCatalog::resolve_open_query(&catalog, roots.query)
+        .expect("reloaded query must remain available");
+    let (replayed_present, replayed_reopen) = derive_fixture_sufficient_present(
+        roots,
+        &reloaded_query,
+        &replayed_trace,
+        &alternate_path_trace,
+    );
+    assert_eq!(
+        replayed_present, live_present,
+        "the exact finite sufficient present must regenerate from persisted roots"
+    );
+    assert_eq!(
+        replayed_reopen, live_reopen,
+        "the new protected path continuation must regenerate the same reopen witness"
     );
     assert!(matches!(
         runtime

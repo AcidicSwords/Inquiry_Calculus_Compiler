@@ -308,6 +308,14 @@ admitted resolution paths with the same event, completion set, and runtime endpo
 return traces. The next frontier is the sufficient-present fold/reopen witness; no trace is stored
 as a second history.
 
+`ic-core::ExactFiniteSufficientPresent` now supplies the first protected-continuation-indexed fold
+check. Every protected observation must factor through the proposed present. The first fixture
+folds two path-distinct histories into the single coarsest class under a continuation that cannot
+distinguish them, regenerates the same factorization after restart, and returns those exact
+histories as a reopen witness when a path-sensitive continuation is added. This derived check is
+not active mutable memory, standing, a compression licence, or a general bounded-memory claim.
+The next frontier is one real LLM provider behind the already stable dispatch/replay boundary.
+
 The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
 the single connection and reopening the database preserves pending/complete operational state,
 canonical event identity, immutable raw bytes, and parent-linked order after embedded migrations
