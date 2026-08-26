@@ -2,6 +2,8 @@ use std::{
     collections::BTreeMap,
     convert::Infallible,
     env,
+    fs::OpenOptions,
+    io::ErrorKind,
     path::PathBuf,
     sync::{
         Arc,
@@ -47,6 +49,43 @@ use ic_runtime::{
     replay_completed_finite_separator_inquiry, route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
+
+static NEXT_TEMP_DATABASE: AtomicUsize = AtomicUsize::new(0);
+
+fn reserve_sqlite_path(prefix: &str, clock_nonce: u128) -> PathBuf {
+    loop {
+        let sequence = NEXT_TEMP_DATABASE.fetch_add(1, Ordering::Relaxed);
+        let path = env::temp_dir().join(format!(
+            "{prefix}-{}-{clock_nonce}-{sequence}.sqlite",
+            std::process::id()
+        ));
+        match OpenOptions::new().write(true).create_new(true).open(&path) {
+            Ok(file) => {
+                drop(file);
+                return path;
+            }
+            Err(error) if error.kind() == ErrorKind::AlreadyExists => continue,
+            Err(error) => panic!("temporary SQLite path must be reservable: {error}"),
+        }
+    }
+}
+
+fn fresh_sqlite_path(prefix: &str) -> PathBuf {
+    let clock_nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system clock must be after Unix epoch")
+        .as_nanos();
+    reserve_sqlite_path(prefix, clock_nonce)
+}
+
+#[test]
+fn temporary_sqlite_paths_remain_distinct_at_one_clock_instant() {
+    let first = reserve_sqlite_path("inquiry-calculus-path-breaker", 0);
+    let second = reserve_sqlite_path("inquiry-calculus-path-breaker", 0);
+    assert_ne!(first, second);
+    std::fs::remove_file(first).expect("first reserved path must be removable");
+    std::fs::remove_file(second).expect("second reserved path must be removable");
+}
 
 #[derive(Default)]
 struct Catalog {
@@ -600,14 +639,7 @@ async fn persisted_cold_replay_fixture() -> (
     ExactFiniteSufficientPresent,
     ExactFinitePresentReopenWitness,
 ) {
-    let nonce = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("system clock must be after Unix epoch")
-        .as_nanos();
-    let path = env::temp_dir().join(format!(
-        "inquiry-calculus-cold-replay-{}-{nonce}.sqlite",
-        std::process::id()
-    ));
+    let path = fresh_sqlite_path("inquiry-calculus-cold-replay");
     let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
     let store = ArtifactStore::open(&url)
         .await
@@ -3376,14 +3408,7 @@ async fn ollama_values_become_post_actuality_typed_answers_and_cold_replay_witho
 #[tokio::test]
 #[ignore = "requires local Ollama with qwen3.5:9b"]
 async fn live_ollama_call_creates_typed_answers_only_after_actuality_and_cold_replays() {
-    let nonce = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("system clock must be after Unix epoch")
-        .as_nanos();
-    let path = env::temp_dir().join(format!(
-        "inquiry-calculus-live-ollama-replay-{}-{nonce}.sqlite",
-        std::process::id()
-    ));
+    let path = fresh_sqlite_path("inquiry-calculus-live-ollama-replay");
     let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
     let store = ArtifactStore::open(&url)
         .await

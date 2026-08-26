@@ -10,34 +10,42 @@ Repository actuality must be probed before acting. The current residual was deri
 
 ## Strongest live obligation
 
-Close the witnessed parallel test-database alias before relying on the workspace gate as repeatable evidence.
+Admit each exact finite cue before it participates in cue-basis sufficiency or resource-frontier selection.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: TEST-ISOLATION-001
-plan_phase: cross-phase acceptance
-goal: Give every parallel file-backed replay fixture a collision-proof temporary SQLite path without changing runtime persistence or migration semantics.
-protected_difference: A migration idempotence failure caused by two tests aliasing one temporary database is not an implementation migration failure and cannot be dismissed as a green-rerun environment accident.
-discriminator: Concurrent calls to persisted_cold_replay_fixture obtain distinct paths even when the platform clock returns the same instant, and repeated parallel admitted-resume plus workspace suites pass with exact cleanup.
-horizon: ic-runtime admitted-resume test fixture allocation and cleanup only; no production store, schema, migration, artifact, event, or replay behavior
-relevant_decisions: D-0131
-relevant_failures: F-0005
-if_pass: restore CUE-PLANNING-001 unchanged as the strongest semantic implementation obligation
-if_fail: preserve the colliding paths and reopen exclusive temporary-resource allocation rather than weakening migration checks
+id: CUE-PLANNING-001
+plan_phase: 13
+goal: Require checked support, applicability, declared coverage, and answer provenance for every exact finite cue used by the existing basis and nondominated-frontier checkers.
+protected_difference: A structurally valid cue signature is not an admissible cue; incomplete admission is Unknown, while a positively unseparated pair retains its concrete separator.
+discriminator: Accept a fully admitted sufficient cue basis, reject unsupported or context-borrowing cues, return Unknown for incomplete admission, and route a witnessed ambiguous pair through the generic SeparatorProblem path.
+horizon: one finite exact declared cue field, one binding and signature context, caller-supplied finite candidate set and resource preorder
+relevant_decisions: D-0014, D-0057, D-0058, D-0069, D-0124
+relevant_failures: none
+if_pass: QSUCC-OCC-001 occurrence-indexed v2.0 successor identity
+if_fail: reopen the earliest failed support, applicability, coverage, answer-provenance, or exact-signature relation; do not weaken cue sufficiency
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Start from the three tests that call `persisted_cold_replay_fixture` concurrently. Force allocation through one process-local sequence in addition to process and clock identity, then establish that a generated batch of paths is duplicate-free and the existing parallel suite no longer aliases a database.
+Start from the existing exact finite protected signature, cue signatures, sufficient-basis checker, finite resource preorder, generic separator problem, and demonstrated method bridge.
 
-The smallest wrong implementation merely retries migration, deletes a database another test owns, serializes the whole suite, or suppresses the `table already exists` result.
+Construct two otherwise identical cue candidates:
+
+1. one whose exact support route stands, whose applicability and finite coverage match the declared field, and whose answer provenance resolves every table entry; and
+2. one that is structurally well formed but has one unsupported, inapplicable, uncovered, foreign, or unresolved provenance obligation.
+
+The admitted cue may participate in exact basis and nondominated-frontier checks. The second must not. Missing evidence returns `Unknown`, never negative evidence. If the admitted basis still merges a protectedly distinct pair, preserve that exact pair and its equal cue answers as the residual that re-enters the generic separator route.
+
+The smallest wrong implementation would accept a cue because its finite table is total, borrow another cue's support or coverage, collapse incomplete admission to rejection, or discard the concrete ambiguous pair.
 
 ## Prohibitions at this boundary
 
-- Do not change production SQLite opening, migrations, schema, or replay behavior.
-- Do not delete or reuse a path owned by another test.
-- Do not serialize parallel tests to hide the collision.
-- Do not add a dependency when standard process-local uniqueness is sufficient.
+- Do not infer support, applicability, coverage, or answer provenance from structural validity.
+- Do not pre-warrant generated output or choose a singleton completion.
+- Do not claim exhaustive generation, global minimality, impossibility, or a unique optimum from caller-supplied finite candidates.
+- Do not add a scheduler, model policy, semantic opcode, table, crate, credential store, or second history.
+- Do not alter canonical identity or persistence merely to materialize this derived admission.
 
 ## Exit
 
-On pass, append the resolution evidence, restore `CUE-PLANNING-001` byte-for-byte as the live block, and continue. On failure, preserve the actual paths and reopen allocation rather than relaxing migration or replay checks.
+On pass, update conformance and any warranted append-only decision, replace the live block with its successor residual, and continue. On failure, preserve the actual return and reopen the earliest implicated relation rather than broadening the architecture.
