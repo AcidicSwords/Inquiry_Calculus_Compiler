@@ -111,6 +111,31 @@ impl ExternalEffectState {
     }
 }
 
+/// Result of attempting to durably prepare one external effect.
+///
+/// Only `DispatchAuthorized` proves that this caller created the durable intent and may proceed
+/// to the provider. `Existing` is recovery information: even when it is still `Pending`, the
+/// earlier process may already have dispatched, so this caller must not dispatch automatically.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ExternalEffectPreparation {
+    DispatchAuthorized(ExternalEffectState),
+    Existing(ExternalEffectState),
+}
+
+impl ExternalEffectPreparation {
+    #[must_use]
+    pub const fn state(self) -> ExternalEffectState {
+        match self {
+            Self::DispatchAuthorized(state) | Self::Existing(state) => state,
+        }
+    }
+
+    #[must_use]
+    pub const fn dispatch_authorized(self) -> bool {
+        matches!(self, Self::DispatchAuthorized(_))
+    }
+}
+
 impl ArtifactStore {
     /// Opens a SQLite URL using one authoritative connection.
     pub async fn open(database_url: &str) -> Result<Self, StoreError> {
@@ -135,13 +160,13 @@ impl ArtifactStore {
     /// the expected ledger parent must still be the current head. Only one unresolved preparation
     /// is allowed for the single writer. Repeating the exact same preparation is idempotent.
     #[tracing::instrument(skip(self), fields(dispatch_token = %token.as_artifact_ref()))]
-    pub async fn prepare_external_effect(
+    async fn prepare_external_effect(
         &self,
         token: DispatchToken,
         request: ArtifactRef,
         operator: ProbeOperatorRef,
         ledger_parent: Option<EventRef>,
-    ) -> Result<ExternalEffectState, StoreError> {
+    ) -> Result<ExternalEffectPreparation, StoreError> {
         self.get(request)
             .await?
             .ok_or(StoreError::MissingReferencedArtifact(request))?;
@@ -164,7 +189,7 @@ impl ArtifactStore {
                 return Err(StoreError::DispatchTokenConflict(token));
             }
             transaction.commit().await?;
-            return Ok(state);
+            return Ok(ExternalEffectPreparation::Existing(state));
         }
 
         let unresolved: Option<Vec<u8>> = sqlx::query_scalar(
@@ -204,12 +229,14 @@ impl ArtifactStore {
         .execute(&mut *transaction)
         .await?;
         transaction.commit().await?;
-        Ok(ExternalEffectState::Pending {
-            token,
-            request,
-            operator,
-            ledger_parent,
-        })
+        Ok(ExternalEffectPreparation::DispatchAuthorized(
+            ExternalEffectState::Pending {
+                token,
+                request,
+                operator,
+                ledger_parent,
+            },
+        ))
     }
 
     /// Typed preparation path for a checked backend request derived from the exact operator.
@@ -219,7 +246,7 @@ impl ArtifactStore {
         request: BackendRequestRef,
         operator: ProbeOperatorRef,
         ledger_parent: Option<EventRef>,
-    ) -> Result<ExternalEffectState, StoreError> {
+    ) -> Result<ExternalEffectPreparation, StoreError> {
         let request_value = self.verify_backend_request(request).await?;
         if request_value.operator() != operator {
             return Err(StoreError::BackendRequestOperatorMismatch {

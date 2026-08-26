@@ -251,6 +251,11 @@ ordinary event, ledger edge, and completion link. The operational row is not a s
 actuality claim, second event history, decoded answer, or warrant; this deliberately leaves the
 canonical/plan attempt-record shape open.
 
+Preparation also distinguishes a newly committed intent from an exact pre-existing row. Only the
+new `DispatchAuthorized` result permits the current caller to invoke a provider. An exact repeat,
+including one recovered after restart, returns `Existing`; a pending existing row therefore remains
+unknown and cannot accidentally become permission to dispatch again.
+
 The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
 the single connection and reopening the database preserves pending/complete operational state,
 canonical event identity, immutable raw bytes, and parent-linked order after embedded migrations

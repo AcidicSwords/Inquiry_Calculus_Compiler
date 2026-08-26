@@ -128,6 +128,10 @@ The protected difference is visible in the accepted sources:
   ledger edge, and completion link together. Restart verifies the completed event spine. The table
   is operational recovery state, not a canonical semantic attempt or second authoritative event
   history; actual provider execution remains open.
+- Preparation returns a separate operational disposition. Only a freshly inserted durable intent
+  returns `DispatchAuthorized`; an exact existing pending or completed row returns `Existing`.
+  Thus idempotent lookup and crash recovery cannot be mistaken for permission to invoke the
+  provider again. This is an execution-safety distinction, not evidence that any effect occurred.
 - `SurfacePlan` and `BackendRequest` supply the first typed compiler/backend request boundary.
   Both are canonical, content-addressed, and non-actual. The plan repeats and rechecks the exact
   operator's query, boundary, active view, executable code, and probe contract before adding its

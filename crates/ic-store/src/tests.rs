@@ -230,18 +230,19 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
             .expect("backend request dependencies must exist"),
     );
     let token = DispatchToken::from_bytes([0xa1; 32]);
-    let pending = store
+    let prepared = store
         .prepare_backend_request(token, request, event.operator(), None)
         .await
         .expect("intent must be durable before dispatch");
+    assert!(prepared.dispatch_authorized());
+    let pending = prepared.state();
     assert!(matches!(pending, ExternalEffectState::Pending { .. }));
-    assert_eq!(
-        store
-            .prepare_backend_request(token, request, event.operator(), None)
-            .await
-            .expect("exact preparation must be idempotent"),
-        pending
-    );
+    let repeated = store
+        .prepare_backend_request(token, request, event.operator(), None)
+        .await
+        .expect("exact preparation must be idempotent");
+    assert_eq!(repeated, ExternalEffectPreparation::Existing(pending));
+    assert!(!repeated.dispatch_authorized());
     let conflicting_request = stored_ref(&store, b"other-request").await;
     assert!(matches!(
         store
@@ -285,6 +286,12 @@ async fn external_effect_preparation_survives_restart_and_completes_as_one_raw_e
             .expect("pending effects must be enumerable"),
         vec![pending]
     );
+    let recovered = restarted
+        .prepare_backend_request(token, request, event.operator(), None)
+        .await
+        .expect("restart must recover exact preparation without authorizing another dispatch");
+    assert_eq!(recovered, ExternalEffectPreparation::Existing(pending));
+    assert!(!recovered.dispatch_authorized());
 
     let wrong_raw = RawReturn::new(vec![0xff]);
     assert!(matches!(
