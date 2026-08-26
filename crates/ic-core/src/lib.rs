@@ -29,6 +29,7 @@ mod occurrence;
 mod probe;
 mod probe_contract;
 mod query;
+mod question_readiness;
 mod question_succession;
 mod raw_return;
 mod recovery;
@@ -181,6 +182,10 @@ pub use query::{
     OPEN_QUERY_ARTIFACT_KIND, OPEN_QUERY_SCHEMA_VERSION, OpenPort, OpenQuery, OpenQueryCatalog,
     OpenQueryCheckError, OpenQueryError, OpenQueryFiberError, OpenQueryPlugError,
     OpenQueryTransformError, QueryRef,
+};
+pub use question_readiness::{
+    QuestionReadiness, QuestionReadinessCatalog, QuestionReadinessError,
+    QuestionReadinessRequirement, await_question_readiness, derive_question_readiness,
 };
 pub use question_succession::{
     ASK_OCCURRENCE_ARTIFACT_KIND, ASK_OCCURRENCE_SCHEMA_VERSION, AskOccurrence,

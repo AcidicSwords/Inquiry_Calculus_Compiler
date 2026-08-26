@@ -19,14 +19,14 @@ use ic_core::{
     IProgIR, IProgRef, NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog,
     OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
     OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
-    ProgramBinding, ProtectedCompletionFieldRef, ProvenanceRef, QueryRef,
-    QuestionSuccessionCatalog, QuestionSuccessor, RawReturn, RawReturnCatalog, RawReturnRef,
-    ReciprocalOccurrence, RelationBodyIR, RelationCatalog, RelationPort, RelationRef,
-    RelationSchema, RelationSignature, RelationUse, RelationUseContext, RelationUseRef,
-    RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog, ResolutionPath,
-    ResolutionPathIR, ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef,
-    SeedReorientation, SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext,
-    SourceConfig, SourceConfigRef, Standing, StateRef, StructureViewRef,
+    ProgramBinding, ProtectedCompletionFieldRef, ProvenanceRef, QueryRef, QuestionReadiness,
+    QuestionReadinessRequirement, QuestionSuccessionCatalog, QuestionSuccessor, RawReturn,
+    RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR, RelationCatalog,
+    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog,
+    ResolutionPath, ResolutionPathIR, ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef,
+    ScopeRef, SeedReorientation, SelectedReturn, SeparatorProblem, SeparatorProblemRef,
+    SignatureContext, SourceConfig, SourceConfigRef, Standing, StateRef, StructureViewRef,
     SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
     SupportSubjectRef, TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
@@ -34,9 +34,10 @@ use ic_core::{
     TypedFiniteNegationExtension, TypedFiniteObservation,
     TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
     admit_finite_negation_extension, admit_finite_supported_answers, admit_probed_finite_departure,
-    bind_finite_ask_continuation, check_departure_witness_standing_support, check_return_closure,
+    await_question_readiness, bind_finite_ask_continuation,
+    check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
-    derive_question_successor, match_decoded_observation_use,
+    derive_question_readiness, derive_question_successor, match_decoded_observation_use,
     resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
     resolve_relation_use_support, standing_determination_presentation_support,
     standing_from_declared_support, standing_relation_use_support,
@@ -2930,6 +2931,69 @@ fn static_question_relation_does_not_manufacture_an_occurrence_successor() {
         &Catalog,
     ) -> Result<QuestionSuccessor, ic_core::QuestionSuccessorError> =
         derive_question_successor::<Catalog>;
+}
+
+#[test]
+// Test boundary QREADY-UNLOCK-001 and QREADY-NONUNLOCK-001:
+// F = adjacency, endpoint shape, or any actual answer unlocks a target question.
+// C = only a whole admitted answer containing the target's exact declared dependency is Ready.
+// Omega/M = two finite questions and their distinct event-linked supported answers.
+// P/V/E/U = finite candidate identity and target rechecking; richer dependency domains remain
+// open, and AwaitingAnswer is not a negative claim.
+fn exact_supported_dependency_is_required_for_local_question_readiness() {
+    let scenario =
+        build_finite_departure_scenario(true, true).expect("the finite probe fixture must admit");
+    let source_answer = admit_finite_supported_answers(
+        scenario.source_observation.decoded().clone(),
+        vec![scenario.source_observation.clone()],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("source answer must admit");
+    let candidate_answer = admit_finite_supported_answers(
+        scenario.candidate_observation.decoded().clone(),
+        vec![scenario.candidate_observation.clone()],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("candidate answer must admit independently");
+    let requirement = QuestionReadinessRequirement::new(
+        candidate_answer.decoded().query(),
+        source_answer.candidates()[0].as_artifact_ref(),
+    );
+
+    let awaiting = await_question_readiness(requirement, &scenario.catalog)
+        .expect("the target question must recheck before an answer arrives");
+    assert!(matches!(
+        awaiting,
+        QuestionReadiness::AwaitingAnswer { requirement: retained } if retained == requirement
+    ));
+    assert!(awaiting.answer().is_none());
+    assert!(!awaiting.is_ready());
+
+    let ready = derive_question_readiness(requirement, source_answer.clone(), &scenario.catalog)
+        .expect("the exact event-linked dependency must unlock the local target");
+    assert!(matches!(
+        ready,
+        QuestionReadiness::Ready { requirement: retained, ref answer }
+            if retained == requirement && answer == &source_answer
+    ));
+    assert!(ready.is_ready());
+
+    let nonunlock =
+        derive_question_readiness(requirement, candidate_answer.clone(), &scenario.catalog)
+            .expect("a mismatched admitted answer remains a distinct local result");
+    assert!(matches!(
+        nonunlock,
+        QuestionReadiness::DependencyNotSupplied { requirement: retained, ref answer }
+            if retained == requirement && answer == &candidate_answer
+    ));
+    assert!(!nonunlock.is_ready());
+    assert_eq!(
+        nonunlock.answer(),
+        Some(&candidate_answer),
+        "the nonunlock foil retains its actual supported answer rather than discarding it"
+    );
 }
 
 #[test]

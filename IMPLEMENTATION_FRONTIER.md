@@ -2,43 +2,43 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `573681f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `349eae0`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QSTATIC-DYNAMIC-001` established that a static common relation anchor between two semantic questions does not generate an `Ask` occurrence, answer, continuation, event, or route. A Return-only source remains nonnegative absence; only one separately checked `Ask` occurrence plus its whole event-linked answer and continuation derives `QSucc`. This adds no controller, scheduler, table, semantic transition, or second history.
+`QREADY-UNLOCK-001` and `QREADY-NONUNLOCK-001` established the smallest local readiness boundary: an unanswerered target remains `AwaitingAnswer`; a whole admitted answer makes it `Ready` only when it contains the exact declared dependency; and another independently admitted answer lacking that identity remains `DependencyNotSupplied`. This adds no controller, scheduler, canonical artifact, table, semantic transition, or second history.
 
 ## Strongest live obligation
 
-Derive readiness only when an admitted answer supplies the exact missing dependency of a target question.
+Preserve a non-singleton reverse completion fiber when the converse relation is many-to-one; do not manufacture a single-valued inverse.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QREADY-UNLOCK-001
-plan_phase: 9
-goal: Derive a local readiness transition only when one whole admitted answer supplies the exact declared missing dependency of one target question, preserving the answer and dependency witness.
-protected_difference: Static relation, temporal adjacency, endpoint equality, or generic later execution is not an unlock. Readiness is a typed derived relation over a declared target and a changed exact dependency.
-discriminator: Construct one finite target with an explicit missing dependency that is false before the event-linked supported answer and true after that exact answer supplies it; preserve a same-shape nonunlock route whose answer does not satisfy the dependency and reject readiness there.
-horizon: one local finite source/target pair, one declared dependency, one admitted answer, one nonunlock foil, no global scheduler or frontier closure
-relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0131, D-0134, D-0135, D-0136, D-0137
+id: QCONVERSE-NOT-INVERSE-001
+plan_phase: 10
+goal: Derive a reverse completion fiber from one oriented relation use while preserving every compatible completion and refusing to infer a single-valued inverse without a checked uniqueness contract.
+protected_difference: Converse orientation is a reverse relation, not an inverse function. Equal forward endpoints or one selected return do not collapse a many-member reverse fiber.
+discriminator: Construct one finite many-to-one forward relation whose reverse query has two compatible completions; retain the complete reverse fiber and reject a representation that silently chooses either completion as an inverse.
+horizon: one finite oriented relation use, one many-to-one mapping, one two-member reverse fiber, no universal inverse theorem
+relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0135, D-0137, D-0138
 relevant_failures: F-0003
-if_pass: QREADY-NONUNLOCK-001 reject temporal adjacency or later execution that does not change any declared readiness dependency
-if_fail: reopen the smallest target/dependency/readiness/answer/provenance relation; do not add a scheduler, controller, global question policy, or new transition opcode
+if_pass: QADJOINT-001 require a checked binding-supplied law before accepting a forward/backward weakest-condition pairing
+if_fail: reopen the smallest relation-orientation/fiber/selection/uniqueness distinction; do not add an inverse opcode, controller, scheduler, table, or semantic transition
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Start from one finite target question carrying one explicit missing dependency. Before the event-linked whole admitted answer, readiness must be false because that exact dependency is absent. After the answer supplies precisely that dependency, derive a local readiness result that preserves both answer and dependency witnesses.
+Start from one finite relation use with two distinct sources that map to one common forward result. Form the reverse relation under the same declared binding and use identity. The rechecked reverse completion field must retain both sources.
 
-Construct a same-shape nonunlock foil: static adjacency and later execution may be present, but its answer supplies a different dependency. It must remain not ready. The fixture is local derived structure over existing source, support, and provenance artifacts; it must not require a scheduler, controller, global transition, or new history.
+Attempt to select either source as an inverse. That attempt must remain a selection outside the fiber and fail absent a separately checked singleton/uniqueness condition. The fixture is local derived structure over existing relation and query artifacts; it must not require a controller, scheduler, global transition, or new history.
 
-The smallest wrong implementation treats temporal adjacency, endpoint equality, any answer, or an undeclared dependency as an unlock.
+The smallest wrong implementation treats converse orientation, an endpoint, or a selected reverse completion as a single-valued inverse.
 
 ## Prohibitions at this boundary
 
-- Do not treat relation schema, temporal adjacency, converse, common anchor, generated route, endpoint equality, or generic later execution as an unlock.
-- Do not infer readiness from absent actuality, missing evidence, or an answer that does not satisfy the declared dependency; retain the appropriate unavailable/unknown boundary.
-- Do not synthesize a controller, scheduler, global policy, transition opcode, table, or second history to make the local case pass.
+- Do not treat converse orientation, relation schema, common endpoint, generated route, or one selected completion as an inverse function.
+- Do not infer uniqueness from absent alternatives, incomplete coverage, or an unlisted reverse completion; retain the appropriate unavailable/unknown boundary.
+- Do not synthesize an inverse opcode, controller, scheduler, global policy, table, or second history to make the local case pass.
 
 ## Exit
 
-On pass, update conformance and any warranted append-only decision, replace the live block with `QREADY-NONUNLOCK-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated target/dependency/readiness/answer/provenance relation rather than broadening the architecture.
+On pass, update conformance and any warranted append-only decision, replace the live block with `QADJOINT-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated orientation/fiber/selection/uniqueness relation rather than broadening the architecture.

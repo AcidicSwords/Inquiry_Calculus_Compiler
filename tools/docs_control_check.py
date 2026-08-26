@@ -107,6 +107,14 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "static_question_relation_does_not_manufacture_an_occurrence_successor",
     ),
+    "QREADY-UNLOCK-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "exact_supported_dependency_is_required_for_local_question_readiness",
+    ),
+    "QREADY-NONUNLOCK-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "exact_supported_dependency_is_required_for_local_question_readiness",
+    ),
 }
 
 ERRORS: list[str] = []
