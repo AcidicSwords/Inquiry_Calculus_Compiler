@@ -15,24 +15,24 @@ use ic_core::{
     FiniteSupportedAnswerError, FiniteTypedIncompatibilityUseCatalog, FormulaArtifact,
     FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
     GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
-    IProgArtifact, IProgCatalog, IProgIR, IProgRef, NegationCoverage, NegationUse, NegationUseRef,
-    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence,
-    OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding, ProbeContractRef,
-    ProbeOperator, ProbeOperatorRef, ProtectedCompletionFieldRef, ProvenanceRef, QueryRef,
-    RawReturn, RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR,
-    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
-    RelationUseContext, RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError,
-    ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef, ReturnClosure,
-    RoleComparison, RouteRef, ScopeRef, SeedReorientation, SelectedReturn, SeparatorProblem,
-    SeparatorProblemRef, SignatureContext, Standing, StateRef, StructureViewRef,
-    SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
+    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, NegationCoverage, NegationUse,
+    NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
+    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
+    ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog, RawReturnRef, ReciprocalOccurrence,
+    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
+    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
+    RelationUseSupportError, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
+    ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef, SeedReorientation,
+    SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext, Standing, StateRef,
+    StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
     SupportSubjectRef, TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
     TypeRef, TypeSymbol, TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable,
     TypedFiniteNegationExtension, TypedFiniteObservation,
     TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
     admit_finite_negation_extension, admit_finite_supported_answers, admit_probed_finite_departure,
-    check_departure_witness_standing_support, check_return_closure,
+    bind_finite_ask_continuation, check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     match_decoded_observation_use, resolve_departure_witness_evidence_support,
     resolve_determination_presentation_support, resolve_relation_use_support,
@@ -2369,6 +2369,78 @@ fn finite_supported_answers_require_exact_decoded_probe_and_standing_route_cover
     .expect("all decoded supported alternatives must remain in the answer set");
     assert_eq!(partial.candidates().len(), 2);
     assert!(partial.candidates().contains(&alternate_candidate_ref));
+
+    let continuation = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: alternate_answer,
+        },
+    ));
+    let context_slot = TypeSymbol::new("context").expect("binding name must be valid");
+    let answer_slot = TypeSymbol::new("answer").expect("answer slot must be valid");
+    let ask = IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: partial.decoded().query(),
+            environment: vec![ProgramBinding::new(context_slot.clone(), alternate_answer)],
+            answer_slot: answer_slot.clone(),
+            continuation,
+        },
+    );
+    let bound = bind_finite_ask_continuation(&ask, partial.clone(), &scenario.catalog)
+        .expect("the whole partial answer must bind as inspectable continuation data");
+    assert_eq!(bound.question(), partial.decoded().query());
+    assert_eq!(bound.answer_slot(), &answer_slot);
+    assert_eq!(bound.answer().candidates(), partial.candidates());
+    assert_eq!(bound.answer().candidates().len(), 2);
+    assert_eq!(bound.environment()[0].name(), &context_slot);
+    assert_eq!(bound.continuation(), continuation);
+
+    let capturing = IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: partial.decoded().query(),
+            environment: vec![ProgramBinding::new(answer_slot.clone(), alternate_answer)],
+            answer_slot,
+            continuation,
+        },
+    );
+    assert!(matches!(
+        bind_finite_ask_continuation(&capturing, partial.clone(), &scenario.catalog),
+        Err(ic_core::FiniteAnswerBindingError::IProgCheck(error))
+            if matches!(*error, IProgCheckError::AnswerSlotShadowsEnvironment(ref name) if name == "answer")
+    ));
+
+    let other_question = scenario.candidate_observation.decoded().query();
+    assert_ne!(other_question, partial.decoded().query());
+    let wrong_question = IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: other_question,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("answer slot must be valid"),
+            continuation,
+        },
+    );
+    assert!(matches!(
+        bind_finite_ask_continuation(&wrong_question, partial.clone(), &scenario.catalog),
+        Err(ic_core::FiniteAnswerBindingError::QuestionMismatch {
+            program_question,
+            answer_question,
+        }) if program_question == other_question && answer_question == partial.decoded().query()
+    ));
+
+    let not_an_ask = IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: alternate_answer,
+        },
+    );
+    assert!(matches!(
+        bind_finite_ask_continuation(&not_an_ask, partial, &scenario.catalog),
+        Err(ic_core::FiniteAnswerBindingError::SourceIsNotAsk(_))
+    ));
+
     assert!(matches!(
         admit_finite_supported_answers(
             two_candidates,

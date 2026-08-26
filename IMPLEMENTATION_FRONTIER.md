@@ -13,8 +13,9 @@ ordinary event record. Phase 6 now has canonical ordinary-event identity and app
 linkage. A derived finite supported-answer admission now replays one preserved decoded set and
 requires every completion to retain its exact `Probe` observation use, exact closing
 relation-support route, and the event's raw return. It preserves multi-completion partial answers
-without selecting a singleton. General continuation binding remains open at the Phase 3/5/6/7
-boundary. Phase 11 now has canonical claim and candidate
+without selecting a singleton. A derived capture-safe binding now supplies that whole set to one
+checked `IProg::Ask` answer slot while retaining the explicit environment and continuation
+identity. Runtime lowering remains open at the Phase 3/5/6/7 boundary. Phase 11 now has canonical claim and candidate
 support-environment identity with structural provenance checking. One typed least-fixed-point
 engine now carries claim and relation subjects, rejects mixed rootless cycles, retains exact
 closing-environment provenance, and keeps equal underlying digests separated by subject kind.
@@ -44,15 +45,15 @@ inferring them from opaque payload bytes.
 
 ## Strongest live obligation
 
-After the finite reciprocal semantic slice and exact finite supported-answer admission, resolve
-the earliest executable continuation gap:
+After the finite reciprocal semantic slice, exact finite supported-answer admission, and
+capture-safe source binding, resolve the earliest executable lowering gap:
 
-> Given canonical first-order `IProg::Ask`, an `AdmittedFiniteAnswerSet`, and the verified
-> `Return | Branch | Probe` runtime, what is the smallest capture-safe first-order binding and
-> lowering contract that supplies the entire supported set to the named answer slot, preserves a
-> multi-completion partial answer, and selects only continuations represented by inspectable data?
-> The bridge must remain cold-replayable from the preserved event/raw return and keep proposal,
-> actuality, resolution, check, warrant, and standing visibly distinct.
+> Given a `BoundFiniteAskContinuation` and the verified `Return | Branch | Probe` runtime, what is
+> the smallest explicit lowering that proves one named source continuation corresponds to the
+> probe's fixed resume target and preserves the bound answer in the resumed machine state? The
+> bridge must reject another operator, continuation, target, or raw-return provenance; remain
+> cold-replayable from the admitted event; and keep proposal, actuality, resolution, check,
+> warrant, and standing visibly distinct.
 
 The protected difference is visible in the accepted sources:
 
@@ -89,6 +90,12 @@ The protected difference is visible in the accepted sources:
   The full decoded set is retained: a two-completion decoder result remains one partial supported
   answer rather than becoming an arbitrarily selected singleton. The result is not canonical
   storage, a warrant, standing mutation, answer-slot substitution, or runtime continuation choice.
+- `bind_finite_ask_continuation` supplies the first capture-safe lexical answer boundary. It
+  rechecks the source `IProg`, requires an `Ask` for the answer's exact question, rejects an answer
+  slot that shadows the explicit environment, and retains the source and continuation identities,
+  environment, named slot, and entire admitted set. A two-completion partial answer remains two
+  completions. The result is derived data and does not rewrite the canonical source artifact,
+  evaluate a continuation, choose a runtime block, or establish a source-to-runtime lowering.
 - `match_decoded_observation_use` supplies the next derived structural boundary. It requires a
   preserved candidate from that decoded result and a declared relation use to rehash and agree
   exactly on query relation, complete named bindings, and the query's scope, applicability,

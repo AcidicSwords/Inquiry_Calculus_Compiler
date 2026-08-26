@@ -64,6 +64,7 @@ or passing.
 | P3-IPROG-003 explicit named environment identity, declared dependencies, and duplicate-name rejection | PASS | `iprog_identity::{first_order_return_and_ask_round_trip_without_closures,rejects_duplicate_explicit_environment_names}` |
 | P3-IPROG-004 structural program checking revalidates result, typed forms, query, and continuation | PASS | `relation_schema::first_order_program_check_rejects_forged_or_result_mismatched_continuations` |
 | P3-IPROG-005 stable Ask-with-environment byte/hash vector | PASS | `fixtures/iprogs/iprog-v2-ask-environment.json` |
+| P3-IPROG-BIND-006 capture-safe finite answer binding retains the entire admitted partial set and rejects slot capture, question mismatch, and non-Ask sources | PASS | `decoder_identity::finite_supported_answers_require_exact_decoded_probe_and_standing_route_coverage` |
 | P4-DETERMINATION-IR-001 claim-local determination-presentation canonical identity and ancestry | PASS | `determination_identity::determination_presentations_round_trip_with_explicit_context_and_ancestry` |
 | P4-DETERMINATION-IR-002 malformed determination-presentation rejection | PASS | `determination_identity::determination_presentations_reject_malformed_encodings` |
 | P4-DETERMINATION-IR-003 typed source and context-preserving predecessor validation | PASS | `determination_identity::determination_presentation_check_rejects_forged_source_and_incompatible_ancestry` |

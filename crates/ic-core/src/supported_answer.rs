@@ -11,12 +11,13 @@ use thiserror::Error;
 use crate::{
     ActualDecodeError, ActualDecodeResult, ActualEventCheckError, ActualEventError,
     CompletionCandidateRef, DecodedCandidateSet, DecodedObservationError, DecodedObservationUse,
-    EventRef, FiniteDecoderCatalog, FiniteDecoderRef, ObservationResultCatalog,
-    OperatorOccurrenceCatalog, RawReturnRef, RelationUseRef, RelationUseSupportCatalog,
-    RelationUseSupportError, ResolvedRelationUseSupport, Standing,
+    EventRef, FiniteDecoderCatalog, FiniteDecoderRef, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgError, IProgIR, IProgRef, ObservationResultCatalog, OperatorOccurrenceCatalog,
+    ProbeOperatorRef, ProgramBinding, QueryRef, RawReturnRef, RelationUseRef,
+    RelationUseSupportCatalog, RelationUseSupportError, ResolvedRelationUseSupport, Standing,
     SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
-    SupportEnvironmentCatalog, SupportEnvironmentRef, check_actual_event, decode_actual_event,
-    match_decoded_observation_use, standing_relation_use_support,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, TypeSymbol, check_actual_event,
+    decode_actual_event, match_decoded_observation_use, standing_relation_use_support,
 };
 
 /// Catalog boundary for finite event-linked supported-answer admission.
@@ -41,6 +42,7 @@ pub struct AdmittedFiniteAnswerSet {
     observations: Vec<DecodedObservationUse>,
     support: Vec<ResolvedRelationUseSupport>,
     event: EventRef,
+    operator: ProbeOperatorRef,
     raw_return: RawReturnRef,
 }
 
@@ -68,6 +70,11 @@ impl AdmittedFiniteAnswerSet {
     #[must_use]
     pub const fn event(&self) -> EventRef {
         self.event
+    }
+
+    #[must_use]
+    pub const fn operator(&self) -> ProbeOperatorRef {
+        self.operator
     }
 
     #[must_use]
@@ -143,7 +150,92 @@ pub fn admit_finite_supported_answers<C: FiniteSupportedAnswerCatalog>(
         observations,
         support,
         event: event_ref,
+        operator: event.operator(),
         raw_return: event.raw_return(),
+    })
+}
+
+/// One checked lexical binding of an admitted finite answer to an `IProg::Ask` continuation.
+///
+/// The explicit environment and answer binding remain separate so the answer slot cannot capture
+/// a pre-existing value. This is inspectable derived data, not substitution, execution, or a new
+/// canonical program artifact.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BoundFiniteAskContinuation {
+    source: IProgRef,
+    question: QueryRef,
+    environment: Vec<ProgramBinding>,
+    answer_slot: TypeSymbol,
+    answer: AdmittedFiniteAnswerSet,
+    continuation: IProgRef,
+}
+
+impl BoundFiniteAskContinuation {
+    #[must_use]
+    pub const fn source(&self) -> IProgRef {
+        self.source
+    }
+
+    #[must_use]
+    pub const fn question(&self) -> QueryRef {
+        self.question
+    }
+
+    #[must_use]
+    pub fn environment(&self) -> &[ProgramBinding] {
+        &self.environment
+    }
+
+    #[must_use]
+    pub const fn answer_slot(&self) -> &TypeSymbol {
+        &self.answer_slot
+    }
+
+    #[must_use]
+    pub const fn answer(&self) -> &AdmittedFiniteAnswerSet {
+        &self.answer
+    }
+
+    #[must_use]
+    pub const fn continuation(&self) -> IProgRef {
+        self.continuation
+    }
+}
+
+/// Binds the whole admitted finite answer to the named slot of one checked source ask.
+///
+/// The source program is rechecked, including capture rejection and continuation identity. The
+/// admitted answer must name exactly the same semantic question. No candidate is selected from a
+/// multi-completion answer and the continuation is returned as data rather than invoked.
+pub fn bind_finite_ask_continuation<C: IProgCatalog>(
+    source: &IProgArtifact,
+    answer: AdmittedFiniteAnswerSet,
+    catalog: &C,
+) -> Result<BoundFiniteAskContinuation, FiniteAnswerBindingError> {
+    source.check(catalog)?;
+    let source_ref = source.iprog_ref()?;
+    let IProgIR::Ask {
+        question,
+        environment,
+        answer_slot,
+        continuation,
+    } = source.program()
+    else {
+        return Err(FiniteAnswerBindingError::SourceIsNotAsk(source_ref));
+    };
+    if *question != answer.decoded().query() {
+        return Err(FiniteAnswerBindingError::QuestionMismatch {
+            program_question: *question,
+            answer_question: answer.decoded().query(),
+        });
+    }
+    Ok(BoundFiniteAskContinuation {
+        source: source_ref,
+        question: *question,
+        environment: environment.clone(),
+        answer_slot: answer_slot.clone(),
+        answer,
+        continuation: *continuation,
     })
 }
 
@@ -253,5 +345,29 @@ impl From<RelationUseSupportError> for FiniteSupportedAnswerError {
 impl From<SupportEnvironmentArtifactCheckError> for FiniteSupportedAnswerError {
     fn from(error: SupportEnvironmentArtifactCheckError) -> Self {
         Self::EnvironmentCheck(Box::new(error))
+    }
+}
+
+/// Errors from capture-safe finite answer binding.
+#[derive(Debug, Error)]
+pub enum FiniteAnswerBindingError {
+    #[error(transparent)]
+    IProgEncoding(#[from] IProgError),
+    #[error(transparent)]
+    IProgCheck(Box<IProgCheckError>),
+    #[error("source inquiry program {0} is not an Ask")]
+    SourceIsNotAsk(IProgRef),
+    #[error(
+        "source Ask names question {program_question}, but the admitted answer names {answer_question}"
+    )]
+    QuestionMismatch {
+        program_question: QueryRef,
+        answer_question: QueryRef,
+    },
+}
+
+impl From<IProgCheckError> for FiniteAnswerBindingError {
+    fn from(error: IProgCheckError) -> Self {
+        Self::IProgCheck(Box::new(error))
     }
 }

@@ -94,7 +94,11 @@ Missing, duplicate, foreign, non-probe, unsupported, or raw-return-disconnected 
 reject. A multi-completion decoded result remains a partial supported answer and cannot be
 silently reduced to a convenient singleton. The result is finite-route-relative derived evidence,
 not a canonical artifact, warrant, standing mutation, or continuation choice. Capture-safe answer
-substitution, normalization, registered pure operations, and execution remain deferred.
+binding is now available as a derived `BoundFiniteAskContinuation`: it rechecks the source program,
+rejects an answer slot that shadows the explicit environment, requires the answer's question to
+match, and retains the source/continuation identities, environment, slot, and whole admitted set.
+It does not substitute or evaluate the continuation. Normalization, registered pure operations,
+runtime lowering, and execution remain deferred.
 
 Phase 5 has a first-order structural `ProgramIR` in `ic-runtime`: typed `Return`, nonempty
 internal `Branch`, and `Probe` suspension/resume blocks. Verification rechecks typed returns,

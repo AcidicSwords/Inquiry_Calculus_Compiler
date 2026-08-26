@@ -224,9 +224,17 @@ impl IProgArtifact {
             IProgIR::Ask {
                 question,
                 environment,
+                answer_slot,
                 continuation,
-                ..
             } => {
+                if environment
+                    .iter()
+                    .any(|binding| binding.name() == answer_slot)
+                {
+                    return Err(IProgCheckError::AnswerSlotShadowsEnvironment(
+                        answer_slot.as_str().to_owned(),
+                    ));
+                }
                 let query = catalog
                     .resolve_open_query(*question)
                     .ok_or(IProgCheckError::UnresolvedQuery(*question))?;
@@ -504,6 +512,8 @@ pub enum IProgCheckError {
     },
     #[error("continuation result type {actual} does not match enclosing result {expected}")]
     ContinuationResultTypeMismatch { expected: TypeRef, actual: TypeRef },
+    #[error("answer slot {0:?} shadows an explicit environment binding")]
+    AnswerSlotShadowsEnvironment(String),
     #[error("first-order program continuation graph contains cycle at {0}")]
     CyclicContinuation(IProgRef),
 }

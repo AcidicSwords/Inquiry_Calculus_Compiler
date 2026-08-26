@@ -218,8 +218,9 @@ pub use standing::{
     standing_from_declared_support, standing_relation_use_support,
 };
 pub use supported_answer::{
-    AdmittedFiniteAnswerSet, FiniteSupportedAnswerCatalog, FiniteSupportedAnswerError,
-    admit_finite_supported_answers,
+    AdmittedFiniteAnswerSet, BoundFiniteAskContinuation, FiniteAnswerBindingError,
+    FiniteSupportedAnswerCatalog, FiniteSupportedAnswerError, admit_finite_supported_answers,
+    bind_finite_ask_continuation,
 };
 pub use ty::{
     BindingVersionRef, TYPE_ARTIFACT_KIND, TYPE_SCHEMA_VERSION, TYPED_FORM_ARTIFACT_KIND,
