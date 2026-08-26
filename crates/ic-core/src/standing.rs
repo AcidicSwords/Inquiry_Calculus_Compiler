@@ -8,9 +8,10 @@ use thiserror::Error;
 
 use crate::{
     ApplicabilityRef, ArtifactEnvelope, ArtifactKind, ClaimArtifact, ClaimCatalog, ClaimCheckError,
-    ClaimError, RawReturnError, RawReturnRef, RelationCatalog, RelationCheckError, RelationError,
-    RelationRef, RelationSchema, RelationUse, RelationUseCheckError, RelationUseError,
-    RelationUseRef, ScopeRef, SupportRef,
+    ClaimError, DeterminationCatalog, DeterminationPresentationCheckError,
+    DeterminationPresentationError, DeterminationPresentationRef, RawReturnError, RawReturnRef,
+    RelationCatalog, RelationCheckError, RelationError, RelationRef, RelationSchema, RelationUse,
+    RelationUseCheckError, RelationUseError, RelationUseRef, ScopeRef, SupportRef,
 };
 use crate::{ArtifactError, ArtifactRef};
 
@@ -371,6 +372,106 @@ pub trait RelationUseSupportCatalog: SupportEnvironmentCatalog {
     fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse>;
 }
 
+/// The catalog boundary needed to connect a determination presentation's declared support to a
+/// claim-targeted support environment.
+pub trait DeterminationSupportCatalog: SupportEnvironmentCatalog + DeterminationCatalog {}
+
+impl<T> DeterminationSupportCatalog for T where T: SupportEnvironmentCatalog + DeterminationCatalog {}
+
+/// A checked structural link from one determination presentation to its claim-targeted support.
+///
+/// The target claim is deliberately retained separately from the presentation source form: the
+/// current canonical records contain no claim-to-form interpretation law. This link therefore
+/// does not assert that the claim proposition denotes the form, that the claim is relevant to the
+/// web, or that its support route is independently grounded.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ResolvedDeterminationSupport {
+    presentation: DeterminationPresentationRef,
+    environment: SupportEnvironmentRef,
+    claim: ClaimRef,
+}
+
+impl ResolvedDeterminationSupport {
+    #[must_use]
+    pub const fn presentation(&self) -> DeterminationPresentationRef {
+        self.presentation
+    }
+    #[must_use]
+    pub const fn environment(&self) -> SupportEnvironmentRef {
+        self.environment
+    }
+    #[must_use]
+    pub const fn claim(&self) -> ClaimRef {
+        self.claim
+    }
+}
+
+/// Resolves the exact claim-targeted environment named by a determination presentation.
+pub fn resolve_determination_presentation_support<C: DeterminationSupportCatalog>(
+    presentation_ref: DeterminationPresentationRef,
+    catalog: &C,
+) -> Result<ResolvedDeterminationSupport, DeterminationSupportError> {
+    let presentation = catalog
+        .resolve_determination_presentation(presentation_ref)
+        .ok_or(DeterminationSupportError::UnresolvedPresentation(
+            presentation_ref,
+        ))?;
+    let calculated_presentation = presentation.determination_presentation_ref()?;
+    if calculated_presentation != presentation_ref {
+        return Err(DeterminationSupportError::PresentationIdentityMismatch {
+            reference: presentation_ref,
+            calculated: calculated_presentation,
+        });
+    }
+    presentation.check(catalog)?;
+    let environment_ref =
+        SupportEnvironmentRef::from_artifact_ref(presentation.support().as_artifact_ref());
+    let environment = catalog.resolve_support_environment(environment_ref).ok_or(
+        DeterminationSupportError::UnresolvedEnvironment(environment_ref),
+    )?;
+    let calculated_environment = environment.support_environment_ref()?;
+    if calculated_environment != environment_ref {
+        return Err(DeterminationSupportError::EnvironmentIdentityMismatch {
+            reference: environment_ref,
+            calculated: calculated_environment,
+        });
+    }
+    environment.check(catalog)?;
+    let SupportSubjectRef::Claim(claim) = environment.target() else {
+        return Err(DeterminationSupportError::RelationTargetIsNotDeterminationSupport);
+    };
+    if environment.scope() != presentation.scope() {
+        return Err(DeterminationSupportError::ContextMismatch("scope"));
+    }
+    if environment.applicability() != presentation.applicability() {
+        return Err(DeterminationSupportError::ContextMismatch("applicability"));
+    }
+    Ok(ResolvedDeterminationSupport {
+        presentation: presentation_ref,
+        environment: environment_ref,
+        claim,
+    })
+}
+
+/// Requires the presentation's exact target claim to occur in a declared least-fixed-point
+/// standing result.
+///
+/// This is still relative to the declared support problem: it does not turn caller-declared
+/// applicability/check/ingress conditions into independently established actuality or warrant.
+pub fn standing_determination_presentation_support<C: DeterminationSupportCatalog>(
+    presentation_ref: DeterminationPresentationRef,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<ResolvedDeterminationSupport, DeterminationSupportError> {
+    let resolved = resolve_determination_presentation_support(presentation_ref, catalog)?;
+    if !standing.contains(resolved.claim()) {
+        return Err(DeterminationSupportError::ClaimIsNotStanding(
+            resolved.claim(),
+        ));
+    }
+    Ok(resolved)
+}
+
 /// A derived checked association between one relation-use occurrence and its relation-targeted
 /// support environment.
 ///
@@ -687,6 +788,40 @@ pub enum RelationUseSupportError {
     },
     #[error("support environment context differs from relation use at {0}")]
     ContextMismatch(&'static str),
+}
+
+#[derive(Debug, Error)]
+pub enum DeterminationSupportError {
+    #[error(transparent)]
+    Determination(#[from] DeterminationPresentationError),
+    #[error(transparent)]
+    DeterminationCheck(#[from] DeterminationPresentationCheckError),
+    #[error(transparent)]
+    Environment(#[from] SupportEnvironmentArtifactError),
+    #[error(transparent)]
+    EnvironmentCheck(#[from] SupportEnvironmentArtifactCheckError),
+    #[error("determination presentation {0} is unavailable")]
+    UnresolvedPresentation(DeterminationPresentationRef),
+    #[error(
+        "determination presentation {reference} hashes to {calculated}, not its claimed identity"
+    )]
+    PresentationIdentityMismatch {
+        reference: DeterminationPresentationRef,
+        calculated: DeterminationPresentationRef,
+    },
+    #[error("support environment {0} is unavailable")]
+    UnresolvedEnvironment(SupportEnvironmentRef),
+    #[error("support environment {reference} hashes to {calculated}, not its claimed identity")]
+    EnvironmentIdentityMismatch {
+        reference: SupportEnvironmentRef,
+        calculated: SupportEnvironmentRef,
+    },
+    #[error("a relation-targeted support environment cannot support a determination presentation")]
+    RelationTargetIsNotDeterminationSupport,
+    #[error("support environment context differs from determination presentation at {0}")]
+    ContextMismatch(&'static str),
+    #[error("claim {0} is absent from the declared standing result")]
+    ClaimIsNotStanding(ClaimRef),
 }
 
 /// One explicitly declared assessment of the closure conditions not evaluable by this phase.

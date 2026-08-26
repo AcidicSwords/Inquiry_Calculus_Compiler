@@ -180,12 +180,14 @@ pub use separator::{
 };
 pub use sixfold::{GammaError, ReciprocalOccurrence, ReciprocalOccurrenceError, RoleComparison};
 pub use standing::{
-    ClaimRef, DeclaredStandingError, DeclaredSupportClosure, RelationUseSupportCatalog,
-    RelationUseSupportError, ResolvedRelationUseSupport, SUPPORT_ENVIRONMENT_ARTIFACT_KIND,
+    ClaimRef, DeclaredStandingError, DeclaredSupportClosure, DeterminationSupportCatalog,
+    DeterminationSupportError, RelationUseSupportCatalog, RelationUseSupportError,
+    ResolvedDeterminationSupport, ResolvedRelationUseSupport, SUPPORT_ENVIRONMENT_ARTIFACT_KIND,
     SUPPORT_ENVIRONMENT_SCHEMA_VERSION, Standing, StandingProblem, SupportEnvironment,
     SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef,
-    SupportSubjectRef, resolve_relation_use_support, standing, standing_from_declared_support,
+    SupportSubjectRef, resolve_determination_presentation_support, resolve_relation_use_support,
+    standing, standing_determination_presentation_support, standing_from_declared_support,
 };
 pub use ty::{
     BindingVersionRef, TYPE_ARTIFACT_KIND, TYPE_SCHEMA_VERSION, TYPED_FORM_ARTIFACT_KIND,

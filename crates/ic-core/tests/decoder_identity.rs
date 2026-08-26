@@ -5,7 +5,8 @@ use ic_core::{
     ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError,
     ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
     DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError, DecoderRef,
-    DeterminationPresentationRef, DischargeMode, FINITE_DECODER_ARTIFACT_KIND,
+    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
+    DeterminationSupportError, DischargeMode, FINITE_DECODER_ARTIFACT_KIND,
     FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
     FiniteDecoderError, FiniteDecoderOutcome, FormulaArtifact, FormulaCatalog, FormulaRef,
     GrainRef, HorizonRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
@@ -18,7 +19,8 @@ use ic_core::{
     SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
     SupportSubjectRef, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
     TypedForm, TypedFormRef, decode_actual_event, match_decoded_observation_use,
-    resolve_relation_use_support, standing_from_declared_support,
+    resolve_determination_presentation_support, resolve_relation_use_support,
+    standing_determination_presentation_support, standing_from_declared_support,
 };
 
 #[derive(Clone, Default)]
@@ -37,6 +39,7 @@ struct Catalog {
     operators: BTreeMap<ProbeOperatorRef, ProbeOperator>,
     claims: BTreeMap<ClaimRef, ClaimArtifact>,
     support_environments: BTreeMap<SupportEnvironmentRef, SupportEnvironmentArtifact>,
+    presentations: BTreeMap<DeterminationPresentationRef, DeterminationPresentation>,
 }
 
 impl Catalog {
@@ -116,6 +119,17 @@ impl Catalog {
             .support_environment_ref()
             .expect("support environment must encode");
         self.support_environments.insert(reference, environment);
+        reference
+    }
+
+    fn insert_presentation(
+        &mut self,
+        presentation: DeterminationPresentation,
+    ) -> DeterminationPresentationRef {
+        let reference = presentation
+            .determination_presentation_ref()
+            .expect("presentation must encode");
+        self.presentations.insert(reference, presentation);
         reference
     }
 }
@@ -225,6 +239,15 @@ impl SupportEnvironmentCatalog for Catalog {
 impl RelationUseSupportCatalog for Catalog {
     fn resolve_relation_use(&self, reference: RelationUseRef) -> Option<RelationUse> {
         self.relation_uses.get(&reference).cloned()
+    }
+}
+
+impl DeterminationCatalog for Catalog {
+    fn resolve_determination_presentation(
+        &self,
+        reference: DeterminationPresentationRef,
+    ) -> Option<DeterminationPresentation> {
+        self.presentations.get(&reference).cloned()
     }
 }
 
@@ -719,6 +742,117 @@ fn support_environment_identity_preserves_candidate_support_without_closure() {
         ),
         Err(SupportEnvironmentArtifactError::DuplicateActualReturn(reference))
             if reference == fixture.decoded_raw
+    ));
+}
+
+#[test]
+fn determination_support_requires_one_checked_claim_targeted_standing_environment() {
+    let mut fixture = fixture();
+    let binding = BindingVersionRef::from_artifact_ref(artifact(0x10));
+    let scope = ScopeRef::from_artifact_ref(artifact(0x16));
+    let applicability = ApplicabilityRef::from_artifact_ref(artifact(0x17));
+    let source =
+        fixture
+            .catalog
+            .insert_form(TypedForm::new(binding, fixture.answer_type, artifact(0x71)));
+    let claim = fixture.catalog.insert_claim(
+        ClaimArtifact::new(
+            source.as_artifact_ref(),
+            fixture.query,
+            Vec::new(),
+            Vec::new(),
+            scope,
+            applicability,
+            ClaimStatus::Checked,
+        )
+        .expect("claim must canonicalize"),
+    );
+    let environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Claim(claim),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("claim-targeted environment must canonicalize"),
+    );
+    let presentation = fixture
+        .catalog
+        .insert_presentation(DeterminationPresentation::new(
+            ic_core::DistinctionRef::from_artifact_ref(artifact(0x72)),
+            ic_core::Orientation::X,
+            source,
+            ic_core::RelationalWebRef::from_artifact_ref(artifact(0x73)),
+            binding,
+            scope,
+            applicability,
+            GrainRef::from_artifact_ref(artifact(0x14)),
+            HorizonRef::from_artifact_ref(artifact(0x15)),
+            environment.as_support_ref(),
+            None,
+        ));
+
+    let resolved = resolve_determination_presentation_support(presentation, &fixture.catalog)
+        .expect("presentation must resolve only its exact claim-targeted environment");
+    assert_eq!(resolved.presentation(), presentation);
+    assert_eq!(resolved.environment(), environment);
+    assert_eq!(resolved.claim(), claim);
+
+    let ungrounded = standing_from_declared_support(Vec::new(), &[], &fixture.catalog)
+        .expect("an empty standing problem is well defined");
+    assert!(matches!(
+        standing_determination_presentation_support(presentation, &ungrounded, &fixture.catalog),
+        Err(DeterminationSupportError::ClaimIsNotStanding(reference)) if reference == claim
+    ));
+
+    let closure = DeclaredSupportClosure::new(environment, Vec::new(), true, true, false);
+    let standing = standing_from_declared_support(Vec::new(), &[closure], &fixture.catalog)
+        .expect("the declared closed route reaches its claim in the least fixed point");
+    assert_eq!(
+        standing_determination_presentation_support(presentation, &standing, &fixture.catalog)
+            .expect("a standing target claim must complete the structural link"),
+        resolved
+    );
+
+    let relation_environment = fixture.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(fixture.relation),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
+            applicability,
+            scope,
+        )
+        .expect("relation-targeted environment must canonicalize"),
+    );
+    let relation_targeted_presentation =
+        fixture
+            .catalog
+            .insert_presentation(DeterminationPresentation::new(
+                ic_core::DistinctionRef::from_artifact_ref(artifact(0x74)),
+                ic_core::Orientation::X,
+                source,
+                ic_core::RelationalWebRef::from_artifact_ref(artifact(0x75)),
+                binding,
+                scope,
+                applicability,
+                GrainRef::from_artifact_ref(artifact(0x14)),
+                HorizonRef::from_artifact_ref(artifact(0x15)),
+                relation_environment.as_support_ref(),
+                None,
+            ));
+    assert!(matches!(
+        resolve_determination_presentation_support(
+            relation_targeted_presentation,
+            &fixture.catalog
+        ),
+        Err(DeterminationSupportError::RelationTargetIsNotDeterminationSupport)
     ));
 }
 

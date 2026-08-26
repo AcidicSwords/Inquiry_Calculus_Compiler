@@ -224,6 +224,12 @@ standing premise before translating it into the existing least-fixed-point input
 checker success, and invalidation remain an explicit assessment; it is not proof, warrant, or an
 independent-ingress validator.
 
+A determination presentation can now resolve the exact claim-targeted environment named by its
+`SupportRef`, require matching scope/applicability, and require that target claim to occur in the
+declared least-fixed-point standing result. This does not assert that the opaque claim payload
+denotes the presentation source form, that the web is admitted or relevant, or that caller-declared
+closure conditions are independently grounded.
+
 Phase 14 now has `DeclaredFiniteGeneratorRegime`, a derived finite view that keeps declared route
 availability separate from current materialization and from selection. A fresh declared route is
 not evidence of a representation gap, and absence from this finite view is not evidence that no

@@ -14,8 +14,9 @@ linkage. A derived structural view can now connect one preserved decoded candida
 declared observation use; general supported-answer materialization remains reserved for the
 Phase 6/7 actuality-and-resolution boundary. Phase 11 now has canonical claim and candidate
 support-environment identity with structural provenance checking. Relation uses can structurally
-resolve matching relation-targeted environments through `SupportRef`, but no claim admission
-linkage exists.
+resolve matching relation-targeted environments through `SupportRef`, and a determination
+presentation can structurally resolve a claim-targeted environment whose target occurs in a
+declared standing result. Neither link evaluates opaque closure roles or admits web relevance.
 
 Adopting the successor changes the standing reciprocal-boundary contract, not the
 implemented phase. The repository has a pinned Rust workspace, exact versioned
@@ -315,7 +316,7 @@ candidate/observation-use equality and finite-pair/use membership are now checke
 The same pair is now checked at explicit source/candidate role ports, and claims retain checked
 candidate provenance without self-standing. The next discriminator must reject a purported
 departure whose claim/use lacks separately identified support-environment, least-fixed-point
-standing/relevance/non-circularity evidence or has no more than caller-declared finite-table
+standing, relevance, or non-circularity evidence, or has no more than caller-declared finite-table
 support.
 
 Phase 11 has a least-fixed-point standing engine. `standing()` iterates
@@ -335,11 +336,11 @@ actual returns, checker/assumption/dependency identities, applicability, and sco
 content address; it rechecks claim/raw-return identities, relation schemas, and claim-target
 context but does not evaluate opaque roles or close a route. A relation use now resolves a
 matching relation-targeted environment through its exact `SupportRef`, relation, scope, and
-applicability; a claim-targeted environment and every closure/admission condition remain
-unresolved. `standing_from_declared_support` now checks a claim-targeted environment and every
-declared standing premise before translating it into the existing least-fixed-point input, but its
-applicability/check/invalidation conditions remain caller declarations; it is not a warrant or
-independent-ingress validator.
+applicability. A determination presentation now resolves its exact claim-targeted environment,
+requires matching scope/applicability, and can require the target claim to occur in the declared
+least-fixed-point result. The canonical record does not yet state a claim-payload-to-source-form
+interpretation law, and applicability/check/invalidation conditions remain caller declarations;
+this is not a warrant, web-admission/relevance rule, or independent-ingress validator.
 
 Phase 14 now has a finite declared generator-regime view separating currently materialized routes
 from fresh routes already in the declared regime and from routes outside it. It does not certify
