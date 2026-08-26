@@ -7,13 +7,20 @@
 
 use std::{collections::BTreeSet, env, time::Duration};
 
-use ic_core::{ArtifactRef, BackendRequest};
+use ic_core::{
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BackendRequest, RawReturn,
+    RawReturnError, RawReturnRef,
+};
 use thiserror::Error;
 
 use crate::{ProbeProvider, ProviderReturn};
 
 /// Official OpenAI Responses endpoint.
 pub const OPENAI_RESPONSES_ENDPOINT: &str = "https://api.openai.com/v1/responses";
+/// Canonical artifact kind for one deterministically decoded provider string value.
+pub const OPENAI_DECODED_TEXT_ARTIFACT_KIND: &str = "ic.openai-decoded-text";
+/// Schema version for one deterministically decoded provider string value.
+pub const OPENAI_DECODED_TEXT_SCHEMA_VERSION: u32 = 1;
 const OPENAI_HTTP_RESPONSE_DOMAIN: &[u8] = b"inquiry-calculus:openai-http-response\0";
 const OPENAI_HTTP_RESPONSE_VERSION: u16 = 1;
 
@@ -129,6 +136,167 @@ impl DecodedOpenAiJsonArray {
     }
 }
 
+/// One content-addressed text value regenerated from an exact raw return and decoder version.
+///
+/// This is the opaque represented-form artifact used by a later `TypedForm`; it is not itself a
+/// typed form, completion candidate, support assertion, or warrant.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct OpenAiDecodedText {
+    raw_return: RawReturnRef,
+    decoder_version: ArtifactRef,
+    candidate_ordinal: u32,
+    text: String,
+}
+
+impl OpenAiDecodedText {
+    #[must_use]
+    pub const fn new(
+        raw_return: RawReturnRef,
+        decoder_version: ArtifactRef,
+        candidate_ordinal: u32,
+        text: String,
+    ) -> Self {
+        Self {
+            raw_return,
+            decoder_version,
+            candidate_ordinal,
+            text,
+        }
+    }
+
+    #[must_use]
+    pub const fn raw_return(&self) -> RawReturnRef {
+        self.raw_return
+    }
+
+    #[must_use]
+    pub const fn decoder_version(&self) -> ArtifactRef {
+        self.decoder_version
+    }
+
+    #[must_use]
+    pub const fn candidate_ordinal(&self) -> u32 {
+        self.candidate_ordinal
+    }
+
+    #[must_use]
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+
+    pub fn canonical_payload(&self) -> Result<Vec<u8>, OpenAiDecodedTextError> {
+        let text_len = u32::try_from(self.text.len())
+            .map_err(|_| OpenAiDecodedTextError::TextTooLong(self.text.len()))?;
+        let mut payload = Vec::with_capacity(72 + self.text.len());
+        payload.extend_from_slice(self.raw_return.as_artifact_ref().as_bytes());
+        payload.extend_from_slice(self.decoder_version.as_bytes());
+        payload.extend_from_slice(&self.candidate_ordinal.to_be_bytes());
+        payload.extend_from_slice(&text_len.to_be_bytes());
+        payload.extend_from_slice(self.text.as_bytes());
+        Ok(payload)
+    }
+
+    pub fn envelope(&self) -> Result<ArtifactEnvelope, OpenAiDecodedTextError> {
+        Ok(ArtifactEnvelope::from_canonical_payload(
+            ArtifactKind::new(OPENAI_DECODED_TEXT_ARTIFACT_KIND)?,
+            OPENAI_DECODED_TEXT_SCHEMA_VERSION,
+            self.canonical_payload()?,
+        ))
+    }
+
+    pub fn artifact_ref(&self) -> Result<ArtifactRef, OpenAiDecodedTextError> {
+        Ok(self.envelope()?.artifact_ref()?)
+    }
+
+    pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, OpenAiDecodedTextError> {
+        if envelope.kind().as_str() != OPENAI_DECODED_TEXT_ARTIFACT_KIND {
+            return Err(OpenAiDecodedTextError::UnexpectedArtifactKind {
+                expected: OPENAI_DECODED_TEXT_ARTIFACT_KIND,
+                actual: envelope.kind().as_str().to_owned(),
+            });
+        }
+        if envelope.schema_version() != OPENAI_DECODED_TEXT_SCHEMA_VERSION {
+            return Err(OpenAiDecodedTextError::UnsupportedSchemaVersion(
+                envelope.schema_version(),
+            ));
+        }
+        let payload = envelope.canonical_payload();
+        if payload.len() < 72 {
+            return Err(OpenAiDecodedTextError::TruncatedPayload);
+        }
+        let raw_return = RawReturnRef::from_artifact_ref(ArtifactRef::from_bytes(
+            payload[0..32]
+                .try_into()
+                .map_err(|_| OpenAiDecodedTextError::TruncatedPayload)?,
+        ));
+        let decoder_version = ArtifactRef::from_bytes(
+            payload[32..64]
+                .try_into()
+                .map_err(|_| OpenAiDecodedTextError::TruncatedPayload)?,
+        );
+        let candidate_ordinal = u32::from_be_bytes(
+            payload[64..68]
+                .try_into()
+                .map_err(|_| OpenAiDecodedTextError::TruncatedPayload)?,
+        );
+        let text_len = u32::from_be_bytes(
+            payload[68..72]
+                .try_into()
+                .map_err(|_| OpenAiDecodedTextError::TruncatedPayload)?,
+        );
+        let text_len =
+            usize::try_from(text_len).map_err(|_| OpenAiDecodedTextError::TextLengthOverflow)?;
+        let text_bytes = payload
+            .get(72..)
+            .ok_or(OpenAiDecodedTextError::TruncatedPayload)?;
+        if text_bytes.len() != text_len {
+            return Err(OpenAiDecodedTextError::TextLengthMismatch {
+                declared: text_len,
+                actual: text_bytes.len(),
+            });
+        }
+        let text = String::from_utf8(text_bytes.to_vec())
+            .map_err(|_| OpenAiDecodedTextError::InvalidTextUtf8)?;
+        Ok(Self::new(
+            raw_return,
+            decoder_version,
+            candidate_ordinal,
+            text,
+        ))
+    }
+
+    #[must_use]
+    pub const fn referenced_artifacts(&self) -> [ArtifactRef; 2] {
+        [self.raw_return.as_artifact_ref(), self.decoder_version]
+    }
+
+    /// Replays this value from the exact raw return and decoder contract.
+    pub fn check(&self, raw_return: &RawReturn) -> Result<(), OpenAiDecodedTextCheckError> {
+        let calculated = raw_return.raw_return_ref()?;
+        if calculated != self.raw_return {
+            return Err(OpenAiDecodedTextCheckError::RawReturnIdentityMismatch {
+                expected: self.raw_return,
+                actual: calculated,
+            });
+        }
+        let decoded = decode_openai_json_array_response(raw_return.bytes())?;
+        let ordinal = usize::try_from(self.candidate_ordinal)
+            .map_err(|_| OpenAiDecodedTextCheckError::CandidateOrdinalOverflow)?;
+        let actual = decoded.candidates().get(ordinal).ok_or(
+            OpenAiDecodedTextCheckError::CandidateOrdinalMissing {
+                ordinal: self.candidate_ordinal,
+                count: decoded.candidates().len(),
+            },
+        )?;
+        if actual != &self.text {
+            return Err(OpenAiDecodedTextCheckError::CandidateTextMismatch {
+                ordinal: self.candidate_ordinal,
+            });
+        }
+        Ok(())
+    }
+}
+
 /// Decodes every `output_text` content item whose exact text is a JSON array of strings.
 ///
 /// Responses output is heterogeneous, so this scans the complete output array rather than
@@ -202,6 +370,37 @@ pub fn decode_openai_json_array_response(
         model,
         candidates,
     })
+}
+
+/// Deterministically materializes all text values from one preserved raw provider return.
+pub fn materialize_openai_decoded_texts(
+    raw_return: RawReturnRef,
+    raw: &RawReturn,
+    decoder_version: ArtifactRef,
+) -> Result<Vec<OpenAiDecodedText>, OpenAiDecodedTextCheckError> {
+    let calculated = raw.raw_return_ref()?;
+    if calculated != raw_return {
+        return Err(OpenAiDecodedTextCheckError::RawReturnIdentityMismatch {
+            expected: raw_return,
+            actual: calculated,
+        });
+    }
+    let decoded = decode_openai_json_array_response(raw.bytes())?;
+    decoded
+        .candidates
+        .into_iter()
+        .enumerate()
+        .map(|(ordinal, text)| {
+            let ordinal = u32::try_from(ordinal)
+                .map_err(|_| OpenAiDecodedTextCheckError::CandidateOrdinalOverflow)?;
+            Ok(OpenAiDecodedText::new(
+                raw_return,
+                decoder_version,
+                ordinal,
+                text,
+            ))
+        })
+        .collect()
 }
 
 fn required_string(
@@ -373,4 +572,46 @@ pub enum OpenAiResponseDecodeError {
     DuplicateCandidate(String),
     #[error("OpenAI response has no string field {0:?}")]
     MissingString(&'static str),
+}
+
+#[derive(Debug, Error)]
+pub enum OpenAiDecodedTextError {
+    #[error(transparent)]
+    Artifact(#[from] ArtifactError),
+    #[error("OpenAI decoded text is too long: {0} UTF-8 bytes")]
+    TextTooLong(usize),
+    #[error("OpenAI decoded text payload is truncated")]
+    TruncatedPayload,
+    #[error("OpenAI decoded text length overflows this platform")]
+    TextLengthOverflow,
+    #[error("OpenAI decoded text declares {declared} bytes but carries {actual}")]
+    TextLengthMismatch { declared: usize, actual: usize },
+    #[error("OpenAI decoded text bytes are not valid UTF-8")]
+    InvalidTextUtf8,
+    #[error("expected artifact kind {expected:?}, got {actual:?}")]
+    UnexpectedArtifactKind {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("unsupported OpenAI decoded text schema version {0}")]
+    UnsupportedSchemaVersion(u32),
+}
+
+#[derive(Debug, Error)]
+pub enum OpenAiDecodedTextCheckError {
+    #[error(transparent)]
+    RawReturn(#[from] RawReturnError),
+    #[error(transparent)]
+    Decode(#[from] OpenAiResponseDecodeError),
+    #[error("raw return identity is {actual}, not expected {expected}")]
+    RawReturnIdentityMismatch {
+        expected: RawReturnRef,
+        actual: RawReturnRef,
+    },
+    #[error("candidate ordinal cannot be represented on this platform")]
+    CandidateOrdinalOverflow,
+    #[error("candidate ordinal {ordinal} is absent from decoded set of size {count}")]
+    CandidateOrdinalMissing { ordinal: u32, count: usize },
+    #[error("candidate text at ordinal {ordinal} differs from the decoded raw return")]
+    CandidateTextMismatch { ordinal: u32 },
 }

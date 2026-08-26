@@ -138,15 +138,23 @@ not authorize a successful request. Therefore live success remains `PENDING`, no
 > other occurrence-context field remains fixed; admission still requires that exact environment
 > to close in standing and name the committed raw return.
 
-The strongest executable obligation is now `PROVIDER-001C`:
+`PROVIDER-001C`, deterministic decoded-value materialization, is demonstrated:
 
-> Convert every decoded provider string into a deterministic, typed completion for the already
-> addressed source question; persist only the irreducible value/form/candidate, decoder/path, and
+> Each candidate becomes an `ic.openai-decoded-text/v1` value addressed by exact raw return,
+> decoder version, ordinal, and UTF-8 text. A file-backed restart reloads only raw return and
+> decoder-version roots, reruns decoding, and regenerates the same value references. Version,
+> ordinal, and text drift remain distinguishable. No table, opcode, session, or semantic support
+> is added.
+
+The strongest executable obligation is now `PROVIDER-001D`:
+
+> Convert every regenerated decoded value into a typed completion for the already addressed
+> source question; persist only the irreducible form/candidate, decoder/path, and
 > post-return support artifacts needed for exact restart; then drive the whole set through support,
 > capture-safe binding, admitted resumption, and zero-redispatch cold replay.
 
 Use one deterministic offline valid-shaped provider return first. Regenerate every post-return
-artifact from the stored raw frame after restart; do not reuse pre-crash candidates, decoder,
+artifact from the stored raw frame and decoder version after restart; do not reuse pre-crash candidates, decoder,
 support, standing, binding, suspension, or lowering. If exact typed value identity cannot be
 regenerated from raw return plus declared decoder version, preserve that as a named replay-recipe
 breaker before adding canonical structure. Do not weaken support, pre-warrant generated output,

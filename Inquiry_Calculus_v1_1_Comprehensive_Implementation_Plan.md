@@ -4104,7 +4104,8 @@ The transport prefix is demonstrated offline for both HTTP 200 and HTTP 401. The
 decoder scans the heterogeneous output list and preserves every exact JSON-array candidate without
 claiming support. Post-return observation support is now separated from pre-dispatch query support,
 while exact standing closure and raw-return coverage remain mandatory. A live 401 was preserved as
-`F-0001`; successful live acceptance remains pending until its credential reopen condition changes.
+`F-0001`. Each candidate text now regenerates as an `ic.openai-decoded-text/v1` value addressed by
+raw return, decoder version, ordinal, and exact text across file-backed restart. Successful live acceptance remains pending until its credential reopen condition changes.
 The credential constraint does not authorize transport/semantic conflation or block construction of
 deterministic typed materialization, resumption, and replay breakers.
 

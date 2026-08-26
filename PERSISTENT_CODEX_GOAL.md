@@ -101,12 +101,14 @@ The transport and post-actuality JSON-array decoding prefixes now pass offline. 
 all output items and preserves all candidates without claiming support. The positive identity-cycle
 breaker was also resolved: observation support may be formed after the raw return while every other
 occurrence-context field remains fixed, and exact standing/raw-return admission still applies.
+Each decoded string now has a minimal content-addressed value identity over raw return, decoder
+version, ordinal, and exact text; those identities regenerate after a file-backed restart.
 
 The next dependency chain is:
 
 ```text
-stored successful provider return
--> deterministic typed completion materialization from every decoded string
+stored successful provider return and decoder version
+-> typed forms and completion candidates over every regenerated decoded value
 -> independently supported answer admission using post-return environments
 -> capture-safe continuation binding and runtime resumption
 -> the same protected result after restart with zero redispatch

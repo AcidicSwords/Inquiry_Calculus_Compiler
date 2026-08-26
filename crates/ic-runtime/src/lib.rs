@@ -23,9 +23,11 @@ use ic_core::{
     TypeError, TypeRef, TypedForm, TypedFormRef,
 };
 pub use openai::{
-    DecodedOpenAiJsonArray, OPENAI_RESPONSES_ENDPOINT, OpenAiHttpResponse, OpenAiHttpResponseError,
-    OpenAiProviderError, OpenAiResponseDecodeError, OpenAiResponsesProvider,
-    decode_openai_json_array_response,
+    DecodedOpenAiJsonArray, OPENAI_DECODED_TEXT_ARTIFACT_KIND, OPENAI_DECODED_TEXT_SCHEMA_VERSION,
+    OPENAI_RESPONSES_ENDPOINT, OpenAiDecodedText, OpenAiDecodedTextCheckError,
+    OpenAiDecodedTextError, OpenAiHttpResponse, OpenAiHttpResponseError, OpenAiProviderError,
+    OpenAiResponseDecodeError, OpenAiResponsesProvider, decode_openai_json_array_response,
+    materialize_openai_decoded_texts,
 };
 pub use replay::{
     ColdReplayedProbe, FiniteProbeReplayError, ReplayObservation, replay_completed_finite_probe,
