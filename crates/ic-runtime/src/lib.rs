@@ -2,11 +2,18 @@
 //!
 //! This phase contains `Return`, `Branch`, probe suspension, raw-only resumption, and one derived
 //! finite admitted-answer resumption bridge. It never dispatches an operator or records an
-//! actuality event. The admitted bridge consumes event-linked evidence produced by `ic-core`; it
-//! does not manufacture actuality, decoding, standing, or warrant.
+//! actuality event except through the explicit crash-safe dispatch coordinator. The admitted
+//! bridge consumes event-linked evidence produced by `ic-core`; it does not manufacture decoding,
+//! standing, or warrant.
+
+mod dispatch;
 
 use std::collections::BTreeMap;
 
+pub use dispatch::{
+    ActualizedProbe, ProbeDispatchContext, ProbeDispatchError, ProbeProvider, ProviderReturn,
+    dispatch_probe,
+};
 pub use ic_core::ProbeOperatorRef;
 use ic_core::{
     BoundFiniteAskContinuation, EventRef, IProgRef, RawReturnRef, TypeCatalog, TypeCheckError,

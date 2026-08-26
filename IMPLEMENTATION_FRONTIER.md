@@ -17,7 +17,9 @@ without selecting a singleton. A derived capture-safe binding now supplies that 
 checked `IProg::Ask` answer slot while retaining the explicit environment and continuation
 identity. An explicit finite source-continuation lowering now resumes a matching suspended probe
 while retaining the bound event/raw-return provenance; operator, continuation, and target
-mismatches reject. External dispatch and durable replay remain open at the Phase 5/6 boundary.
+  mismatches reject. One injected mock-provider dispatch now durably prepares, calls once,
+  preserves exact returned bytes, and completes the ordinary event before exposing it; durable
+  cold replay through decode/admission/resumption remains open at the Phase 5/6/7 boundary.
 The Phase 6 crash breaker now has a separate operational external-effect journal: durable
 preparation precedes any caller dispatch; unresolved restart state remains unknown and is never
 auto-retried; completion atomically installs the raw artifact, checked ordinary event, ledger edge,
@@ -60,15 +62,14 @@ inferring them from opaque payload bytes.
 ## Strongest live obligation
 
 After the finite reciprocal semantic slice, event-to-runtime continuation bridge, typed backend
-request identity, and operational crash-safe preparation/completion journal, resolve the earliest
-actual dispatch gap:
+request identity, crash-safe journal, and one injected mock-provider execution, resolve the first
+complete cold-replay gap:
 
-> Given a verified `ProbeSuspension`, checked `BackendRequest`, and durable preparation journal,
-> what is the smallest injected mock-provider coordinator that dispatches only a newly prepared
-> request, captures the returned bytes exactly once, completes the ordinary event before decode,
-> and then reaches the existing admitted-answer/resumption path? An already-pending token after a
-> restart must never auto-dispatch, and backend failure must remain distinct from undefined or
-> unknown semantic decoding.
+> Given a committed `ActualizedProbe` and a restarted file-backed store, what is the smallest
+> replay adapter that reconstructs the exact raw return, event, finite decode, supported answer,
+> capture-safe binding, and admitted runtime resumption without consulting pre-crash in-memory
+> values? Provider failure, decoder `Undefined`, decoder `Unknown`, unsupported answers, and
+> lowering mismatch must remain distinct residuals.
 
 The protected difference is visible in the accepted sources:
 
@@ -132,6 +133,12 @@ The protected difference is visible in the accepted sources:
   returns `DispatchAuthorized`; an exact existing pending or completed row returns `Existing`.
   Thus idempotent lookup and crash recovery cannot be mistaken for permission to invoke the
   provider again. This is an execution-safety distinction, not evidence that any effect occurred.
+- `dispatch_probe` is the first injected provider execution boundary. It requires the suspension
+  operator to equal the checked request operator, obtains a fresh `DispatchAuthorized` result,
+  calls the provider once with the checked request, preserves its exact opaque bytes, and completes
+  the ordinary event before returning `ActualizedProbe`. Existing completed/pending rows reject
+  before the provider call. A provider error remains operational and leaves the durable row pending;
+  it is not decoder `Undefined`, decoder `Unknown`, semantic non-discharge, or warrant.
 - `SurfacePlan` and `BackendRequest` supply the first typed compiler/backend request boundary.
   Both are canonical, content-addressed, and non-actual. The plan repeats and rechecks the exact
   operator's query, boundary, active view, executable code, and probe contract before adding its
@@ -507,11 +514,12 @@ These are recorded now but do not outrank the Phase 4 determination boundary:
   exteriority. Recovery checks remain three-valued; a coverage-indexed constitutive
   characterization is a derived view, not an authoritative object or self-warranting
   horizon.
-- **Phase 6:** typed request-before-dispatch, unknown pending restart state, atomic raw/event
-  completion, and file-backed recovery now pass. A typed semantic attempt boundary remains open;
+- **Phase 6:** typed request-before-dispatch, unknown pending restart state, one injected mock
+  dispatch, atomic raw/event completion, and file-backed recovery now pass. A typed semantic
+  attempt boundary remains open;
   do not collapse the completed event into a proposed request or promote the recovery journal into
   semantic history. Next validate request, boundary, operator, state, route, backend, and provenance
-  contracts and extend replay through admitted resolution and resumed state.
+  contracts and extend cold replay through admitted resolution and resumed state.
 - **Phase 10/12 method boundary:** canonical method, surface-plan, and backend-request identities
   now pass exact structural checks. Next inject the smallest mock provider after durable
   preparation, preserve its raw actual return before interpretation, keep backend failure distinct

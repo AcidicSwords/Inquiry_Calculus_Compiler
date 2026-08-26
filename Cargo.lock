@@ -535,7 +535,9 @@ name = "ic-runtime"
 version = "0.1.0"
 dependencies = [
  "ic-core",
+ "ic-store",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]

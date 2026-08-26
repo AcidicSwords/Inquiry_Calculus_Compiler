@@ -247,7 +247,7 @@ impl ArtifactStore {
         operator: ProbeOperatorRef,
         ledger_parent: Option<EventRef>,
     ) -> Result<ExternalEffectPreparation, StoreError> {
-        let request_value = self.verify_backend_request(request).await?;
+        let request_value = self.checked_backend_request(request).await?;
         if request_value.operator() != operator {
             return Err(StoreError::BackendRequestOperatorMismatch {
                 request: request_value.operator(),
@@ -256,6 +256,16 @@ impl ArtifactStore {
         }
         self.prepare_external_effect(token, request.as_artifact_ref(), operator, ledger_parent)
             .await
+    }
+
+    /// Resolves and rechecks one stored backend request, its surface plan, and its operator.
+    ///
+    /// This establishes exact structural identity only; it performs no rendering or dispatch.
+    pub async fn checked_backend_request(
+        &self,
+        request: BackendRequestRef,
+    ) -> Result<BackendRequest, StoreError> {
+        self.verify_backend_request(request).await
     }
 
     /// Returns the operational recovery state for one dispatch token.

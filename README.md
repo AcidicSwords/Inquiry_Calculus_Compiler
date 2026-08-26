@@ -256,6 +256,14 @@ new `DispatchAuthorized` result permits the current caller to invoke a provider.
 including one recovered after restart, returns `Existing`; a pending existing row therefore remains
 unknown and cannot accidentally become permission to dispatch again.
 
+`ic-runtime::dispatch_probe` now supplies the first injected provider coordinator. It accepts only
+a verified suspension's exact checked backend request, dispatches only after a fresh durable
+authorization, converts the provider's opaque bytes into `RawReturn`, and atomically completes the
+ordinary event before returning anything to a decoder. The fixture proves one call on success,
+zero redispatches for completed or recovered-pending rows, and a separate operational provider
+failure path. This is a mock-provider boundary, not method admission, semantic resolution, or a
+real-provider integration.
+
 The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
 the single connection and reopening the database preserves pending/complete operational state,
 canonical event identity, immutable raw bytes, and parent-linked order after embedded migrations
