@@ -168,9 +168,11 @@ pub use resolution::{
 pub use seed::{SeedReorientation, SeedReorientationError};
 pub use separator::{
     DeclaredFiniteGeneratorRegime, DeclaredFiniteGeneratorRegimeError,
-    DeclaredRouteMaterialization, EffectivityRef, GeneratorRegimeRef, ProtectedClassRef,
-    ProtectedCompletionFieldRef, SEPARATOR_PROBLEM_ARTIFACT_KIND, SEPARATOR_PROBLEM_SCHEMA_VERSION,
-    SeparatorProblem, SeparatorProblemError, SeparatorProblemRef, StructureViewRef,
+    DeclaredRouteMaterialization, EffectivityRef, ExactFiniteRegimeRoute,
+    ExactFiniteRegimeSeparatorError, ExactFiniteRegimeSeparatorResult, GeneratorRegimeRef,
+    ProtectedClassRef, ProtectedCompletionFieldRef, SEPARATOR_PROBLEM_ARTIFACT_KIND,
+    SEPARATOR_PROBLEM_SCHEMA_VERSION, SeparatorProblem, SeparatorProblemError, SeparatorProblemRef,
+    StructureViewRef, check_exact_no_separator_within_declared_regime,
 };
 pub use sixfold::{GammaError, ReciprocalOccurrence, ReciprocalOccurrenceError, RoleComparison};
 pub use standing::{

@@ -346,6 +346,11 @@ from fresh routes already in the declared regime and from routes outside it. It 
 lawfulness, completeness, or a representation gap; exact no-separator and independently
 witnessed expressibility remain future questions.
 
+The finite exact companion now checks every route in one declared regime against a caller-supplied
+exact protected signature. It can retain `ExactNoSeparatorWithinRegime`, never a global
+representation gap: regime exhaustiveness and signature exactness are declared scope, not proof
+that no admitted language can express the difference.
+
 ## Known later questions
 
 These are recorded now but do not outrank the Phase 4 determination boundary:

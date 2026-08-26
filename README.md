@@ -229,6 +229,11 @@ availability separate from current materialization and from selection. A fresh d
 not evidence of a representation gap, and absence from this finite view is not evidence that no
 lawful route exists.
 
+Its exact finite companion requires one caller-supplied exact signature for every route in that
+declared regime. When every route fails to separate a protected pair, it retains only an
+`ExactNoSeparatorWithinRegime` witness; it does not claim global inexpressibility or propose a
+representation extension.
+
 The first concrete resolution boundary is a canonical finite decoder table for one query and raw
 input type. Each listed raw return either decodes to a nonempty set of checked complete candidates
 or is explicitly outside the decoder; an unlisted raw return remains `Unknown`. A direct

@@ -10,8 +10,9 @@ use std::{collections::BTreeSet, fmt, str::FromStr};
 use thiserror::Error;
 
 use crate::{
-    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef, GrainRef,
-    HorizonRef,
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef,
+    ExactFiniteCueBasisError, ExactFiniteCueBasisResult, ExactFiniteSignature, FiniteCueSeparator,
+    GrainRef, HorizonRef, check_exact_finite_cue_basis,
 };
 
 /// Canonical artifact kind for generic protected residual/separator problems.
@@ -141,6 +142,89 @@ pub enum DeclaredFiniteGeneratorRegimeError {
     DuplicateRoute(ArtifactRef),
     #[error("materialized route {0} is not in the declared generator regime")]
     MaterializedRouteOutsideRegime(ArtifactRef),
+}
+
+/// One caller-supplied exact signature for a declared generator-regime route.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ExactFiniteRegimeRoute {
+    route: ArtifactRef,
+    signature: ExactFiniteSignature,
+}
+
+impl ExactFiniteRegimeRoute {
+    #[must_use]
+    pub const fn new(route: ArtifactRef, signature: ExactFiniteSignature) -> Self {
+        Self { route, signature }
+    }
+    #[must_use]
+    pub const fn route(&self) -> ArtifactRef {
+        self.route
+    }
+    #[must_use]
+    pub const fn signature(&self) -> &ExactFiniteSignature {
+        &self.signature
+    }
+}
+
+/// The bounded no-separator conclusion available from a declared complete finite regime.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ExactFiniteRegimeSeparatorResult {
+    /// The declared exact route signatures jointly separate every protectedly distinct pair.
+    SeparatingBasisPresent,
+    /// One protectedly distinct pair remains indistinguishable to every route in this regime.
+    ExactNoSeparatorWithinRegime { separator: FiniteCueSeparator },
+}
+
+/// Checks whether all routes in a declared finite regime jointly fail to separate a protected
+/// finite signature.
+///
+/// Completeness is only over the supplied regime membership and caller-supplied exact tables. A
+/// no-separator result therefore does not establish a representation gap outside that regime.
+pub fn check_exact_no_separator_within_declared_regime(
+    regime: &DeclaredFiniteGeneratorRegime,
+    routes: &[ExactFiniteRegimeRoute],
+    protected: &ExactFiniteSignature,
+) -> Result<ExactFiniteRegimeSeparatorResult, ExactFiniteRegimeSeparatorError> {
+    let mut seen = BTreeSet::new();
+    let mut signatures = Vec::with_capacity(routes.len());
+    for route in routes {
+        if !regime.routes().contains(&route.route()) {
+            return Err(ExactFiniteRegimeSeparatorError::RouteOutsideRegime(
+                route.route(),
+            ));
+        }
+        if !seen.insert(route.route()) {
+            return Err(ExactFiniteRegimeSeparatorError::DuplicateRoute(
+                route.route(),
+            ));
+        }
+        signatures.push(route.signature().clone());
+    }
+    if let Some(route) = regime.routes().iter().find(|route| !seen.contains(route)) {
+        return Err(ExactFiniteRegimeSeparatorError::MissingRouteSignature(
+            *route,
+        ));
+    }
+    match check_exact_finite_cue_basis(&signatures, protected)? {
+        ExactFiniteCueBasisResult::Sufficient => {
+            Ok(ExactFiniteRegimeSeparatorResult::SeparatingBasisPresent)
+        }
+        ExactFiniteCueBasisResult::Insufficient { separator } => {
+            Ok(ExactFiniteRegimeSeparatorResult::ExactNoSeparatorWithinRegime { separator })
+        }
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum ExactFiniteRegimeSeparatorError {
+    #[error("route {0} is outside the declared finite generator regime")]
+    RouteOutsideRegime(ArtifactRef),
+    #[error("declared finite generator regime repeats exact signature for route {0}")]
+    DuplicateRoute(ArtifactRef),
+    #[error("declared finite generator regime lacks an exact signature for route {0}")]
+    MissingRouteSignature(ArtifactRef),
+    #[error(transparent)]
+    CueBasis(#[from] ExactFiniteCueBasisError),
 }
 
 /// One declared generic residual to be separated by a later admitted inquiry route.
