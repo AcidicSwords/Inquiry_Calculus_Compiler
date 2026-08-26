@@ -35,9 +35,10 @@ use ic_core::{
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, PairedActualityTrace, ProbeDispatchContext, ProbeProvider, ProgramIR,
-    ProviderReturn, ReplayObservation, RuntimeCatalog, Terminator, dispatch_probe,
-    replay_completed_finite_probe,
+    MachineStep, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaHttpResponse,
+    PairedActualityTrace, ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn,
+    ReplayObservation, RuntimeCatalog, Terminator, dispatch_probe,
+    materialize_ollama_decoded_texts, replay_completed_finite_probe,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -295,6 +296,19 @@ async fn load_envelope(store: &ArtifactStore, reference: ArtifactRef) -> Artifac
         .expect("replay artifact must exist")
 }
 
+fn ollama_candidate_response() -> Vec<u8> {
+    let body = serde_json::to_vec(&serde_json::json!({
+        "model": "qwen3.5:9b",
+        "response": "{\"candidates\":[\"north\",\"south\"]}",
+        "done": true,
+        "done_reason": "stop"
+    }))
+    .expect("fixture Ollama response must encode");
+    OllamaHttpResponse::new(200, body)
+        .encode()
+        .expect("fixture Ollama transport frame must encode")
+}
+
 #[derive(Clone, Copy)]
 struct ColdReplayRoots {
     token: DispatchToken,
@@ -331,6 +345,22 @@ struct ColdReplayRoots {
     current_protected: ProtectedContinuationRef,
     path_protected: ProtectedContinuationRef,
     compiler_version: ArtifactRef,
+}
+
+#[derive(Clone, Copy)]
+struct OllamaPostReturnRoots {
+    decoder_version: ArtifactRef,
+    value_a: ArtifactRef,
+    value_b: ArtifactRef,
+    form_a: TypedFormRef,
+    form_b: TypedFormRef,
+    candidate_a: CompletionCandidateRef,
+    candidate_b: CompletionCandidateRef,
+    observation_a: RelationUseRef,
+    observation_b: RelationUseRef,
+    support: SupportEnvironmentRef,
+    decoder: FiniteDecoderRef,
+    path: ResolutionPathRef,
 }
 
 fn derive_fixture_sufficient_present(
@@ -409,6 +439,7 @@ fn derive_fixture_sufficient_present(
 struct CountingProvider {
     calls: Arc<AtomicUsize>,
     expected_body: ArtifactRef,
+    response: Vec<u8>,
 }
 
 impl ProbeProvider for CountingProvider {
@@ -417,7 +448,7 @@ impl ProbeProvider for CountingProvider {
     fn dispatch(&mut self, request: &BackendRequest) -> Result<ProviderReturn, Self::Error> {
         self.calls.fetch_add(1, Ordering::SeqCst);
         assert_eq!(request.request_body(), self.expected_body);
-        Ok(ProviderReturn::new(vec![0x41, 0x00, 0xff]))
+        Ok(ProviderReturn::new(self.response.clone()))
     }
 }
 
@@ -509,7 +540,7 @@ async fn persisted_cold_replay_fixture() -> (
     );
     assert_eq!(catalog.insert_schema(relation_value), relation);
 
-    let raw = RawReturn::new(vec![0x41, 0x00, 0xff]);
+    let raw = RawReturn::new(ollama_candidate_response());
     let raw_return = RawReturnRef::from_artifact_ref(
         store
             .insert(&raw.envelope().expect("raw return must encode"))
@@ -525,7 +556,7 @@ async fn persisted_cold_replay_fixture() -> (
         Vec::new(),
         vec![raw_return],
         Vec::new(),
-        Vec::new(),
+        vec![stored_ref(&store, b"pre-dispatch-support-assumption").await],
         Vec::new(),
         applicability,
         scope,
@@ -1089,6 +1120,7 @@ async fn persisted_cold_replay_fixture() -> (
     let mut provider = CountingProvider {
         calls: Arc::clone(&provider_calls),
         expected_body: request_body,
+        response: raw.bytes().to_vec(),
     };
     let actual = dispatch_probe(
         &store,
@@ -1336,6 +1368,237 @@ async fn load_cold_replay_catalog(store: &ArtifactStore, roots: ColdReplayRoots)
         assert_eq!(catalog.insert_program(value), reference);
     }
     catalog
+}
+
+async fn materialize_ollama_post_return_slice(
+    store: &ArtifactStore,
+    catalog: &mut Catalog,
+    roots: ColdReplayRoots,
+) -> OllamaPostReturnRoots {
+    let raw = catalog
+        .resolve_raw_return(roots.raw_return)
+        .expect("actual raw return must be available before derived materialization");
+    let decoder_version = stored_ref(store, b"ollama-schema-decoder-v1").await;
+    let values = materialize_ollama_decoded_texts(roots.raw_return, &raw, decoder_version)
+        .expect("committed local return must decode after actuality");
+    assert_eq!(
+        values.len(),
+        2,
+        "fixture schema requires two preserved candidates"
+    );
+    let value_a = persist(
+        store,
+        &values[0]
+            .envelope()
+            .expect("first decoded value must encode"),
+        &values[0].referenced_artifacts(),
+    )
+    .await;
+    let value_b = persist(
+        store,
+        &values[1]
+            .envelope()
+            .expect("second decoded value must encode"),
+        &values[1].referenced_artifacts(),
+    )
+    .await;
+    assert_eq!(
+        values[0].artifact_ref().expect("first value must address"),
+        value_a
+    );
+    assert_eq!(
+        values[1].artifact_ref().expect("second value must address"),
+        value_b
+    );
+
+    let binding = catalog
+        .resolve_type(roots.unit)
+        .expect("answer type must remain available")
+        .binding();
+    let form_a_value = TypedForm::new(binding, roots.unit, value_a);
+    let form_a = TypedFormRef::from_artifact_ref(
+        persist(
+            store,
+            &form_a_value
+                .envelope()
+                .expect("first post-return form must encode"),
+            &form_a_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_form(form_a_value), form_a);
+    let form_b_value = TypedForm::new(binding, roots.unit, value_b);
+    let form_b = TypedFormRef::from_artifact_ref(
+        persist(
+            store,
+            &form_b_value
+                .envelope()
+                .expect("second post-return form must encode"),
+            &form_b_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_form(form_b_value), form_b);
+
+    let query = OpenQueryCatalog::resolve_open_query(catalog, roots.query)
+        .expect("source query must remain available");
+    let answer_port = query
+        .open_ports()
+        .first()
+        .expect("fixture query must retain one open answer port")
+        .port()
+        .clone();
+    let candidate_a_value = query
+        .plug(vec![PortBinding::new(answer_port.clone(), form_a)], catalog)
+        .expect("first local value must fill the already addressed query");
+    let candidate_b_value = query
+        .plug(vec![PortBinding::new(answer_port.clone(), form_b)], catalog)
+        .expect("second local value must fill the already addressed query");
+    let candidate_a = CompletionCandidateRef::from_artifact_ref(
+        persist(
+            store,
+            &candidate_a_value
+                .envelope()
+                .expect("first post-return candidate must encode"),
+            &candidate_a_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_candidate(candidate_a_value), candidate_a);
+    let candidate_b = CompletionCandidateRef::from_artifact_ref(
+        persist(
+            store,
+            &candidate_b_value
+                .envelope()
+                .expect("second post-return candidate must encode"),
+            &candidate_b_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_candidate(candidate_b_value), candidate_b);
+
+    let query_context = query.context();
+    let support_value = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Relation(query.relation()),
+        Vec::new(),
+        vec![roots.raw_return],
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        query_context.applicability(),
+        query_context.scope(),
+    )
+    .expect("post-return support environment must encode");
+    let support = SupportEnvironmentRef::from_artifact_ref(
+        persist(
+            store,
+            &support_value
+                .envelope()
+                .expect("post-return support must encode"),
+            &support_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_support(support_value), support);
+    let observation_context = RelationUseContext::new(
+        query_context.scope(),
+        query_context.applicability(),
+        query_context.grain(),
+        query_context.horizon(),
+        query_context.mode(),
+        support.as_support_ref(),
+        query_context.warrant(),
+    );
+    let observation_a_value = RelationUse::new(
+        query.relation(),
+        vec![PortBinding::new(answer_port.clone(), form_a)],
+        observation_context,
+    );
+    let observation_a = RelationUseRef::from_artifact_ref(
+        persist(
+            store,
+            &observation_a_value
+                .envelope()
+                .expect("first post-return observation must encode"),
+            &observation_a_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_relation_use(observation_a_value),
+        observation_a
+    );
+    let observation_b_value = RelationUse::new(
+        query.relation(),
+        vec![PortBinding::new(answer_port, form_b)],
+        observation_context,
+    );
+    let observation_b = RelationUseRef::from_artifact_ref(
+        persist(
+            store,
+            &observation_b_value
+                .envelope()
+                .expect("second post-return observation must encode"),
+            &observation_b_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_relation_use(observation_b_value),
+        observation_b
+    );
+
+    let decoder_value = FiniteDecoder::new(
+        roots.query,
+        roots.raw_type,
+        vec![FiniteDecoderEntry::Decoded {
+            raw_return: roots.raw_return,
+            candidates: vec![candidate_a, candidate_b],
+        }],
+    )
+    .expect("post-return finite decoder must encode");
+    let decoder = FiniteDecoderRef::from_artifact_ref(
+        persist(
+            store,
+            &decoder_value
+                .envelope()
+                .expect("post-return decoder must encode"),
+            &decoder_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_decoder(decoder_value), decoder);
+    let path_value = ResolutionPath::new(
+        roots.raw_type,
+        roots.unit,
+        ResolutionPathIR::Decode {
+            decoder: decoder.as_decoder_ref(),
+        },
+    );
+    let path = ResolutionPathRef::from_artifact_ref(
+        persist(
+            store,
+            &path_value.envelope().expect("post-return path must encode"),
+            &path_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_path(path_value), path);
+
+    OllamaPostReturnRoots {
+        decoder_version,
+        value_a,
+        value_b,
+        form_a,
+        form_b,
+        candidate_a,
+        candidate_b,
+        observation_a,
+        observation_b,
+        support,
+        decoder,
+        path,
+    }
 }
 
 #[test]
@@ -1686,7 +1949,10 @@ async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
     .expect("persisted actuality must cold replay to an admitted resumption");
     assert_eq!(replayed.actuality().event_ref(), roots.event);
     assert_eq!(replayed.actuality().raw_return_ref(), roots.raw_return);
-    assert_eq!(replayed.actuality().raw_return().bytes(), [0x41, 0, 0xff]);
+    assert_eq!(
+        replayed.actuality().raw_return().bytes(),
+        ollama_candidate_response()
+    );
     assert_eq!(replayed.resumption().event(), roots.event);
     assert_eq!(replayed.resumption().raw_return(), roots.raw_return);
     let mut expected_candidates = vec![roots.candidate_a, roots.candidate_b];
@@ -1959,5 +2225,315 @@ async fn finite_probe_executes_once_and_cold_replays_with_distinct_residuals() {
     ));
 
     store.close().await;
+    std::fs::remove_file(path).expect("temporary cold replay database must be removable");
+}
+
+#[tokio::test]
+async fn ollama_values_become_post_actuality_typed_answers_and_cold_replay_without_redispatch() {
+    let (path, roots, provider_calls, _trace, _present, _reopen) =
+        persisted_cold_replay_fixture().await;
+    let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
+    let store = ArtifactStore::open(&url)
+        .await
+        .expect("post-actuality store must reopen");
+    store
+        .migrate()
+        .await
+        .expect("embedded migrations must remain repeatable");
+    let mut catalog = load_cold_replay_catalog(&store, roots).await;
+    assert_eq!(
+        catalog.candidates.len(),
+        2,
+        "the preexisting generic fixture has no local-model candidate set"
+    );
+    let post = materialize_ollama_post_return_slice(&store, &mut catalog, roots).await;
+    let source_query = OpenQueryCatalog::resolve_open_query(&catalog, roots.query)
+        .expect("source query must remain available");
+    assert_ne!(
+        source_query.context().support(),
+        post.support.as_support_ref(),
+        "the local observation route must be formed after the actual raw return rather than reuse the pre-dispatch query support"
+    );
+
+    let source = catalog
+        .resolve_iprog(roots.source)
+        .expect("source Ask must remain available");
+    let continuation = catalog
+        .resolve_iprog(roots.continuation)
+        .expect("source continuation must remain available");
+    let runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: roots.operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    runtime
+        .verify(&catalog)
+        .expect("fresh lowering must not depend on post-return candidates");
+    let MachineStep::Suspended(suspension) = runtime
+        .step(runtime.start())
+        .expect("fresh lowering must suspend at the original probe")
+    else {
+        panic!("entry must suspend")
+    };
+    let standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            post.support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &catalog,
+    )
+    .expect("the independently formed post-return support route must close");
+    let decoder = catalog
+        .resolve_finite_decoder(post.decoder)
+        .expect("post-return decoder must be in the fresh catalog");
+    let live = replay_completed_finite_probe(
+        &store,
+        roots.token,
+        &decoder,
+        post.path,
+        &[
+            ReplayObservation::new(post.candidate_a, post.observation_a),
+            ReplayObservation::new(post.candidate_b, post.observation_b),
+        ],
+        &standing,
+        &source,
+        suspension,
+        ContinuationLowering::new(
+            continuation.iprog_ref().expect("continuation must address"),
+            BlockTarget::new(1),
+        ),
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("every decoded local candidate must admit and bind after actuality");
+    assert_eq!(live.actuality().event_ref(), roots.event);
+    assert_eq!(live.actuality().raw_return_ref(), roots.raw_return);
+    let mut expected_post_candidates = vec![post.candidate_a, post.candidate_b];
+    expected_post_candidates.sort_unstable();
+    assert_eq!(
+        live.resumption().binding().answer().candidates(),
+        expected_post_candidates
+    );
+    assert_eq!(
+        provider_calls.load(Ordering::SeqCst),
+        1,
+        "post-actuality semantic admission must not invoke the provider"
+    );
+    store.close().await;
+
+    let reopened = ArtifactStore::open(&url)
+        .await
+        .expect("cold replay store must reopen");
+    reopened
+        .migrate()
+        .await
+        .expect("embedded migrations must remain repeatable");
+    let mut cold_catalog = load_cold_replay_catalog(&reopened, roots).await;
+    let stored_raw = cold_catalog
+        .resolve_raw_return(roots.raw_return)
+        .expect("committed raw return must reload");
+    let regenerated_values =
+        materialize_ollama_decoded_texts(roots.raw_return, &stored_raw, post.decoder_version)
+            .expect("cold replay must re-run the decoder from only raw/version roots");
+    let regenerated_value_refs = regenerated_values
+        .iter()
+        .map(OllamaDecodedText::artifact_ref)
+        .collect::<Result<Vec<_>, _>>()
+        .expect("regenerated local values must address");
+    assert_eq!(regenerated_value_refs, [post.value_a, post.value_b]);
+    for reference in [post.value_a, post.value_b] {
+        let stored = load_envelope(&reopened, reference).await;
+        assert_eq!(stored.kind().as_str(), OLLAMA_DECODED_TEXT_ARTIFACT_KIND);
+        let value = OllamaDecodedText::from_envelope(&stored)
+            .expect("stored local value must retain its decoder contract");
+        value
+            .check(&stored_raw)
+            .expect("stored local value must recheck against the preserved raw return");
+    }
+
+    let binding = cold_catalog
+        .resolve_type(roots.unit)
+        .expect("answer type must reload")
+        .binding();
+    let regenerated_form_a = TypedForm::new(binding, roots.unit, post.value_a);
+    let regenerated_form_b = TypedForm::new(binding, roots.unit, post.value_b);
+    assert_eq!(
+        regenerated_form_a
+            .typed_form_ref()
+            .expect("first regenerated form must address"),
+        post.form_a
+    );
+    assert_eq!(
+        regenerated_form_b
+            .typed_form_ref()
+            .expect("second regenerated form must address"),
+        post.form_b
+    );
+    assert_eq!(cold_catalog.insert_form(regenerated_form_a), post.form_a);
+    assert_eq!(cold_catalog.insert_form(regenerated_form_b), post.form_b);
+    let query = OpenQueryCatalog::resolve_open_query(&cold_catalog, roots.query)
+        .expect("source query must reload");
+    let answer_port = query
+        .open_ports()
+        .first()
+        .expect("source query must retain its answer port")
+        .port()
+        .clone();
+    let regenerated_candidate_a = query
+        .plug(
+            vec![PortBinding::new(answer_port.clone(), post.form_a)],
+            &cold_catalog,
+        )
+        .expect("first regenerated local value must fill the source query");
+    let regenerated_candidate_b = query
+        .plug(
+            vec![PortBinding::new(answer_port.clone(), post.form_b)],
+            &cold_catalog,
+        )
+        .expect("second regenerated local value must fill the source query");
+    assert_eq!(
+        regenerated_candidate_a
+            .completion_candidate_ref()
+            .expect("first regenerated candidate must address"),
+        post.candidate_a
+    );
+    assert_eq!(
+        regenerated_candidate_b
+            .completion_candidate_ref()
+            .expect("second regenerated candidate must address"),
+        post.candidate_b
+    );
+    assert_eq!(
+        cold_catalog.insert_candidate(regenerated_candidate_a),
+        post.candidate_a
+    );
+    assert_eq!(
+        cold_catalog.insert_candidate(regenerated_candidate_b),
+        post.candidate_b
+    );
+    let support = SupportEnvironmentArtifact::from_envelope(
+        &load_envelope(&reopened, post.support.as_artifact_ref()).await,
+    )
+    .expect("post-return support must reload");
+    assert_eq!(cold_catalog.insert_support(support), post.support);
+    for reference in [post.observation_a, post.observation_b] {
+        let use_value = RelationUse::from_envelope(
+            &load_envelope(&reopened, reference.as_artifact_ref()).await,
+        )
+        .expect("post-return observation must reload");
+        assert_eq!(cold_catalog.insert_relation_use(use_value), reference);
+    }
+    let replay_decoder = FiniteDecoder::from_envelope(
+        &load_envelope(&reopened, post.decoder.as_artifact_ref()).await,
+    )
+    .expect("post-return decoder must reload");
+    assert_eq!(
+        cold_catalog.insert_decoder(replay_decoder.clone()),
+        post.decoder
+    );
+    let replay_path =
+        ResolutionPath::from_envelope(&load_envelope(&reopened, post.path.as_artifact_ref()).await)
+            .expect("post-return path must reload");
+    assert_eq!(cold_catalog.insert_path(replay_path), post.path);
+    let replay_source = cold_catalog
+        .resolve_iprog(roots.source)
+        .expect("source Ask must reload");
+    let replay_continuation = cold_catalog
+        .resolve_iprog(roots.continuation)
+        .expect("source continuation must reload");
+    let replay_runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: roots.operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    replay_runtime
+        .verify(&cold_catalog)
+        .expect("cold regenerated lowering must verify");
+    let MachineStep::Suspended(replay_suspension) = replay_runtime
+        .step(replay_runtime.start())
+        .expect("cold regenerated lowering must suspend")
+    else {
+        panic!("cold entry must suspend")
+    };
+    let replay_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            post.support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &cold_catalog,
+    )
+    .expect("cold post-return support must reconstruct standing");
+    let replayed = replay_completed_finite_probe(
+        &reopened,
+        roots.token,
+        &replay_decoder,
+        post.path,
+        &[
+            ReplayObservation::new(post.candidate_a, post.observation_a),
+            ReplayObservation::new(post.candidate_b, post.observation_b),
+        ],
+        &replay_standing,
+        &replay_source,
+        replay_suspension,
+        ContinuationLowering::new(
+            replay_continuation
+                .iprog_ref()
+                .expect("cold continuation must address"),
+            BlockTarget::new(1),
+        ),
+        &replay_runtime,
+        &cold_catalog,
+    )
+    .await
+    .expect("cold replay must bind the regenerated full local candidate set");
+    assert_eq!(replayed.actuality().event_ref(), roots.event);
+    assert_eq!(replayed.actuality().raw_return_ref(), roots.raw_return);
+    assert_eq!(
+        replayed.resumption().binding().answer().candidates(),
+        expected_post_candidates
+    );
+    assert_eq!(
+        provider_calls.load(Ordering::SeqCst),
+        1,
+        "cold replay must never redispatch the local-model provider"
+    );
+    reopened.close().await;
     std::fs::remove_file(path).expect("temporary cold replay database must be removable");
 }

@@ -109,12 +109,18 @@ after a file-backed restart; the active typed-completion chain uses the Ollama v
 The next dependency chain is:
 
 ```text
-stored successful local-model return and decoder version
--> typed forms and completion candidates over every regenerated decoded value
+fresh successful local-model return and decoder version
+-> post-actuality typed forms and completion candidates over every regenerated decoded value
 -> independently supported answer admission using post-return environments
 -> capture-safe continuation binding and runtime resumption
 -> the same protected result after restart with zero redispatch
 ```
+
+The deterministic `PROVIDER-001D` composition now passes from an already committed
+Ollama-shaped event: no candidate, support, decoder, or observation is created until after that
+event, and restart regenerates the same two-candidate binding without redispatch. The remaining
+`PROVIDER-001E` discriminator is to make the event itself originate from the installed local model
+inside that one complete fixture.
 
 Do not let a provider or credential residual collapse transport actuality into semantic `Unknown`,
 and do not predeclare support for an unpredictable content-addressed return. If the existing support

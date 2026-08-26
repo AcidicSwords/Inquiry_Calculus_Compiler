@@ -14,6 +14,10 @@ decoded. OpenAI remains an optional secondary adapter whose current credential r
 next executable obligation are recorded in `CONFORMANCE_STATUS.md` and
 `IMPLEMENTATION_FRONTIER.md`.
 
+The deterministic continuation fixture now carries an Ollama-shaped committed return through typed
+candidate creation, post-return support, admission, binding, and cold replay. The remaining local
+provider fixture must originate that same full chain from a fresh local-model call.
+
 ## Authority by question
 
 Authority is scoped to the question it answers rather than treated as one global

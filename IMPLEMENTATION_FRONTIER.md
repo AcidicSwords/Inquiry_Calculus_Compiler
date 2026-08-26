@@ -147,21 +147,29 @@ HTTP 401; `F-0001` remains an optional-provider constraint rather than the activ
 > ordinal, and text drift remain distinguishable. No table, opcode, session, or semantic support
 > is added.
 
-The strongest executable obligation is now `PROVIDER-001D`:
+`PROVIDER-001D`, the deterministic post-actuality typed replay slice, is demonstrated:
 
 > Convert every regenerated decoded value into a typed completion for the already addressed
 > source question; persist only the irreducible form/candidate, decoder/path, and
 > post-return support artifacts needed for exact restart; then drive the whole set through support,
 > capture-safe binding, admitted resumption, and zero-redispatch cold replay.
 
-Use the successful local Ollama return and deterministic equivalent fixtures. Regenerate every post-return
-artifact from the stored raw frame and decoder version after restart; do not reuse pre-crash candidates, decoder,
-support, standing, binding, suspension, or lowering. If exact typed value identity cannot be
-regenerated from raw return plus declared decoder version, preserve that as a named replay-recipe
-breaker before adding canonical structure. Do not weaken support, pre-warrant generated output,
-choose a singleton implicitly, or add a provider framework, scheduler, model policy, credential
-store, semantic opcode, table, or crate. OpenAI live acceptance is independent and may be rerun only
-after `F-0001`'s reopen condition changes.
+The fixture begins from an already committed Ollama-shaped raw event. It materializes two values,
+then creates their forms, candidates, post-return support, observations, decoder, and path only
+after actuality. It checks the complete answer binding and resumption, closes the store, reconstructs
+values from raw/version roots, and replays the same bound candidate set without another dispatch.
+It proves deterministic composition of the live-provider boundary, not that a fresh live Ollama
+call has yet traversed every semantic step in one fixture.
+
+The strongest executable obligation is now `PROVIDER-001E`:
+
+> Run that same post-actuality typed/replay composition from one freshly dispatched local Ollama
+> return, with no pre-existing candidate, support, decoder, or observation artifacts; preserve a
+> replayable root set and verify zero redispatch after restart.
+
+Do not weaken support, pre-warrant generated output, choose a singleton implicitly, or add a
+provider framework, scheduler, model policy, credential store, semantic opcode, table, or crate.
+OpenAI live acceptance is independent and may be rerun only after `F-0001`'s reopen condition changes.
 
 The protected difference is visible in the accepted sources:
 

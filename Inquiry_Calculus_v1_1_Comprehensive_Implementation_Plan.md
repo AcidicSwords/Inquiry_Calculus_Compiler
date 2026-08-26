@@ -4110,6 +4110,12 @@ Post-return observation
 support remains separate from pre-dispatch query support, while exact standing closure and
 raw-return coverage remain mandatory.
 
+The deterministic `PROVIDER-001D` fixture now takes a committed Ollama-shaped event through
+post-return values, typed forms, complete candidates, distinct support, exact standing, binding,
+resumption, and file-backed zero-redispatch replay. The next `PROVIDER-001E` fixture must begin
+with one fresh local Ollama call and create none of those semantic artifacts before its raw event
+is committed.
+
 Later phase constraints are deliberately local:
 
 - Phase 8 preserves ledger order versus causal order, resume versus replay, and endpoint versus
@@ -4382,8 +4388,8 @@ its full specification.
 Advance the current implementation in this order:
 
 ```text
-1. PROVIDER-001D
-   successful local Ollama body -> post-actuality multi-completion decode
+1. PROVIDER-001E
+   fresh local Ollama body -> post-actuality multi-completion decode
    -> independent support -> binding/resumption -> zero-redispatch cold replay
 
 2. Phase 8/9 generalization
