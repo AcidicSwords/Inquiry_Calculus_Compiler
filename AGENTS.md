@@ -29,6 +29,73 @@ Do not ask a question when every supported answer leads to the same continuation
 
 ---
 
+## Companion control documents
+
+This repository uses three deliberately separate control documents.
+
+### `AGENTS.md` — repository-wide execution protocol
+
+This file governs **how consequential work is performed**:
+
+- authority by question;
+- `Pure / Generate / Probe / Check / Warrant`;
+- actual-return preservation;
+- typed answer-dependent continuations;
+- reciprocal challenge when consequential;
+- separator, subtraction, regeneration, stopping, recurrence;
+- test/change gates;
+- no-self-warrant;
+- Git/filesystem safety.
+
+Its detailed first-order `IProg` is the normative compilation target of the engineering protocol.
+
+### `PERSISTENT_CODEX_GOAL.md` — standing autonomous objective
+
+This file governs **what the implementation agent is persistently trying to accomplish** when no narrower user instruction supersedes it.
+
+It supplies:
+
+- the long-horizon implementation goal;
+- autonomous continuation rules;
+- the software-native perceptual reasoning aperture;
+- sufficient-present development-state discipline;
+- the rule for generating the next implementation obligation from the current residual.
+
+A new user request may narrow or temporarily redirect the active task. When that request is satisfied, resume the persistent goal unless the user changed or revoked it.
+
+### `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` — research context and implementation deltas
+
+This file is a **self-contained checkpoint of what the separate, still-running research/domain-crawl recursion has established so far** and how those results bear on implementation. The implementation agent is not expected to possess the research conversation, its working ledgers, or its in-progress documents. Do not search for missing research files before using the handoff; everything currently required from research is restated there.
+
+It is not independent semantic authority, and it is intentionally revisable as the separate research process advances.
+
+Use it to distinguish:
+
+- research-derived reasoning discipline that can be used immediately;
+- fixture-ready breakers;
+- architecture constraints for later phases;
+- implementation-ready derived macros/contracts;
+- rejected overclaims;
+- research-only open questions.
+
+If this handoff conflicts with the canonical specification, the canonical specification governs meaning. If it conflicts with an accepted implementation decision in the decision's recorded scope, reopen the decision only through its recorded reopen condition or a newly witnessed protected breaker.
+
+A later handoff revision may supersede an earlier research conclusion without implying a semantic-authority change. Treat the changed research statement as a new candidate constraint: map it to the canonical calculus, locate the earliest implementation boundary it could affect, and require an executable breaker before changing accepted implementation behavior.
+
+### Default autonomous invocation
+
+When invoked without a narrower explicit task:
+
+1. read `PERSISTENT_CODEX_GOAL.md`;
+2. reconstruct the current implementation state from repository actuality;
+3. read `IMPLEMENTATION_FRONTIER.md`;
+4. consult `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` for applicable research-derived constraints;
+5. execute the principal development program in this file on the strongest live executable obligation;
+6. after a warranted local ratchet, update the project-state files and continue to the next residual without waiting for a new user instruction.
+
+Do not ask the user to choose a continuation that the repository, authority files, tests, or lawful probes can determine.
+
+
 # I. Engineering protocol
 
 ## 1. Authority is indexed by the question
@@ -38,9 +105,11 @@ Authority is not one total ordering for every kind of claim. First identify the 
 | Question being answered | Governing source |
 |---|---|
 | What did the user authorize, and what delivery is in scope? | The explicit user request and subsequently accepted task contract. |
-| What does Inquiry Calculus v1.1 mean? | `Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex` and accepted additions, including the paired-actuality addition and the adopted positive-negation successor semantics. |
+| What does Inquiry Calculus v1.1 mean? | `Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex` (Positive-Negation Successor Edition, 25 August 2026). |
 | How should that meaning be implemented, and in what order? | `Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md`. |
+| What is the standing autonomous project objective when no narrower user task supersedes it? | `PERSISTENT_CODEX_GOAL.md`, constrained by the semantic authority and implementation plan. |
 | What is the strongest unresolved implementation obligation now? | `IMPLEMENTATION_FRONTIER.md`. |
+| What research-derived implementation constraints or later-phase deltas are currently known? | `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md`, as derived guidance only; it cannot silently amend canonical semantics. |
 | Which local implementation choices have been accepted? | `DECISIONS.jsonl`, within each decision's recorded scope and reopen condition. |
 | What does the repository or an external system actually contain or do? | Files, Git state, builds, tests, runtime traces, tools, providers, and their preserved raw returns. |
 | What behavior has been demonstrated under admitted checks? | Tests and `CONFORMANCE_STATUS.md`, limited to the distinctions and coverage those checks actually establish. |
@@ -96,6 +165,7 @@ The following are cached answers. Apply them without reopening unless the stated
 | What happens when the admitted representation cannot express an independently witnessed distinction? | Open a representation or binding-extension problem. Do not search forever inside the same language or declare equivalence. | A separator is found within the existing admitted language. |
 | What does a typed distinction schema provide? | `D = (X, Y, B_D, pi_X, pi_Y, Gamma_D)` provides typed candidate carriers, boundary incidence, projections, and a downstream compatibility predicate. Projection does not create exteriority. | An accepted semantic successor changes the distinction schema. |
 | What is the standing source determination for reciprocal work? | A supported claim-local `DeterminationPresentation`, indexed by scope, applicability, grain, horizon, and provenance; it is not an assertion of all facts. | Phase 4 breakers require a broader or narrower admitted presentation. |
+| How is support partitioned at the current departure boundary? | The determination presentation resolves through its own exact claim-targeted support environment; source-observation, candidate-observation, and incompatibility relation uses each retain their own exact relation-targeted support environment. Resolving those routes is structural provenance, not standing/admission of the evidence uses. | A typed aggregate/bridge is accepted, a support-closure law independently evaluates relation-targeted evidence, or the canonical departure-support contract changes. |
 | What establishes departure? | A positive, relevant, non-circular `DepartureWitness` against the standing presentation. Failed equality, search, retrieval, projection, or mere non-equivalence is insufficient. | An accepted semantic successor changes the witness obligation. |
 | What does incomplete departure or negation coverage mean? | `Unknown`, not negative evidence and not an exterior. | Coverage is completed by an admitted route or the governing semantics changes. |
 | What is contextual negation? | An oriented, typed, supported `NegationUse` with immutable use identity. Classical formula negation remains distinct. | An accepted semantic successor unifies or replaces the two notions. |
@@ -119,7 +189,7 @@ Apply this program to consequential work. Collapse trivial steps whose answers a
 
 Run `ENSURE` before editing:
 
-- identify the explicit task, authorization boundary, acceptance conditions, and behaviors that must remain invariant;
+- identify the explicit task; if no narrower task is active, bind the task to the standing objective in `PERSISTENT_CODEX_GOAL.md`; identify the authorization boundary, acceptance conditions, and behaviors that must remain invariant;
 - identify the governing sources by question type and their current versions;
 - inspect the smallest sufficient repository actuality, including relevant files, symbols, data flow, tests, schema, history, and worktree state;
 - state the protected scope, applicability, grain, horizon, and admitted checks;
@@ -127,6 +197,8 @@ Run `ENSURE` before editing:
 - initialize a state fingerprint, a finite live frontier, and decreasing fuel for recurrence.
 
 Repository search yields candidate loci, not responsibility. Confirm the forward path from a candidate to the requested behavior before treating it as causal.
+
+For consequential design/debugging, construct the software frame before selecting a patch: identify the relevant boundary, admissible occupants, actual occupants, arrangement, typed relational paths, and protected consequences. Do not substitute file proximity, symbol proximity, or lexical similarity for relational responsibility. This is an engineering search discipline, not a new calculus primitive or runtime opcode.
 
 ### 3.2 Resolve an early stop if one is justified
 

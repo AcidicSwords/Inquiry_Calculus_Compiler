@@ -17,16 +17,21 @@ priority list.
 | Task scope and delivery | Explicit user request |
 | Standing semantics | `Inquiry_Calculus_Unified_Canonical_Specification_v1_1.tex` and the accepted paired addition |
 | Architecture and phase order | `Inquiry_Calculus_v1_1_Comprehensive_Implementation_Plan.md` |
+| Standing autonomous implementation objective | `PERSISTENT_CODEX_GOAL.md`, constrained by standing semantics and architecture |
 | Strongest live implementation question | `IMPLEMENTATION_FRONTIER.md` |
+| Research-derived implementation guidance | `PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md`, as a revisable checkpoint rather than semantic authority |
 | Accepted local choices | `DECISIONS.jsonl` |
 | Repository actuality | Code, Git state, builds, tests, and tool returns |
 | Demonstrated conformance | Tests and `CONFORMANCE_STATUS.md` |
 | Observed constraints | `FAILURES.jsonl` |
 
-`AGENTS.md` compiles repository work into an inspectable, answer-dependent inquiry
-program. A still-supported instruction is a cached answer, not a reason to reopen a
-settled question. The paired-actuality addition remains an explanatory, derived
-addition and does not introduce a second history ontology.
+The repository uses three separate control documents. `AGENTS.md` compiles consequential
+work into an inspectable, answer-dependent inquiry program; `PERSISTENT_CODEX_GOAL.md`
+supplies the long-horizon autonomous objective; and
+`PROJECT_RESEARCH_IMPLEMENTATION_HANDOFF.md` carries self-contained, revisable research
+constraints into the live implementation frontier. A still-supported instruction is a cached
+answer, not a reason to reopen a settled question. The paired-actuality addition remains an
+explanatory, derived addition and does not introduce a second history ontology.
 
 The predecessor implementation plan and canonical specification remain retrievable at
 Git commit `49dc381ac230326aa28be6c157ece0d21a31eaa2` as ancestry and regression
