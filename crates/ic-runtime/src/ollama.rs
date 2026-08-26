@@ -6,13 +6,20 @@
 
 use std::{collections::BTreeSet, time::Duration};
 
-use ic_core::{ArtifactRef, BackendRequest};
+use ic_core::{
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BackendRequest, RawReturn,
+    RawReturnError, RawReturnRef,
+};
 use thiserror::Error;
 
 use crate::{ProbeProvider, ProviderReturn};
 
 /// Default local Ollama non-streaming generation endpoint.
 pub const OLLAMA_GENERATE_ENDPOINT: &str = "http://127.0.0.1:11434/api/generate";
+/// Canonical artifact kind for one deterministically decoded local-model string value.
+pub const OLLAMA_DECODED_TEXT_ARTIFACT_KIND: &str = "ic.ollama-decoded-text";
+/// Schema version for one deterministically decoded local-model string value.
+pub const OLLAMA_DECODED_TEXT_SCHEMA_VERSION: u32 = 1;
 const OLLAMA_HTTP_RESPONSE_DOMAIN: &[u8] = b"inquiry-calculus:ollama-http-response\0";
 const OLLAMA_HTTP_RESPONSE_VERSION: u16 = 1;
 
@@ -120,6 +127,164 @@ impl DecodedOllamaCandidates {
     }
 }
 
+/// One content-addressed text value regenerated from an exact Ollama return and decoder version.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct OllamaDecodedText {
+    raw_return: RawReturnRef,
+    decoder_version: ArtifactRef,
+    candidate_ordinal: u32,
+    text: String,
+}
+
+impl OllamaDecodedText {
+    #[must_use]
+    pub const fn new(
+        raw_return: RawReturnRef,
+        decoder_version: ArtifactRef,
+        candidate_ordinal: u32,
+        text: String,
+    ) -> Self {
+        Self {
+            raw_return,
+            decoder_version,
+            candidate_ordinal,
+            text,
+        }
+    }
+
+    #[must_use]
+    pub const fn raw_return(&self) -> RawReturnRef {
+        self.raw_return
+    }
+
+    #[must_use]
+    pub const fn decoder_version(&self) -> ArtifactRef {
+        self.decoder_version
+    }
+
+    #[must_use]
+    pub const fn candidate_ordinal(&self) -> u32 {
+        self.candidate_ordinal
+    }
+
+    #[must_use]
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+
+    pub fn canonical_payload(&self) -> Result<Vec<u8>, OllamaDecodedTextError> {
+        let text_len = u32::try_from(self.text.len())
+            .map_err(|_| OllamaDecodedTextError::TextTooLong(self.text.len()))?;
+        let mut payload = Vec::with_capacity(72 + self.text.len());
+        payload.extend_from_slice(self.raw_return.as_artifact_ref().as_bytes());
+        payload.extend_from_slice(self.decoder_version.as_bytes());
+        payload.extend_from_slice(&self.candidate_ordinal.to_be_bytes());
+        payload.extend_from_slice(&text_len.to_be_bytes());
+        payload.extend_from_slice(self.text.as_bytes());
+        Ok(payload)
+    }
+
+    pub fn envelope(&self) -> Result<ArtifactEnvelope, OllamaDecodedTextError> {
+        Ok(ArtifactEnvelope::from_canonical_payload(
+            ArtifactKind::new(OLLAMA_DECODED_TEXT_ARTIFACT_KIND)?,
+            OLLAMA_DECODED_TEXT_SCHEMA_VERSION,
+            self.canonical_payload()?,
+        ))
+    }
+
+    pub fn artifact_ref(&self) -> Result<ArtifactRef, OllamaDecodedTextError> {
+        Ok(self.envelope()?.artifact_ref()?)
+    }
+
+    pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, OllamaDecodedTextError> {
+        if envelope.kind().as_str() != OLLAMA_DECODED_TEXT_ARTIFACT_KIND {
+            return Err(OllamaDecodedTextError::UnexpectedArtifactKind {
+                expected: OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
+                actual: envelope.kind().as_str().to_owned(),
+            });
+        }
+        if envelope.schema_version() != OLLAMA_DECODED_TEXT_SCHEMA_VERSION {
+            return Err(OllamaDecodedTextError::UnsupportedSchemaVersion(
+                envelope.schema_version(),
+            ));
+        }
+        let payload = envelope.canonical_payload();
+        if payload.len() < 72 {
+            return Err(OllamaDecodedTextError::TruncatedPayload);
+        }
+        let raw_return = RawReturnRef::from_artifact_ref(ArtifactRef::from_bytes(
+            payload[0..32]
+                .try_into()
+                .map_err(|_| OllamaDecodedTextError::TruncatedPayload)?,
+        ));
+        let decoder_version = ArtifactRef::from_bytes(
+            payload[32..64]
+                .try_into()
+                .map_err(|_| OllamaDecodedTextError::TruncatedPayload)?,
+        );
+        let candidate_ordinal = u32::from_be_bytes(
+            payload[64..68]
+                .try_into()
+                .map_err(|_| OllamaDecodedTextError::TruncatedPayload)?,
+        );
+        let text_len = u32::from_be_bytes(
+            payload[68..72]
+                .try_into()
+                .map_err(|_| OllamaDecodedTextError::TruncatedPayload)?,
+        );
+        let text_len =
+            usize::try_from(text_len).map_err(|_| OllamaDecodedTextError::TextLengthOverflow)?;
+        let text_bytes = payload
+            .get(72..)
+            .ok_or(OllamaDecodedTextError::TruncatedPayload)?;
+        if text_bytes.len() != text_len {
+            return Err(OllamaDecodedTextError::TextLengthMismatch {
+                declared: text_len,
+                actual: text_bytes.len(),
+            });
+        }
+        let text = String::from_utf8(text_bytes.to_vec())
+            .map_err(|_| OllamaDecodedTextError::InvalidTextUtf8)?;
+        Ok(Self::new(
+            raw_return,
+            decoder_version,
+            candidate_ordinal,
+            text,
+        ))
+    }
+
+    #[must_use]
+    pub const fn referenced_artifacts(&self) -> [ArtifactRef; 2] {
+        [self.raw_return.as_artifact_ref(), self.decoder_version]
+    }
+
+    /// Replays this value from the exact raw return and decoder contract.
+    pub fn check(&self, raw_return: &RawReturn) -> Result<(), OllamaDecodedTextCheckError> {
+        let calculated = raw_return.raw_return_ref()?;
+        if calculated != self.raw_return {
+            return Err(OllamaDecodedTextCheckError::RawReturnIdentityMismatch {
+                expected: self.raw_return,
+                actual: calculated,
+            });
+        }
+        let decoded = decode_ollama_candidate_response(raw_return.bytes())?;
+        let ordinal = usize::try_from(self.candidate_ordinal)
+            .map_err(|_| OllamaDecodedTextCheckError::CandidateOrdinalOverflow)?;
+        let actual = decoded.candidates().get(ordinal).ok_or(
+            OllamaDecodedTextCheckError::CandidateOrdinalMissing {
+                ordinal: self.candidate_ordinal,
+                count: decoded.candidates().len(),
+            },
+        )?;
+        if actual != &self.text {
+            return Err(OllamaDecodedTextCheckError::CandidateTextMismatch {
+                ordinal: self.candidate_ordinal,
+            });
+        }
+        Ok(())
+    }
+}
+
 /// Decodes the schema-constrained `{ "candidates": [..] }` string inside an Ollama response.
 pub fn decode_ollama_candidate_response(
     bytes: &[u8],
@@ -178,6 +343,37 @@ fn required_string(
         .and_then(serde_json::Value::as_str)
         .map(str::to_owned)
         .ok_or(OllamaResponseDecodeError::MissingString(field))
+}
+
+/// Deterministically materializes all text values from one preserved local-model return.
+pub fn materialize_ollama_decoded_texts(
+    raw_return: RawReturnRef,
+    raw: &RawReturn,
+    decoder_version: ArtifactRef,
+) -> Result<Vec<OllamaDecodedText>, OllamaDecodedTextCheckError> {
+    let calculated = raw.raw_return_ref()?;
+    if calculated != raw_return {
+        return Err(OllamaDecodedTextCheckError::RawReturnIdentityMismatch {
+            expected: raw_return,
+            actual: calculated,
+        });
+    }
+    let decoded = decode_ollama_candidate_response(raw.bytes())?;
+    decoded
+        .candidates
+        .into_iter()
+        .enumerate()
+        .map(|(ordinal, text)| {
+            let ordinal = u32::try_from(ordinal)
+                .map_err(|_| OllamaDecodedTextCheckError::CandidateOrdinalOverflow)?;
+            Ok(OllamaDecodedText::new(
+                raw_return,
+                decoder_version,
+                ordinal,
+                text,
+            ))
+        })
+        .collect()
 }
 
 /// One narrow synchronous local Ollama provider.
@@ -306,4 +502,46 @@ pub enum OllamaResponseDecodeError {
     EmptyCandidate,
     #[error("Ollama generated response repeats candidate {0:?}")]
     DuplicateCandidate(String),
+}
+
+#[derive(Debug, Error)]
+pub enum OllamaDecodedTextError {
+    #[error(transparent)]
+    Artifact(#[from] ArtifactError),
+    #[error("Ollama decoded text is too long: {0} UTF-8 bytes")]
+    TextTooLong(usize),
+    #[error("Ollama decoded text payload is truncated")]
+    TruncatedPayload,
+    #[error("Ollama decoded text length overflows this platform")]
+    TextLengthOverflow,
+    #[error("Ollama decoded text declares {declared} bytes but carries {actual}")]
+    TextLengthMismatch { declared: usize, actual: usize },
+    #[error("Ollama decoded text bytes are not valid UTF-8")]
+    InvalidTextUtf8,
+    #[error("expected artifact kind {expected:?}, got {actual:?}")]
+    UnexpectedArtifactKind {
+        expected: &'static str,
+        actual: String,
+    },
+    #[error("unsupported Ollama decoded text schema version {0}")]
+    UnsupportedSchemaVersion(u32),
+}
+
+#[derive(Debug, Error)]
+pub enum OllamaDecodedTextCheckError {
+    #[error(transparent)]
+    RawReturn(#[from] RawReturnError),
+    #[error(transparent)]
+    Decode(#[from] OllamaResponseDecodeError),
+    #[error("raw return identity is {actual}, not expected {expected}")]
+    RawReturnIdentityMismatch {
+        expected: RawReturnRef,
+        actual: RawReturnRef,
+    },
+    #[error("candidate ordinal cannot be represented on this platform")]
+    CandidateOrdinalOverflow,
+    #[error("candidate ordinal {ordinal} is absent from decoded set of size {count}")]
+    CandidateOrdinalMissing { ordinal: u32, count: usize },
+    #[error("candidate text at ordinal {ordinal} differs from the decoded raw return")]
+    CandidateTextMismatch { ordinal: u32 },
 }

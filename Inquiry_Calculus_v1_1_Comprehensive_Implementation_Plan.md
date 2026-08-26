@@ -4104,7 +4104,9 @@ The local transport prefix passes deterministic success/failure tests and one li
 probe. The installed model returned two distinct candidates, and `dispatch_probe` committed the raw
 frame and event before the decoder inspected either candidate. The OpenAI transport/decoder and
 `ic.openai-decoded-text/v1` replay fixtures remain valid secondary evidence; its live HTTP 401 is
-recorded as `F-0001` but no longer blocks the active provider sequence. Post-return observation
+recorded as `F-0001` but no longer blocks the active provider sequence. Local candidates now also
+regenerate as `ic.ollama-decoded-text/v1` values from only raw return and decoder-version roots.
+Post-return observation
 support remains separate from pre-dispatch query support, while exact standing closure and
 raw-return coverage remain mandatory.
 

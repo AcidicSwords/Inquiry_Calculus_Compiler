@@ -24,9 +24,11 @@ use ic_core::{
     TypeError, TypeRef, TypedForm, TypedFormRef,
 };
 pub use ollama::{
-    DecodedOllamaCandidates, OLLAMA_GENERATE_ENDPOINT, OllamaGenerateProvider, OllamaHttpResponse,
-    OllamaHttpResponseError, OllamaProviderError, OllamaResponseDecodeError,
-    decode_ollama_candidate_response,
+    DecodedOllamaCandidates, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OLLAMA_DECODED_TEXT_SCHEMA_VERSION,
+    OLLAMA_GENERATE_ENDPOINT, OllamaDecodedText, OllamaDecodedTextCheckError,
+    OllamaDecodedTextError, OllamaGenerateProvider, OllamaHttpResponse, OllamaHttpResponseError,
+    OllamaProviderError, OllamaResponseDecodeError, decode_ollama_candidate_response,
+    materialize_ollama_decoded_texts,
 };
 pub use openai::{
     DecodedOpenAiJsonArray, OPENAI_DECODED_TEXT_ARTIFACT_KIND, OPENAI_DECODED_TEXT_SCHEMA_VERSION,

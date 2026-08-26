@@ -102,8 +102,9 @@ The OpenAI heterogeneous-output decoder and Ollama schema-response decoder both 
 candidates without claiming support. The positive identity-cycle
 breaker was also resolved: observation support may be formed after the raw return while every other
 occurrence-context field remains fixed, and exact standing/raw-return admission still applies.
-Each decoded string now has a minimal content-addressed value identity over raw return, decoder
-version, ordinal, and exact text; those identities regenerate after a file-backed restart.
+Each decoded string now has a provider-specific minimal content-addressed value identity over raw
+return, decoder version, ordinal, and exact text. Both OpenAI and Ollama value identities regenerate
+after a file-backed restart; the active typed-completion chain uses the Ollama values.
 
 The next dependency chain is:
 

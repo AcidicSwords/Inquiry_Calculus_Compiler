@@ -138,10 +138,11 @@ HTTP 401; `F-0001` remains an optional-provider constraint rather than the activ
 > other occurrence-context field remains fixed; admission still requires that exact environment
 > to close in standing and name the committed raw return.
 
-`PROVIDER-001C`, deterministic decoded-value materialization, is demonstrated:
+`PROVIDER-001C`, deterministic decoded-value materialization, is demonstrated for both adapters:
 
-> Each candidate becomes an `ic.openai-decoded-text/v1` value addressed by exact raw return,
-> decoder version, ordinal, and UTF-8 text. A file-backed restart reloads only raw return and
+> Each candidate becomes a provider-specific `ic.openai-decoded-text/v1` or
+> `ic.ollama-decoded-text/v1` value addressed by exact raw return, decoder version, ordinal, and
+> UTF-8 text. A file-backed restart reloads only raw return and
 > decoder-version roots, reruns decoding, and regenerates the same value references. Version,
 > ordinal, and text drift remain distinguishable. No table, opcode, session, or semantic support
 > is added.
