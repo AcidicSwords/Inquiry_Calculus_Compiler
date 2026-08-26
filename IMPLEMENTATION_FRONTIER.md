@@ -356,6 +356,11 @@ limited to a fresh declared route, the latter to a route outside the declared re
 separator problem. Neither selects a route, establishes expressibility failure, or admits a
 binding extension.
 
+Phase 15 now has finite declared `BindingBridgeIR` transport and a target-only strict-growth
+witness for conservative observational extension. It rechecks named query/schema bindings but
+does not establish transport for every old question, preservation of interpretations, a binding
+admission, or any inclusion under rebinding.
+
 ## Known later questions
 
 These are recorded now but do not outrank the Phase 4 determination boundary:

@@ -5,6 +5,7 @@
 
 mod artifact;
 mod boundary;
+mod bridge;
 mod claim;
 mod context;
 mod cue;
@@ -43,6 +44,7 @@ pub use artifact::{
 pub use boundary::{
     BOUNDARY_CHART_ARTIFACT_KIND, BOUNDARY_CHART_SCHEMA_VERSION, BoundaryChart, BoundaryChartError,
 };
+pub use bridge::{BindingBridgeCheckError, BindingBridgeError, BindingBridgeIR, BindingChangeKind};
 pub use claim::{
     CLAIM_ARTIFACT_KIND, CLAIM_SCHEMA_VERSION, ClaimArtifact, ClaimCatalog, ClaimCheckError,
     ClaimError, ClaimStatus,
