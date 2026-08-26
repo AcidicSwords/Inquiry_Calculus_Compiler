@@ -6,9 +6,10 @@ use ic_core::{
     SurfacePlan, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypedForm, TypedFormRef,
 };
 use ic_runtime::{
-    BasicBlock, BlockTarget, MachineStep, OpenAiHttpResponse, OpenAiResponsesProvider,
-    ProbeDispatchContext, ProbeDispatchError, ProbeProvider, ProgramIR, ProviderReturn,
-    RuntimeCatalog, Terminator, dispatch_probe,
+    BasicBlock, BlockTarget, MachineStep, OllamaGenerateProvider, OllamaHttpResponse,
+    OpenAiHttpResponse, OpenAiResponsesProvider, ProbeDispatchContext, ProbeDispatchError,
+    ProbeProvider, ProgramIR, ProviderReturn, RuntimeCatalog, Terminator,
+    decode_ollama_candidate_response, dispatch_probe,
 };
 use ic_store::{ArtifactStore, DispatchToken, ExternalEffectState};
 use thiserror::Error;
@@ -331,6 +332,71 @@ async fn live_openai_response_is_committed_before_json_interpretation() {
             .is_some_and(|output| !output.is_empty()),
         "completed live response must carry at least one output item"
     );
+}
+
+#[tokio::test]
+#[ignore = "requires local Ollama with qwen3.5:9b"]
+async fn live_ollama_response_is_committed_before_candidate_interpretation() {
+    let request_json = serde_json::to_vec(&serde_json::json!({
+        "model": "qwen3.5:9b",
+        "prompt": "Return exactly two distinct one-word candidate completions.",
+        "stream": false,
+        "think": false,
+        "options": {"temperature": 0},
+        "format": {
+            "type": "object",
+            "properties": {
+                "candidates": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "minItems": 2,
+                    "maxItems": 2
+                }
+            },
+            "required": ["candidates"],
+            "additionalProperties": false
+        }
+    }))
+    .expect("live Ollama request must encode");
+    let fixture = fixture_with_request_body(&request_json).await;
+    let MachineStep::Suspended(suspension) = fixture
+        .runtime
+        .step(fixture.runtime.start())
+        .expect("live runtime must step to its probe")
+    else {
+        panic!("live runtime entry must suspend")
+    };
+    let mut provider = OllamaGenerateProvider::new(fixture.request_body, request_json)
+        .expect("local Ollama provider must configure");
+    let actual = dispatch_probe(
+        &fixture.store,
+        suspension,
+        DispatchToken::from_bytes([0xd2; 32]),
+        fixture.request,
+        fixture.context,
+        &mut provider,
+    )
+    .await
+    .expect("live Ollama return must commit as ordinary actuality");
+
+    assert!(
+        fixture
+            .store
+            .get(actual.raw_return_ref().as_artifact_ref())
+            .await
+            .expect("committed live raw return must reload")
+            .is_some()
+    );
+    assert_eq!(actual.event().raw_return(), actual.raw_return_ref());
+    let transport = OllamaHttpResponse::decode(actual.raw_return().bytes())
+        .expect("committed provider transport return must decode after actuality");
+    assert_eq!(transport.status(), 200, "local model request must succeed");
+    let decoded = decode_ollama_candidate_response(actual.raw_return().bytes())
+        .expect("candidate interpretation occurs only after committed actuality");
+    assert_eq!(decoded.model(), "qwen3.5:9b");
+    assert_eq!(decoded.done_reason(), "stop");
+    assert_eq!(decoded.candidates().len(), 2);
+    assert_ne!(decoded.candidates()[0], decoded.candidates()[1]);
 }
 
 #[tokio::test]

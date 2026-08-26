@@ -90,15 +90,16 @@ TRACE-001 paired question/return actuality with path-sensitive provenance
 PRESENT-001 exact finite sufficient-present factorization and positive reopening witness
 ```
 
-The current Phase 10 ratchet is a real-provider vertical slice. A narrow OpenAI Responses adapter
-now preserves a versioned `HTTP status + exact body` frame through the existing `ProbeProvider`
-boundary; deterministic local tests distinguish success, non-success actuality, malformed framing,
-request mismatch, and secret-free failures. The first live probe reached the provider and committed
-HTTP 401 before interpretation. `F-0001` therefore leaves successful live actualization pending
-without blocking offline implementation.
+The current Phase 10 ratchet is a real-provider vertical slice. The active provider is the locally
+installed Ollama runtime with `qwen3.5:9b`; its live schema-constrained probe succeeded through the
+existing durable `ProbeProvider` boundary. Exact HTTP status/body bytes and the ordinary event were
+committed before decoding two distinct candidates. Deterministic tests preserve success and
+non-success actuality and keep framing, transport, completion, and candidate failures distinct.
+The OpenAI adapter remains a secondary optional route; `F-0001` records only its credential
+constraint and does not block the local implementation path.
 
-The transport and post-actuality JSON-array decoding prefixes now pass offline. The decoder scans
-all output items and preserves all candidates without claiming support. The positive identity-cycle
+The OpenAI heterogeneous-output decoder and Ollama schema-response decoder both preserve all
+candidates without claiming support. The positive identity-cycle
 breaker was also resolved: observation support may be formed after the raw return while every other
 occurrence-context field remains fixed, and exact standing/raw-return admission still applies.
 Each decoded string now has a minimal content-addressed value identity over raw return, decoder
@@ -107,15 +108,15 @@ version, ordinal, and exact text; those identities regenerate after a file-backe
 The next dependency chain is:
 
 ```text
-stored successful provider return and decoder version
+stored successful local-model return and decoder version
 -> typed forms and completion candidates over every regenerated decoded value
 -> independently supported answer admission using post-return environments
 -> capture-safe continuation binding and runtime resumption
 -> the same protected result after restart with zero redispatch
 ```
 
-Do not let the credential residual collapse transport actuality into semantic `Unknown`, and do
-not predeclare support for an unpredictable content-addressed return. If the existing support
+Do not let a provider or credential residual collapse transport actuality into semantic `Unknown`,
+and do not predeclare support for an unpredictable content-addressed return. If the existing support
 contract creates such a cycle, make that exact cycle the breaker and implement only the smallest
 authority-preserving successor justified by the canonical specification and standing plan.
 

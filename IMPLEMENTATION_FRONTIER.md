@@ -117,23 +117,23 @@ compile/replay recipe.
 > exact protected continuation equivalence, regenerate the view after restart, and reopen the fold
 > when one newly protected continuation separates the previously equivalent histories.
 
-`PROVIDER-001A`, the provider transport boundary, is locally demonstrated:
+`PROVIDER-001A`, provider transport preservation, is demonstrated for two narrow adapters:
 
-> One narrow OpenAI Responses adapter sends the exact content-addressed request and preserves a
-> versioned HTTP-status-plus-body frame through `ProbeProvider`. Both successful and non-success
-> HTTP responses are provider actuality, and `dispatch_probe` commits them before JSON decoding.
+> OpenAI Responses and local Ollama adapters send an exact content-addressed request and preserve
+> their versioned HTTP-status-plus-body frames through `ProbeProvider`. Successful and non-success
+> HTTP responses are provider actuality, and `dispatch_probe` commits them before decoding.
 
-The deterministic fixture proves exact request bytes, authorization-header presence without secret
-disclosure, exact response bytes, request-reference mismatch rejection, malformed-frame rejection,
-and HTTP 401 preservation. The opt-in live fixture reached the official endpoint and committed a
-401 response before interpretation; `F-0001` records that the currently available credential does
-not authorize a successful request. Therefore live success remains `PENDING`, not falsely passed.
+Deterministic fixtures prove exact request/response bytes, request-reference mismatch and
+malformed-frame rejection, and preservation of HTTP failures. The local live fixture uses the
+installed Ollama `qwen3.5:9b`, commits a successful response before interpretation, and then
+preserves two distinct schema-constrained candidates. The OpenAI live fixture separately committed
+HTTP 401; `F-0001` remains an optional-provider constraint rather than the active frontier.
 
-`PROVIDER-001B`, the post-actuality response decoder and support-cycle breaker, is demonstrated:
+`PROVIDER-001B`, post-actuality decoding and the support-cycle breaker, is demonstrated:
 
-> The decoder scans the complete heterogeneous Responses output array, preserves every exact
-> candidate from every message `output_text` JSON array, and keeps transport, parse, completion,
-> and candidate failures distinct. It establishes no support by parsing alone. A decoded
+> The OpenAI decoder scans heterogeneous output and the Ollama decoder checks a completed
+> schema-constrained response; both preserve every exact candidate and keep transport, parse,
+> completion, and candidate failures distinct. Neither establishes support by parsing alone. A decoded
 > observation may attach an independently formed post-return support environment while every
 > other occurrence-context field remains fixed; admission still requires that exact environment
 > to close in standing and name the committed raw return.
@@ -153,14 +153,14 @@ The strongest executable obligation is now `PROVIDER-001D`:
 > post-return support artifacts needed for exact restart; then drive the whole set through support,
 > capture-safe binding, admitted resumption, and zero-redispatch cold replay.
 
-Use one deterministic offline valid-shaped provider return first. Regenerate every post-return
+Use the successful local Ollama return and deterministic equivalent fixtures. Regenerate every post-return
 artifact from the stored raw frame and decoder version after restart; do not reuse pre-crash candidates, decoder,
 support, standing, binding, suspension, or lowering. If exact typed value identity cannot be
 regenerated from raw return plus declared decoder version, preserve that as a named replay-recipe
 breaker before adding canonical structure. Do not weaken support, pre-warrant generated output,
 choose a singleton implicitly, or add a provider framework, scheduler, model policy, credential
-store, semantic opcode, table, or crate. Re-run the live acceptance fixture only after `F-0001`'s
-reopen condition changes.
+store, semantic opcode, table, or crate. OpenAI live acceptance is independent and may be rerun only
+after `F-0001`'s reopen condition changes.
 
 The protected difference is visible in the accepted sources:
 

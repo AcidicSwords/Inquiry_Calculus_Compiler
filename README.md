@@ -5,15 +5,14 @@ including the adopted **Successor Reciprocal-Boundary / Positive-Negation Editio
 The executable implementation now includes verified semantic increments across Phases 1--11,
 the finite positive-negation reciprocal slice, crash-safe external-effect actuality, a complete
 finite question cycle with cold replay, paired question/return traces, and an exact finite
-sufficient-present/reopening witness. Phase 10 now also contains a narrow OpenAI Responses
-transport adapter whose offline contract preserves both success and non-success HTTP returns
-before interpretation. Its post-actuality decoder scans heterogeneous output and preserves every
-JSON-array completion, and observation support can now be formed after an unpredictable return
-without rewriting the source question. Each decoded string also has a minimal replayable value
-identity over raw return, decoder version, ordinal, and exact text. A successful live provider return is still pending because the currently
-available credential returned HTTP 401 (`F-0001`). This is not yet the complete reference
-runtime. The exact demonstrated boundary and next executable obligation are recorded in
-`CONFORMANCE_STATUS.md` and `IMPLEMENTATION_FRONTIER.md`.
+sufficient-present/reopening witness. Phase 10 now also contains narrow OpenAI Responses and local
+Ollama transport adapters. Both preserve exact HTTP actuality before interpretation. The installed
+`qwen3.5:9b` model has completed a live schema-constrained probe through the ordinary durable
+dispatch path; its exact response and event were committed before all generated candidates were
+decoded. OpenAI remains an optional secondary adapter whose current credential returned HTTP 401
+(`F-0001`). This is not yet the complete reference runtime. The exact demonstrated boundary and
+next executable obligation are recorded in `CONFORMANCE_STATUS.md` and
+`IMPLEMENTATION_FRONTIER.md`.
 
 ## Authority by question
 
@@ -295,8 +294,10 @@ a verified suspension's exact checked backend request, dispatches only after a f
 authorization, converts the provider's opaque bytes into `RawReturn`, and atomically completes the
 ordinary event before returning anything to a decoder. The fixture proves one call on success,
 zero redispatches for completed or recovered-pending rows, and a separate operational provider
-failure path. This is a mock-provider boundary, not method admission, semantic resolution, a
-standing decision, or real-provider integration.
+failure path. Narrow OpenAI and Ollama adapters reuse this boundary without becoming method
+admission, semantic resolution, or a standing decision. The local Ollama fixture demonstrates one
+successful `qwen3.5:9b` actualization; generated candidates remain unsupported until the separate
+post-return admission path succeeds.
 
 `ic-runtime::replay_completed_finite_probe` now composes the durable actuality spine with the
 existing finite decoder, exact relation-support standing, complete answer-set admission,
@@ -322,7 +323,9 @@ folds two path-distinct histories into the single coarsest class under a continu
 distinguish them, regenerates the same factorization after restart, and returns those exact
 histories as a reopen witness when a path-sensitive continuation is added. This derived check is
 not active mutable memory, standing, a compression licence, or a general bounded-memory claim.
-The next frontier is one real LLM provider behind the already stable dispatch/replay boundary.
+The next frontier is to turn every candidate from the demonstrated local-model return into exact
+typed completions, admit their independently formed post-return support, resume the source
+continuation, and regenerate the same result after restart with zero redispatch.
 
 The event ledger and external-effect recovery journal have file-backed restart witnesses. Closing
 the single connection and reopening the database preserves pending/complete operational state,

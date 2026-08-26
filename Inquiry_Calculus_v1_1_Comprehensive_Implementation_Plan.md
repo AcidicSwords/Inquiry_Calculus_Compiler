@@ -4062,7 +4062,7 @@ Classify its surviving implementation pressure as follows:
 | Class | Forward consequence |
 |---|---|
 | `ALREADY_DEMONSTRATED` | Typed semantic kernel, finite departure and reciprocal slice, immutable artifacts/events, typed request-before-dispatch, exact backend-request checking, and one crash-safe injected provider call remain established by current tests. |
-| `CURRENT_FIXTURE` | `RPL-001`--`RPL-005`, `CYCLE-001`, `TRACE-001`, and `PRESENT-001` are demonstrated. The current fixture is `PROVIDER-001`: one real-provider return decoded only after actuality, admitted without singleton forcing, resumed, and cold-replayed. |
+| `CURRENT_FIXTURE` | `RPL-001`--`RPL-005`, `CYCLE-001`, `TRACE-001`, and `PRESENT-001` are demonstrated. The local Ollama `qwen3.5:9b` transport/decode prefix of `PROVIDER-001` is demonstrated. The current fixture completes its typed multi-answer admission, resumption, and zero-redispatch cold replay. |
 | `PHASE_LOCAL_CONSTRAINT` | Apply research breakers only at their responsible Phase 6--18 boundary: actuality, resolution, paired provenance, sufficient presents, provider separation, shared standing, transparent separator/method/fold/bridge compositions, conservative lift, and predecessor-judged revision. |
 | `FUTURE_OPTIMIZATION` | Learned routing, latent masks, vectors, parallelism, distribution, and other breadth remain Phase 19 experiments requiring measured protected gain. |
 | `SEMANTIC_REOPEN_CANDIDATE` | General transition authority and protected-erasure bindings require explicit semantic or binding authority before implementation. |
@@ -4090,24 +4090,23 @@ authorized only if a fresh-process breaker proves that an exact mapping is other
 The current provider sequence is:
 
 ```text
-checked content-addressed OpenAI Responses request
--> narrow ProbeProvider transport
--> versioned HTTP status + exact body RawReturn
+checked content-addressed local Ollama request
+-> narrow ProbeProvider transport using installed qwen3.5:9b
+-> versioned Ollama HTTP status + exact body RawReturn
 -> ordinary ActualEvent committed before interpretation
--> response decoder preserving every completion
+-> schema-response decoder preserving every completion
 -> exact independent support routes and standing reconstruction
 -> complete supported answer, source binding, and admitted resumption
 -> file-backed restart and zero-redispatch regeneration
 ```
 
-The transport prefix is demonstrated offline for both HTTP 200 and HTTP 401. The post-actuality
-decoder scans the heterogeneous output list and preserves every exact JSON-array candidate without
-claiming support. Post-return observation support is now separated from pre-dispatch query support,
-while exact standing closure and raw-return coverage remain mandatory. A live 401 was preserved as
-`F-0001`. Each candidate text now regenerates as an `ic.openai-decoded-text/v1` value addressed by
-raw return, decoder version, ordinal, and exact text across file-backed restart. Successful live acceptance remains pending until its credential reopen condition changes.
-The credential constraint does not authorize transport/semantic conflation or block construction of
-deterministic typed materialization, resumption, and replay breakers.
+The local transport prefix passes deterministic success/failure tests and one live schema-constrained
+probe. The installed model returned two distinct candidates, and `dispatch_probe` committed the raw
+frame and event before the decoder inspected either candidate. The OpenAI transport/decoder and
+`ic.openai-decoded-text/v1` replay fixtures remain valid secondary evidence; its live HTTP 401 is
+recorded as `F-0001` but no longer blocks the active provider sequence. Post-return observation
+support remains separate from pre-dispatch query support, while exact standing closure and
+raw-return coverage remain mandatory.
 
 Later phase constraints are deliberately local:
 
@@ -4381,8 +4380,8 @@ its full specification.
 Advance the current implementation in this order:
 
 ```text
-1. PROVIDER-001B
-   successful Responses body -> post-actuality multi-completion decode
+1. PROVIDER-001D
+   successful local Ollama body -> post-actuality multi-completion decode
    -> independent support -> binding/resumption -> zero-redispatch cold replay
 
 2. Phase 8/9 generalization

@@ -7,6 +7,7 @@
 //! standing, or warrant.
 
 mod dispatch;
+mod ollama;
 mod openai;
 mod replay;
 mod trace;
@@ -21,6 +22,11 @@ pub use ic_core::ProbeOperatorRef;
 use ic_core::{
     BoundFiniteAskContinuation, EventRef, IProgRef, RawReturnRef, TypeCatalog, TypeCheckError,
     TypeError, TypeRef, TypedForm, TypedFormRef,
+};
+pub use ollama::{
+    DecodedOllamaCandidates, OLLAMA_GENERATE_ENDPOINT, OllamaGenerateProvider, OllamaHttpResponse,
+    OllamaHttpResponseError, OllamaProviderError, OllamaResponseDecodeError,
+    decode_ollama_candidate_response,
 };
 pub use openai::{
     DecodedOpenAiJsonArray, OPENAI_DECODED_TEXT_ARTIFACT_KIND, OPENAI_DECODED_TEXT_SCHEMA_VERSION,
