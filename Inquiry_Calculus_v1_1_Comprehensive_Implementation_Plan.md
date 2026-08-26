@@ -4112,9 +4112,13 @@ raw-return coverage remain mandatory.
 
 The deterministic `PROVIDER-001D` fixture now takes a committed Ollama-shaped event through
 post-return values, typed forms, complete candidates, distinct support, exact standing, binding,
-resumption, and file-backed zero-redispatch replay. The next `PROVIDER-001E` fixture must begin
-with one fresh local Ollama call and create none of those semantic artifacts before its raw event
-is committed.
+resumption, and file-backed zero-redispatch replay. `PROVIDER-001E` adds the required fresh local
+Ollama call and creates none of those semantic artifacts before its raw event is committed.
+
+`PROVIDER-001E` now passes against the installed `qwen3.5:9b`: one fresh dispatch commits the
+raw return/event before the entire typed answer/resumption chain is built, and a file-backed restart
+replays it with no second provider call. The next phase-local work is `TRACE-002`, a finite
+multi-event paired-actuality and sufficient-present/reopening traversal.
 
 Later phase constraints are deliberately local:
 
@@ -4388,9 +4392,9 @@ its full specification.
 Advance the current implementation in this order:
 
 ```text
-1. PROVIDER-001E
-   fresh local Ollama body -> post-actuality multi-completion decode
-   -> independent support -> binding/resumption -> zero-redispatch cold replay
+1. TRACE-002
+   finite multi-event ordinary history -> paired source/return projections
+   -> causal/order separator -> sufficient present -> positive reopening witness
 
 2. Phase 8/9 generalization
    multi-event causal inquiry traces -> derived active/access/reserve views

@@ -161,11 +161,19 @@ values from raw/version roots, and replays the same bound candidate set without 
 It proves deterministic composition of the live-provider boundary, not that a fresh live Ollama
 call has yet traversed every semantic step in one fixture.
 
-The strongest executable obligation is now `PROVIDER-001E`:
+`PROVIDER-001E`, fresh local actualization through typed cold replay, is demonstrated:
 
-> Run that same post-actuality typed/replay composition from one freshly dispatched local Ollama
-> return, with no pre-existing candidate, support, decoder, or observation artifacts; preserve a
-> replayable root set and verify zero redispatch after restart.
+> One fresh `qwen3.5:9b` call produces the ordinary raw/event actuality. Only after that event
+> exist the decoded values, typed forms, candidates, post-return support, observations,
+> decoder/path, standing closure, binding, and resumption. A restart regenerates and replays the
+> complete answer set with the provider-call counter still exactly one.
+
+The strongest executable obligation is now `TRACE-002`:
+
+> Extend the derived paired-actuality/sufficient-present vertical slice from one finite synthetic
+> event to a finite multi-event inquiry traversal. Preserve event versus causal order, source versus
+> return projections, and a positive reopening witness without creating a second authoritative
+> history or mutable memory store.
 
 Do not weaken support, pre-warrant generated output, choose a singleton implicitly, or add a
 provider framework, scheduler, model policy, credential store, semantic opcode, table, or crate.

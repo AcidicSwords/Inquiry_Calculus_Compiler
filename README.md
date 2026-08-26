@@ -16,7 +16,9 @@ next executable obligation are recorded in `CONFORMANCE_STATUS.md` and
 
 The deterministic continuation fixture now carries an Ollama-shaped committed return through typed
 candidate creation, post-return support, admission, binding, and cold replay. The remaining local
-provider fixture must originate that same full chain from a fresh local-model call.
+provider fixture now also originates that full chain from a fresh local-model call. The next
+frontier generalizes paired actuality and sufficient-present/reopening across a finite multi-event
+ordinary history.
 
 ## Authority by question
 

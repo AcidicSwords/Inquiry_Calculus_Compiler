@@ -106,7 +106,7 @@ Each decoded string now has a provider-specific minimal content-addressed value 
 return, decoder version, ordinal, and exact text. Both OpenAI and Ollama value identities regenerate
 after a file-backed restart; the active typed-completion chain uses the Ollama values.
 
-The next dependency chain is:
+The local provider/replay chain is now complete at its declared finite scope:
 
 ```text
 fresh successful local-model return and decoder version
@@ -116,11 +116,10 @@ fresh successful local-model return and decoder version
 -> the same protected result after restart with zero redispatch
 ```
 
-The deterministic `PROVIDER-001D` composition now passes from an already committed
-Ollama-shaped event: no candidate, support, decoder, or observation is created until after that
-event, and restart regenerates the same two-candidate binding without redispatch. The remaining
-`PROVIDER-001E` discriminator is to make the event itself originate from the installed local model
-inside that one complete fixture.
+`PROVIDER-001D` demonstrates the deterministic post-actuality composition, and `PROVIDER-001E`
+now runs that whole sequence against the installed model itself. The next obligation is `TRACE-002`:
+use a finite multi-event traversal to extend paired actuality and sufficient-present/reopening while
+keeping ordinary history authoritative and all traces/presents derived.
 
 Do not let a provider or credential residual collapse transport actuality into semantic `Unknown`,
 and do not predeclare support for an unpredictable content-addressed return. If the existing support

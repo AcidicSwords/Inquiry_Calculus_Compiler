@@ -35,10 +35,10 @@ use ic_core::{
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaHttpResponse,
-    PairedActualityTrace, ProbeDispatchContext, ProbeProvider, ProgramIR, ProviderReturn,
-    ReplayObservation, RuntimeCatalog, Terminator, dispatch_probe,
-    materialize_ollama_decoded_texts, replay_completed_finite_probe,
+    MachineStep, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaGenerateProvider,
+    OllamaHttpResponse, OllamaProviderError, PairedActualityTrace, ProbeDispatchContext,
+    ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation, RuntimeCatalog, Terminator,
+    dispatch_probe, materialize_ollama_decoded_texts, replay_completed_finite_probe,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -449,6 +449,20 @@ impl ProbeProvider for CountingProvider {
         self.calls.fetch_add(1, Ordering::SeqCst);
         assert_eq!(request.request_body(), self.expected_body);
         Ok(ProviderReturn::new(self.response.clone()))
+    }
+}
+
+struct CountingOllamaProvider {
+    calls: Arc<AtomicUsize>,
+    inner: OllamaGenerateProvider,
+}
+
+impl ProbeProvider for CountingOllamaProvider {
+    type Error = OllamaProviderError;
+
+    fn dispatch(&mut self, request: &BackendRequest) -> Result<ProviderReturn, Self::Error> {
+        self.calls.fetch_add(1, Ordering::SeqCst);
+        self.inner.dispatch(request)
     }
 }
 
@@ -2536,4 +2550,563 @@ async fn ollama_values_become_post_actuality_typed_answers_and_cold_replay_witho
     );
     reopened.close().await;
     std::fs::remove_file(path).expect("temporary cold replay database must be removable");
+}
+
+#[tokio::test]
+#[ignore = "requires local Ollama with qwen3.5:9b"]
+async fn live_ollama_call_creates_typed_answers_only_after_actuality_and_cold_replays() {
+    let nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system clock must be after Unix epoch")
+        .as_nanos();
+    let path = env::temp_dir().join(format!(
+        "inquiry-calculus-live-ollama-replay-{}-{nonce}.sqlite",
+        std::process::id()
+    ));
+    let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
+    let store = ArtifactStore::open(&url)
+        .await
+        .expect("file-backed live Ollama store must open");
+    store.migrate().await.expect("migrations must apply");
+    let mut catalog = Catalog::default();
+
+    let binding = BindingVersionRef::from_artifact_ref(stored_ref(&store, b"live-binding").await);
+    let unit_value = TypeArtifact::new(binding, TyIR::Unit);
+    let unit = TypeRef::from_artifact_ref(
+        persist(
+            &store,
+            &unit_value.envelope().expect("unit type must encode"),
+            &unit_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_type(unit_value), unit);
+    let raw_type_value = TypeArtifact::new(binding, TyIR::Raw(unit));
+    let raw_type = TypeRef::from_artifact_ref(
+        persist(
+            &store,
+            &raw_type_value.envelope().expect("raw type must encode"),
+            &raw_type_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_type(raw_type_value), raw_type);
+    let chart_form_value = TypedForm::new(binding, unit, stored_ref(&store, b"chart-form").await);
+    let chart_form = TypedFormRef::from_artifact_ref(
+        persist(
+            &store,
+            &chart_form_value.envelope().expect("chart form must encode"),
+            &chart_form_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_form(chart_form_value), chart_form);
+    let return_form_value = TypedForm::new(binding, unit, stored_ref(&store, b"return-form").await);
+    let return_form = TypedFormRef::from_artifact_ref(
+        persist(
+            &store,
+            &return_form_value
+                .envelope()
+                .expect("return form must encode"),
+            &return_form_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_form(return_form_value), return_form);
+
+    let answer_port = TypeSymbol::new("answer").expect("answer port must be valid");
+    let relation_value = RelationSchema::new(
+        binding,
+        vec![RelationPort::new(answer_port.clone(), unit)],
+        RelationBodyIR::BindingNative {
+            contract: stored_ref(&store, b"live-relation-contract").await,
+        },
+        Vec::new(),
+        Vec::new(),
+    );
+    let relation = RelationRef::from_artifact_ref(
+        persist(
+            &store,
+            &relation_value.envelope().expect("relation must encode"),
+            &relation_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_schema(relation_value), relation);
+    let scope = ScopeRef::from_artifact_ref(stored_ref(&store, b"live-scope").await);
+    let applicability =
+        ApplicabilityRef::from_artifact_ref(stored_ref(&store, b"live-applicability").await);
+    let pre_support_value = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Relation(relation),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        vec![stored_ref(&store, b"pre-actuality-support-assumption").await],
+        Vec::new(),
+        applicability,
+        scope,
+    )
+    .expect("pre-actuality support must encode");
+    let pre_support = SupportEnvironmentRef::from_artifact_ref(
+        persist(
+            &store,
+            &pre_support_value
+                .envelope()
+                .expect("pre-actuality support must encode"),
+            &pre_support_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_support(pre_support_value), pre_support);
+    let grain = GrainRef::from_artifact_ref(stored_ref(&store, b"live-grain").await);
+    let horizon = HorizonRef::from_artifact_ref(stored_ref(&store, b"live-horizon").await);
+    let query_context = RelationUseContext::new(
+        scope,
+        applicability,
+        grain,
+        horizon,
+        DischargeMode::Probe,
+        pre_support.as_support_ref(),
+        None,
+    );
+    let query_value = OpenQuery::new(
+        relation,
+        Vec::new(),
+        vec![OpenPort::new(answer_port.clone(), DischargeMode::Probe)],
+        query_context,
+    );
+    let query = QueryRef::from_artifact_ref(
+        persist(
+            &store,
+            &query_value.envelope().expect("source query must encode"),
+            &query_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_query(query_value), query);
+    let chart_use_value = RelationUse::new(
+        relation,
+        vec![PortBinding::new(answer_port.clone(), chart_form)],
+        query_context,
+    );
+    let chart_use = RelationUseRef::from_artifact_ref(
+        persist(
+            &store,
+            &chart_use_value.envelope().expect("chart use must encode"),
+            &chart_use_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_relation_use(chart_use_value), chart_use);
+    let chart_value = BoundaryChart::new(
+        query,
+        unit,
+        unit,
+        unit,
+        relation,
+        relation,
+        ic_core::DeterminationPresentationRef::from_artifact_ref(
+            stored_ref(&store, b"live-determination").await,
+        ),
+        None,
+        Vec::new(),
+        Vec::new(),
+        chart_use,
+        FormulaRef::from_artifact_ref(stored_ref(&store, b"live-compatibility").await),
+        None,
+        grain,
+        horizon,
+    );
+    let boundary = BoundaryRef::from_artifact_ref(
+        persist(
+            &store,
+            &chart_value.envelope().expect("boundary chart must encode"),
+            &chart_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog.charts.insert(boundary, chart_value);
+
+    let active_view = stored_ref(&store, b"live-active-view").await;
+    let backend = stored_ref(&store, b"live-backend").await;
+    let executable_code = stored_ref(&store, b"live-executable-code").await;
+    let decoder_contract = stored_ref(&store, b"live-decoder-contract").await;
+    let probe_contract =
+        ProbeContractRef::from_artifact_ref(stored_ref(&store, b"live-probe-contract").await);
+    let compiler_version = stored_ref(&store, b"live-compiler-version").await;
+    let operator_value = ProbeOperator::new(
+        query,
+        boundary,
+        active_view,
+        backend,
+        executable_code,
+        raw_type,
+        decoder_contract,
+        probe_contract,
+        compiler_version,
+    );
+    let operator = ProbeOperatorRef::from_artifact_ref(
+        persist(
+            &store,
+            &operator_value.envelope().expect("operator must encode"),
+            &operator_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog.operators.insert(operator, operator_value);
+    let plan_value = SurfacePlan::new(
+        operator,
+        query,
+        boundary,
+        active_view,
+        executable_code,
+        probe_contract,
+        stored_ref(&store, b"live-renderer-version").await,
+        stored_ref(&store, b"live-rendered-body").await,
+    );
+    let plan = ic_core::SurfacePlanRef::from_artifact_ref(
+        persist(
+            &store,
+            &plan_value.envelope().expect("surface plan must encode"),
+            &plan_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    let request_json = serde_json::to_vec(&serde_json::json!({
+        "model": "qwen3.5:9b",
+        "prompt": "Return exactly two distinct one-word candidate completions.",
+        "stream": false,
+        "think": false,
+        "options": {"temperature": 0},
+        "format": {
+            "type": "object",
+            "properties": {
+                "candidates": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "minItems": 2,
+                    "maxItems": 2
+                }
+            },
+            "required": ["candidates"],
+            "additionalProperties": false
+        }
+    }))
+    .expect("live local request must encode");
+    let request_body = stored_ref(&store, &request_json).await;
+    let request_value = BackendRequest::new(
+        operator,
+        plan,
+        query,
+        boundary,
+        backend,
+        executable_code,
+        compiler_version,
+        stored_ref(&store, b"live-backend-version").await,
+        request_body,
+    );
+    let request = ic_core::BackendRequestRef::from_artifact_ref(
+        persist(
+            &store,
+            &request_value
+                .envelope()
+                .expect("backend request must encode"),
+            &request_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    let continuation_value = IProgArtifact::new(unit, IProgIR::Return { value: return_form });
+    let continuation = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &continuation_value
+                .envelope()
+                .expect("continuation must encode"),
+            &continuation_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_program(continuation_value), continuation);
+    let source_value = IProgArtifact::new(
+        unit,
+        IProgIR::Ask {
+            question: query,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer_set").expect("slot must be valid"),
+            continuation,
+        },
+    );
+    let source = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &source_value.envelope().expect("source Ask must encode"),
+            &source_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_program(source_value), source);
+    let runtime = ProgramIR::new(
+        unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return { value: return_form },
+            ),
+        ],
+    );
+    runtime
+        .verify(&catalog)
+        .expect("pre-actuality runtime must verify without candidates");
+    assert!(catalog.candidates.is_empty());
+    assert_eq!(catalog.support.len(), 1);
+    let MachineStep::Suspended(suspension) = runtime
+        .step(runtime.start())
+        .expect("source lowering must suspend at probe")
+    else {
+        panic!("entry must suspend")
+    };
+    let dispatch_context = ProbeDispatchContext::new(
+        None,
+        StateRef::from_artifact_ref(stored_ref(&store, b"live-state-before").await),
+        None,
+        StateRef::from_artifact_ref(stored_ref(&store, b"live-state-after").await),
+        grain,
+        RouteRef::from_artifact_ref(stored_ref(&store, b"live-route").await),
+        binding,
+        ProvenanceRef::from_artifact_ref(stored_ref(&store, b"live-provenance").await),
+    );
+    let provider_calls = Arc::new(AtomicUsize::new(0));
+    let mut provider = CountingOllamaProvider {
+        calls: Arc::clone(&provider_calls),
+        inner: OllamaGenerateProvider::new(request_body, request_json)
+            .expect("local Ollama provider must configure"),
+    };
+    let token = DispatchToken::from_bytes([0xd3; 32]);
+    let actual = dispatch_probe(
+        &store,
+        suspension,
+        token,
+        request,
+        dispatch_context,
+        &mut provider,
+    )
+    .await
+    .expect("fresh local model return must commit before interpretation");
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 1);
+    let raw_return = actual.raw_return_ref();
+    let event = actual.event_ref();
+    catalog.insert_raw_return(actual.raw_return().clone());
+    catalog.events.insert(event, actual.event().clone());
+
+    let base_roots = ColdReplayRoots {
+        token,
+        unit,
+        raw_type,
+        answer_a: return_form,
+        answer_b: chart_form,
+        relation,
+        query,
+        wrong_query: query,
+        candidate_a: CompletionCandidateRef::from_artifact_ref(artifact(0xee)),
+        candidate_b: CompletionCandidateRef::from_artifact_ref(artifact(0xef)),
+        observation_a: RelationUseRef::from_artifact_ref(artifact(0xf0)),
+        observation_b: RelationUseRef::from_artifact_ref(artifact(0xf1)),
+        support: pre_support,
+        decoded_decoder: FiniteDecoderRef::from_artifact_ref(artifact(0xf2)),
+        alternate_decoded_decoder: FiniteDecoderRef::from_artifact_ref(artifact(0xf3)),
+        undefined_decoder: FiniteDecoderRef::from_artifact_ref(artifact(0xf4)),
+        unknown_decoder: FiniteDecoderRef::from_artifact_ref(artifact(0xf5)),
+        decoded_path: ResolutionPathRef::from_artifact_ref(artifact(0xf6)),
+        alternate_decoded_path: ResolutionPathRef::from_artifact_ref(artifact(0xf7)),
+        undefined_path: ResolutionPathRef::from_artifact_ref(artifact(0xf8)),
+        unknown_path: ResolutionPathRef::from_artifact_ref(artifact(0xf9)),
+        boundary,
+        operator,
+        rival_operator: operator,
+        source,
+        wrong_source: source,
+        capture_source: source,
+        continuation,
+        event,
+        raw_return,
+        alternate_raw_return: raw_return,
+        current_protected: ProtectedContinuationRef::from_artifact_ref(
+            stored_ref(&store, b"live-current-protected").await,
+        ),
+        path_protected: ProtectedContinuationRef::from_artifact_ref(
+            stored_ref(&store, b"live-path-protected").await,
+        ),
+        compiler_version,
+    };
+    let post = materialize_ollama_post_return_slice(&store, &mut catalog, base_roots).await;
+    let source_query = OpenQueryCatalog::resolve_open_query(&catalog, query)
+        .expect("source query must remain available");
+    assert_ne!(
+        source_query.context().support(),
+        post.support.as_support_ref()
+    );
+    let standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            post.support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &catalog,
+    )
+    .expect("fresh post-return local support must close");
+    let decoder = catalog
+        .resolve_finite_decoder(post.decoder)
+        .expect("fresh local decoder must exist");
+    let source_value = catalog
+        .resolve_iprog(source)
+        .expect("source Ask must remain available");
+    let live = replay_completed_finite_probe(
+        &store,
+        token,
+        &decoder,
+        post.path,
+        &[
+            ReplayObservation::new(post.candidate_a, post.observation_a),
+            ReplayObservation::new(post.candidate_b, post.observation_b),
+        ],
+        &standing,
+        &source_value,
+        suspension,
+        ContinuationLowering::new(continuation, BlockTarget::new(1)),
+        &runtime,
+        &catalog,
+    )
+    .await
+    .expect("the fresh local return must bind and resume every decoded candidate");
+    assert_eq!(live.actuality().event_ref(), event);
+    assert_eq!(live.actuality().raw_return_ref(), raw_return);
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 1);
+
+    let roots = ColdReplayRoots {
+        candidate_a: post.candidate_a,
+        candidate_b: post.candidate_b,
+        observation_a: post.observation_a,
+        observation_b: post.observation_b,
+        support: post.support,
+        decoded_decoder: post.decoder,
+        alternate_decoded_decoder: post.decoder,
+        undefined_decoder: post.decoder,
+        unknown_decoder: post.decoder,
+        decoded_path: post.path,
+        alternate_decoded_path: post.path,
+        undefined_path: post.path,
+        unknown_path: post.path,
+        ..base_roots
+    };
+    store.close().await;
+
+    let reopened = ArtifactStore::open(&url)
+        .await
+        .expect("fresh local replay store must reopen");
+    reopened
+        .migrate()
+        .await
+        .expect("embedded migrations must remain repeatable");
+    let mut cold_catalog = load_cold_replay_catalog(&reopened, roots).await;
+    let stored_raw = cold_catalog
+        .resolve_raw_return(raw_return)
+        .expect("fresh local raw return must reload");
+    let values = materialize_ollama_decoded_texts(raw_return, &stored_raw, post.decoder_version)
+        .expect("cold replay must decode the fresh local raw return again");
+    let value_refs = values
+        .iter()
+        .map(OllamaDecodedText::artifact_ref)
+        .collect::<Result<Vec<_>, _>>()
+        .expect("cold local values must address");
+    assert_eq!(value_refs, [post.value_a, post.value_b]);
+    let form_a = TypedForm::new(binding, unit, post.value_a);
+    let form_b = TypedForm::new(binding, unit, post.value_b);
+    assert_eq!(
+        form_a.typed_form_ref().expect("first form must address"),
+        post.form_a
+    );
+    assert_eq!(
+        form_b.typed_form_ref().expect("second form must address"),
+        post.form_b
+    );
+    assert_eq!(cold_catalog.insert_form(form_a), post.form_a);
+    assert_eq!(cold_catalog.insert_form(form_b), post.form_b);
+    let replay_decoder = cold_catalog
+        .resolve_finite_decoder(post.decoder)
+        .expect("post-return local decoder must reload");
+    let replay_source = cold_catalog
+        .resolve_iprog(source)
+        .expect("source Ask must reload");
+    let replay_runtime = ProgramIR::new(
+        unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return { value: return_form },
+            ),
+        ],
+    );
+    replay_runtime
+        .verify(&cold_catalog)
+        .expect("cold local lowering must verify");
+    let MachineStep::Suspended(replay_suspension) = replay_runtime
+        .step(replay_runtime.start())
+        .expect("cold local lowering must suspend")
+    else {
+        panic!("cold local entry must suspend")
+    };
+    let replay_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            post.support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &cold_catalog,
+    )
+    .expect("cold local support must close again");
+    let replayed = replay_completed_finite_probe(
+        &reopened,
+        token,
+        &replay_decoder,
+        post.path,
+        &[
+            ReplayObservation::new(post.candidate_a, post.observation_a),
+            ReplayObservation::new(post.candidate_b, post.observation_b),
+        ],
+        &replay_standing,
+        &replay_source,
+        replay_suspension,
+        ContinuationLowering::new(continuation, BlockTarget::new(1)),
+        &replay_runtime,
+        &cold_catalog,
+    )
+    .await
+    .expect("cold replay must resume the fresh local model answer without redispatch");
+    assert_eq!(replayed.actuality().event_ref(), event);
+    assert_eq!(replayed.actuality().raw_return_ref(), raw_return);
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 1);
+    reopened.close().await;
+    std::fs::remove_file(path).expect("temporary live local replay database must be removable");
 }
