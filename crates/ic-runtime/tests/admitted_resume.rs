@@ -49,14 +49,15 @@ use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
     MachineStep, MethodBridgeReentryError, MethodCuePlanning, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
     OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
-    PairedActualityTrace, PairedActualityTraversal, ProbeDischargeBundleError,
+    PairedActualityTrace, PairedActualityTraversal, PortLowering, ProbeDischargeBundleError,
     ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
-    ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog,
-    SharedProbeEventAdmission, SourceEventLinkError, Terminator, TraversalCausalOrder,
-    admit_finite_probe_discharge_bundle, check_source_event_link, dispatch_probe,
-    materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
-    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
-    resolve_finite_probe_occurrence, route_separator_through_method_bridge,
+    ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
+    SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
+    SourceEventLinkError, Terminator, TraversalCausalOrder, admit_finite_probe_discharge_bundle,
+    check_source_event_link, dispatch_probe, materialize_ollama_decoded_texts,
+    plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
+    replay_completed_finite_separator_inquiry, resolve_finite_probe_occurrence,
+    route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -4802,6 +4803,113 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         ],
     );
     runtime.verify(&catalog).expect("runtime must verify");
+    let source_ports = OpenQueryCatalog::resolve_open_query(&catalog, roots.query)
+        .expect("source query must reload")
+        .open_ports()
+        .iter()
+        .map(|open| PortLowering::new(open.port().clone(), open.mode()))
+        .collect::<Vec<_>>();
+    assert_eq!(
+        source_ports.len(),
+        1,
+        "fixture isolates one source Ask port"
+    );
+    let source_runtime =
+        RuntimeProgramArtifact::new(binding, roots.compiler_version, runtime.clone());
+    let source_runtime_ref = source_runtime
+        .runtime_program_ref()
+        .expect("source runtime identity must encode");
+    let source_lowering = SourceAskLowering::new(
+        first_occurrence.clone(),
+        source_ports.clone(),
+        source_runtime.clone(),
+    )
+    .expect("complete source ports must form a lowering");
+    source_lowering
+        .check_expected(&first_occurrence, source_runtime_ref, &catalog)
+        .expect("exact source Ask lowering must recheck");
+    assert!(matches!(
+        source_lowering.check_expected(&second_occurrence, source_runtime_ref, &catalog),
+        Err(SourceAskLoweringCheckError::ExpectedOccurrenceMismatch)
+    ));
+    let changed_runtime = RuntimeProgramArtifact::new(
+        binding,
+        roots.compiler_version,
+        ProgramIR::new(
+            roots.unit,
+            BlockTarget::new(0),
+            vec![BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            )],
+        ),
+    );
+    let changed_runtime_lowering = SourceAskLowering::new(
+        first_occurrence.clone(),
+        source_ports.clone(),
+        changed_runtime,
+    )
+    .expect("changed runtime remains structurally formable");
+    assert!(matches!(
+        changed_runtime_lowering.check_expected(&first_occurrence, source_runtime_ref, &catalog),
+        Err(SourceAskLoweringCheckError::ExpectedRuntimeMismatch { .. })
+    ));
+    let source_port = source_ports[0].port().clone();
+    let foreign_lowering = SourceAskLowering::new(
+        first_occurrence.clone(),
+        vec![PortLowering::new(
+            TypeSymbol::new("foreign").expect("foreign port name must be valid"),
+            source_ports[0].mode(),
+        )],
+        source_runtime.clone(),
+    )
+    .expect("foreign port remains formable before checking");
+    assert!(matches!(
+        foreign_lowering.check(&catalog),
+        Err(SourceAskLoweringCheckError::ForeignPort(_))
+    ));
+    let wrong_mode_lowering = SourceAskLowering::new(
+        first_occurrence.clone(),
+        vec![PortLowering::new(
+            source_port.clone(),
+            DischargeMode::Generate,
+        )],
+        source_runtime.clone(),
+    )
+    .expect("wrong mode remains formable before checking");
+    assert!(matches!(
+        wrong_mode_lowering.check(&catalog),
+        Err(SourceAskLoweringCheckError::ModeMismatch { .. })
+    ));
+    let duplicate_lowering = SourceAskLowering::new(
+        first_occurrence.clone(),
+        vec![
+            PortLowering::new(source_port.clone(), source_ports[0].mode()),
+            PortLowering::new(source_port, source_ports[0].mode()),
+        ],
+        source_runtime.clone(),
+    )
+    .expect("duplicate ports remain formable before checking");
+    assert!(matches!(
+        duplicate_lowering.check(&catalog),
+        Err(SourceAskLoweringCheckError::DuplicatePort(_))
+    ));
+    assert!(matches!(
+        SourceAskLowering::new(first_occurrence.clone(), Vec::new(), source_runtime.clone()),
+        Err(SourceAskLoweringCheckError::EmptyPortLowerings)
+    ));
+    let wrong_compiler_lowering = SourceAskLowering::new(
+        first_occurrence.clone(),
+        source_ports,
+        RuntimeProgramArtifact::new(binding, artifact(0xfe), runtime.clone()),
+    )
+    .expect("wrong compiler remains formable before checking");
+    assert!(matches!(
+        wrong_compiler_lowering.check(&catalog),
+        Err(SourceAskLoweringCheckError::CompilerMismatch { .. })
+    ));
     let state_a = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-a").await);
     let state_b = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-b").await);
     let state_c = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-c").await);

@@ -13,6 +13,7 @@ mod openai;
 mod replay;
 mod resolved_occurrence;
 mod runtime_code;
+mod source_ask_lowering;
 mod trace;
 
 use std::collections::BTreeMap;
@@ -58,6 +59,9 @@ pub use resolved_occurrence::{
 pub use runtime_code::{
     RUNTIME_PROGRAM_ARTIFACT_KIND, RUNTIME_PROGRAM_SCHEMA_VERSION, RuntimeProgramArtifact,
     RuntimeProgramCheckError, RuntimeProgramError,
+};
+pub use source_ask_lowering::{
+    PortLowering, SourceAskLowering, SourceAskLoweringCatalog, SourceAskLoweringCheckError,
 };
 use thiserror::Error;
 pub use trace::{

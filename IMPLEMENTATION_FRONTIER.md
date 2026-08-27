@@ -2,41 +2,41 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `9739b1f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `22df490`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QPURE-REGISTRY-001` established that the present schema has no formable pure operation: the only accepted source tags are `Return` and `Ask`, both with direct nonexecuting heads. The compiler-version-indexed identity normalizer is therefore complete only at this grammar; an unknown operation tag rejects. This is an `Equivalent` no-addition result, adding no source syntax, registry, evaluator, table, opcode, scheduler, controller, or persistence schema.
+`QASK-LOWERING-001` established a derived, nonexecuting source-Ask lowering over one exact occurrence, each declared source port and mode, its compiler coordinate, and one checked runtime-program identity. The checker rewalks source and runtime and a consuming reconstruction must separately match both expected identities. The finite breaker rejects swapped occurrences, changed runtime/compiler, and empty, duplicate, foreign, or mode-changed port fields. It neither dispatches nor creates an event, compiler, resolver, table, or opcode.
 
 ## Strongest live obligation
 
-Derive the smallest checked `SourceAskLowering` relation that binds one exact source `Ask` occurrence, every declared open port and discharge mode, the compiler coordinate, and one verified runtime program without adding a new runtime opcode or dispatching a provider.
+Demonstrate that the checked `SourceAskLowering` relation regenerates after a file-backed restart from persisted ordinary roots, without reusing an in-memory lowering or dispatching a provider.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QASK-LOWERING-001
+id: QASK-COLD-REGEN-002
 plan_phase: 5
-goal: Derive a checked source-Ask-to-runtime lowering that preserves exact occurrence, per-port mode, compiler coordinate, and runtime program identity.
-protected_difference: A runtime program can have a compatible result/endpoint while lowering another source occurrence, omitting a source port, changing a declared discharge mode, or using another compiler coordinate. Such substitution changes the actual continuation/authority route even before dispatch.
-discriminator: Construct one checked finite source `Ask` with every open port named once and a verified `ProgramIR`. Accept only the exact source occurrence, port/mode list, compiler coordinate, and runtime identity; reject swapped occurrence, missing/duplicate/foreign port, changed mode, compiler, or runtime program. Prove verification does not dispatch or create an event.
-horizon: one finite checked source Ask, its exact open-port field, one verified runtime program, and no dispatch; no general compiler, port execution, provider call, event, resolver procedure artifact, cross-binding bridge, scheduler, controller, table, or opcode
-relevant_decisions: D-0125, D-0150, D-0154, D-0155
+goal: Reconstruct one checked source-Ask-to-runtime lowering after reopening only persisted ordinary source/configuration/runtime roots, preserving exact occurrence, port/mode field, compiler coordinate, and runtime identity.
+protected_difference: A lowering that passes only through a warm catalog can silently depend on stale source, query, type, or runtime objects. A fresh reconstruction must reject a substituted occurrence or runtime even where question/result/endpoint projections agree.
+discriminator: Persist one finite source Ask/configuration/occurrence and one runtime-program artifact, close and reopen the store, rebuild a fresh catalog, decode/recheck both sides, regenerate the derived lowering, and compare its expected occurrence/runtime identities. Reject a swapped occurrence and a changed runtime with zero provider calls.
+horizon: one file-backed source Ask and runtime artifact, fresh catalog reconstruction, exact port/mode/compiler/runtime identities, and no dispatch; no persisted lowering recipe, general compiler, resolver procedure artifact, port execution, event, cross-binding bridge, scheduler, controller, table, or opcode
+relevant_decisions: D-0125, D-0150, D-0154, D-0155, D-0156
 relevant_failures: F-0001, F-0002
-if_pass: rederive the strongest remaining Phase 5/6 residual from the stable plan and pending conformance; do not reopen passed QSUCC/QREADY/QACTUAL fixtures without a new breaker
-if_fail: reopen the earliest source occurrence, port/mode, compiler, runtime-program identity, or execution-separation relation; do not introduce a general compiler, dispatcher, scheduler, controller, table, or opcode
+if_pass: rederive the strongest remaining Phase 5/6 residual from the stable plan and pending conformance; do not reopen passed QASK/QSUCC/QREADY/QACTUAL fixtures without a new breaker
+if_fail: reopen the earliest persisted root, catalog reconstruction, occurrence, port/mode, compiler, or runtime-program identity relation; do not serialize the derived lowering or introduce a general compiler, dispatcher, scheduler, controller, table, or opcode
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Construct one checked source `Ask` with its exact finite open-port field and a verified runtime program. Its lowering must rewalk both source and runtime, require exactly one matching lowering per port and declared mode, and retain the source/compiler/runtime coordinates. Every structural substitution must reject before any provider boundary.
+Persist one source configuration/Ask occurrence and one `RuntimeProgramArtifact`; after restart, decode them and rewalk the same source query to regenerate, rather than reload, the derived lowering. The reconstructed lowering must carry exactly one matching port/mode entry for each source port and must compare equal only at the expected source occurrence/runtime coordinates.
 
-The smallest wrong implementation names only the question or endpoint, treats every port as `Probe`, omits a port, accepts another compiler/runtime program, or dispatches while verifying.
+The smallest wrong implementation caches a warm lowering, reloads only a compatible question/endpoint, serializes the derived lowering as authority, accepts another occurrence/runtime program, or dispatches while regenerating.
 
 ## Prohibitions at this boundary
 
-- Do not generalize the source lowering into a compiler, resolver, dispatcher, scheduler, controller, table, or opcode.
-- Do not execute or create an event merely because a source lowering verifies.
-- Do not erase exact occurrence, source port/mode, compiler, or runtime-program identities.
+- Do not persist the derived lowering as a new authority or generalize it into a compiler, resolver, dispatcher, scheduler, controller, table, or opcode.
+- Do not execute or create an event merely because a lowering is reconstructed.
+- Do not erase exact occurrence, source port/mode, compiler, runtime-program, or fresh-catalog reconstruction identities.
 
 ## Exit
 
-On pass, update conformance and project state, then rederive the next strongest residual. On failure, preserve the actual return and reopen the earliest implicated lowering relation rather than broadening the architecture.
+On pass, update conformance and project state, then rederive the next strongest residual. On failure, preserve the actual return and reopen the earliest implicated persisted-root or lowering relation rather than broadening the architecture.
