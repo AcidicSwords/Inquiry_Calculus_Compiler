@@ -131,6 +131,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "required_discharge_survives_nondominance_without_promoting_generation",
     ),
+    "QIFP-LOCAL-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "finite_local_fixed_point_requires_exact_coverage_and_no_open_obligation",
+    ),
 }
 
 ERRORS: list[str] = []

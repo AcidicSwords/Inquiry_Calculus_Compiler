@@ -5,7 +5,7 @@ use ic_core::{
     AdmittedFiniteDeparture, AdmittedFiniteNegationExtension, ApplicabilityRef, ArtifactRef,
     AskOccurrence, AskOccurrenceCheckError, BindingVersionRef, BoundaryChart, BoundaryRef,
     ClaimArtifact, ClaimError, ClaimRef, ClaimStatus, CompletionCandidate,
-    CompletionCandidateCatalog, CompletionCandidateRef, DeclaredStandingError,
+    CompletionCandidateCatalog, CompletionCandidateRef, CoverageRef, DeclaredStandingError,
     DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse, DecoderRef,
     DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError, DepartureWitness,
     DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
@@ -13,19 +13,21 @@ use ic_core::{
     FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
     FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
     FiniteDepartureAdmissionError, FiniteDepartureEvidence, FiniteLiveQuestionFrontierError,
-    FiniteResourcePreorder, FiniteSupportedAnswerError, FiniteTypedIncompatibilityUseCatalog,
-    FormulaArtifact, FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
-    GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
-    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, LiveQuestionCandidate,
-    LiveQuestionOrigin, NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog,
-    OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
-    OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
-    ProgramBinding, ProtectedCompletionFieldRef, ProtectedContinuationRef, ProtectedQuestionBranch,
-    ProvenanceRef, QueryRef, QuestionReadiness, QuestionReadinessRequirement,
-    QuestionSuccessionCatalog, QuestionSuccessor, RawReturn, RawReturnCatalog, RawReturnRef,
-    ReciprocalOccurrence, RelationBodyIR, RelationCatalog, RelationPort, RelationRef,
-    RelationSchema, RelationSignature, RelationUse, RelationUseContext, RelationUseRef,
-    RelationUseSupportCatalog, RelationUseSupportError, RequiredDischargeKind,
+    FiniteLocalEffectivityCoverage, FiniteResourcePreorder, FiniteSupportedAnswerError,
+    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
+    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgIR, IProgRef, LiveQuestionCandidate, LiveQuestionOrigin, LocalEffectivityEdge,
+    LocalInterrogativeContext, LocalInterrogativeFixedPoint, LocalQuestionAssessment,
+    LocalQuestionClosingReason, LocalQuestionExit, NegationCoverage, NegationUse, NegationUseRef,
+    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence,
+    OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding, ProbeContractRef,
+    ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
+    ProtectedContinuationRef, ProtectedQuestionBranch, ProvenanceRef, QueryRef, QuestionReadiness,
+    QuestionReadinessRequirement, QuestionSuccessionCatalog, QuestionSuccessor, RawReturn,
+    RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR, RelationCatalog,
+    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, RequiredDischargeKind,
     RequiredQuestionDischarge, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
     ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef, SeedReorientation,
     SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext, SourceConfig,
@@ -39,11 +41,11 @@ use ic_core::{
     await_question_readiness, bind_finite_ask_continuation,
     check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
-    derive_finite_live_question_frontier, derive_question_readiness, derive_question_successor,
-    match_decoded_observation_use, resolve_departure_witness_evidence_support,
-    resolve_determination_presentation_support, resolve_relation_use_support,
-    standing_determination_presentation_support, standing_from_declared_support,
-    standing_relation_use_support,
+    derive_finite_live_question_frontier, derive_finite_local_interrogative_fixed_point,
+    derive_question_readiness, derive_question_successor, match_decoded_observation_use,
+    resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
+    resolve_relation_use_support, standing_determination_presentation_support,
+    standing_from_declared_support, standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -3931,4 +3933,308 @@ fn required_discharge_survives_nondominance_without_promoting_generation() {
         Err(FiniteLiveQuestionFrontierError::NonReflexiveResource(resource))
             if resource == cheap_resource
     ));
+}
+
+#[test]
+// Test boundary QIFP-LOCAL-001:
+// F = a visible finite list is called closed despite missing effectivity coverage, an executable
+//     required discharge, or a blocked/resource/authority/extension exit.
+// C = least reachability under one exact finite root/effectivity coverage field, followed by an
+//     occurrence-local closing classification for every reachable checked Ask.
+// Omega/M = one five-occurrence finite star, exact and one-edge-incomplete materializations, one
+//     open required Check, and all four explicit residual-exit kinds.
+// P/V/E/U = source re-walk, exact set difference, and finite least-fixed-point iteration; the
+//     result is local to the supplied binding/effectivity/coverage/horizon/resource coordinates
+//     and reopens for intensional graphs, dynamic coverage, or cross-binding effectivity.
+fn finite_local_fixed_point_requires_exact_coverage_and_no_open_obligation() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite fixture must admit");
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.source,
+        },
+    ));
+    let root_program = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: scenario.source_observation.decoded().query(),
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let mut occurrence = |coordinate: u8| {
+        let source = SourceConfig::new(
+            scenario.answer_type,
+            root_program,
+            Vec::new(),
+            scenario.binding,
+            artifact(coordinate),
+            ProvenanceRef::from_artifact_ref(artifact(coordinate.wrapping_add(0x20))),
+        )
+        .expect("source configuration must canonicalize");
+        scenario.catalog.insert_source_config(source.clone());
+        source
+            .ask_occurrences(&scenario.catalog)
+            .expect("source must re-walk")
+            .into_iter()
+            .next()
+            .expect("source root must be Ask")
+    };
+    let occurrences: Vec<_> = (0x40..=0x44).map(&mut occurrence).collect();
+    let references: Vec<_> = occurrences
+        .iter()
+        .map(|occurrence| {
+            occurrence
+                .ask_occurrence_ref()
+                .expect("occurrence must retain identity")
+        })
+        .collect();
+    let edges: Vec<_> = references[1..]
+        .iter()
+        .map(|target| LocalEffectivityEdge::new(references[0], *target))
+        .collect();
+    let effectivity = EffectivityRef::from_artifact_ref(artifact(0x70));
+    let coverage_ref = CoverageRef::from_artifact_ref(artifact(0x71));
+    let coverage = FiniteLocalEffectivityCoverage::new(
+        effectivity,
+        coverage_ref,
+        references.clone(),
+        edges.clone(),
+    )
+    .expect("the finite star is an exact coverage claim");
+    let context = LocalInterrogativeContext::new(
+        scenario.binding,
+        effectivity,
+        coverage_ref,
+        scenario.horizon,
+        artifact(0x72),
+    );
+    let protected_a = ProtectedContinuationRef::from_artifact_ref(artifact(0x73));
+    let protected_b = ProtectedContinuationRef::from_artifact_ref(artifact(0x74));
+    let candidate = |occurrence: AskOccurrence, tag: u8, productive: bool, required: bool| {
+        let second = if productive { protected_b } else { protected_a };
+        LiveQuestionCandidate::new(
+            occurrence,
+            vec![
+                ProtectedQuestionBranch::new(artifact(tag), protected_a),
+                ProtectedQuestionBranch::new(artifact(tag.wrapping_add(1)), second),
+            ],
+            artifact(tag.wrapping_add(2)),
+            LiveQuestionOrigin::Existing {
+                provenance: artifact(tag.wrapping_add(3)),
+            },
+            if required {
+                vec![RequiredQuestionDischarge::new(
+                    RequiredDischargeKind::Check,
+                    artifact(tag.wrapping_add(4)),
+                    artifact(tag.wrapping_add(5)),
+                )]
+            } else {
+                Vec::new()
+            },
+        )
+        .expect("local candidate must be well formed")
+    };
+    let candidates = [
+        candidate(occurrences[0].clone(), 0x80, true, false),
+        candidate(occurrences[1].clone(), 0x88, true, false),
+        candidate(occurrences[2].clone(), 0x90, true, false),
+        candidate(occurrences[3].clone(), 0x98, false, false),
+        candidate(occurrences[4].clone(), 0xa0, true, false),
+    ];
+    let closed_assessments = vec![
+        LocalQuestionAssessment::closed(
+            candidates[0].clone(),
+            LocalQuestionClosingReason::Determined {
+                evidence: artifact(0xb0),
+            },
+        ),
+        LocalQuestionAssessment::closed(
+            candidates[1].clone(),
+            LocalQuestionClosingReason::FactorableRedundant {
+                evidence: artifact(0xb1),
+            },
+        ),
+        LocalQuestionAssessment::closed(
+            candidates[2].clone(),
+            LocalQuestionClosingReason::Inapplicable {
+                evidence: artifact(0xb2),
+            },
+        ),
+        LocalQuestionAssessment::closed(
+            candidates[3].clone(),
+            LocalQuestionClosingReason::NonProductive {
+                evidence: artifact(0xb3),
+            },
+        ),
+        LocalQuestionAssessment::closed(
+            candidates[4].clone(),
+            LocalQuestionClosingReason::Determined {
+                evidence: artifact(0xb4),
+            },
+        ),
+    ];
+
+    let closed = derive_finite_local_interrogative_fixed_point(
+        context,
+        &[references[0]],
+        &closed_assessments,
+        &edges,
+        &coverage,
+        &scenario.catalog,
+    )
+    .expect("the exact finite field must be decidable");
+    assert!(matches!(
+        closed,
+        LocalInterrogativeFixedPoint::Closed {
+            reachable,
+            assessments,
+            ..
+        }
+            if reachable.len() == references.len()
+                && references.iter().all(|reference| reachable.contains(reference))
+                && assessments.len() == references.len()
+    ));
+    let borrowed_coverage_context = LocalInterrogativeContext::new(
+        scenario.binding,
+        effectivity,
+        CoverageRef::from_artifact_ref(artifact(0x75)),
+        scenario.horizon,
+        artifact(0x72),
+    );
+    assert!(matches!(
+        derive_finite_local_interrogative_fixed_point(
+            borrowed_coverage_context,
+            &[references[0]],
+            &closed_assessments,
+            &edges,
+            &coverage,
+            &scenario.catalog,
+        ),
+        Err(ic_core::LocalInterrogativeFixedPointError::CoverageIdentityMismatch { .. })
+    ));
+    let foreign_binding_context = LocalInterrogativeContext::new(
+        BindingVersionRef::from_artifact_ref(artifact(0x76)),
+        effectivity,
+        coverage_ref,
+        scenario.horizon,
+        artifact(0x72),
+    );
+    assert!(matches!(
+        derive_finite_local_interrogative_fixed_point(
+            foreign_binding_context,
+            &[references[0]],
+            &closed_assessments,
+            &edges,
+            &coverage,
+            &scenario.catalog,
+        ),
+        Err(ic_core::LocalInterrogativeFixedPointError::BindingMismatch { .. })
+    ));
+
+    let incomplete = derive_finite_local_interrogative_fixed_point(
+        context,
+        &[references[0]],
+        &closed_assessments,
+        &edges[..edges.len() - 1],
+        &coverage,
+        &scenario.catalog,
+    )
+    .expect("incomplete materialization is a typed result, not a negative claim");
+    assert!(matches!(
+        incomplete,
+        LocalInterrogativeFixedPoint::Unknown {
+            available_occurrences,
+            missing_occurrences,
+            missing_edges,
+            ..
+        } if available_occurrences.len() == references.len()
+            && missing_occurrences.is_empty()
+            && missing_edges == vec![*edges.last().expect("star has a final edge")]
+    ));
+
+    let mut required_assessments = closed_assessments.clone();
+    let required_candidate = candidate(occurrences[4].clone(), 0xa8, false, true);
+    let required_discharge = required_candidate.required_discharges()[0];
+    required_assessments[4] = LocalQuestionAssessment::closed(
+        required_candidate,
+        LocalQuestionClosingReason::NonProductive {
+            evidence: artifact(0xb5),
+        },
+    );
+    let required_open = derive_finite_local_interrogative_fixed_point(
+        context,
+        &[references[0]],
+        &required_assessments,
+        &edges,
+        &coverage,
+        &scenario.catalog,
+    )
+    .expect("open required work is a retained local result");
+    assert!(matches!(
+        required_open,
+        LocalInterrogativeFixedPoint::OpenRequired { obligations, .. }
+            if obligations.len() == 1
+                && obligations[0].occurrence() == references[4]
+                && obligations[0].discharges() == [required_discharge]
+    ));
+
+    let residual_assessments = vec![
+        closed_assessments[0].clone(),
+        LocalQuestionAssessment::exit(
+            candidates[1].clone(),
+            LocalQuestionExit::Blocked {
+                dependency: artifact(0xc0),
+            },
+        ),
+        LocalQuestionAssessment::exit(
+            candidates[2].clone(),
+            LocalQuestionExit::ResourceBounded {
+                bound: artifact(0xc1),
+            },
+        ),
+        LocalQuestionAssessment::exit(
+            candidates[3].clone(),
+            LocalQuestionExit::Authority {
+                requirement: artifact(0xc2),
+            },
+        ),
+        LocalQuestionAssessment::exit(
+            candidates[4].clone(),
+            LocalQuestionExit::Extension {
+                obligation: artifact(0xc3),
+            },
+        ),
+    ];
+    let residual = derive_finite_local_interrogative_fixed_point(
+        context,
+        &[references[0]],
+        &residual_assessments,
+        &edges,
+        &coverage,
+        &scenario.catalog,
+    )
+    .expect("explicit exits remain a typed local result");
+    let LocalInterrogativeFixedPoint::Residual { exits, .. } = residual else {
+        panic!("explicit exits must not be counted as successful closure")
+    };
+    assert_eq!(exits.len(), 4);
+    assert!(exits.iter().any(|exit| matches!(
+        exit.exit(),
+        LocalQuestionExit::Blocked { dependency } if dependency == artifact(0xc0)
+    )));
+    assert!(exits.iter().any(|exit| matches!(
+        exit.exit(),
+        LocalQuestionExit::ResourceBounded { bound } if bound == artifact(0xc1)
+    )));
+    assert!(exits.iter().any(|exit| matches!(
+        exit.exit(),
+        LocalQuestionExit::Authority { requirement } if requirement == artifact(0xc2)
+    )));
+    assert!(exits.iter().any(|exit| matches!(
+        exit.exit(),
+        LocalQuestionExit::Extension { obligation } if obligation == artifact(0xc3)
+    )));
 }

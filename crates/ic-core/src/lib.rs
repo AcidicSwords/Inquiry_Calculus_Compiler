@@ -24,6 +24,7 @@ mod formula;
 mod frontier;
 mod iprog;
 mod live_question_frontier;
+mod local_interrogative_fixed_point;
 mod method;
 mod negation;
 mod negation_query;
@@ -159,6 +160,13 @@ pub use live_question_frontier::{
     FiniteLiveQuestionFrontier, FiniteLiveQuestionFrontierError, LiveQuestionCandidate,
     LiveQuestionCandidateError, LiveQuestionOrigin, ProtectedQuestionBranch, RequiredDischargeKind,
     RequiredQuestionDischarge, derive_finite_live_question_frontier,
+};
+pub use local_interrogative_fixed_point::{
+    FiniteLocalEffectivityCoverage, FiniteLocalEffectivityCoverageError, LocalEffectivityEdge,
+    LocalInterrogativeContext, LocalInterrogativeFixedPoint, LocalInterrogativeFixedPointError,
+    LocalInterrogativeResidual, LocalQuestionAssessment, LocalQuestionClassification,
+    LocalQuestionClosingReason, LocalQuestionExit, OpenRequiredQuestion,
+    derive_finite_local_interrogative_fixed_point,
 };
 pub use method::{
     BackendRef, CheckerRef, CostModelRef, CoverageRef, ExtensionDomainRef,
