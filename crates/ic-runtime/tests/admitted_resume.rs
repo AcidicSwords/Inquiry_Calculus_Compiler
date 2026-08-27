@@ -6594,6 +6594,8 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     .expect("the mixed-mode event must decode through its declared path") else {
         panic!("the mixed-mode event must retain two decoded completions")
     };
+    // A port this question does not declare is rejected by name; a declared sibling port is
+    // rejected because this route does not land in that port's carrier.
     assert!(matches!(
         decode_actual_event_for_port(
             &TypeSymbol::new("absent").expect("port must be valid"),
@@ -6605,6 +6607,18 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
             &cold_catalog,
         ),
         Err(ActualDecodeError::ForeignAnswerPort(_))
+    ));
+    assert!(matches!(
+        decode_actual_event_for_port(
+            &mixed_pure_port,
+            mixed_link.actuality().event(),
+            &cold_catalog
+                .resolve_finite_decoder(mixed_decoder)
+                .expect("mixed-mode decoder must reload"),
+            mixed_decoded_path,
+            &cold_catalog,
+        ),
+        Err(ActualDecodeError::PathOutputMismatch { .. })
     ));
     let mixed_observations = vec![
         match_decoded_observation_use(
