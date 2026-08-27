@@ -1,17 +1,18 @@
 //! Derived, nonexecuting source-`Ask` to runtime-program lowering checks.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use ic_core::{
-    ArtifactRef, AskOccurrence, AskOccurrenceCheckError, DischargeMode, OpenQueryCheckError,
-    QuestionSuccessionCatalog, RuntimeProgramRef, TypeSymbol,
+    ArtifactRef, AskOccurrence, AskOccurrenceCheckError, BindingVersionRef, DischargeMode,
+    OpenQueryCheckError, ProvenanceRef, QuestionSuccessionCatalog, ResolutionPathCheckError,
+    ResolutionPathRef, RouteRef, RuntimeProgramRef, TypeRef, TypeSymbol, TypedFormRef,
 };
 use thiserror::Error;
 
 use crate::{
     ActualitySeparationCatalog, FiniteProbeDischargeBundle, ProbeDischargeBundleError,
     RuntimeCatalog, RuntimeProgramArtifact, RuntimeProgramCheckError,
-    admit_finite_probe_discharge_bundle,
+    admit_finite_probe_discharge_bundle, admit_probe_ports_of_mixed_discharge,
 };
 
 /// One declared lowering of exactly one checked open source port.
@@ -254,6 +255,284 @@ impl SourceAskProbeDischarge {
     }
 }
 
+/// One non-Probe open-port evidence record within a source occurrence.
+///
+/// Canonical `PortEvidence` gives Pure, Generate, Check, and Warrant ports their exact typed
+/// result, route, resolution path, versions, and provenance. None of them carries an
+/// `ActualEvent`: only a Probe port enters the ordinary event spine, so this record has no event
+/// field to fill and cannot be made to carry actuality.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct NonProbePortDischargeEvidence {
+    port: TypeSymbol,
+    mode: DischargeMode,
+    result: TypedFormRef,
+    route: RouteRef,
+    resolution_path: ResolutionPathRef,
+    binding: BindingVersionRef,
+    compiler_version: ArtifactRef,
+    provenance: ProvenanceRef,
+}
+
+impl NonProbePortDischargeEvidence {
+    #[allow(clippy::too_many_arguments)]
+    #[must_use]
+    pub const fn new(
+        port: TypeSymbol,
+        mode: DischargeMode,
+        result: TypedFormRef,
+        route: RouteRef,
+        resolution_path: ResolutionPathRef,
+        binding: BindingVersionRef,
+        compiler_version: ArtifactRef,
+        provenance: ProvenanceRef,
+    ) -> Self {
+        Self {
+            port,
+            mode,
+            result,
+            route,
+            resolution_path,
+            binding,
+            compiler_version,
+            provenance,
+        }
+    }
+
+    #[must_use]
+    pub const fn port(&self) -> &TypeSymbol {
+        &self.port
+    }
+
+    #[must_use]
+    pub const fn mode(&self) -> DischargeMode {
+        self.mode
+    }
+
+    #[must_use]
+    pub const fn result(&self) -> TypedFormRef {
+        self.result
+    }
+
+    #[must_use]
+    pub const fn route(&self) -> RouteRef {
+        self.route
+    }
+
+    #[must_use]
+    pub const fn resolution_path(&self) -> ResolutionPathRef {
+        self.resolution_path
+    }
+}
+
+/// A derived view of one source `Ask` occurrence whose open ports do not all share a mode.
+///
+/// The Probe ports keep the existing checked bundle as the owner of their event, route, decoder,
+/// and resolution provenance. The non-Probe ports keep their own typed result and declared
+/// authority route. The two sides partition the exact open-port field of one occurrence; neither
+/// side may claim a port declared for the other, and verification never dispatches.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MixedModeSourceAskDischarge {
+    lowering: SourceAskLowering,
+    probe_bundle: FiniteProbeDischargeBundle,
+    non_probe: Vec<NonProbePortDischargeEvidence>,
+}
+
+impl MixedModeSourceAskDischarge {
+    #[must_use]
+    pub const fn new(
+        lowering: SourceAskLowering,
+        probe_bundle: FiniteProbeDischargeBundle,
+        non_probe: Vec<NonProbePortDischargeEvidence>,
+    ) -> Self {
+        Self {
+            lowering,
+            probe_bundle,
+            non_probe,
+        }
+    }
+
+    #[must_use]
+    pub const fn lowering(&self) -> &SourceAskLowering {
+        &self.lowering
+    }
+
+    #[must_use]
+    pub const fn probe_bundle(&self) -> &FiniteProbeDischargeBundle {
+        &self.probe_bundle
+    }
+
+    #[must_use]
+    pub fn non_probe(&self) -> &[NonProbePortDischargeEvidence] {
+        &self.non_probe
+    }
+
+    /// Independently rechecks the lowering, the Probe side, and every non-Probe port without
+    /// executing or dispatching anything.
+    pub fn check<C: SourceAskProbeDischargeCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), MixedModeSourceAskDischargeError> {
+        self.lowering.check(catalog)?;
+        let occurrence = self.lowering.occurrence();
+
+        let mut probe_ports = BTreeSet::new();
+        let mut non_probe_modes = BTreeMap::new();
+        for lowering in self.lowering.port_lowerings() {
+            if lowering.mode() == DischargeMode::Probe {
+                probe_ports.insert(lowering.port().clone());
+            } else {
+                non_probe_modes.insert(lowering.port().clone(), lowering.mode());
+            }
+        }
+        if probe_ports.is_empty() {
+            return Err(MixedModeSourceAskDischargeError::NoProbePort);
+        }
+        if non_probe_modes.is_empty() {
+            return Err(MixedModeSourceAskDischargeError::NoNonProbePort);
+        }
+
+        let rechecked_bundle = admit_probe_ports_of_mixed_discharge(
+            self.probe_bundle.occurrence().clone(),
+            self.probe_bundle.components().to_vec(),
+            self.probe_bundle.shared_events().to_vec(),
+            catalog,
+        )?;
+        if rechecked_bundle.occurrence() != occurrence {
+            return Err(MixedModeSourceAskDischargeError::OccurrenceMismatch);
+        }
+        let bundle_ports = rechecked_bundle
+            .components()
+            .iter()
+            .map(|component| component.port().clone())
+            .collect::<BTreeSet<_>>();
+        if bundle_ports != probe_ports {
+            return Err(MixedModeSourceAskDischargeError::ProbePortCoverageMismatch);
+        }
+
+        let query = ic_core::OpenQueryCatalog::resolve_open_query(catalog, occurrence.question())
+            .ok_or(MixedModeSourceAskDischargeError::UnresolvedQuery(
+            occurrence.question(),
+        ))?;
+        let schema = ic_core::RelationCatalog::resolve_relation_schema(catalog, query.relation())
+            .ok_or(MixedModeSourceAskDischargeError::UnresolvedRelation(
+            query.relation(),
+        ))?;
+
+        let mut covered = BTreeSet::new();
+        for evidence in &self.non_probe {
+            if evidence.mode == DischargeMode::Probe {
+                return Err(MixedModeSourceAskDischargeError::ProbeModeOnNonProbeSide(
+                    evidence.port.as_str().to_owned(),
+                ));
+            }
+            let declared = non_probe_modes.get(&evidence.port).ok_or_else(|| {
+                MixedModeSourceAskDischargeError::ForeignNonProbePort(
+                    evidence.port.as_str().to_owned(),
+                )
+            })?;
+            if *declared != evidence.mode {
+                return Err(MixedModeSourceAskDischargeError::NonProbeModeMismatch {
+                    port: evidence.port.as_str().to_owned(),
+                    declared: *declared,
+                    evidence: evidence.mode,
+                });
+            }
+            if !covered.insert(evidence.port.clone()) {
+                return Err(MixedModeSourceAskDischargeError::DuplicateNonProbePort(
+                    evidence.port.as_str().to_owned(),
+                ));
+            }
+            if evidence.binding != occurrence.binding_version() {
+                return Err(MixedModeSourceAskDischargeError::NonProbeBindingMismatch(
+                    evidence.port.as_str().to_owned(),
+                ));
+            }
+            if evidence.compiler_version != occurrence.compiler_version() {
+                return Err(
+                    MixedModeSourceAskDischargeError::NonProbeCompilerVersionMismatch(
+                        evidence.port.as_str().to_owned(),
+                    ),
+                );
+            }
+            if evidence.provenance != occurrence.provenance() {
+                return Err(
+                    MixedModeSourceAskDischargeError::NonProbeProvenanceMismatch(
+                        evidence.port.as_str().to_owned(),
+                    ),
+                );
+            }
+
+            let typed_form = ic_core::FormulaCatalog::resolve_typed_form(catalog, evidence.result)
+                .ok_or(MixedModeSourceAskDischargeError::UnresolvedNonProbeResult(
+                    evidence.result,
+                ))?;
+            let calculated = typed_form.typed_form_ref()?;
+            if calculated != evidence.result {
+                return Err(
+                    MixedModeSourceAskDischargeError::NonProbeResultIdentityMismatch {
+                        expected: evidence.result,
+                        actual: calculated,
+                    },
+                );
+            }
+            if typed_form.binding() != occurrence.binding_version() {
+                return Err(
+                    MixedModeSourceAskDischargeError::NonProbeResultBindingMismatch(
+                        evidence.port.as_str().to_owned(),
+                    ),
+                );
+            }
+
+            let path = catalog
+                .resolve_resolution_path(evidence.resolution_path)
+                .ok_or(MixedModeSourceAskDischargeError::UnresolvedResolutionPath(
+                    evidence.resolution_path,
+                ))?;
+            let calculated = path.resolution_path_ref()?;
+            if calculated != evidence.resolution_path {
+                return Err(
+                    MixedModeSourceAskDischargeError::ResolutionPathIdentityMismatch {
+                        expected: evidence.resolution_path,
+                        actual: calculated,
+                    },
+                );
+            }
+            path.check(catalog).map_err(|error| {
+                MixedModeSourceAskDischargeError::ResolutionPathCheck(Box::new(error))
+            })?;
+            let carrier = schema
+                .ports()
+                .iter()
+                .find(|port| port.name() == &evidence.port)
+                .map(ic_core::RelationPort::ty)
+                .ok_or_else(|| {
+                    MixedModeSourceAskDischargeError::PortMissingFromSchema(
+                        evidence.port.as_str().to_owned(),
+                    )
+                })?;
+            if path.input() != typed_form.ty() || path.output() != carrier {
+                return Err(
+                    MixedModeSourceAskDischargeError::NonProbeResolutionTypeMismatch(Box::new(
+                        NonProbeResolutionTypeMismatch {
+                            port: evidence.port.clone(),
+                            expected_input: typed_form.ty(),
+                            actual_input: path.input(),
+                            expected_output: carrier,
+                            actual_output: path.output(),
+                        },
+                    )),
+                );
+            }
+        }
+
+        let declared_non_probe = non_probe_modes.keys().cloned().collect::<BTreeSet<_>>();
+        if covered != declared_non_probe {
+            return Err(MixedModeSourceAskDischargeError::NonProbePortCoverageMismatch);
+        }
+        Ok(())
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum SourceAskLoweringCheckError {
     #[error(transparent)]
@@ -331,4 +610,88 @@ pub enum SourceAskProbeDischargeError {
     NonProbeLoweringPort(String),
     #[error("source lowering ports do not exactly match finite Probe bundle component ports")]
     PortCoverageMismatch,
+}
+
+#[derive(Debug, Error)]
+pub enum MixedModeSourceAskDischargeError {
+    #[error(transparent)]
+    Lowering(#[from] SourceAskLoweringCheckError),
+    #[error(transparent)]
+    Bundle(#[from] ProbeDischargeBundleError),
+    #[error(transparent)]
+    TypedFormEncoding(#[from] ic_core::TypeError),
+    #[error(transparent)]
+    ResolutionPathEncoding(#[from] ic_core::ResolutionPathError),
+    #[error("resolution path failed recheck: {0}")]
+    ResolutionPathCheck(Box<ResolutionPathCheckError>),
+    #[error("a mixed-mode source Ask view requires at least one Probe port")]
+    NoProbePort,
+    #[error("a mixed-mode source Ask view requires at least one non-Probe port")]
+    NoNonProbePort,
+    #[error("Probe discharge bundle belongs to a different source Ask occurrence")]
+    OccurrenceMismatch,
+    #[error("Probe bundle components do not exactly cover the Probe-mode source ports")]
+    ProbePortCoverageMismatch,
+    #[error("non-Probe evidence does not exactly cover the non-Probe source ports")]
+    NonProbePortCoverageMismatch,
+    #[error("non-Probe evidence for port {0:?} declares Probe mode and would claim an event")]
+    ProbeModeOnNonProbeSide(String),
+    #[error(
+        "non-Probe evidence names port {0:?}, which this source Ask does not declare non-Probe"
+    )]
+    ForeignNonProbePort(String),
+    #[error("non-Probe evidence repeats port {0:?}")]
+    DuplicateNonProbePort(String),
+    #[error(
+        "non-Probe evidence mode {evidence:?} differs from source mode {declared:?} for port {port:?}"
+    )]
+    NonProbeModeMismatch {
+        port: String,
+        declared: DischargeMode,
+        evidence: DischargeMode,
+    },
+    #[error("non-Probe evidence for port {0:?} has a binding other than its source occurrence")]
+    NonProbeBindingMismatch(String),
+    #[error(
+        "non-Probe evidence for port {0:?} has a compiler version other than its source occurrence"
+    )]
+    NonProbeCompilerVersionMismatch(String),
+    #[error("non-Probe evidence for port {0:?} has provenance other than its source occurrence")]
+    NonProbeProvenanceMismatch(String),
+    #[error("question {0} is unavailable")]
+    UnresolvedQuery(ic_core::QueryRef),
+    #[error("relation {0} is unavailable")]
+    UnresolvedRelation(ic_core::RelationRef),
+    #[error("open port {0:?} is absent from its relation schema")]
+    PortMissingFromSchema(String),
+    #[error("non-Probe typed result {0} is unavailable")]
+    UnresolvedNonProbeResult(TypedFormRef),
+    #[error("non-Probe typed result identity is {actual}, expected {expected}")]
+    NonProbeResultIdentityMismatch {
+        expected: TypedFormRef,
+        actual: TypedFormRef,
+    },
+    #[error("non-Probe typed result for port {0:?} is scoped to another binding")]
+    NonProbeResultBindingMismatch(String),
+    #[error("resolution path {0} is unavailable")]
+    UnresolvedResolutionPath(ResolutionPathRef),
+    #[error("resolution path identity is {actual}, expected {expected}")]
+    ResolutionPathIdentityMismatch {
+        expected: ResolutionPathRef,
+        actual: ResolutionPathRef,
+    },
+    #[error(transparent)]
+    NonProbeResolutionTypeMismatch(Box<NonProbeResolutionTypeMismatch>),
+}
+
+#[derive(Debug, Error)]
+#[error(
+    "non-Probe port {port} resolution path has {actual_input}->{actual_output}, expected {expected_input}->{expected_output}"
+)]
+pub struct NonProbeResolutionTypeMismatch {
+    port: TypeSymbol,
+    expected_input: TypeRef,
+    actual_input: TypeRef,
+    expected_output: TypeRef,
+    actual_output: TypeRef,
 }

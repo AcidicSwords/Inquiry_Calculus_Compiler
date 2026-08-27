@@ -47,15 +47,18 @@ use ic_core::{
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, MethodBridgeReentryError, MethodCuePlanning, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
-    OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
-    PairedActualityTrace, PairedActualityTraversal, PortLowering, ProbeDischargeBundleError,
-    ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
-    ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
+    MachineStep, MethodBridgeReentryError, MethodCuePlanning, MixedModeSourceAskDischarge,
+    MixedModeSourceAskDischargeError, NonProbePortDischargeEvidence,
+    OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaGenerateProvider,
+    OllamaHttpResponse, OllamaProviderError, PairedActualityTrace, PairedActualityTraversal,
+    PortLowering, ProbeDischargeBundleError, ProbeDispatchContext, ProbePortDischargeEvidence,
+    ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
+    ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
     SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
-    TraversalCausalOrder, admit_finite_probe_discharge_bundle, check_source_event_link,
-    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
+    TraversalCausalOrder, admit_finite_probe_discharge_bundle,
+    admit_probe_ports_of_mixed_discharge, check_source_event_link, dispatch_probe,
+    materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
     replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
     resolve_finite_probe_occurrence, route_separator_through_method_bridge,
 };
@@ -5288,6 +5291,297 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     .await
     .expect("one event may actualize an explicitly checked mixed-port lowering");
     assert_eq!(provider_calls.load(Ordering::SeqCst), 4);
+
+    // One source Ask whose open ports do not share a discharge mode. Only the Probe port may
+    // reach the event spine; the Pure port keeps its own typed result and authority route.
+    let mixed_probe_port = TypeSymbol::new("probed").expect("port must be valid");
+    let mixed_pure_port = TypeSymbol::new("derived").expect("port must be valid");
+    let mixed_relation_value = RelationSchema::new(
+        binding,
+        vec![
+            RelationPort::new(mixed_probe_port.clone(), roots.unit),
+            RelationPort::new(mixed_pure_port.clone(), roots.unit),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: stored_ref(&store, b"mixed-mode-relation-contract").await,
+        },
+        Vec::new(),
+        Vec::new(),
+    );
+    let mixed_relation = RelationRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_relation_value
+                .envelope()
+                .expect("mixed-mode relation must encode"),
+            &mixed_relation_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_schema(mixed_relation_value), mixed_relation);
+    let mixed_query_value = OpenQuery::new(
+        mixed_relation,
+        Vec::new(),
+        vec![
+            OpenPort::new(mixed_probe_port.clone(), DischargeMode::Probe),
+            OpenPort::new(mixed_pure_port.clone(), DischargeMode::Pure),
+        ],
+        query_context,
+    );
+    let mixed_query = QueryRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_query_value
+                .envelope()
+                .expect("mixed-mode query must encode"),
+            &mixed_query_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_query(mixed_query_value), mixed_query);
+    let mixed_chart_value = BoundaryChart::new(
+        mixed_query,
+        base_chart.x_type(),
+        base_chart.y_type(),
+        base_chart.boundary_type(),
+        base_chart.pi_x(),
+        base_chart.pi_y(),
+        base_chart.x_determination(),
+        base_chart.y_determination(),
+        base_chart.negation_frontier_x().to_vec(),
+        base_chart.negation_frontier_y().to_vec(),
+        base_chart.seed_y(),
+        base_chart.compatibility(),
+        base_chart.traversal(),
+        base_chart.grain(),
+        base_chart.horizon(),
+    );
+    let mixed_boundary = BoundaryRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_chart_value
+                .envelope()
+                .expect("mixed-mode boundary must encode"),
+            &mixed_chart_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog
+        .charts
+        .insert(mixed_boundary, mixed_chart_value.clone());
+    let mixed_operator_value = ProbeOperator::new(
+        mixed_query,
+        mixed_boundary,
+        base_operator.active_view(),
+        base_operator.backend(),
+        base_operator.executable_code(),
+        base_operator.return_type(),
+        base_operator.decoder_contract(),
+        base_operator.probe_contract(),
+        base_operator.compiler_version(),
+    );
+    let mixed_operator = ProbeOperatorRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_operator_value
+                .envelope()
+                .expect("mixed-mode operator must encode"),
+            &mixed_operator_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog
+        .operators
+        .insert(mixed_operator, mixed_operator_value.clone());
+    let mixed_plan_value = SurfacePlan::new(
+        mixed_operator,
+        mixed_query,
+        mixed_boundary,
+        mixed_operator_value.active_view(),
+        mixed_operator_value.executable_code(),
+        mixed_operator_value.probe_contract(),
+        stored_ref(&store, b"mixed-mode-renderer-version").await,
+        stored_ref(&store, b"mixed-mode-rendered-body").await,
+    );
+    let mixed_plan = ic_core::SurfacePlanRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_plan_value
+                .envelope()
+                .expect("mixed-mode plan must encode"),
+            &mixed_plan_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    let mixed_request_body = stored_ref(&store, b"mixed-mode-request-body").await;
+    let mixed_request_value = BackendRequest::new(
+        mixed_operator,
+        mixed_plan,
+        mixed_query,
+        mixed_boundary,
+        mixed_operator_value.backend(),
+        mixed_operator_value.executable_code(),
+        mixed_operator_value.compiler_version(),
+        request.backend_version(),
+        mixed_request_body,
+    );
+    let mixed_request = ic_core::BackendRequestRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_request_value
+                .envelope()
+                .expect("mixed-mode request must encode"),
+            &mixed_request_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    let mixed_source_program_value = IProgArtifact::new(
+        roots.unit,
+        IProgIR::Ask {
+            question: mixed_query,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("mixed_mode_answer").expect("slot must be valid"),
+            continuation: roots.continuation,
+        },
+    );
+    let mixed_source_program = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_source_program_value
+                .envelope()
+                .expect("mixed-mode source must encode"),
+            &mixed_source_program_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_program(mixed_source_program_value),
+        mixed_source_program
+    );
+    let mixed_provenance =
+        ProvenanceRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-source-provenance").await);
+    let mixed_source_value = SourceConfig::new(
+        roots.unit,
+        mixed_source_program,
+        Vec::new(),
+        binding,
+        roots.compiler_version,
+        mixed_provenance,
+    )
+    .expect("mixed-mode source configuration must encode");
+    let mixed_source_ref = SourceConfigRef::from_artifact_ref(
+        persist(
+            &store,
+            &mixed_source_value
+                .envelope()
+                .expect("mixed-mode source configuration must encode"),
+            &mixed_source_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_source_config(mixed_source_value.clone()),
+        mixed_source_ref
+    );
+    let mixed_occurrence = mixed_source_value
+        .ask_occurrences(&catalog)
+        .expect("mixed-mode source must re-walk")
+        .into_iter()
+        .next()
+        .expect("mixed-mode source must contain an Ask");
+    let mixed_occurrence_ref = mixed_occurrence
+        .ask_occurrence_ref()
+        .expect("mixed-mode occurrence must encode");
+    persist(
+        &store,
+        &mixed_occurrence
+            .envelope()
+            .expect("mixed-mode occurrence must encode"),
+        &persist_occurrence(&mixed_occurrence),
+    )
+    .await;
+    let pure_path_value = ResolutionPath::new(roots.unit, roots.unit, ResolutionPathIR::Identity);
+    let pure_path = ResolutionPathRef::from_artifact_ref(
+        persist(
+            &store,
+            &pure_path_value
+                .envelope()
+                .expect("pure identity path must encode"),
+            &pure_path_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_path(pure_path_value), pure_path);
+    let mixed_runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: mixed_operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    mixed_runtime
+        .verify(&catalog)
+        .expect("mixed-mode runtime must verify");
+    let mixed_runtime_artifact =
+        RuntimeProgramArtifact::new(binding, roots.compiler_version, mixed_runtime.clone());
+    let mixed_runtime_ref = mixed_runtime_artifact
+        .runtime_program_ref()
+        .expect("mixed-mode runtime identity must encode");
+    persist(
+        &store,
+        &mixed_runtime_artifact
+            .envelope()
+            .expect("mixed-mode runtime artifact must encode"),
+        &mixed_runtime_artifact.referenced_artifacts(),
+    )
+    .await;
+    let MachineStep::Suspended(mixed_suspension) = mixed_runtime
+        .step(mixed_runtime.start())
+        .expect("mixed-mode runtime must suspend")
+    else {
+        panic!("mixed-mode runtime must suspend")
+    };
+    let state_d = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-d").await);
+    let state_e = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-e").await);
+    let token_mixed = DispatchToken::from_bytes([0xd4; 32]);
+    let mut mixed_provider = CountingProvider {
+        calls: Arc::clone(&provider_calls),
+        expected_body: mixed_request_body,
+        response: original.raw_return().bytes().to_vec(),
+    };
+    let mixed_actual = dispatch_probe(
+        &store,
+        mixed_suspension,
+        token_mixed,
+        mixed_request,
+        ProbeDispatchContext::new(
+            Some(multi_actual.event_ref()),
+            state_d,
+            None,
+            state_e,
+            grain,
+            route,
+            binding,
+            mixed_provenance,
+        )
+        .with_source_ask_occurrence(mixed_occurrence_ref),
+        &mut mixed_provider,
+    )
+    .await
+    .expect("only the Probe port of a mixed-mode source Ask may actualize an event");
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 5);
     store.close().await;
 
     let reopened = ArtifactStore::open(&url)
@@ -6078,10 +6372,295 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         ),
         Err(ProbeDischargeBundleError::ResolutionTypeMismatch(_))
     ));
+    let cold_mixed_relation = RelationSchema::from_envelope(
+        &load_envelope(&reopened, mixed_relation.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode relation must cold decode");
+    assert_eq!(
+        cold_catalog.insert_schema(cold_mixed_relation),
+        mixed_relation
+    );
+    let cold_mixed_query =
+        OpenQuery::from_envelope(&load_envelope(&reopened, mixed_query.as_artifact_ref()).await)
+            .expect("mixed-mode query must cold decode");
+    assert_eq!(cold_catalog.insert_query(cold_mixed_query), mixed_query);
+    let cold_mixed_chart = BoundaryChart::from_envelope(
+        &load_envelope(&reopened, mixed_boundary.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode boundary must cold decode");
+    cold_catalog.charts.insert(mixed_boundary, cold_mixed_chart);
+    let cold_mixed_operator = ProbeOperator::from_envelope(
+        &load_envelope(&reopened, mixed_operator.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode operator must cold decode");
+    cold_catalog
+        .operators
+        .insert(mixed_operator, cold_mixed_operator);
+    let cold_mixed_source_program = IProgArtifact::from_envelope(
+        &load_envelope(&reopened, mixed_source_program.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode source must cold decode");
+    assert_eq!(
+        cold_catalog.insert_program(cold_mixed_source_program),
+        mixed_source_program
+    );
+    let cold_mixed_source = SourceConfig::from_envelope(
+        &load_envelope(&reopened, mixed_source_ref.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode source configuration must cold decode");
+    assert_eq!(
+        cold_catalog.insert_source_config(cold_mixed_source),
+        mixed_source_ref
+    );
+    let cold_mixed_occurrence = AskOccurrence::from_envelope(
+        &load_envelope(&reopened, mixed_occurrence_ref.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode occurrence must cold decode");
+    let cold_pure_path =
+        ResolutionPath::from_envelope(&load_envelope(&reopened, pure_path.as_artifact_ref()).await)
+            .expect("pure identity path must cold decode");
+    assert_eq!(cold_catalog.insert_path(cold_pure_path), pure_path);
+    let cold_mixed_runtime = RuntimeProgramArtifact::from_envelope(
+        &load_envelope(&reopened, mixed_runtime_ref.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode runtime artifact must cold decode");
+    let replay_mixed = reopened
+        .replay_completed_external_effect(token_mixed)
+        .await
+        .expect("mixed-mode effect must cold replay");
+    assert_eq!(replay_mixed.event_ref(), mixed_actual.event_ref());
+    let mixed_link =
+        check_source_event_link(replay_mixed, cold_mixed_occurrence.clone(), &cold_catalog)
+            .expect("the Probe port event must recheck against its source occurrence");
+
+    let cold_mixed_ports =
+        OpenQueryCatalog::resolve_open_query(&cold_catalog, cold_mixed_occurrence.question())
+            .expect("cold mixed-mode query must reload")
+            .open_ports()
+            .iter()
+            .map(|open| PortLowering::new(open.port().clone(), open.mode()))
+            .collect::<Vec<_>>();
+    assert_eq!(cold_mixed_ports.len(), 2);
+    let mixed_lowering = SourceAskLowering::new(
+        cold_mixed_occurrence.clone(),
+        cold_mixed_ports,
+        cold_mixed_runtime,
+    )
+    .expect("a complete mixed-mode port field must form a lowering");
+    mixed_lowering
+        .check_expected(&cold_mixed_occurrence, mixed_runtime_ref, &cold_catalog)
+        .expect("the mixed-mode lowering must retain its exact occurrence and runtime");
+
+    // The all-Probe specialization must keep rejecting a question with any non-Probe port.
+    assert!(matches!(
+        admit_finite_probe_discharge_bundle(
+            cold_mixed_occurrence.clone(),
+            vec![ProbePortDischargeEvidence::new(
+                mixed_probe_port.clone(),
+                route,
+                roots.decoded_path,
+                binding,
+                roots.compiler_version,
+                mixed_provenance,
+                mixed_link.clone(),
+            )],
+            Vec::new(),
+            &cold_catalog,
+        ),
+        Err(ProbeDischargeBundleError::NonProbePortOutsideFiniteSpecialization(port))
+            if port == mixed_pure_port
+    ));
+    assert!(matches!(
+        SourceAskProbeDischarge::new(mixed_lowering.clone(), bundle.clone()).check(&cold_catalog),
+        Err(SourceAskProbeDischargeError::NonProbeLoweringPort(_))
+    ));
+
+    let mixed_probe_bundle = admit_probe_ports_of_mixed_discharge(
+        cold_mixed_occurrence.clone(),
+        vec![ProbePortDischargeEvidence::new(
+            mixed_probe_port.clone(),
+            route,
+            roots.decoded_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+            mixed_link,
+        )],
+        Vec::new(),
+        &cold_catalog,
+    )
+    .expect("the Probe-mode subset of a mixed question must admit through the same checker");
+    assert_eq!(mixed_probe_bundle.components().len(), 1);
+    let pure_evidence = NonProbePortDischargeEvidence::new(
+        mixed_pure_port.clone(),
+        DischargeMode::Pure,
+        roots.answer_a,
+        route,
+        pure_path,
+        binding,
+        roots.compiler_version,
+        mixed_provenance,
+    );
+    let mixed_view = MixedModeSourceAskDischarge::new(
+        mixed_lowering.clone(),
+        mixed_probe_bundle.clone(),
+        vec![pure_evidence.clone()],
+    );
+    mixed_view
+        .check(&cold_catalog)
+        .expect("one Probe port and one Pure port must form one exact mixed-mode view");
+    assert_eq!(mixed_view.probe_bundle().components().len(), 1);
+    assert_eq!(mixed_view.non_probe().len(), 1);
+    assert_eq!(mixed_view.non_probe()[0].mode(), DischargeMode::Pure);
+
+    let mixed_foil = |non_probe: Vec<NonProbePortDischargeEvidence>| {
+        MixedModeSourceAskDischarge::new(
+            mixed_lowering.clone(),
+            mixed_probe_bundle.clone(),
+            non_probe,
+        )
+        .check(&cold_catalog)
+    };
+    // An event-bearing mode may not be assigned to the non-Probe port.
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Probe,
+            roots.answer_a,
+            route,
+            pure_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::ProbeModeOnNonProbeSide(_))
+    ));
+    // The non-Probe side may not claim the Probe port.
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_probe_port.clone(),
+            DischargeMode::Pure,
+            roots.answer_a,
+            route,
+            pure_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::ForeignNonProbePort(_))
+    ));
+    // A declared Pure port may not be discharged under another authority.
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Warrant,
+            roots.answer_a,
+            route,
+            pure_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::NonProbeModeMismatch { .. })
+    ));
+    assert!(matches!(
+        mixed_foil(vec![pure_evidence.clone(), pure_evidence.clone()]),
+        Err(MixedModeSourceAskDischargeError::DuplicateNonProbePort(_))
+    ));
+    assert!(matches!(
+        mixed_foil(Vec::new()),
+        Err(MixedModeSourceAskDischargeError::NonProbePortCoverageMismatch)
+    ));
+    // Non-Probe output must be an exact resolvable typed form, never an untyped reference.
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            TypedFormRef::from_artifact_ref(artifact(0xc7)),
+            route,
+            pure_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::UnresolvedNonProbeResult(
+            _
+        ))
+    ));
+    // Its declared route must actually carry that result to this port's carrier type.
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            roots.answer_a,
+            route,
+            opaque_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::NonProbeResolutionTypeMismatch(_))
+    ));
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            roots.answer_a,
+            route,
+            pure_path,
+            binding,
+            artifact(0xfe),
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::NonProbeCompilerVersionMismatch(_))
+    ));
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            roots.answer_a,
+            route,
+            pure_path,
+            BindingVersionRef::from_artifact_ref(artifact(0xfd)),
+            roots.compiler_version,
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::NonProbeBindingMismatch(_))
+    ));
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port,
+            DischargeMode::Pure,
+            roots.answer_a,
+            route,
+            pure_path,
+            binding,
+            roots.compiler_version,
+            ProvenanceRef::from_artifact_ref(artifact(0xfc)),
+        )]),
+        Err(MixedModeSourceAskDischargeError::NonProbeProvenanceMismatch(_))
+    ));
+    // Another occurrence's structurally compatible Probe bundle is not interchangeable.
+    assert!(matches!(
+        MixedModeSourceAskDischarge::new(mixed_lowering, bundle, vec![pure_evidence.clone()],)
+            .check(&cold_catalog),
+        Err(MixedModeSourceAskDischargeError::OccurrenceMismatch)
+    ));
+    // An all-Probe occurrence has no non-Probe side and stays outside this view.
+    assert!(matches!(
+        MixedModeSourceAskDischarge::new(
+            cold_source_lowering,
+            mixed_probe_bundle,
+            vec![pure_evidence],
+        )
+        .check(&cold_catalog),
+        Err(MixedModeSourceAskDischargeError::NoNonProbePort)
+    ));
+
     assert_eq!(
         provider_calls.load(Ordering::SeqCst),
-        4,
-        "cold replay must not redispatch either occurrence or the shared-port event"
+        5,
+        "cold replay must not redispatch any occurrence, the shared-port event, or the mixed-mode Probe port"
     );
     reopened.close().await;
     std::fs::remove_file(path).expect("temporary occurrence replay database must be removable");

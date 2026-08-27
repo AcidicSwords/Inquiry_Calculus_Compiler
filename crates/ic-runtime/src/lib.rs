@@ -21,7 +21,8 @@ use std::collections::BTreeMap;
 pub use actuality::{
     ActualitySeparationCatalog, FiniteProbeDischargeBundle, ProbeDischargeBundleError,
     ProbePortDischargeEvidence, SharedProbeEventAdmission, SourceEventLink, SourceEventLinkError,
-    admit_finite_probe_discharge_bundle, check_source_event_link,
+    admit_finite_probe_discharge_bundle, admit_probe_ports_of_mixed_discharge,
+    check_source_event_link,
 };
 pub use dispatch::{
     ActualizedProbe, ProbeDispatchContext, ProbeDispatchError, ProbeProvider, ProviderReturn,
@@ -61,8 +62,10 @@ pub use runtime_code::{
     RuntimeProgramCheckError, RuntimeProgramError,
 };
 pub use source_ask_lowering::{
-    PortLowering, SourceAskLowering, SourceAskLoweringCatalog, SourceAskLoweringCheckError,
-    SourceAskProbeDischarge, SourceAskProbeDischargeCatalog, SourceAskProbeDischargeError,
+    MixedModeSourceAskDischarge, MixedModeSourceAskDischargeError, NonProbePortDischargeEvidence,
+    NonProbeResolutionTypeMismatch, PortLowering, SourceAskLowering, SourceAskLoweringCatalog,
+    SourceAskLoweringCheckError, SourceAskProbeDischarge, SourceAskProbeDischargeCatalog,
+    SourceAskProbeDischargeError,
 };
 use thiserror::Error;
 pub use trace::{

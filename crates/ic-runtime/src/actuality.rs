@@ -256,13 +256,61 @@ impl FiniteProbeDischargeBundle {
     }
 }
 
+/// Which open ports a Probe bundle admission must cover exactly.
+///
+/// This selects the expected port field only. Every occurrence, event, route, resolution-path,
+/// version, and provenance check below is identical for both scopes.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum ProbePortScope {
+    /// Every open port must be Probe-mode: the existing finite all-Probe specialization.
+    EveryOpenPort,
+    /// Only the Probe-mode open ports are expected; the remaining ports are discharged by their
+    /// own declared modes elsewhere and never by this bundle.
+    ProbeModeSubset,
+}
+
 /// Admits one finite bundle only when every open port is Probe-mode and covered exactly once,
 /// every event is linked to the same occurrence, and every shared event has an exact explicit
 /// multi-port admission.
 pub fn admit_finite_probe_discharge_bundle<C: ActualitySeparationCatalog>(
     occurrence: AskOccurrence,
+    components: Vec<ProbePortDischargeEvidence>,
+    shared_events: Vec<SharedProbeEventAdmission>,
+    catalog: &C,
+) -> Result<FiniteProbeDischargeBundle, ProbeDischargeBundleError> {
+    admit_probe_discharge_bundle(
+        occurrence,
+        components,
+        shared_events,
+        ProbePortScope::EveryOpenPort,
+        catalog,
+    )
+}
+
+/// Admits the Probe-mode part of a mixed-mode source `Ask` through the same checker.
+///
+/// The non-Probe ports of the same question are not expected here and never gain an event; they
+/// are discharged by `MixedModeSourceAskDischarge` under their own declared modes.
+pub fn admit_probe_ports_of_mixed_discharge<C: ActualitySeparationCatalog>(
+    occurrence: AskOccurrence,
+    components: Vec<ProbePortDischargeEvidence>,
+    shared_events: Vec<SharedProbeEventAdmission>,
+    catalog: &C,
+) -> Result<FiniteProbeDischargeBundle, ProbeDischargeBundleError> {
+    admit_probe_discharge_bundle(
+        occurrence,
+        components,
+        shared_events,
+        ProbePortScope::ProbeModeSubset,
+        catalog,
+    )
+}
+
+fn admit_probe_discharge_bundle<C: ActualitySeparationCatalog>(
+    occurrence: AskOccurrence,
     mut components: Vec<ProbePortDischargeEvidence>,
     mut shared_events: Vec<SharedProbeEventAdmission>,
+    scope: ProbePortScope,
     catalog: &C,
 ) -> Result<FiniteProbeDischargeBundle, ProbeDischargeBundleError> {
     occurrence
@@ -289,11 +337,16 @@ pub fn admit_finite_probe_discharge_bundle<C: ActualitySeparationCatalog>(
     let mut expected_ports = BTreeMap::new();
     for open in query.open_ports() {
         if open.mode() != DischargeMode::Probe {
-            return Err(
-                ProbeDischargeBundleError::NonProbePortOutsideFiniteSpecialization(
-                    open.port().clone(),
-                ),
-            );
+            match scope {
+                ProbePortScope::EveryOpenPort => {
+                    return Err(
+                        ProbeDischargeBundleError::NonProbePortOutsideFiniteSpecialization(
+                            open.port().clone(),
+                        ),
+                    );
+                }
+                ProbePortScope::ProbeModeSubset => continue,
+            }
         }
         let ty = schema
             .ports()
