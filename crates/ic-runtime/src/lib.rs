@@ -11,6 +11,7 @@ mod dispatch;
 mod ollama;
 mod openai;
 mod replay;
+mod resolved_occurrence;
 mod trace;
 
 use std::collections::BTreeMap;
@@ -48,6 +49,10 @@ pub use replay::{
     FiniteSeparatorReplayError, MethodBridgeReentry, MethodBridgeReentryError, MethodCuePlanning,
     ReplayObservation, plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
     replay_completed_finite_separator_inquiry, route_separator_through_method_bridge,
+};
+pub use resolved_occurrence::{
+    ResolvedFiniteProbeOccurrence, ResolvedFiniteProbeOccurrenceError,
+    resolve_finite_probe_occurrence,
 };
 use thiserror::Error;
 pub use trace::{

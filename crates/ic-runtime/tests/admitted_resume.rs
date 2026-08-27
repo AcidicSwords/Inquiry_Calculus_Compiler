@@ -22,11 +22,13 @@ use ic_core::{
     ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFinitePresentUpdate,
     ExactFiniteSignature, ExactFiniteSufficientPresent, ExactFiniteSufficientPresentResult,
     ExactProtectedContinuation, ExtensionDomainRef, FiniteAnswerBindingError, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderRef, FiniteSupportedAnswerError,
-    FormulaArtifact, FormulaCatalog, FormulaIR, FormulaRef, GeneratedInquiry,
-    GeneratedInquiryCatalog, GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog,
-    IProgCheckError, IProgIR, IProgRef, MethodBridge, MethodBridgeCatalog, MethodBridgeCheckError,
-    MethodContract, MethodRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderRef, FiniteResolutionCoverage,
+    FiniteResolutionLeafEntry, FiniteResolutionLeafTable, FiniteResolutionOutcome,
+    FiniteResolutionOutcomeKind, FiniteResolutionRun, FiniteSupportedAnswerError, FormulaArtifact,
+    FormulaCatalog, FormulaIR, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
+    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgIR, IProgRef, MethodBridge, MethodBridgeCatalog, MethodBridgeCheckError, MethodContract,
+    MethodRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
     OperatorOccurrenceCatalog, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
     ProgramBinding, ProtectedCompletionFieldRef, ProtectedContinuationRef, ProvenanceRef, QueryRef,
     QuestionSuccessionCatalog, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
@@ -39,9 +41,9 @@ use ic_core::{
     TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef, admit_exact_finite_cue,
     admit_finite_supported_answers, bind_finite_ask_continuation,
     challenge_exact_finite_sufficient_present, check_admitted_exact_finite_cue_basis,
-    decode_actual_event, derive_exact_finite_sufficient_present,
-    extend_exact_finite_sufficient_present, match_decoded_observation_use,
-    standing_from_declared_support,
+    classify_finite_question_resolution, decode_actual_event,
+    derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
+    match_decoded_observation_use, run_finite_resolution, standing_from_declared_support,
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
@@ -49,11 +51,12 @@ use ic_runtime::{
     OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
     PairedActualityTrace, PairedActualityTraversal, ProbeDischargeBundleError,
     ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
-    ReplayObservation, RuntimeCatalog, SharedProbeEventAdmission, SourceEventLinkError, Terminator,
-    TraversalCausalOrder, admit_finite_probe_discharge_bundle, check_source_event_link,
-    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
+    ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog,
+    SharedProbeEventAdmission, SourceEventLinkError, Terminator, TraversalCausalOrder,
+    admit_finite_probe_discharge_bundle, check_source_event_link, dispatch_probe,
+    materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
     replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
-    route_separator_through_method_bridge,
+    resolve_finite_probe_occurrence, route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -5389,6 +5392,314 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
             .expect("second successor must execute"),
         MachineStep::Returned(value) if value == roots.answer_b
     ));
+
+    // Test boundary QRESOLUTION-GATE-001:
+    // F = a finite relational Compose selects one output, aliases one of five resolution
+    // outcomes, or lets a non-Supported result/equal question enter a source continuation.
+    // C = exact finite relational set composition, question/event/path-indexed payloads, whole
+    // standing support admission, and exact bundle/Ask/continuation reconstruction.
+    // Omega/M = this one two-candidate Probe question, one source-linked event, exact and partial
+    // finite leaf tables, and one direct-decode-plus-relation Compose path.
+    // P/V/E/U = all five constructors and two compatible outputs; general search completeness,
+    // intensional relations, mixed-mode bundles, and cross-binding resolution remain open.
+    let source_query = OpenQueryCatalog::resolve_open_query(&cold_catalog, roots.query)
+        .expect("source query must remain available for resolution");
+    let answer_port = source_query
+        .open_ports()
+        .first()
+        .expect("finite resolution fixture has one answer port")
+        .port()
+        .clone();
+    let bundle_a = admit_finite_probe_discharge_bundle(
+        cold_first_occurrence.clone(),
+        vec![ProbePortDischargeEvidence::new(
+            answer_port,
+            route,
+            roots.decoded_path,
+            binding,
+            roots.compiler_version,
+            first_provenance,
+            link_a.clone(),
+        )],
+        Vec::new(),
+        &cold_catalog,
+    )
+    .expect("the exact one-port source event must form its discharge bundle");
+
+    let mut candidate_values = vec![
+        roots.candidate_a.as_artifact_ref(),
+        roots.candidate_b.as_artifact_ref(),
+    ];
+    candidate_values.sort_unstable();
+    let raw_value = roots.raw_return.as_artifact_ref();
+    let relation_path_value = ResolutionPath::new(
+        roots.unit,
+        roots.unit,
+        ResolutionPathIR::Relation {
+            relation: roots.relation,
+        },
+    );
+    let relation_path = cold_catalog.insert_path(relation_path_value);
+    let composed_path_value = ResolutionPath::new(
+        roots.raw_type,
+        roots.unit,
+        ResolutionPathIR::Compose {
+            first: roots.decoded_path,
+            second: relation_path,
+        },
+    );
+    let composed_path = cold_catalog.insert_path(composed_path_value);
+    let decoder_table = FiniteResolutionLeafTable::new(
+        roots.decoded_path,
+        vec![raw_value],
+        vec![FiniteResolutionLeafEntry::related(
+            raw_value,
+            candidate_values.clone(),
+        )],
+        FiniteResolutionCoverage::Exact(CoverageRef::from_artifact_ref(
+            stored_ref(&reopened, b"resolution-decoder-coverage").await,
+        )),
+    )
+    .expect("direct decoder relation must have exact finite coverage");
+    let relation_table = FiniteResolutionLeafTable::new(
+        relation_path,
+        candidate_values.clone(),
+        candidate_values
+            .iter()
+            .copied()
+            .map(|candidate| FiniteResolutionLeafEntry::related(candidate, vec![candidate]))
+            .collect(),
+        FiniteResolutionCoverage::Exact(CoverageRef::from_artifact_ref(
+            stored_ref(&reopened, b"resolution-relation-coverage").await,
+        )),
+    )
+    .expect("second relation must cover both decoder outputs");
+    let complete_run = run_finite_resolution(
+        composed_path,
+        raw_value,
+        &[decoder_table, relation_table],
+        &cold_catalog,
+    )
+    .expect("finite relational Compose must run");
+    let FiniteResolutionRun::Complete(complete) = &complete_run else {
+        panic!("both exact leaves must yield a complete relational run")
+    };
+    assert_eq!(
+        complete.outputs(),
+        candidate_values,
+        "Compose must retain both compatible outputs rather than select the first"
+    );
+
+    let ActualDecodeResult::Decoded(decoded) = decode_actual_event(
+        replay_a.event(),
+        &cold_decoder,
+        roots.decoded_path,
+        &cold_catalog,
+    )
+    .expect("source-linked event must decode through its direct path") else {
+        panic!("fixture event must retain its two decoded candidates")
+    };
+    let decoded_observations = vec![
+        match_decoded_observation_use(
+            &decoded,
+            roots.candidate_a,
+            roots.observation_a,
+            &cold_catalog,
+        )
+        .expect("first decoded candidate must retain its observation"),
+        match_decoded_observation_use(
+            &decoded,
+            roots.candidate_b,
+            roots.observation_b,
+            &cold_catalog,
+        )
+        .expect("second decoded candidate must retain its observation"),
+    ];
+    let supported = classify_finite_question_resolution(
+        replay_a.event_ref(),
+        roots.query,
+        complete_run.clone(),
+        Some(decoded.clone()),
+        decoded_observations.clone(),
+        &cold_standing,
+        &cold_catalog,
+    )
+    .expect("the exact composed output field must classify through standing support");
+    assert_eq!(supported.kind(), FiniteResolutionOutcomeKind::Supported);
+
+    let empty_standing = standing_from_declared_support(Vec::new(), &[], &cold_catalog)
+        .expect("an empty standing field must remain constructible");
+    let unsupported = classify_finite_question_resolution(
+        replay_a.event_ref(),
+        roots.query,
+        complete_run.clone(),
+        Some(decoded.clone()),
+        decoded_observations.clone(),
+        &empty_standing,
+        &cold_catalog,
+    )
+    .expect("decoded candidates with a failed support route form Unsupported");
+    assert!(matches!(
+        &unsupported,
+        FiniteResolutionOutcome::Unsupported(residual)
+            if residual.decoded().candidates() == candidate_values
+                .iter()
+                .copied()
+                .map(CompletionCandidateRef::from_artifact_ref)
+                .collect::<Vec<_>>()
+    ));
+
+    let terminal_path_value = ResolutionPath::new(
+        roots.raw_type,
+        roots.unit,
+        ResolutionPathIR::Relation {
+            relation: roots.relation,
+        },
+    );
+    let terminal_path = cold_catalog.insert_path(terminal_path_value);
+    let terminal_domain = vec![raw_value];
+    let exact_empty_run = run_finite_resolution(
+        terminal_path,
+        raw_value,
+        &[FiniteResolutionLeafTable::new(
+            terminal_path,
+            terminal_domain.clone(),
+            Vec::new(),
+            FiniteResolutionCoverage::Exact(CoverageRef::from_artifact_ref(
+                stored_ref(&reopened, b"resolution-empty-coverage").await,
+            )),
+        )
+        .expect("exact empty table must be well formed")],
+        &cold_catalog,
+    )
+    .expect("exact empty relation must run");
+    let exact_empty = classify_finite_question_resolution(
+        replay_a.event_ref(),
+        roots.query,
+        exact_empty_run,
+        None,
+        Vec::new(),
+        &cold_standing,
+        &cold_catalog,
+    )
+    .expect("exhaustive empty relation must classify as ExactEmpty");
+    assert_eq!(exact_empty.kind(), FiniteResolutionOutcomeKind::ExactEmpty);
+
+    let undefined_residual = stored_ref(&reopened, b"resolution-undefined-residual").await;
+    let undefined_run = run_finite_resolution(
+        terminal_path,
+        raw_value,
+        &[FiniteResolutionLeafTable::new(
+            terminal_path,
+            terminal_domain.clone(),
+            vec![FiniteResolutionLeafEntry::undefined(
+                raw_value,
+                undefined_residual,
+            )],
+            FiniteResolutionCoverage::Exact(CoverageRef::from_artifact_ref(
+                stored_ref(&reopened, b"resolution-undefined-coverage").await,
+            )),
+        )
+        .expect("typed undefined table must be well formed")],
+        &cold_catalog,
+    )
+    .expect("typed undefined relation must run");
+    let undefined = classify_finite_question_resolution(
+        replay_a.event_ref(),
+        roots.query,
+        undefined_run,
+        None,
+        Vec::new(),
+        &cold_standing,
+        &cold_catalog,
+    )
+    .expect("typed undefined relation must retain its residual");
+    assert!(matches!(
+        &undefined,
+        FiniteResolutionOutcome::Undefined(residual)
+            if residual.run().residuals() == [undefined_residual]
+    ));
+
+    let unknown_run = run_finite_resolution(
+        terminal_path,
+        raw_value,
+        &[FiniteResolutionLeafTable::new(
+            terminal_path,
+            terminal_domain,
+            vec![FiniteResolutionLeafEntry::related(
+                raw_value,
+                vec![roots.candidate_a.as_artifact_ref()],
+            )],
+            FiniteResolutionCoverage::Partial(CoverageRef::from_artifact_ref(
+                stored_ref(&reopened, b"resolution-partial-coverage").await,
+            )),
+        )
+        .expect("partial relation table must be well formed")],
+        &cold_catalog,
+    )
+    .expect("partial relation must run without claiming closure");
+    let unknown = classify_finite_question_resolution(
+        replay_a.event_ref(),
+        roots.query,
+        unknown_run,
+        None,
+        Vec::new(),
+        &cold_standing,
+        &cold_catalog,
+    )
+    .expect("partial coverage must classify as Unknown");
+    assert!(matches!(
+        &unknown,
+        FiniteResolutionOutcome::Unknown(residual)
+            if residual.run().known_outputs() == [roots.candidate_a.as_artifact_ref()]
+                && residual.run().uncovered_inputs() == [raw_value]
+    ));
+
+    for outcome in [exact_empty, undefined, unsupported, unknown] {
+        assert!(matches!(
+            resolve_finite_probe_occurrence(
+                bundle_a.clone(),
+                outcome,
+                &cold_first_program,
+                &cold_catalog,
+            ),
+            Err(ResolvedFiniteProbeOccurrenceError::NonSupported(_))
+        ));
+    }
+    let resolved = resolve_finite_probe_occurrence(
+        bundle_a.clone(),
+        supported,
+        &cold_first_program,
+        &cold_catalog,
+    )
+    .expect("only Supported may enter the exact source continuation");
+    assert_eq!(resolved.ask_occurrence(), first_occurrence_ref);
+    assert_eq!(resolved.resolution().run().outputs(), candidate_values);
+    assert!(matches!(
+        resolved.next(),
+        ic_core::QuestionSuccessor::Return { value, .. } if *value == roots.answer_a
+    ));
+
+    let second_supported = classify_finite_question_resolution(
+        replay_a.event_ref(),
+        roots.query,
+        complete_run,
+        Some(decoded),
+        decoded_observations,
+        &cold_standing,
+        &cold_catalog,
+    )
+    .expect("supported result must remain reproducible from the same checked evidence");
+    assert!(matches!(
+        resolve_finite_probe_occurrence(
+            bundle_a,
+            second_supported,
+            &cold_second_program,
+            &cold_catalog,
+        ),
+        Err(ResolvedFiniteProbeOccurrenceError::SourceProgramMismatch { .. })
+    ));
+
     assert!(matches!(
         check_source_event_link(replay_a, cold_second_occurrence, &cold_catalog),
         Err(SourceEventLinkError::OccurrenceMismatch { .. })

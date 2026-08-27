@@ -163,6 +163,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "finite_supported_family_lift_preserves_every_tagged_child_position_and_unknowns",
     ),
+    "QRESOLUTION-GATE-001": (
+        "crates/ic-runtime/tests/admitted_resume.rs",
+        "source_linked_events_preserve_equal_projection_occurrences_after_restart",
+    ),
 }
 
 ERRORS: list[str] = []

@@ -43,6 +43,7 @@ mod relation;
 mod relation_expr;
 mod relation_use;
 mod resolution;
+mod resolution_gate;
 mod route_regeneration;
 mod seed;
 mod separator;
@@ -260,6 +261,15 @@ pub use resolution::{
     DecoderRef, RESOLUTION_PATH_ARTIFACT_KIND, RESOLUTION_PATH_SCHEMA_VERSION, ResolutionCatalog,
     ResolutionPath, ResolutionPathCheckError, ResolutionPathError, ResolutionPathIR,
     ResolutionPathRef,
+};
+pub use resolution_gate::{
+    CompleteFiniteResolutionRun, FiniteCoverageResidual, FiniteEmptyCertificate,
+    FiniteResolutionCoverage, FiniteResolutionGateError, FiniteResolutionLeafEntry,
+    FiniteResolutionLeafResult, FiniteResolutionLeafTable, FiniteResolutionOutcome,
+    FiniteResolutionOutcomeKind, FiniteResolutionResidual, FiniteResolutionRun,
+    FiniteResolutionRunError, FiniteResolutionTableError, FiniteResolutionTypeMismatch,
+    FiniteSupportResidual, FiniteSupportedResolution, UndefinedFiniteResolutionRun,
+    UnknownFiniteResolutionRun, classify_finite_question_resolution, run_finite_resolution,
 };
 pub use route_regeneration::{
     CheckedFiniteRouteNode, ExactFiniteRouteResidualFiber, ExactFiniteRouteResidualFiberError,
