@@ -6637,6 +6637,52 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         .expect("second mixed-mode completion must retain its observation"),
     ];
 
+    // A second declared path and a second support environment, admitted here so that the
+    // evidence-coordinate constructions further below need no further catalog mutation. Both
+    // reach the same result over the same observed pairs by a different declared evidence route.
+    let composed_pure_path = cold_catalog.insert_path(ResolutionPath::new(
+        roots.raw_type,
+        roots.raw_type,
+        ResolutionPathIR::Compose {
+            first: opaque_path,
+            second: opaque_path,
+        },
+    ));
+    assert_ne!(composed_pure_path, opaque_path);
+    let alternate_support = cold_catalog.insert_support(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(mixed_relation),
+            Vec::new(),
+            vec![roots.raw_return],
+            Vec::new(),
+            vec![stored_ref(&reopened, b"mixed-mode-alternate-assumption").await],
+            Vec::new(),
+            mixed_query_context.applicability(),
+            mixed_query_context.scope(),
+        )
+        .expect("the alternate support environment must encode"),
+    );
+    assert_ne!(alternate_support, mixed_support);
+    let alternate_use_context = RelationUseContext::new(
+        mixed_query_context.scope(),
+        mixed_query_context.applicability(),
+        mixed_query_context.grain(),
+        mixed_query_context.horizon(),
+        mixed_query_context.mode(),
+        alternate_support.as_support_ref(),
+        mixed_query_context.warrant(),
+    );
+    let alternate_observation_a = cold_catalog.insert_relation_use(RelationUse::new(
+        mixed_relation,
+        mixed_completion(roots.answer_a, derived_form),
+        alternate_use_context,
+    ));
+    let alternate_observation_b = cold_catalog.insert_relation_use(RelationUse::new(
+        mixed_relation,
+        mixed_completion(roots.answer_b, derived_form),
+        alternate_use_context,
+    ));
+
     // The all-Probe specialization must keep rejecting a question with any non-Probe port.
     assert!(matches!(
         admit_finite_probe_discharge_bundle(
@@ -7030,6 +7076,116 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         recovered_route,
         probe_component.route(),
         "a Probe port's route is recoverable from its retained event"
+    );
+
+    // Canonical SuppAns sums over an evidence environment as well as a route. Move only the
+    // evidence: hold every member, every port result, and every declared route fixed.
+    //
+    // Non-Probe side: a second declared path carrying the same typed result to the same carrier.
+    // Composing the identity path with itself keeps the raw-to-raw signature the port requires
+    // while declaring a different route through the data.
+    let repathed_view = MixedModeSourceAskDischarge::new(
+        mixed_lowering.clone(),
+        mixed_probe_bundle.clone(),
+        vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            NonProbePortOutput::Determined(derived_form),
+            route,
+            composed_pure_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )],
+    );
+    repathed_view
+        .check(&cold_catalog)
+        .expect("the second path must independently recheck to the same carrier");
+    let repathed = resolve_mixed_mode_question(
+        &repathed_view,
+        vec![(
+            mixed_probe_port.clone(),
+            classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+        )],
+        &cold_catalog,
+    )
+    .expect("the repathed answer must resolve");
+    let WholeQuestionOutcome::Supported(repathed_answer) = &repathed else {
+        panic!("the repathed joint outcome must be Supported")
+    };
+    assert_eq!(repathed_answer.members(), whole_answer.members());
+    assert_ne!(
+        repathed_answer, whole_answer,
+        "the same result reaching the same carrier by a second path is a different record"
+    );
+
+    // Probe side: a second support environment closing the same observed relation and bindings.
+    // A relation use names its support through its own context, so the use artifacts change with
+    // the environment; the observed pairs and the decoded set do not.
+    let alternate_observations = vec![
+        match_decoded_observation_use(
+            &mixed_decoded,
+            mixed_candidate_a,
+            alternate_observation_a,
+            &cold_catalog,
+        )
+        .expect("the same observed pair must match under a second support environment"),
+        match_decoded_observation_use(
+            &mixed_decoded,
+            mixed_candidate_b,
+            alternate_observation_b,
+            &cold_catalog,
+        )
+        .expect("the same observed pair must match under a second support environment"),
+    ];
+    let alternate_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            alternate_support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &cold_catalog,
+    )
+    .expect("the alternate support must reconstruct");
+    let alternate_supported = classify_finite_port_resolution(
+        &mixed_probe_port,
+        mixed_link_event,
+        mixed_query,
+        mixed_run.clone(),
+        Some(mixed_decoded.clone()),
+        alternate_observations,
+        &alternate_standing,
+        &cold_catalog,
+    )
+    .expect("the same run and decoded set must classify Supported through the second environment");
+    let resupported = resolve_mixed_mode_question(
+        &mixed_view,
+        vec![(mixed_probe_port.clone(), alternate_supported)],
+        &cold_catalog,
+    )
+    .expect("the resupported answer must resolve");
+    let WholeQuestionOutcome::Supported(resupported_answer) = &resupported else {
+        panic!("the resupported joint outcome must be Supported")
+    };
+    assert_eq!(resupported_answer.members(), whole_answer.members());
+    let MixedPortContribution::Probe {
+        resolution: resupported_resolution,
+        ..
+    } = &resupported_answer.contributions()[1]
+    else {
+        panic!("the Probe port must contribute its resolution")
+    };
+    assert_eq!(
+        resupported_resolution.event(),
+        resolution.event(),
+        "the same actual event supports both answers"
+    );
+    assert_ne!(
+        resupported_answer, whole_answer,
+        "the same members supported through a second environment is a different record"
     );
 
     // A Probe return alone cannot resolve the question while a port is unaccounted for.
