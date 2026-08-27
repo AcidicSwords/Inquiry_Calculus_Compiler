@@ -15,6 +15,7 @@ mod controlled_rendering;
 mod cue;
 mod decoder;
 mod departure;
+mod dependent_lift;
 mod determination;
 mod event;
 mod exterior;
@@ -112,6 +113,11 @@ pub use departure::{
     FiniteDepartureAdmissionCatalog, FiniteDepartureAdmissionError, FiniteDepartureEvidence,
     ResolvedDepartureEvidenceSupport, admit_probed_finite_departure,
     check_departure_witness_standing_support, resolve_departure_witness_evidence_support,
+};
+pub use dependent_lift::{
+    CompleteFiniteSupportedFamilyLift, FiniteSupportedFamilyLift, FiniteSupportedFamilyLiftError,
+    MaterializedChildQuestion, TaggedChildPort, TaggedChildQuestion,
+    UnknownFiniteSupportedFamilyLift, lift_finite_supported_family,
 };
 pub use determination::{
     DETERMINATION_PRESENTATION_ARTIFACT_KIND, DETERMINATION_PRESENTATION_SCHEMA_VERSION,

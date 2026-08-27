@@ -2,47 +2,48 @@ use std::collections::BTreeMap;
 
 use ic_core::{
     ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog,
-    AdmittedFiniteDeparture, AdmittedFiniteNegationExtension, AnnotatedInterrogativeRoute,
-    ApplicabilityRef, ArtifactRef, AskOccurrence, AskOccurrenceCheckError, BindingVersionRef,
-    BoundaryChart, BoundaryRef, ClaimArtifact, ClaimError, ClaimRef, ClaimStatus,
-    CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef,
-    ControlledBackwardKind, ControlledCoverage, ControlledElaborationExpectation,
-    ControlledInterrogativePrompt, ControlledRenderingError, CoverageRef, DeclaredStandingError,
-    DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse, DecoderRef,
-    DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError, DepartureWitness,
-    DerivedInterrogativeAnnotation, DeterminationCatalog, DeterminationPresentation,
-    DeterminationPresentationRef, DeterminationSupportError, DischargeMode, EffectivityRef,
-    EventRef, ExactFinitePreorder, ExactFiniteRouteResidualFiber, ExactFiniteSignature,
-    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteAdjunctionCandidate,
-    FiniteAdjunctionCatalog, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
-    FiniteDecoderError, FiniteDecoderOutcome, FiniteDepartureAdmissionError,
-    FiniteDepartureEvidence, FiniteLiveQuestionFrontierError, FiniteLocalEffectivityCoverage,
-    FiniteResourcePreorder, FiniteRouteAblationRefusal, FiniteRouteAblationResult,
-    FiniteRouteReconstruction, FiniteRouteRegenerationResult, FiniteSupportedAnswerError,
-    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
-    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
-    IProgIR, IProgRef, InterrogativeLoweringError, LiveQuestionCandidate, LiveQuestionOrigin,
-    LocalEffectivityEdge, LocalInterrogativeContext, LocalInterrogativeFixedPoint,
-    LocalQuestionAssessment, LocalQuestionClosingReason, LocalQuestionExit, LocalReopeningReason,
-    NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery,
-    OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError,
-    PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding,
-    ProtectedCompletionFieldRef, ProtectedContinuationRef, ProtectedQuestionBranch, ProvenanceRef,
-    QueryRef, QuestionReadiness, QuestionReadinessRequirement, QuestionSuccessionCatalog,
-    QuestionSuccessor, RawReturn, RawReturnCatalog, RawReturnRef, ReciprocalOccurrence,
-    RelationBodyIR, RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature,
-    RelationUse, RelationUseContext, RelationUseRef, RelationUseSupportCatalog,
-    RelationUseSupportError, RequiredDischargeKind, RequiredQuestionDischarge, ResolutionCatalog,
-    ResolutionPath, ResolutionPathIR, ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef,
-    ScopeRef, SeedReorientation, SelectedReturn, SeparatorProblem, SeparatorProblemRef,
-    SignatureContext, SourceConfig, SourceConfigRef, Standing, StateRef, StructureViewRef,
-    SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
-    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
-    SupportSubjectRef, TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
-    TypeRef, TypeSymbol, TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable,
-    TypedFiniteNegationExtension, TypedFiniteObservation,
-    TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
+    AdmittedFiniteAnswerSet, AdmittedFiniteDeparture, AdmittedFiniteNegationExtension,
+    AnnotatedInterrogativeRoute, ApplicabilityRef, ArtifactRef, AskOccurrence,
+    AskOccurrenceCheckError, BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact,
+    ClaimError, ClaimRef, ClaimStatus, CompletionCandidate, CompletionCandidateCatalog,
+    CompletionCandidateRef, ControlledBackwardKind, ControlledCoverage,
+    ControlledElaborationExpectation, ControlledInterrogativePrompt, ControlledRenderingError,
+    CoverageRef, DeclaredStandingError, DeclaredSupportClosure, DecodedObservationError,
+    DecodedObservationUse, DecoderRef, DepartureCatalog, DepartureEvidenceSupportError,
+    DepartureStandingCheckError, DepartureWitness, DerivedInterrogativeAnnotation,
+    DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
+    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef, ExactFinitePreorder,
+    ExactFiniteRouteResidualFiber, ExactFiniteSignature, FINITE_DECODER_ARTIFACT_KIND,
+    FINITE_DECODER_SCHEMA_VERSION, FiniteAdjunctionCandidate, FiniteAdjunctionCatalog,
+    FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError,
+    FiniteDecoderOutcome, FiniteDepartureAdmissionError, FiniteDepartureEvidence,
+    FiniteLiveQuestionFrontierError, FiniteLocalEffectivityCoverage, FiniteResourcePreorder,
+    FiniteRouteAblationRefusal, FiniteRouteAblationResult, FiniteRouteReconstruction,
+    FiniteRouteRegenerationResult, FiniteSupportedAnswerError, FiniteSupportedFamilyLift,
+    FiniteSupportedFamilyLiftError, FiniteTypedIncompatibilityUseCatalog, FormulaArtifact,
+    FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
+    GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
+    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, InterrogativeLoweringError,
+    LiveQuestionCandidate, LiveQuestionOrigin, LocalEffectivityEdge, LocalInterrogativeContext,
+    LocalInterrogativeFixedPoint, LocalQuestionAssessment, LocalQuestionClosingReason,
+    LocalQuestionExit, LocalReopeningReason, MaterializedChildQuestion, NegationCoverage,
+    NegationUse, NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
+    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
+    ProtectedContinuationRef, ProtectedQuestionBranch, ProvenanceRef, QueryRef, QuestionReadiness,
+    QuestionReadinessRequirement, QuestionSuccessionCatalog, QuestionSuccessor, RawReturn,
+    RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR, RelationCatalog,
+    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
+    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, RequiredDischargeKind,
+    RequiredQuestionDischarge, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
+    ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef, SeedReorientation,
+    SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext, SourceConfig,
+    SourceConfigRef, Standing, StateRef, StructureViewRef, SupportEnvironmentArtifact,
+    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef,
+    TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
+    TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable, TypedFiniteNegationExtension,
+    TypedFiniteObservation, TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
     ablate_exact_finite_route_node, admit_finite_adjunction, admit_finite_negation_extension,
     admit_finite_supported_answers, admit_probed_finite_departure, await_question_readiness,
     bind_finite_ask_continuation, check_departure_witness_standing_support,
@@ -51,11 +52,12 @@ use ic_core::{
     decode_actual_event, derive_finite_live_question_frontier,
     derive_finite_local_interrogative_fixed_point, derive_local_interrogative_reopening,
     derive_question_readiness, derive_question_successor, elaborate_controlled_interrogative,
-    lower_annotated_interrogative_route, match_decoded_observation_use,
-    render_existential_preimage, render_same_use_reciprocal_return, render_universal_adjoint,
-    resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
-    resolve_relation_use_support, standing_determination_presentation_support,
-    standing_from_declared_support, standing_relation_use_support,
+    lift_finite_supported_family, lower_annotated_interrogative_route,
+    match_decoded_observation_use, render_existential_preimage, render_same_use_reciprocal_return,
+    render_universal_adjoint, resolve_departure_witness_evidence_support,
+    resolve_determination_presentation_support, resolve_relation_use_support,
+    standing_determination_presentation_support, standing_from_declared_support,
+    standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -5513,5 +5515,285 @@ fn interrogative_annotations_erase_only_to_the_checked_ordinary_program() {
         Err(InterrogativeLoweringError::Controlled(
             ControlledRenderingError::ReciprocalUseMismatch { .. }
         ))
+    ));
+}
+
+fn two_member_supported_answer(scenario: &mut FiniteDepartureScenario) -> AdmittedFiniteAnswerSet {
+    let decoded = scenario.source_observation.decoded().clone();
+    let query = scenario
+        .catalog
+        .queries
+        .get(&decoded.query())
+        .expect("decoded query must remain available")
+        .clone();
+    let alternate_answer = scenario.catalog.insert_form(TypedForm::new(
+        scenario.binding,
+        scenario.answer_type,
+        artifact(0x67),
+    ));
+    let alternate_candidate = query
+        .plug(
+            vec![PortBinding::new(
+                query.open_ports()[0].port().clone(),
+                alternate_answer,
+            )],
+            &scenario.catalog,
+        )
+        .expect("alternate completion must fill the same question");
+    let alternate_candidate_ref = scenario
+        .catalog
+        .insert_candidate(alternate_candidate.clone());
+    let alternate_use = scenario.catalog.insert_relation_use(RelationUse::new(
+        query.relation(),
+        alternate_candidate.bindings().to_vec(),
+        *query.context(),
+    ));
+    let decoder = FiniteDecoder::new(
+        decoded.query(),
+        scenario.raw_type,
+        vec![FiniteDecoderEntry::Decoded {
+            raw_return: scenario.admitted.source_raw_return(),
+            candidates: vec![
+                scenario.source_observation.candidate(),
+                alternate_candidate_ref,
+            ],
+        }],
+    )
+    .expect("two decoded candidates must remain one supported answer");
+    let decoder_ref = scenario.catalog.insert_decoder(decoder.clone());
+    let path = scenario.catalog.insert_path(ResolutionPath::new(
+        scenario.raw_type,
+        scenario.answer_type,
+        ResolutionPathIR::Decode {
+            decoder: decoder_ref.as_decoder_ref(),
+        },
+    ));
+    let event = scenario
+        .catalog
+        .events
+        .get(&decoded.event())
+        .expect("decoded event must remain available")
+        .clone();
+    let ActualDecodeResult::Decoded(two_candidates) =
+        decode_actual_event(&event, &decoder, path, &scenario.catalog)
+            .expect("the same actual return must decode to both candidates")
+    else {
+        panic!("listed candidates must decode")
+    };
+    let first_observation = match_decoded_observation_use(
+        &two_candidates,
+        scenario.source_observation.candidate(),
+        scenario.source_observation.observation(),
+        &scenario.catalog,
+    )
+    .expect("the original observation remains one completion");
+    let alternate_observation = match_decoded_observation_use(
+        &two_candidates,
+        alternate_candidate_ref,
+        alternate_use,
+        &scenario.catalog,
+    )
+    .expect("the alternate completion has its own matching observation");
+    admit_finite_supported_answers(
+        two_candidates,
+        vec![first_observation, alternate_observation],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("the complete two-member answer must admit")
+}
+
+#[test]
+// Test boundary QLIFT-ALLPATHS-001:
+// F = a finite dependent lift selects one parent, loses `(parent, port)` tags, or replaces
+// heterogeneous child modes with one common authority; incomplete materialization claims closure.
+// C = exact parent-member inclusion, checked child questions, tagged dependent-sum positions,
+// pointwise inherited type/mode/route context, and explicit Unknown uncovered members.
+// Omega/M = one two-member Probe-supported parent and two two-port child questions.
+// P/V/E/U = exhaustive finite set comparison and ordinary OpenQuery checks; intensional family
+// coverage, child completion products, source lowering, and cross-binding transport remain open.
+fn finite_supported_family_lift_preserves_every_tagged_child_position_and_unknowns() {
+    let mut scenario = build_finite_departure_scenario(true, true)
+        .expect("the finite parent answer fixture must admit");
+    let parent = two_member_supported_answer(&mut scenario);
+    assert_eq!(parent.candidates().len(), 2);
+    let parent_members = parent.candidates().to_vec();
+
+    let probe_port = TypeSymbol::new("probe_child").expect("port must be valid");
+    let other_port = TypeSymbol::new("other_child").expect("port must be valid");
+    let child_relation = scenario.catalog.insert_schema(RelationSchema::new(
+        scenario.binding,
+        vec![
+            RelationPort::new(probe_port.clone(), scenario.answer_type),
+            RelationPort::new(other_port.clone(), scenario.answer_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x70),
+        },
+        Vec::new(),
+        Vec::new(),
+    ));
+    let first_support = SupportRef::from_artifact_ref(artifact(0x71));
+    let second_support = SupportRef::from_artifact_ref(artifact(0x72));
+    let first_question = scenario.catalog.insert_query(OpenQuery::new(
+        child_relation,
+        Vec::new(),
+        vec![
+            OpenPort::new(probe_port.clone(), DischargeMode::Probe),
+            OpenPort::new(other_port.clone(), DischargeMode::Check),
+        ],
+        RelationUseContext::new(
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            DischargeMode::Probe,
+            first_support,
+            None,
+        ),
+    ));
+    let second_warrant = ic_core::WarrantRef::from_artifact_ref(artifact(0x73));
+    let second_question = scenario.catalog.insert_query(OpenQuery::new(
+        child_relation,
+        Vec::new(),
+        vec![
+            OpenPort::new(probe_port.clone(), DischargeMode::Generate),
+            OpenPort::new(other_port.clone(), DischargeMode::Warrant),
+        ],
+        RelationUseContext::new(
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            DischargeMode::Generate,
+            second_support,
+            Some(second_warrant),
+        ),
+    ));
+    let coverage = CoverageRef::from_artifact_ref(artifact(0x74));
+    let result = lift_finite_supported_family(
+        parent.clone(),
+        vec![
+            MaterializedChildQuestion::new(parent_members[1], second_question),
+            MaterializedChildQuestion::new(parent_members[0], first_question),
+        ],
+        coverage,
+        &scenario.catalog,
+    )
+    .expect("the whole two-member family must lift");
+    let FiniteSupportedFamilyLift::Complete(complete) = result else {
+        panic!("exact parent-member coverage must be complete")
+    };
+    assert_eq!(complete.parent(), &parent);
+    assert_eq!(complete.coverage(), coverage);
+    assert_eq!(complete.children().len(), 2);
+    assert_eq!(complete.positions().len(), 4);
+    let positions: BTreeMap<_, _> = complete
+        .positions()
+        .iter()
+        .map(|position| {
+            (
+                (position.parent(), position.port().as_str().to_owned()),
+                (
+                    position.mode(),
+                    position.support(),
+                    position.warrant(),
+                    position.ty(),
+                ),
+            )
+        })
+        .collect();
+    assert_eq!(
+        positions.len(),
+        4,
+        "equal child names must remain parent-tagged"
+    );
+    assert_eq!(
+        positions[&(parent_members[0], probe_port.as_str().to_owned())],
+        (
+            DischargeMode::Probe,
+            first_support,
+            None,
+            scenario.answer_type,
+        )
+    );
+    assert_eq!(
+        positions[&(parent_members[0], other_port.as_str().to_owned())],
+        (
+            DischargeMode::Check,
+            first_support,
+            None,
+            scenario.answer_type,
+        )
+    );
+    assert_eq!(
+        positions[&(parent_members[1], probe_port.as_str().to_owned())],
+        (
+            DischargeMode::Generate,
+            second_support,
+            Some(second_warrant),
+            scenario.answer_type,
+        )
+    );
+    assert_eq!(
+        positions[&(parent_members[1], other_port.as_str().to_owned())],
+        (
+            DischargeMode::Warrant,
+            second_support,
+            Some(second_warrant),
+            scenario.answer_type,
+        )
+    );
+
+    let incomplete = lift_finite_supported_family(
+        parent.clone(),
+        vec![MaterializedChildQuestion::new(
+            parent_members[0],
+            first_question,
+        )],
+        CoverageRef::from_artifact_ref(artifact(0x75)),
+        &scenario.catalog,
+    )
+    .expect("a proper materialization remains a typed partial result");
+    let FiniteSupportedFamilyLift::Unknown(unknown) = incomplete else {
+        panic!("a proper parent subset must remain Unknown")
+    };
+    assert_eq!(unknown.parent(), &parent);
+    assert_eq!(unknown.children().len(), 1);
+    assert_eq!(unknown.positions().len(), 2);
+    assert_eq!(unknown.uncovered_parents(), [parent_members[1]]);
+
+    assert!(matches!(
+        lift_finite_supported_family(
+            parent.clone(),
+            Vec::new(),
+            CoverageRef::from_artifact_ref(artifact(0x76)),
+            &scenario.catalog
+        ),
+        Err(FiniteSupportedFamilyLiftError::EmptyMaterialization)
+    ));
+    assert!(matches!(
+        lift_finite_supported_family(
+            parent.clone(),
+            vec![
+                MaterializedChildQuestion::new(parent_members[0], first_question),
+                MaterializedChildQuestion::new(parent_members[0], second_question),
+            ],
+            CoverageRef::from_artifact_ref(artifact(0x77)),
+            &scenario.catalog,
+        ),
+        Err(FiniteSupportedFamilyLiftError::DuplicateParent(parent_member))
+            if parent_member == parent_members[0]
+    ));
+    let foreign = CompletionCandidateRef::from_artifact_ref(artifact(0x78));
+    assert!(matches!(
+        lift_finite_supported_family(
+            parent,
+            vec![MaterializedChildQuestion::new(foreign, first_question)],
+            CoverageRef::from_artifact_ref(artifact(0x79)),
+            &scenario.catalog,
+        ),
+        Err(FiniteSupportedFamilyLiftError::ForeignParent(parent_member))
+            if parent_member == foreign
     ));
 }
