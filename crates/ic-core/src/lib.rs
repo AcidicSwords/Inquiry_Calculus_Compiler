@@ -121,9 +121,9 @@ pub use determination::{
 };
 pub use event::{
     ACTUAL_EVENT_ARTIFACT_KIND, ACTUAL_EVENT_SCHEMA_VERSION, ActualEvent, ActualEventCatalog,
-    ActualEventCheckError, ActualEventError, BoundaryRef, EventRef, OperatorRef, ProvenanceRef,
-    RawReturnCatalog, RouteRef, StateRef, check_actual_event, check_event_context,
-    check_raw_return,
+    ActualEventCheckError, ActualEventError, BoundaryRef, EventRef,
+    LEGACY_ACTUAL_EVENT_SCHEMA_VERSION, OperatorRef, ProvenanceRef, RawReturnCatalog, RouteRef,
+    StateRef, check_actual_event, check_event_context, check_raw_return,
 };
 pub use exterior::{TaggedExteriorCatalog, TaggedExteriorClaim, TaggedExteriorClaimError};
 pub use factorization::{

@@ -14,8 +14,8 @@ use std::{
 
 use ic_core::{
     ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef, ArtifactEnvelope,
-    ArtifactKind, ArtifactRef, BackendRef, BackendRequest, BindingVersionRef, BoundaryChart,
-    BoundaryRef, ClaimArtifact, ClaimRef, ClaimStatus, CompletionCandidate,
+    ArtifactKind, ArtifactRef, AskOccurrence, BackendRef, BackendRequest, BindingVersionRef,
+    BoundaryChart, BoundaryRef, ClaimArtifact, ClaimRef, ClaimStatus, CompletionCandidate,
     CompletionCandidateCatalog, CompletionCandidateRef, CoverageRef, DeclaredSupportClosure,
     DischargeMode, EffectivityRef, EventRef, ExactFiniteCue, ExactFiniteCueAdmission,
     ExactFiniteCueCatalog, ExactFiniteCueCheckError, ExactFiniteCueUnknown,
@@ -29,14 +29,15 @@ use ic_core::{
     MethodContract, MethodRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
     OperatorOccurrenceCatalog, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
     ProgramBinding, ProtectedCompletionFieldRef, ProtectedContinuationRef, ProvenanceRef, QueryRef,
-    RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR, RelationCatalog, RelationPort,
-    RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
-    RelationUseRef, RelationUseSupportCatalog, ResidualSchemaRef, ResolutionCatalog,
-    ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef, SeparatorProblem,
-    SeparatorProblemRef, SignatureContext, StateRef, StructureViewRef, SupportEnvironmentArtifact,
-    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportSubjectRef, SurfacePlan, TyIR,
-    TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
-    admit_exact_finite_cue, admit_finite_supported_answers, bind_finite_ask_continuation,
+    QuestionSuccessionCatalog, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
+    RelationCatalog, RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse,
+    RelationUseContext, RelationUseRef, RelationUseSupportCatalog, ResidualSchemaRef,
+    ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef,
+    SeparatorProblem, SeparatorProblemRef, SignatureContext, SourceConfig, SourceConfigRef,
+    StateRef, StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentCatalog,
+    SupportEnvironmentRef, SupportSubjectRef, SurfacePlan, TyIR, TypeArtifact, TypeCatalog,
+    TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef, admit_exact_finite_cue,
+    admit_finite_supported_answers, bind_finite_ask_continuation,
     challenge_exact_finite_sufficient_present, check_admitted_exact_finite_cue_basis,
     decode_actual_event, derive_exact_finite_sufficient_present,
     extend_exact_finite_sufficient_present, match_decoded_observation_use,
@@ -46,8 +47,10 @@ use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
     MachineStep, MethodBridgeReentryError, MethodCuePlanning, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
     OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
-    PairedActualityTrace, PairedActualityTraversal, ProbeDispatchContext, ProbeProvider, ProgramIR,
-    ProviderReturn, ReplayObservation, RuntimeCatalog, Terminator, TraversalCausalOrder,
+    PairedActualityTrace, PairedActualityTraversal, ProbeDischargeBundleError,
+    ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
+    ReplayObservation, RuntimeCatalog, SharedProbeEventAdmission, SourceEventLinkError, Terminator,
+    TraversalCausalOrder, admit_finite_probe_discharge_bundle, check_source_event_link,
     dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
     replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
     route_separator_through_method_bridge,
@@ -112,6 +115,7 @@ struct Catalog {
     formulas: BTreeMap<FormulaRef, FormulaArtifact>,
     methods: BTreeMap<MethodRef, MethodContract>,
     claims: BTreeMap<ClaimRef, ClaimArtifact>,
+    source_configs: BTreeMap<SourceConfigRef, SourceConfig>,
 }
 
 impl Catalog {
@@ -202,6 +206,12 @@ impl Catalog {
     fn insert_claim(&mut self, value: ClaimArtifact) -> ClaimRef {
         let reference = value.claim_ref().expect("claim must encode");
         self.claims.insert(reference, value);
+        reference
+    }
+
+    fn insert_source_config(&mut self, value: SourceConfig) -> SourceConfigRef {
+        let reference = value.source_config_ref().expect("source must encode");
+        self.source_configs.insert(reference, value);
         reference
     }
 }
@@ -320,6 +330,12 @@ impl RelationUseSupportCatalog for Catalog {
 impl IProgCatalog for Catalog {
     fn resolve_iprog(&self, reference: IProgRef) -> Option<IProgArtifact> {
         self.programs.get(&reference).cloned()
+    }
+}
+
+impl QuestionSuccessionCatalog for Catalog {
+    fn resolve_source_config(&self, reference: SourceConfigRef) -> Option<SourceConfig> {
+        self.source_configs.get(&reference).cloned()
     }
 }
 
@@ -4586,4 +4602,935 @@ async fn live_ollama_call_creates_typed_answers_only_after_actuality_and_cold_re
     assert_eq!(provider_calls.load(Ordering::SeqCst), 1);
     reopened.close().await;
     std::fs::remove_file(path).expect("temporary live local replay database must be removable");
+}
+
+#[tokio::test]
+// Test boundary QACTUAL-SEPARATION-001:
+// F = equal question/operator/raw-return projections collapse two realized source Ask occurrences.
+// C = source-linked event schema plus cold EventFor recheck against a reconstructed occurrence.
+// Omega/M = two sequential file-backed Probe dispatches sharing request and provider bytes.
+// P/V/E/U = close/reopen replay and independent source re-walk; reopened by generalized
+// multi-port lowering, which is checked separately by the finite discharge-bundle fixture.
+async fn source_linked_events_preserve_equal_projection_occurrences_after_restart() {
+    let (path, roots, provider_calls, _, _, _) = persisted_cold_replay_fixture().await;
+    let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
+    let store = ArtifactStore::open(&url)
+        .await
+        .expect("occurrence fixture store must reopen");
+    store.migrate().await.expect("migrations must repeat");
+    let mut catalog = load_cold_replay_catalog(&store, roots).await;
+    let original = store
+        .replay_completed_external_effect(roots.token)
+        .await
+        .expect("predecessor effect must replay");
+    let request_ref = original.request_ref();
+    let request = original.request().clone();
+    let binding = catalog
+        .resolve_type(roots.unit)
+        .expect("unit type must reload")
+        .binding();
+
+    let second_continuation_value = IProgArtifact::new(
+        roots.unit,
+        IProgIR::Return {
+            value: roots.answer_b,
+        },
+    );
+    let second_continuation = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &second_continuation_value
+                .envelope()
+                .expect("second continuation must encode"),
+            &second_continuation_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_program(second_continuation_value),
+        second_continuation
+    );
+    let second_source_value = IProgArtifact::new(
+        roots.unit,
+        IProgIR::Ask {
+            question: roots.query,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("second_answer").expect("slot must be valid"),
+            continuation: second_continuation,
+        },
+    );
+    let second_source = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &second_source_value
+                .envelope()
+                .expect("second source must encode"),
+            &second_source_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_program(second_source_value), second_source);
+
+    let first_provenance =
+        ProvenanceRef::from_artifact_ref(stored_ref(&store, b"occurrence-first-provenance").await);
+    let second_provenance =
+        ProvenanceRef::from_artifact_ref(stored_ref(&store, b"occurrence-second-provenance").await);
+    let first_source_value = SourceConfig::new(
+        roots.unit,
+        roots.source,
+        Vec::new(),
+        binding,
+        roots.compiler_version,
+        first_provenance,
+    )
+    .expect("first source configuration must encode");
+    let second_source_value = SourceConfig::new(
+        roots.unit,
+        second_source,
+        Vec::new(),
+        binding,
+        roots.compiler_version,
+        second_provenance,
+    )
+    .expect("second source configuration must encode");
+    let first_source_ref = SourceConfigRef::from_artifact_ref(
+        persist(
+            &store,
+            &first_source_value
+                .envelope()
+                .expect("first source configuration must encode"),
+            &first_source_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    let second_source_ref = SourceConfigRef::from_artifact_ref(
+        persist(
+            &store,
+            &second_source_value
+                .envelope()
+                .expect("second source configuration must encode"),
+            &second_source_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_source_config(first_source_value.clone()),
+        first_source_ref
+    );
+    assert_eq!(
+        catalog.insert_source_config(second_source_value.clone()),
+        second_source_ref
+    );
+    let first_occurrence = first_source_value
+        .ask_occurrences(&catalog)
+        .expect("first source must re-walk")
+        .into_iter()
+        .next()
+        .expect("first source must contain an Ask");
+    let second_occurrence = second_source_value
+        .ask_occurrences(&catalog)
+        .expect("second source must re-walk")
+        .into_iter()
+        .next()
+        .expect("second source must contain an Ask");
+    let persist_occurrence = |occurrence: &AskOccurrence| {
+        let mut references = vec![
+            occurrence.source_config().as_artifact_ref(),
+            occurrence.question().as_artifact_ref(),
+            occurrence.continuation().as_artifact_ref(),
+            occurrence.binding_version().as_artifact_ref(),
+            occurrence.compiler_version(),
+            occurrence.provenance().as_artifact_ref(),
+        ];
+        references.extend(
+            occurrence
+                .environment()
+                .iter()
+                .map(|binding| binding.value().as_artifact_ref()),
+        );
+        references
+    };
+    let first_occurrence_ref = first_occurrence
+        .ask_occurrence_ref()
+        .expect("first occurrence must encode");
+    let second_occurrence_ref = second_occurrence
+        .ask_occurrence_ref()
+        .expect("second occurrence must encode");
+    persist(
+        &store,
+        &first_occurrence
+            .envelope()
+            .expect("first occurrence must encode"),
+        &persist_occurrence(&first_occurrence),
+    )
+    .await;
+    persist(
+        &store,
+        &second_occurrence
+            .envelope()
+            .expect("second occurrence must encode"),
+        &persist_occurrence(&second_occurrence),
+    )
+    .await;
+    assert_ne!(first_occurrence_ref, second_occurrence_ref);
+    assert_eq!(first_occurrence.question(), second_occurrence.question());
+    assert_ne!(
+        first_occurrence.continuation(),
+        second_occurrence.continuation()
+    );
+
+    let runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: roots.operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    runtime.verify(&catalog).expect("runtime must verify");
+    let state_a = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-a").await);
+    let state_b = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-b").await);
+    let state_c = StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-c").await);
+    let route = RouteRef::from_artifact_ref(stored_ref(&store, b"occurrence-route").await);
+    let grain = OpenQueryCatalog::resolve_open_query(&catalog, roots.query)
+        .expect("query must reload")
+        .context()
+        .grain();
+    let token_a = DispatchToken::from_bytes([0xd1; 32]);
+    let token_b = DispatchToken::from_bytes([0xd2; 32]);
+    let mut provider = CountingProvider {
+        calls: Arc::clone(&provider_calls),
+        expected_body: request.request_body(),
+        response: original.raw_return().bytes().to_vec(),
+    };
+    let MachineStep::Suspended(first_suspension) = runtime
+        .step(runtime.start())
+        .expect("first runtime must suspend")
+    else {
+        panic!("first runtime must suspend")
+    };
+    let first_actual = dispatch_probe(
+        &store,
+        first_suspension,
+        token_a,
+        request_ref,
+        ProbeDispatchContext::new(
+            Some(roots.event),
+            state_a,
+            None,
+            state_b,
+            grain,
+            route,
+            binding,
+            first_provenance,
+        )
+        .with_source_ask_occurrence(first_occurrence_ref),
+        &mut provider,
+    )
+    .await
+    .expect("first source-linked dispatch must complete");
+    let MachineStep::Suspended(second_suspension) = runtime
+        .step(runtime.start())
+        .expect("second runtime must suspend")
+    else {
+        panic!("second runtime must suspend")
+    };
+    let second_actual = dispatch_probe(
+        &store,
+        second_suspension,
+        token_b,
+        request_ref,
+        ProbeDispatchContext::new(
+            Some(first_actual.event_ref()),
+            state_b,
+            None,
+            state_c,
+            grain,
+            route,
+            binding,
+            second_provenance,
+        )
+        .with_source_ask_occurrence(second_occurrence_ref),
+        &mut provider,
+    )
+    .await
+    .expect("second source-linked dispatch must complete");
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 3);
+    assert_eq!(
+        first_actual.raw_return_ref(),
+        second_actual.raw_return_ref()
+    );
+    assert_eq!(
+        first_actual.event().question(),
+        second_actual.event().question()
+    );
+    assert_eq!(
+        first_actual.event().operator(),
+        second_actual.event().operator()
+    );
+    assert_ne!(first_actual.event_ref(), second_actual.event_ref());
+
+    let decoded_port = TypeSymbol::new("decoded").expect("port must be valid");
+    let opaque_port = TypeSymbol::new("opaque").expect("port must be valid");
+    let multi_relation_value = RelationSchema::new(
+        binding,
+        vec![
+            RelationPort::new(decoded_port.clone(), roots.unit),
+            RelationPort::new(opaque_port.clone(), roots.raw_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: stored_ref(&store, b"mixed-port-relation-contract").await,
+        },
+        Vec::new(),
+        Vec::new(),
+    );
+    let multi_relation = RelationRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_relation_value
+                .envelope()
+                .expect("mixed-port relation must encode"),
+            &multi_relation_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_schema(multi_relation_value), multi_relation);
+    let query_context = *OpenQueryCatalog::resolve_open_query(&catalog, roots.query)
+        .expect("base query must reload")
+        .context();
+    let multi_query_value = OpenQuery::new(
+        multi_relation,
+        Vec::new(),
+        vec![
+            OpenPort::new(decoded_port.clone(), DischargeMode::Probe),
+            OpenPort::new(opaque_port.clone(), DischargeMode::Probe),
+        ],
+        query_context,
+    );
+    let multi_query = QueryRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_query_value
+                .envelope()
+                .expect("mixed-port query must encode"),
+            &multi_query_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_query(multi_query_value), multi_query);
+    let base_chart = catalog
+        .resolve_boundary_chart(roots.boundary)
+        .expect("base boundary must reload");
+    let multi_chart_value = BoundaryChart::new(
+        multi_query,
+        base_chart.x_type(),
+        base_chart.y_type(),
+        base_chart.boundary_type(),
+        base_chart.pi_x(),
+        base_chart.pi_y(),
+        base_chart.x_determination(),
+        base_chart.y_determination(),
+        base_chart.negation_frontier_x().to_vec(),
+        base_chart.negation_frontier_y().to_vec(),
+        base_chart.seed_y(),
+        base_chart.compatibility(),
+        base_chart.traversal(),
+        base_chart.grain(),
+        base_chart.horizon(),
+    );
+    let multi_boundary = BoundaryRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_chart_value
+                .envelope()
+                .expect("mixed-port boundary must encode"),
+            &multi_chart_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog
+        .charts
+        .insert(multi_boundary, multi_chart_value.clone());
+    let base_operator = catalog
+        .resolve_probe_operator(roots.operator)
+        .expect("base operator must reload");
+    let multi_operator_value = ProbeOperator::new(
+        multi_query,
+        multi_boundary,
+        base_operator.active_view(),
+        base_operator.backend(),
+        base_operator.executable_code(),
+        base_operator.return_type(),
+        base_operator.decoder_contract(),
+        base_operator.probe_contract(),
+        base_operator.compiler_version(),
+    );
+    let multi_operator = ProbeOperatorRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_operator_value
+                .envelope()
+                .expect("mixed-port operator must encode"),
+            &multi_operator_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog
+        .operators
+        .insert(multi_operator, multi_operator_value.clone());
+    let multi_plan_value = SurfacePlan::new(
+        multi_operator,
+        multi_query,
+        multi_boundary,
+        multi_operator_value.active_view(),
+        multi_operator_value.executable_code(),
+        multi_operator_value.probe_contract(),
+        stored_ref(&store, b"mixed-port-renderer-version").await,
+        stored_ref(&store, b"mixed-port-rendered-body").await,
+    );
+    let multi_plan = ic_core::SurfacePlanRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_plan_value
+                .envelope()
+                .expect("mixed-port plan must encode"),
+            &multi_plan_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    let multi_request_body = stored_ref(&store, b"mixed-port-request-body").await;
+    let multi_request_value = BackendRequest::new(
+        multi_operator,
+        multi_plan,
+        multi_query,
+        multi_boundary,
+        multi_operator_value.backend(),
+        multi_operator_value.executable_code(),
+        multi_operator_value.compiler_version(),
+        request.backend_version(),
+        multi_request_body,
+    );
+    let multi_request = ic_core::BackendRequestRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_request_value
+                .envelope()
+                .expect("mixed-port request must encode"),
+            &multi_request_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    let multi_source_program_value = IProgArtifact::new(
+        roots.unit,
+        IProgIR::Ask {
+            question: multi_query,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("mixed_answer").expect("slot must be valid"),
+            continuation: roots.continuation,
+        },
+    );
+    let multi_source_program = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_source_program_value
+                .envelope()
+                .expect("mixed-port source must encode"),
+            &multi_source_program_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_program(multi_source_program_value),
+        multi_source_program
+    );
+    let multi_provenance =
+        ProvenanceRef::from_artifact_ref(stored_ref(&store, b"mixed-port-source-provenance").await);
+    let multi_source_value = SourceConfig::new(
+        roots.unit,
+        multi_source_program,
+        Vec::new(),
+        binding,
+        roots.compiler_version,
+        multi_provenance,
+    )
+    .expect("mixed-port source configuration must encode");
+    let multi_source_ref = SourceConfigRef::from_artifact_ref(
+        persist(
+            &store,
+            &multi_source_value
+                .envelope()
+                .expect("mixed-port source configuration must encode"),
+            &multi_source_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_source_config(multi_source_value.clone()),
+        multi_source_ref
+    );
+    let multi_occurrence = multi_source_value
+        .ask_occurrences(&catalog)
+        .expect("mixed-port source must re-walk")
+        .into_iter()
+        .next()
+        .expect("mixed-port source must contain an Ask");
+    let multi_occurrence_ref = multi_occurrence
+        .ask_occurrence_ref()
+        .expect("mixed-port occurrence must encode");
+    persist(
+        &store,
+        &multi_occurrence
+            .envelope()
+            .expect("mixed-port occurrence must encode"),
+        &persist_occurrence(&multi_occurrence),
+    )
+    .await;
+    let opaque_path_value =
+        ResolutionPath::new(roots.raw_type, roots.raw_type, ResolutionPathIR::Identity);
+    let opaque_path = ResolutionPathRef::from_artifact_ref(
+        persist(
+            &store,
+            &opaque_path_value
+                .envelope()
+                .expect("opaque identity path must encode"),
+            &opaque_path_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_path(opaque_path_value), opaque_path);
+    let multi_runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: multi_operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    multi_runtime
+        .verify(&catalog)
+        .expect("mixed-port runtime must verify");
+    let MachineStep::Suspended(multi_suspension) = multi_runtime
+        .step(multi_runtime.start())
+        .expect("mixed-port runtime must suspend")
+    else {
+        panic!("mixed-port runtime must suspend")
+    };
+    let token_multi = DispatchToken::from_bytes([0xd3; 32]);
+    let mut multi_provider = CountingProvider {
+        calls: Arc::clone(&provider_calls),
+        expected_body: multi_request_body,
+        response: original.raw_return().bytes().to_vec(),
+    };
+    let multi_actual = dispatch_probe(
+        &store,
+        multi_suspension,
+        token_multi,
+        multi_request,
+        ProbeDispatchContext::new(
+            Some(second_actual.event_ref()),
+            state_c,
+            None,
+            StateRef::from_artifact_ref(stored_ref(&store, b"occurrence-state-d").await),
+            grain,
+            route,
+            binding,
+            multi_provenance,
+        )
+        .with_source_ask_occurrence(multi_occurrence_ref),
+        &mut multi_provider,
+    )
+    .await
+    .expect("one event may actualize an explicitly checked mixed-port lowering");
+    assert_eq!(provider_calls.load(Ordering::SeqCst), 4);
+    store.close().await;
+
+    let reopened = ArtifactStore::open(&url)
+        .await
+        .expect("cold occurrence store must reopen");
+    reopened.migrate().await.expect("migrations must repeat");
+    let mut cold_catalog = load_cold_replay_catalog(&reopened, roots).await;
+    let second_continuation_value = IProgArtifact::from_envelope(
+        &load_envelope(&reopened, second_continuation.as_artifact_ref()).await,
+    )
+    .expect("second continuation must cold decode");
+    assert_eq!(
+        cold_catalog.insert_program(second_continuation_value),
+        second_continuation
+    );
+    let second_source_program = IProgArtifact::from_envelope(
+        &load_envelope(&reopened, second_source.as_artifact_ref()).await,
+    )
+    .expect("second source must cold decode");
+    assert_eq!(
+        cold_catalog.insert_program(second_source_program),
+        second_source
+    );
+    let cold_first_source = SourceConfig::from_envelope(
+        &load_envelope(&reopened, first_source_ref.as_artifact_ref()).await,
+    )
+    .expect("first source configuration must cold decode");
+    let cold_second_source = SourceConfig::from_envelope(
+        &load_envelope(&reopened, second_source_ref.as_artifact_ref()).await,
+    )
+    .expect("second source configuration must cold decode");
+    assert_eq!(
+        cold_catalog.insert_source_config(cold_first_source),
+        first_source_ref
+    );
+    assert_eq!(
+        cold_catalog.insert_source_config(cold_second_source),
+        second_source_ref
+    );
+    let cold_first_occurrence = AskOccurrence::from_envelope(
+        &load_envelope(&reopened, first_occurrence_ref.as_artifact_ref()).await,
+    )
+    .expect("first occurrence must cold decode");
+    let cold_second_occurrence = AskOccurrence::from_envelope(
+        &load_envelope(&reopened, second_occurrence_ref.as_artifact_ref()).await,
+    )
+    .expect("second occurrence must cold decode");
+    let replay_a = reopened
+        .replay_completed_external_effect(token_a)
+        .await
+        .expect("first effect must cold replay");
+    let replay_b = reopened
+        .replay_completed_external_effect(token_b)
+        .await
+        .expect("second effect must cold replay");
+    cold_catalog
+        .events
+        .insert(replay_a.event_ref(), replay_a.event().clone());
+    cold_catalog
+        .events
+        .insert(replay_b.event_ref(), replay_b.event().clone());
+    let link_a = check_source_event_link(
+        replay_a.clone(),
+        cold_first_occurrence.clone(),
+        &cold_catalog,
+    )
+    .expect("first event must recheck against its source occurrence");
+    let link_b = check_source_event_link(
+        replay_b.clone(),
+        cold_second_occurrence.clone(),
+        &cold_catalog,
+    )
+    .expect("second event must recheck against its source occurrence");
+    assert_eq!(
+        link_a.actuality().request_ref(),
+        link_b.actuality().request_ref()
+    );
+    assert_eq!(
+        link_a.actuality().raw_return_ref(),
+        link_b.actuality().raw_return_ref()
+    );
+    assert_eq!(
+        link_a.actuality().event().question(),
+        link_b.actuality().event().question()
+    );
+    assert_eq!(
+        link_a.actuality().event().operator(),
+        link_b.actuality().event().operator()
+    );
+    assert_ne!(link_a.occurrence_ref(), link_b.occurrence_ref());
+    assert_ne!(
+        link_a.occurrence().continuation(),
+        link_b.occurrence().continuation()
+    );
+    let cold_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            roots.support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &cold_catalog,
+    )
+    .expect("cold occurrence support must reconstruct");
+    let cold_decoder = cold_catalog
+        .resolve_finite_decoder(roots.decoded_decoder)
+        .expect("cold decoder must reload");
+    let cold_first_program = cold_catalog
+        .resolve_iprog(roots.source)
+        .expect("first source program must reload");
+    let cold_second_program = cold_catalog
+        .resolve_iprog(second_source)
+        .expect("second source program must reload");
+    let first_runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: roots.operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
+    );
+    let second_runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator: roots.operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_b,
+                },
+            ),
+        ],
+    );
+    first_runtime
+        .verify(&cold_catalog)
+        .expect("first cold lowering must verify");
+    second_runtime
+        .verify(&cold_catalog)
+        .expect("second cold lowering must verify");
+    let MachineStep::Suspended(first_suspension) = first_runtime
+        .step(first_runtime.start())
+        .expect("first cold lowering must suspend")
+    else {
+        panic!("first cold lowering must suspend")
+    };
+    let MachineStep::Suspended(second_suspension) = second_runtime
+        .step(second_runtime.start())
+        .expect("second cold lowering must suspend")
+    else {
+        panic!("second cold lowering must suspend")
+    };
+    let observations = [
+        ReplayObservation::new(roots.candidate_a, roots.observation_a),
+        ReplayObservation::new(roots.candidate_b, roots.observation_b),
+    ];
+    let resumed_a = replay_completed_finite_probe(
+        &reopened,
+        token_a,
+        &cold_decoder,
+        roots.decoded_path,
+        &observations,
+        &cold_standing,
+        &cold_first_program,
+        first_suspension,
+        ContinuationLowering::new(roots.continuation, BlockTarget::new(1)),
+        &first_runtime,
+        &cold_catalog,
+    )
+    .await
+    .expect("first occurrence-specific successor must cold replay");
+    let resumed_b = replay_completed_finite_probe(
+        &reopened,
+        token_b,
+        &cold_decoder,
+        roots.decoded_path,
+        &observations,
+        &cold_standing,
+        &cold_second_program,
+        second_suspension,
+        ContinuationLowering::new(second_continuation, BlockTarget::new(1)),
+        &second_runtime,
+        &cold_catalog,
+    )
+    .await
+    .expect("second occurrence-specific successor must cold replay");
+    assert_eq!(
+        resumed_a.resumption().binding().answer().candidates(),
+        resumed_b.resumption().binding().answer().candidates()
+    );
+    assert_ne!(
+        resumed_a.resumption().binding().continuation(),
+        resumed_b.resumption().binding().continuation()
+    );
+    assert!(matches!(
+        first_runtime
+            .step(resumed_a.resumption().state())
+            .expect("first successor must execute"),
+        MachineStep::Returned(value) if value == roots.answer_a
+    ));
+    assert!(matches!(
+        second_runtime
+            .step(resumed_b.resumption().state())
+            .expect("second successor must execute"),
+        MachineStep::Returned(value) if value == roots.answer_b
+    ));
+    assert!(matches!(
+        check_source_event_link(replay_a, cold_second_occurrence, &cold_catalog),
+        Err(SourceEventLinkError::OccurrenceMismatch { .. })
+    ));
+    assert!(matches!(
+        check_source_event_link(original, cold_first_occurrence, &cold_catalog),
+        Err(SourceEventLinkError::LegacyOrDirectEvent(event)) if event == roots.event
+    ));
+
+    let cold_multi_relation = RelationSchema::from_envelope(
+        &load_envelope(&reopened, multi_relation.as_artifact_ref()).await,
+    )
+    .expect("mixed-port relation must cold decode");
+    assert_eq!(
+        cold_catalog.insert_schema(cold_multi_relation),
+        multi_relation
+    );
+    let cold_multi_query =
+        OpenQuery::from_envelope(&load_envelope(&reopened, multi_query.as_artifact_ref()).await)
+            .expect("mixed-port query must cold decode");
+    assert_eq!(cold_catalog.insert_query(cold_multi_query), multi_query);
+    let cold_multi_chart = BoundaryChart::from_envelope(
+        &load_envelope(&reopened, multi_boundary.as_artifact_ref()).await,
+    )
+    .expect("mixed-port boundary must cold decode");
+    cold_catalog.charts.insert(multi_boundary, cold_multi_chart);
+    let cold_multi_operator = ProbeOperator::from_envelope(
+        &load_envelope(&reopened, multi_operator.as_artifact_ref()).await,
+    )
+    .expect("mixed-port operator must cold decode");
+    cold_catalog
+        .operators
+        .insert(multi_operator, cold_multi_operator);
+    let cold_multi_source_program = IProgArtifact::from_envelope(
+        &load_envelope(&reopened, multi_source_program.as_artifact_ref()).await,
+    )
+    .expect("mixed-port source must cold decode");
+    assert_eq!(
+        cold_catalog.insert_program(cold_multi_source_program),
+        multi_source_program
+    );
+    let cold_multi_source = SourceConfig::from_envelope(
+        &load_envelope(&reopened, multi_source_ref.as_artifact_ref()).await,
+    )
+    .expect("mixed-port source configuration must cold decode");
+    assert_eq!(
+        cold_catalog.insert_source_config(cold_multi_source),
+        multi_source_ref
+    );
+    let cold_multi_occurrence = AskOccurrence::from_envelope(
+        &load_envelope(&reopened, multi_occurrence_ref.as_artifact_ref()).await,
+    )
+    .expect("mixed-port occurrence must cold decode");
+    let cold_opaque_path = ResolutionPath::from_envelope(
+        &load_envelope(&reopened, opaque_path.as_artifact_ref()).await,
+    )
+    .expect("opaque path must cold decode");
+    assert_eq!(cold_catalog.insert_path(cold_opaque_path), opaque_path);
+    let replay_multi = reopened
+        .replay_completed_external_effect(token_multi)
+        .await
+        .expect("mixed-port effect must cold replay");
+    assert_eq!(replay_multi.event_ref(), multi_actual.event_ref());
+    let multi_link =
+        check_source_event_link(replay_multi, cold_multi_occurrence.clone(), &cold_catalog)
+            .expect("mixed-port event must recheck against its source occurrence");
+    let decoded_evidence = ProbePortDischargeEvidence::new(
+        decoded_port.clone(),
+        route,
+        roots.decoded_path,
+        binding,
+        roots.compiler_version,
+        multi_provenance,
+        multi_link.clone(),
+    );
+    let opaque_evidence = ProbePortDischargeEvidence::new(
+        opaque_port.clone(),
+        route,
+        opaque_path,
+        binding,
+        roots.compiler_version,
+        multi_provenance,
+        multi_link,
+    );
+    assert!(matches!(
+        admit_finite_probe_discharge_bundle(
+            cold_multi_occurrence.clone(),
+            vec![decoded_evidence.clone(), opaque_evidence.clone()],
+            Vec::new(),
+            &cold_catalog,
+        ),
+        Err(ProbeDischargeBundleError::SharedEventCoverageMismatch)
+    ));
+    let shared = SharedProbeEventAdmission::new(
+        multi_actual.event_ref(),
+        vec![decoded_port.clone(), opaque_port.clone()],
+    )
+    .expect("one event may be admitted for two explicitly named ports");
+    let bundle = admit_finite_probe_discharge_bundle(
+        cold_multi_occurrence.clone(),
+        vec![opaque_evidence.clone(), decoded_evidence.clone()],
+        vec![shared],
+        &cold_catalog,
+    )
+    .expect("cold mixed-port evidence must retain exact port-indexed paths");
+    assert_eq!(bundle.components().len(), 2);
+    assert_eq!(bundle.shared_events().len(), 1);
+    assert_ne!(
+        bundle.components()[0].resolution_path(),
+        bundle.components()[1].resolution_path()
+    );
+    let wrong_decoded = ProbePortDischargeEvidence::new(
+        decoded_port,
+        route,
+        opaque_path,
+        binding,
+        roots.compiler_version,
+        multi_provenance,
+        opaque_evidence.event().clone(),
+    );
+    let shared = SharedProbeEventAdmission::new(
+        multi_actual.event_ref(),
+        vec![
+            TypeSymbol::new("decoded").expect("port must be valid"),
+            opaque_port,
+        ],
+    )
+    .expect("shared admission must remain constructible for the path foil");
+    assert!(matches!(
+        admit_finite_probe_discharge_bundle(
+            cold_multi_occurrence,
+            vec![wrong_decoded, opaque_evidence],
+            vec![shared],
+            &cold_catalog,
+        ),
+        Err(ProbeDischargeBundleError::ResolutionTypeMismatch(_))
+    ));
+    assert_eq!(
+        provider_calls.load(Ordering::SeqCst),
+        4,
+        "cold replay must not redispatch either occurrence or the shared-port event"
+    );
+    reopened.close().await;
+    std::fs::remove_file(path).expect("temporary occurrence replay database must be removable");
 }

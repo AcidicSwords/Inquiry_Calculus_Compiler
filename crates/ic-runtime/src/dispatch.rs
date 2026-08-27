@@ -7,9 +7,9 @@
 use std::error::Error;
 
 use ic_core::{
-    ActualEvent, BackendBoundaryError, BackendRequest, BackendRequestRef, BindingVersionRef,
-    DistinctionRef, EventRef, GrainRef, ProvenanceRef, RawReturn, RawReturnError, RawReturnRef,
-    RouteRef, StateRef,
+    ActualEvent, AskOccurrenceRef, BackendBoundaryError, BackendRequest, BackendRequestRef,
+    BindingVersionRef, DistinctionRef, EventRef, GrainRef, ProvenanceRef, RawReturn,
+    RawReturnError, RawReturnRef, RouteRef, StateRef,
 };
 use ic_store::{
     ArtifactStore, DispatchToken, ExternalEffectPreparation, ExternalEffectState, StoreError,
@@ -25,6 +25,7 @@ use crate::ProbeSuspension;
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct ProbeDispatchContext {
     ledger_parent: Option<EventRef>,
+    source_ask_occurrence: Option<AskOccurrenceRef>,
     state_before: StateRef,
     distinction: Option<DistinctionRef>,
     state_after: StateRef,
@@ -49,6 +50,7 @@ impl ProbeDispatchContext {
     ) -> Self {
         Self {
             ledger_parent,
+            source_ask_occurrence: None,
             state_before,
             distinction,
             state_after,
@@ -62,6 +64,18 @@ impl ProbeDispatchContext {
     #[must_use]
     pub const fn ledger_parent(self) -> Option<EventRef> {
         self.ledger_parent
+    }
+
+    /// Links a source-compiled dispatch to the exact already-persisted `Ask` occurrence.
+    #[must_use]
+    pub const fn with_source_ask_occurrence(mut self, occurrence: AskOccurrenceRef) -> Self {
+        self.source_ask_occurrence = Some(occurrence);
+        self
+    }
+
+    #[must_use]
+    pub const fn source_ask_occurrence(self) -> Option<AskOccurrenceRef> {
+        self.source_ask_occurrence
     }
 }
 
@@ -166,21 +180,41 @@ pub async fn dispatch_probe<P: ProbeProvider>(
         .map_err(ProbeDispatchError::Provider)?;
     let raw_return = RawReturn::new(provider_return.into_bytes());
     let raw_return_ref = raw_return.raw_return_ref()?;
-    let event = ActualEvent::new(
-        context.ledger_parent,
-        context.state_before,
-        request_value.query(),
-        request_value.boundary(),
-        context.distinction,
-        suspension.operator(),
-        raw_return_ref,
-        context.state_after,
-        context.grain,
-        context.route,
-        context.binding,
-        request_value.backend_version(),
-        context.provenance,
-    );
+    let event = if let Some(source_ask_occurrence) = context.source_ask_occurrence {
+        ActualEvent::new_source_linked(
+            context.ledger_parent,
+            context.state_before,
+            source_ask_occurrence,
+            request_value.query(),
+            request_value.boundary(),
+            context.distinction,
+            suspension.operator(),
+            raw_return_ref,
+            context.state_after,
+            context.grain,
+            context.route,
+            context.binding,
+            request_value.compiler_version(),
+            request_value.backend_version(),
+            context.provenance,
+        )
+    } else {
+        ActualEvent::new(
+            context.ledger_parent,
+            context.state_before,
+            request_value.query(),
+            request_value.boundary(),
+            context.distinction,
+            suspension.operator(),
+            raw_return_ref,
+            context.state_after,
+            context.grain,
+            context.route,
+            context.binding,
+            request_value.backend_version(),
+            context.provenance,
+        )
+    };
     let event_ref = store
         .complete_external_effect(token, &raw_return, &event)
         .await?;

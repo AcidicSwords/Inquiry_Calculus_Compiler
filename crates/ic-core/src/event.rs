@@ -11,15 +11,18 @@ use std::{fmt, str::FromStr};
 use thiserror::Error;
 
 use crate::{
-    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, BindingVersionRef, BoundaryChart,
-    BoundaryChartError, DistinctionRef, GrainRef, OpenQuery, OpenQueryError, ProbeOperator,
-    ProbeOperatorError, ProbeOperatorRef, QueryRef, RawReturn, RawReturnError, RawReturnRef,
+    ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef, AskOccurrenceRef,
+    BindingVersionRef, BoundaryChart, BoundaryChartError, DistinctionRef, GrainRef, OpenQuery,
+    OpenQueryError, ProbeOperator, ProbeOperatorError, ProbeOperatorRef, QueryRef, RawReturn,
+    RawReturnError, RawReturnRef,
 };
 
 /// Canonical artifact kind for one ordinary, realized actuality occurrence.
 pub const ACTUAL_EVENT_ARTIFACT_KIND: &str = "ic.actual-event";
 /// Payload schema version for ordinary actuality occurrences.
-pub const ACTUAL_EVENT_SCHEMA_VERSION: u32 = 1;
+pub const ACTUAL_EVENT_SCHEMA_VERSION: u32 = 2;
+/// Pre-v2 event payload retained for cold readability and exact historical identity.
+pub const LEGACY_ACTUAL_EVENT_SCHEMA_VERSION: u32 = 1;
 
 macro_rules! artifact_reference {
     ($name:ident) => {
@@ -70,8 +73,10 @@ pub type OperatorRef = ProbeOperatorRef;
 /// not every ordinary actualization is a reciprocal-boundary occurrence.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ActualEvent {
+    schema_version: u32,
     ledger_parent: Option<EventRef>,
     state_before: StateRef,
+    source_ask_occurrence: Option<AskOccurrenceRef>,
     question: QueryRef,
     boundary: BoundaryRef,
     distinction: Option<DistinctionRef>,
@@ -81,6 +86,7 @@ pub struct ActualEvent {
     grain: GrainRef,
     route: RouteRef,
     binding: BindingVersionRef,
+    compiler_version: Option<ArtifactRef>,
     backend_version: ArtifactRef,
     provenance: ProvenanceRef,
 }
@@ -103,7 +109,7 @@ impl ActualEvent {
         backend_version: ArtifactRef,
         provenance: ProvenanceRef,
     ) -> Self {
-        Self {
+        Self::legacy(
             ledger_parent,
             state_before,
             question,
@@ -117,7 +123,125 @@ impl ActualEvent {
             binding,
             backend_version,
             provenance,
+        )
+    }
+
+    /// Creates a v2 event compiled from one exact checked source `Ask` occurrence.
+    #[allow(clippy::too_many_arguments)]
+    #[must_use]
+    pub const fn new_source_linked(
+        ledger_parent: Option<EventRef>,
+        state_before: StateRef,
+        source_ask_occurrence: AskOccurrenceRef,
+        question: QueryRef,
+        boundary: BoundaryRef,
+        distinction: Option<DistinctionRef>,
+        operator: ProbeOperatorRef,
+        raw_return: RawReturnRef,
+        state_after: StateRef,
+        grain: GrainRef,
+        route: RouteRef,
+        binding: BindingVersionRef,
+        compiler_version: ArtifactRef,
+        backend_version: ArtifactRef,
+        provenance: ProvenanceRef,
+    ) -> Self {
+        Self::v2(
+            ledger_parent,
+            state_before,
+            Some(source_ask_occurrence),
+            question,
+            boundary,
+            distinction,
+            operator,
+            raw_return,
+            state_after,
+            grain,
+            route,
+            binding,
+            compiler_version,
+            backend_version,
+            provenance,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    const fn v2(
+        ledger_parent: Option<EventRef>,
+        state_before: StateRef,
+        source_ask_occurrence: Option<AskOccurrenceRef>,
+        question: QueryRef,
+        boundary: BoundaryRef,
+        distinction: Option<DistinctionRef>,
+        operator: ProbeOperatorRef,
+        raw_return: RawReturnRef,
+        state_after: StateRef,
+        grain: GrainRef,
+        route: RouteRef,
+        binding: BindingVersionRef,
+        compiler_version: ArtifactRef,
+        backend_version: ArtifactRef,
+        provenance: ProvenanceRef,
+    ) -> Self {
+        Self {
+            schema_version: ACTUAL_EVENT_SCHEMA_VERSION,
+            ledger_parent,
+            state_before,
+            source_ask_occurrence,
+            question,
+            boundary,
+            distinction,
+            operator,
+            raw_return,
+            state_after,
+            grain,
+            route,
+            binding,
+            compiler_version: Some(compiler_version),
+            backend_version,
+            provenance,
         }
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    const fn legacy(
+        ledger_parent: Option<EventRef>,
+        state_before: StateRef,
+        question: QueryRef,
+        boundary: BoundaryRef,
+        distinction: Option<DistinctionRef>,
+        operator: ProbeOperatorRef,
+        raw_return: RawReturnRef,
+        state_after: StateRef,
+        grain: GrainRef,
+        route: RouteRef,
+        binding: BindingVersionRef,
+        backend_version: ArtifactRef,
+        provenance: ProvenanceRef,
+    ) -> Self {
+        Self {
+            schema_version: LEGACY_ACTUAL_EVENT_SCHEMA_VERSION,
+            ledger_parent,
+            state_before,
+            source_ask_occurrence: None,
+            question,
+            boundary,
+            distinction,
+            operator,
+            raw_return,
+            state_after,
+            grain,
+            route,
+            binding,
+            compiler_version: None,
+            backend_version,
+            provenance,
+        }
+    }
+
+    #[must_use]
+    pub const fn schema_version(&self) -> u32 {
+        self.schema_version
     }
 
     #[must_use]
@@ -127,6 +251,10 @@ impl ActualEvent {
     #[must_use]
     pub const fn state_before(&self) -> StateRef {
         self.state_before
+    }
+    #[must_use]
+    pub const fn source_ask_occurrence(&self) -> Option<AskOccurrenceRef> {
+        self.source_ask_occurrence
     }
     #[must_use]
     pub const fn question(&self) -> QueryRef {
@@ -164,6 +292,12 @@ impl ActualEvent {
     pub const fn binding(&self) -> BindingVersionRef {
         self.binding
     }
+    /// Explicit compiler identity for v2 events. Legacy v1 records return `None`; their operator
+    /// remains available for a separately checked derived compiler identity.
+    #[must_use]
+    pub const fn compiler_version(&self) -> Option<ArtifactRef> {
+        self.compiler_version
+    }
     #[must_use]
     pub const fn backend_version(&self) -> ArtifactRef {
         self.backend_version
@@ -174,12 +308,19 @@ impl ActualEvent {
     }
 
     pub fn canonical_payload(&self) -> Vec<u8> {
-        let mut encoded = Vec::with_capacity(32 * 13 + 2);
+        let mut encoded = Vec::with_capacity(32 * 15 + 3);
         optional_reference(
             &mut encoded,
             self.ledger_parent.map(EventRef::as_artifact_ref),
         );
         reference(&mut encoded, self.state_before.as_artifact_ref());
+        if self.schema_version == ACTUAL_EVENT_SCHEMA_VERSION {
+            optional_reference(
+                &mut encoded,
+                self.source_ask_occurrence
+                    .map(AskOccurrenceRef::as_artifact_ref),
+            );
+        }
         reference(&mut encoded, self.question.as_artifact_ref());
         reference(&mut encoded, self.boundary.as_artifact_ref());
         optional_reference(
@@ -192,12 +333,64 @@ impl ActualEvent {
         reference(&mut encoded, self.grain.as_artifact_ref());
         reference(&mut encoded, self.route.as_artifact_ref());
         reference(&mut encoded, self.binding.as_artifact_ref());
+        if self.schema_version == ACTUAL_EVENT_SCHEMA_VERSION {
+            reference(
+                &mut encoded,
+                self.compiler_version
+                    .expect("v2 event construction always supplies a compiler version"),
+            );
+        }
         reference(&mut encoded, self.backend_version);
         reference(&mut encoded, self.provenance.as_artifact_ref());
         encoded
     }
 
     pub fn decode_payload(payload: &[u8]) -> Result<Self, ActualEventError> {
+        let mut cursor = Cursor::new(payload);
+        let ledger_parent = cursor
+            .optional_reference()?
+            .map(EventRef::from_artifact_ref);
+        let state_before = StateRef::from_artifact_ref(cursor.reference()?);
+        let source_ask_occurrence = cursor
+            .optional_reference()?
+            .map(AskOccurrenceRef::from_artifact_ref);
+        let question = QueryRef::from_artifact_ref(cursor.reference()?);
+        let boundary = BoundaryRef::from_artifact_ref(cursor.reference()?);
+        let distinction = cursor
+            .optional_reference()?
+            .map(DistinctionRef::from_artifact_ref);
+        let operator = OperatorRef::from_artifact_ref(cursor.reference()?);
+        let raw_return = RawReturnRef::from_artifact_ref(cursor.reference()?);
+        let state_after = StateRef::from_artifact_ref(cursor.reference()?);
+        let grain = GrainRef::from_artifact_ref(cursor.reference()?);
+        let route = RouteRef::from_artifact_ref(cursor.reference()?);
+        let binding = BindingVersionRef::from_artifact_ref(cursor.reference()?);
+        let compiler_version = cursor.reference()?;
+        let backend_version = cursor.reference()?;
+        let provenance = ProvenanceRef::from_artifact_ref(cursor.reference()?);
+        if !cursor.finished() {
+            return Err(ActualEventError::TrailingPayloadBytes(cursor.remaining()));
+        }
+        Ok(Self::v2(
+            ledger_parent,
+            state_before,
+            source_ask_occurrence,
+            question,
+            boundary,
+            distinction,
+            operator,
+            raw_return,
+            state_after,
+            grain,
+            route,
+            binding,
+            compiler_version,
+            backend_version,
+            provenance,
+        ))
+    }
+
+    fn decode_legacy_payload(payload: &[u8]) -> Result<Self, ActualEventError> {
         let mut cursor = Cursor::new(payload);
         let ledger_parent = cursor
             .optional_reference()?
@@ -219,7 +412,7 @@ impl ActualEvent {
         if !cursor.finished() {
             return Err(ActualEventError::TrailingPayloadBytes(cursor.remaining()));
         }
-        Ok(Self::new(
+        Ok(Self::legacy(
             ledger_parent,
             state_before,
             question,
@@ -239,7 +432,7 @@ impl ActualEvent {
     pub fn envelope(&self) -> Result<ArtifactEnvelope, ActualEventError> {
         Ok(ArtifactEnvelope::from_canonical_payload(
             ArtifactKind::new(ACTUAL_EVENT_ARTIFACT_KIND)?,
-            ACTUAL_EVENT_SCHEMA_VERSION,
+            self.schema_version,
             self.canonical_payload(),
         ))
     }
@@ -257,23 +450,27 @@ impl ActualEvent {
                 actual: envelope.kind().as_str().to_owned(),
             });
         }
-        if envelope.schema_version() != ACTUAL_EVENT_SCHEMA_VERSION {
-            return Err(ActualEventError::UnsupportedSchemaVersion(
-                envelope.schema_version(),
-            ));
+        match envelope.schema_version() {
+            ACTUAL_EVENT_SCHEMA_VERSION => Self::decode_payload(envelope.canonical_payload()),
+            LEGACY_ACTUAL_EVENT_SCHEMA_VERSION => {
+                Self::decode_legacy_payload(envelope.canonical_payload())
+            }
+            version => Err(ActualEventError::UnsupportedSchemaVersion(version)),
         }
-        Self::decode_payload(envelope.canonical_payload())
     }
 
     /// References that must exist before the event can enter the immutable artifact store.
     #[must_use]
     pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
-        let mut references = Vec::with_capacity(13);
+        let mut references = Vec::with_capacity(15);
         if let Some(parent) = self.ledger_parent {
             references.push(parent.as_artifact_ref());
         }
+        references.extend([self.state_before.as_artifact_ref()]);
+        if let Some(source) = self.source_ask_occurrence {
+            references.push(source.as_artifact_ref());
+        }
         references.extend([
-            self.state_before.as_artifact_ref(),
             self.question.as_artifact_ref(),
             self.boundary.as_artifact_ref(),
         ]);
@@ -287,9 +484,11 @@ impl ActualEvent {
             self.grain.as_artifact_ref(),
             self.route.as_artifact_ref(),
             self.binding.as_artifact_ref(),
-            self.backend_version,
-            self.provenance.as_artifact_ref(),
         ]);
+        if let Some(compiler_version) = self.compiler_version {
+            references.push(compiler_version);
+        }
+        references.extend([self.backend_version, self.provenance.as_artifact_ref()]);
         references
     }
 }
@@ -479,6 +678,14 @@ pub fn check_event_context(
             operator: operator.boundary(),
         });
     }
+    if let Some(compiler_version) = event.compiler_version
+        && operator.compiler_version() != compiler_version
+    {
+        return Err(ActualEventCheckError::CompilerVersionMismatch {
+            event: compiler_version,
+            operator: operator.compiler_version(),
+        });
+    }
     if chart.grain() != event.grain {
         return Err(ActualEventCheckError::BoundaryGrainMismatch {
             event: event.grain,
@@ -561,6 +768,13 @@ pub enum ActualEventCheckError {
     OperatorBoundaryMismatch {
         event: BoundaryRef,
         operator: BoundaryRef,
+    },
+    #[error(
+        "event compiler version {event} does not match probe-operator compiler version {operator}"
+    )]
+    CompilerVersionMismatch {
+        event: ArtifactRef,
+        operator: ArtifactRef,
     },
     #[error("event grain {event} does not match boundary-chart grain {boundary}")]
     BoundaryGrainMismatch { event: GrainRef, boundary: GrainRef },

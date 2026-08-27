@@ -6,6 +6,7 @@
 //! bridge consumes event-linked evidence produced by `ic-core`; it does not manufacture decoding,
 //! standing, or warrant.
 
+mod actuality;
 mod dispatch;
 mod ollama;
 mod openai;
@@ -14,6 +15,11 @@ mod trace;
 
 use std::collections::BTreeMap;
 
+pub use actuality::{
+    ActualitySeparationCatalog, FiniteProbeDischargeBundle, ProbeDischargeBundleError,
+    ProbePortDischargeEvidence, SharedProbeEventAdmission, SourceEventLink, SourceEventLinkError,
+    admit_finite_probe_discharge_bundle, check_source_event_link,
+};
 pub use dispatch::{
     ActualizedProbe, ProbeDispatchContext, ProbeDispatchError, ProbeProvider, ProviderReturn,
     dispatch_probe,

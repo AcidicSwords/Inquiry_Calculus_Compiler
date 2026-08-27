@@ -2,15 +2,69 @@ use std::collections::BTreeMap;
 
 use ic_core::{
     ActualEvent, ActualEventCatalog, ActualEventCheckError, ActualEventError, ApplicabilityRef,
-    ArtifactRef, BindingVersionRef, BoundaryChart, BoundaryRef, DeterminationPresentationRef,
-    DischargeMode, DistinctionRef, EventRef, FormulaRef, GrainRef, HorizonRef, OpenQuery,
-    OperatorRef, ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProvenanceRef, QueryRef,
-    RawReturn, RawReturnCatalog, RawReturnRef, RelationRef, RelationUseContext, RelationUseRef,
-    RouteRef, ScopeRef, StateRef, SupportRef, TypeRef, check_actual_event, check_raw_return,
+    ArtifactRef, AskOccurrenceRef, BindingVersionRef, BoundaryChart, BoundaryRef,
+    DeterminationPresentationRef, DischargeMode, DistinctionRef, EventRef, FormulaRef, GrainRef,
+    HorizonRef, LEGACY_ACTUAL_EVENT_SCHEMA_VERSION, OpenQuery, OperatorRef, ProbeContractRef,
+    ProbeOperator, ProbeOperatorRef, ProvenanceRef, QueryRef, RawReturn, RawReturnCatalog,
+    RawReturnRef, RelationRef, RelationUseContext, RelationUseRef, RouteRef, ScopeRef, StateRef,
+    SupportRef, TypeRef, check_actual_event, check_raw_return,
 };
 
 fn artifact(byte: u8) -> ArtifactRef {
     ArtifactRef::from_bytes([byte; 32])
+}
+
+#[test]
+fn source_linked_event_v2_round_trips_without_changing_legacy_identity() {
+    let raw_return = RawReturnRef::from_artifact_ref(artifact(12));
+    let legacy = event(raw_return, None);
+    let legacy_ref = legacy.event_ref().expect("legacy event must encode");
+    let legacy_envelope = legacy.envelope().expect("legacy event must encode");
+    assert_eq!(
+        legacy_envelope.schema_version(),
+        LEGACY_ACTUAL_EVENT_SCHEMA_VERSION
+    );
+    let decoded_legacy =
+        ActualEvent::from_envelope(&legacy_envelope).expect("legacy event must remain readable");
+    assert_eq!(decoded_legacy, legacy);
+    assert_eq!(
+        decoded_legacy
+            .event_ref()
+            .expect("legacy event must re-encode"),
+        legacy_ref
+    );
+
+    let source = AskOccurrenceRef::from_artifact_ref(artifact(14));
+    let compiler = artifact(15);
+    let linked = ActualEvent::new_source_linked(
+        legacy.ledger_parent(),
+        legacy.state_before(),
+        source,
+        legacy.question(),
+        legacy.boundary(),
+        legacy.distinction(),
+        legacy.operator(),
+        legacy.raw_return(),
+        legacy.state_after(),
+        legacy.grain(),
+        legacy.route(),
+        legacy.binding(),
+        compiler,
+        legacy.backend_version(),
+        legacy.provenance(),
+    );
+    let linked_envelope = linked.envelope().expect("linked event must encode");
+    assert_eq!(linked_envelope.schema_version(), 2);
+    assert_eq!(linked.source_ask_occurrence(), Some(source));
+    assert_eq!(linked.compiler_version(), Some(compiler));
+    assert_ne!(
+        linked.event_ref().expect("linked event must encode"),
+        legacy_ref
+    );
+    assert_eq!(
+        ActualEvent::from_envelope(&linked_envelope).expect("linked event must decode"),
+        linked
+    );
 }
 
 fn event(raw_return: RawReturnRef, distinction: Option<DistinctionRef>) -> ActualEvent {
