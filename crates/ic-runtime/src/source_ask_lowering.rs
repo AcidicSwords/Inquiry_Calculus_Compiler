@@ -255,17 +255,59 @@ impl SourceAskProbeDischarge {
     }
 }
 
+/// What a non-Probe port supplies, in the two carriers the plan's payload IR keeps apart.
+///
+/// A `Generate` port may only ever hold a `Proposal`. Canonical states that generation evidence
+/// carries no actuality authority, so a proposal must not share a carrier with a result a
+/// registered computation, an independent checker, or the standing policy actually established.
+/// The distinction is structural rather than a flag, so a consumer cannot read a proposal as a
+/// determined result without naming the constructor that says otherwise.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum NonProbePortOutput {
+    /// A `Pure`, `Check`, or `Warrant` port's exact typed result.
+    Determined(TypedFormRef),
+    /// A `Generate` port's provisional filling, carrying no actuality authority.
+    Proposal(TypedFormRef),
+}
+
+impl NonProbePortOutput {
+    /// The typed form either carrier holds. Reading this discards the authority distinction, so
+    /// use it only where the distinction has already been accounted for.
+    #[must_use]
+    pub const fn typed_form(self) -> TypedFormRef {
+        match self {
+            Self::Determined(form) | Self::Proposal(form) => form,
+        }
+    }
+
+    #[must_use]
+    pub const fn is_proposal(self) -> bool {
+        matches!(self, Self::Proposal(_))
+    }
+
+    /// The one discharge mode family this carrier belongs to.
+    const fn admits(self, mode: DischargeMode) -> bool {
+        match self {
+            Self::Proposal(_) => matches!(mode, DischargeMode::Generate),
+            Self::Determined(_) => matches!(
+                mode,
+                DischargeMode::Pure | DischargeMode::Check | DischargeMode::Warrant
+            ),
+        }
+    }
+}
+
 /// One non-Probe open-port evidence record within a source occurrence.
 ///
 /// Canonical `PortEvidence` gives Pure, Generate, Check, and Warrant ports their exact typed
-/// result, route, resolution path, versions, and provenance. None of them carries an
+/// output, route, resolution path, versions, and provenance. None of them carries an
 /// `ActualEvent`: only a Probe port enters the ordinary event spine, so this record has no event
 /// field to fill and cannot be made to carry actuality.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct NonProbePortDischargeEvidence {
     port: TypeSymbol,
     mode: DischargeMode,
-    result: TypedFormRef,
+    output: NonProbePortOutput,
     route: RouteRef,
     resolution_path: ResolutionPathRef,
     binding: BindingVersionRef,
@@ -279,7 +321,7 @@ impl NonProbePortDischargeEvidence {
     pub const fn new(
         port: TypeSymbol,
         mode: DischargeMode,
-        result: TypedFormRef,
+        output: NonProbePortOutput,
         route: RouteRef,
         resolution_path: ResolutionPathRef,
         binding: BindingVersionRef,
@@ -289,7 +331,7 @@ impl NonProbePortDischargeEvidence {
         Self {
             port,
             mode,
-            result,
+            output,
             route,
             resolution_path,
             binding,
@@ -309,8 +351,14 @@ impl NonProbePortDischargeEvidence {
     }
 
     #[must_use]
+    pub const fn output(&self) -> NonProbePortOutput {
+        self.output
+    }
+
+    /// The typed form this port supplies, whether determined or merely proposed.
+    #[must_use]
     pub const fn result(&self) -> TypedFormRef {
-        self.result
+        self.output.typed_form()
     }
 
     #[must_use]
@@ -437,6 +485,14 @@ impl MixedModeSourceAskDischarge {
                     evidence: evidence.mode,
                 });
             }
+            // Only a Generate port may hold a proposal, and a Generate port may hold nothing else.
+            if !evidence.output.admits(evidence.mode) {
+                return Err(MixedModeSourceAskDischargeError::OutputAuthorityMismatch {
+                    port: evidence.port.as_str().to_owned(),
+                    mode: evidence.mode,
+                    proposed: evidence.output.is_proposal(),
+                });
+            }
             if !covered.insert(evidence.port.clone()) {
                 return Err(MixedModeSourceAskDischargeError::DuplicateNonProbePort(
                     evidence.port.as_str().to_owned(),
@@ -462,15 +518,15 @@ impl MixedModeSourceAskDischarge {
                 );
             }
 
-            let typed_form = ic_core::FormulaCatalog::resolve_typed_form(catalog, evidence.result)
-                .ok_or(MixedModeSourceAskDischargeError::UnresolvedNonProbeResult(
-                    evidence.result,
-                ))?;
+            let typed_form =
+                ic_core::FormulaCatalog::resolve_typed_form(catalog, evidence.result()).ok_or(
+                    MixedModeSourceAskDischargeError::UnresolvedNonProbeResult(evidence.result()),
+                )?;
             let calculated = typed_form.typed_form_ref()?;
-            if calculated != evidence.result {
+            if calculated != evidence.result() {
                 return Err(
                     MixedModeSourceAskDischargeError::NonProbeResultIdentityMismatch {
-                        expected: evidence.result,
+                        expected: evidence.result(),
                         actual: calculated,
                     },
                 );
@@ -649,6 +705,15 @@ pub enum MixedModeSourceAskDischargeError {
         port: String,
         declared: DischargeMode,
         evidence: DischargeMode,
+    },
+    #[error(
+        "port {port:?} declares mode {mode:?}, which does not admit a {} carrier",
+        if *proposed { "proposal" } else { "determined-result" }
+    )]
+    OutputAuthorityMismatch {
+        port: String,
+        mode: DischargeMode,
+        proposed: bool,
     },
     #[error("non-Probe evidence for port {0:?} has a binding other than its source occurrence")]
     NonProbeBindingMismatch(String),

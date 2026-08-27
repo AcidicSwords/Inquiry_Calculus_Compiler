@@ -70,9 +70,9 @@ pub use runtime_code::{
 };
 pub use source_ask_lowering::{
     MixedModeSourceAskDischarge, MixedModeSourceAskDischargeError, NonProbePortDischargeEvidence,
-    NonProbeResolutionTypeMismatch, PortLowering, SourceAskLowering, SourceAskLoweringCatalog,
-    SourceAskLoweringCheckError, SourceAskProbeDischarge, SourceAskProbeDischargeCatalog,
-    SourceAskProbeDischargeError,
+    NonProbePortOutput, NonProbeResolutionTypeMismatch, PortLowering, SourceAskLowering,
+    SourceAskLoweringCatalog, SourceAskLoweringCheckError, SourceAskProbeDischarge,
+    SourceAskProbeDischargeCatalog, SourceAskProbeDischargeError,
 };
 use thiserror::Error;
 pub use trace::{

@@ -51,11 +51,11 @@ use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
     MachineStep, MethodBridgeReentryError, MethodCuePlanning, MixedModeSourceAskDischarge,
     MixedModeSourceAskDischargeError, MixedPortContribution, MixedQuestionResolutionError,
-    NonProbePortDischargeEvidence, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText,
-    OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError, PairedActualityTrace,
-    PairedActualityTraversal, PortLowering, ProbeDischargeBundleError, ProbeDispatchContext,
-    ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
-    ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
+    NonProbePortDischargeEvidence, NonProbePortOutput, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
+    OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
+    PairedActualityTrace, PairedActualityTraversal, PortLowering, ProbeDischargeBundleError,
+    ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
+    ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
     SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
     TraversalCausalOrder, WholeQuestionOutcome, admit_finite_probe_discharge_bundle,
@@ -6680,7 +6680,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let pure_evidence = NonProbePortDischargeEvidence::new(
         mixed_pure_port.clone(),
         DischargeMode::Pure,
-        derived_form,
+        NonProbePortOutput::Determined(derived_form),
         route,
         opaque_path,
         binding,
@@ -6712,7 +6712,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Probe,
-            derived_form,
+            NonProbePortOutput::Determined(derived_form),
             route,
             opaque_path,
             binding,
@@ -6726,7 +6726,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_probe_port.clone(),
             DischargeMode::Pure,
-            derived_form,
+            NonProbePortOutput::Determined(derived_form),
             route,
             opaque_path,
             binding,
@@ -6740,7 +6740,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Warrant,
-            derived_form,
+            NonProbePortOutput::Determined(derived_form),
             route,
             opaque_path,
             binding,
@@ -6748,6 +6748,22 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
             mixed_provenance,
         )]),
         Err(MixedModeSourceAskDischargeError::NonProbeModeMismatch { .. })
+    ));
+    // A generated proposal carries no actuality authority, so it may not be offered at a port
+    // whose declared mode reserves discharge to determination. The two carriers are not
+    // interchangeable even when they hold the same typed form.
+    assert!(matches!(
+        mixed_foil(vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            NonProbePortOutput::Proposal(derived_form),
+            route,
+            opaque_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )]),
+        Err(MixedModeSourceAskDischargeError::OutputAuthorityMismatch { proposed: true, .. })
     ));
     assert!(matches!(
         mixed_foil(vec![pure_evidence.clone(), pure_evidence.clone()]),
@@ -6762,7 +6778,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            TypedFormRef::from_artifact_ref(artifact(0xc7)),
+            NonProbePortOutput::Determined(TypedFormRef::from_artifact_ref(artifact(0xc7))),
             route,
             opaque_path,
             binding,
@@ -6778,7 +6794,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            derived_form,
+            NonProbePortOutput::Determined(derived_form),
             route,
             pure_path,
             binding,
@@ -6791,7 +6807,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            derived_form,
+            NonProbePortOutput::Determined(derived_form),
             route,
             opaque_path,
             binding,
@@ -6804,7 +6820,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            derived_form,
+            NonProbePortOutput::Determined(derived_form),
             route,
             opaque_path,
             BindingVersionRef::from_artifact_ref(artifact(0xfd)),
@@ -6817,7 +6833,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            derived_form,
+            NonProbePortOutput::Determined(derived_form),
             route,
             opaque_path,
             binding,
@@ -6989,7 +7005,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            other_derived_form,
+            NonProbePortOutput::Determined(other_derived_form),
             route,
             opaque_path,
             binding,
