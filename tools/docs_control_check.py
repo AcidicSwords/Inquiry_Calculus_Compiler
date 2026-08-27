@@ -147,6 +147,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "route_node_ablation_requires_independent_regeneration_and_protected_equality",
     ),
+    "QRENDER-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "controlled_rendering_never_promotes_shared_words_into_semantic_authority",
+    ),
 }
 
 ERRORS: list[str] = []

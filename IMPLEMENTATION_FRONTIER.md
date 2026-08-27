@@ -2,44 +2,44 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `cb2183f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `30a10ab`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QROUTE-ABLATE-001` established that whole-fiber regenerability is necessary but not self-authorizing. A checked route node is removable only after the retained basis independently regenerates and exactly matches the node's separately sealed pre-ablation signature. Equal-Return-endpoint bases with replaced standing support provenance or reopening identity return positive refusals. This adds no route history, cache authority, learned method, scheduler, controller, canonical artifact, table, or opcode.
+`QRENDER-001` established one controlled three-kind round trip. A declared exact preimage, exhaustively admitted finite adjunction, and admitted same-use reciprocal return share identical “under what conditions” wording while retaining distinct checked `OpenQuery`, contract-kind, coverage, renderer, and reciprocal-use data. Kind, coverage, use, and version substitutions reject. This adds no semantic question species, surface authority, provider policy, canonical artifact, table, or opcode.
 
 ## Strongest live obligation
 
-Round-trip controlled interrogative wording without collapsing existential converse/preimage, binding-supplied universal guarantee/adjoint, or same-use reciprocal return into one backward-looking surface form.
+Erase implementation-only interrogative root and route annotations into ordinary checked `OpenQuery`/`IProg` data without changing questions, whole answer branches, modes, actuality obligations, provenance, reciprocal-use identity, or protected continuations.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QRENDER-001
-plan_phase: 10
-goal: Implement one controlled renderer/elaborator round trip whose inspectable representation preserves the exact normalized open relation and the distinct contract kind of each backward-looking question.
-protected_difference: Existential preimage asks for compatible sources, a universal guarantee or adjoint asserts a binding-supplied law over all covered pairs, and reciprocal return is the reverse section of one exact admitted use. Shared wording such as "under what conditions" cannot strengthen or interchange these contracts.
-discriminator: Render and elaborate three finite typed contracts sharing the same surface root and compatible endpoint shape: existential preimage, exhaustively checked adjoint, and same-use reciprocal return. Require exact relation/binding/port/mode/coverage/provenance round trip and reject each cross-kind elaboration even when the visible wording and endpoints agree.
-horizon: one controlled renderer/provider version, one finite binding, three declared contract kinds, exact finite coverage, no free-form language understanding or general renderer completeness
-relevant_decisions: D-0024, D-0048, D-0066, D-0102, D-0135, D-0146, D-0147
+id: QLOWER-001
+plan_phase: 3,10
+goal: Conservatively lower every derived root and route annotation used by one finite controlled fixture into the already accepted ordinary relation/question/first-order-program substrate.
+protected_difference: An annotation may guide wording or route selection but cannot change the normalized query, answer carrier, open-port modes, occurrence-indexed continuation, actuality obligation, authority/support route, coverage, or same-use reciprocal provenance. Merely returning the same endpoint is insufficient.
+discriminator: Wrap the three QRENDER-001 prompts in finite implementation-only root/route annotations, attach each to a checked first-order `Ask` program and protected whole-answer branches, lower by explicit erasure/expansion, and compare the resulting ordinary `OpenQuery`, `IProg`, occurrence, branch, mode, authority, coverage, reciprocal-use, and continuation signatures. Reject annotations that attempt to override mode, query, continuation, coverage, or use identity.
+horizon: the three demonstrated controlled backward contracts, one finite first-order Ask/Return route per contract, finite explicit annotations, no general macro language or proof of every future derived operator
+relevant_decisions: D-0024, D-0048, D-0066, D-0102, D-0135, D-0146, D-0148
 relevant_failures: F-0003
-if_pass: QLOWER-001 erase derived root and route annotations without changing ordinary typed relation/question/IProg behavior or discharge authority
-if_fail: reopen the smallest prompt representation/elaboration/relation-kind/coverage/provenance distinction; do not add semantic question species, surface authority, a provider policy, table, or opcode
+if_pass: QACTUAL-SEPARATION-001 preserve protected-different realized Ask occurrences and mixed-port provenance through cold reconstruction
+if_fail: reopen the smallest annotation/expansion/query/program/branch/mode/authority/coverage/provenance relation; do not add an interrogative runtime opcode, semantic root type, second program semantics, table, or controller
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Define a controlled prompt representation with an explicit renderer version, normalized open-query identity, relation kind, binding, bound/open ports, discharge modes, coverage, and any required reciprocal use provenance. Surface wording is data but is not the discriminator.
+Define a derived annotated route presentation whose payload is only the accepted controlled prompt, an implementation-only root label, a finite route label/path, and the exact ordinary source `IProg` it claims to elaborate. The annotation supplies no query, mode, authority, coverage, continuation, or use identity not already present in the accepted substrate.
 
-Render one existential preimage, one independently checked finite adjoint, and one same-use reciprocal return through the same "under what conditions" root. Elaborate each controlled prompt back to exactly one normalized contract and reject swapped kind tags, coverage, or reciprocal use identity even where surface text and endpoints coincide.
+For each QRENDER-001 contract, build one checked `Ask` followed by `Return`, with a finite protected whole-answer signature and occurrence-indexed continuation. Lower the annotated presentation by re-elaborating the controlled prompt, rechecking the ordinary source program, and erasing every label. Compare all protected fields to a separately checked unannotated predecessor.
 
-The smallest wrong implementation parses the shared words into a generic backward relation or lets an existential preimage acquire universal or same-use reciprocal authority.
+The smallest wrong implementation lets an annotation override one open-port mode or continuation while preserving the same question and visible endpoint. Separate coverage and reciprocal-use substitutions must also reject.
 
 ## Prohibitions at this boundary
 
-- Do not create semantic question species from surface roots or wording.
-- Do not infer a universal law, reciprocal use, coverage, or discharge authority from text.
-- Do not collapse converse/preimage, adjoint/guarantee, generic backward relation, or same-use reciprocal return.
-- Do not add a provider policy, table, opcode, second semantics, or canonical artifact unless a breaker proves identity persistence is required.
+- Do not make roots, route labels, or macro names source constructors or runtime opcodes.
+- Do not let annotations supply or override semantic fields, authority, actuality, coverage, use identity, or continuation.
+- Do not compare only rendered text, query identity, or final endpoint; preserve whole branches and occurrence ancestry.
+- Do not add a second program semantics, macro VM, table, controller, or canonical annotation artifact.
 
 ## Exit
 
-On pass, update conformance and any warranted append-only decision, replace the live block with `QLOWER-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated prompt representation/elaboration/relation-kind/coverage/provenance distinction rather than broadening the architecture.
+On pass, update conformance and any warranted append-only decision, replace the live block with `QACTUAL-SEPARATION-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated annotation/expansion/query/program/branch/mode/authority/coverage/provenance relation rather than broadening the architecture.

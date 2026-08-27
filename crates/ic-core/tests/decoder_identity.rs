@@ -5,17 +5,19 @@ use ic_core::{
     AdmittedFiniteDeparture, AdmittedFiniteNegationExtension, ApplicabilityRef, ArtifactRef,
     AskOccurrence, AskOccurrenceCheckError, BindingVersionRef, BoundaryChart, BoundaryRef,
     ClaimArtifact, ClaimError, ClaimRef, ClaimStatus, CompletionCandidate,
-    CompletionCandidateCatalog, CompletionCandidateRef, CoverageRef, DeclaredStandingError,
+    CompletionCandidateCatalog, CompletionCandidateRef, ControlledBackwardKind, ControlledCoverage,
+    ControlledElaborationExpectation, ControlledRenderingError, CoverageRef, DeclaredStandingError,
     DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse, DecoderRef,
     DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError, DepartureWitness,
     DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
-    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef,
+    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef, ExactFinitePreorder,
     ExactFiniteRouteResidualFiber, ExactFiniteSignature, FINITE_DECODER_ARTIFACT_KIND,
-    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
-    FiniteDecoderError, FiniteDecoderOutcome, FiniteDepartureAdmissionError,
-    FiniteDepartureEvidence, FiniteLiveQuestionFrontierError, FiniteLocalEffectivityCoverage,
-    FiniteResourcePreorder, FiniteRouteAblationRefusal, FiniteRouteAblationResult,
-    FiniteRouteReconstruction, FiniteRouteRegenerationResult, FiniteSupportedAnswerError,
+    FINITE_DECODER_SCHEMA_VERSION, FiniteAdjunctionCandidate, FiniteAdjunctionCatalog,
+    FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError,
+    FiniteDecoderOutcome, FiniteDepartureAdmissionError, FiniteDepartureEvidence,
+    FiniteLiveQuestionFrontierError, FiniteLocalEffectivityCoverage, FiniteResourcePreorder,
+    FiniteRouteAblationRefusal, FiniteRouteAblationResult, FiniteRouteReconstruction,
+    FiniteRouteRegenerationResult, FiniteSupportedAnswerError,
     FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
     GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
     GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
@@ -39,17 +41,18 @@ use ic_core::{
     TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
     TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable, TypedFiniteNegationExtension,
     TypedFiniteObservation, TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
-    ablate_exact_finite_route_node, admit_finite_negation_extension,
+    ablate_exact_finite_route_node, admit_finite_adjunction, admit_finite_negation_extension,
     admit_finite_supported_answers, admit_probed_finite_departure, await_question_readiness,
     bind_finite_ask_continuation, check_departure_witness_standing_support,
     check_exact_finite_route_regeneration, check_finite_route_node, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     derive_finite_live_question_frontier, derive_finite_local_interrogative_fixed_point,
     derive_local_interrogative_reopening, derive_question_readiness, derive_question_successor,
-    match_decoded_observation_use, resolve_departure_witness_evidence_support,
-    resolve_determination_presentation_support, resolve_relation_use_support,
-    standing_determination_presentation_support, standing_from_declared_support,
-    standing_relation_use_support,
+    elaborate_controlled_interrogative, match_decoded_observation_use, render_existential_preimage,
+    render_same_use_reciprocal_return, render_universal_adjoint,
+    resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
+    resolve_relation_use_support, standing_determination_presentation_support,
+    standing_from_declared_support, standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -237,6 +240,12 @@ impl FormulaCatalog for Catalog {
 
     fn resolve_relation_signature(&self, reference: RelationRef) -> Option<RelationSignature> {
         self.signatures.get(&reference).cloned()
+    }
+}
+
+impl FiniteAdjunctionCatalog for Catalog {
+    fn resolve_typed_form(&self, reference: TypedFormRef) -> Option<TypedForm> {
+        self.forms.get(&reference).copied()
     }
 }
 
@@ -4821,4 +4830,277 @@ fn route_node_ablation_requires_independent_regeneration_and_protected_equality(
     assert_eq!(before.occurrence(), after.occurrence());
     assert_eq!(before.successor(), after.successor());
     assert_ne!(before.reopening(), after.reopening());
+}
+
+#[test]
+// Test boundary QRENDER-001:
+// F = shared backward-looking wording strengthens an existential preimage into a universal law or
+//     substitutes a generic backward relation for one use-specific reciprocal return.
+// C = controlled prompt data round-trips only against independently supplied query, renderer,
+//     contract-kind, coverage, and reciprocal-use expectations after every typed source rechecks.
+// Omega/M = one finite binary binding, one declared exact preimage, one admitted singleton
+//     adjunction, and one admitted singleton reciprocal use rendered through identical words.
+// P/V/E/U = exact typed query and finite-contract rechecking plus cross-kind/coverage/use foils;
+//     free-form language understanding and general renderer completeness remain open.
+fn controlled_rendering_never_promotes_shared_words_into_semantic_authority() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite fixture must admit");
+    let semantic_coverage = NegationCoverage::ExactExhaustive {
+        regime: artifact(0x81),
+        certificate: artifact(0x82),
+    };
+    let departure = scenario.admitted.clone();
+    let presentation = scenario.presentation;
+    let source = scenario.source;
+    let candidate = scenario.candidate;
+    let admitted_reciprocal = admit_singleton_negation_use(
+        &mut scenario,
+        departure,
+        presentation,
+        ic_core::Orientation::X,
+        source,
+        candidate,
+        semantic_coverage,
+        GeneratorCoverageRef::from_artifact_ref(artifact(0x83)),
+        0x84,
+    );
+    let reciprocal_use = admitted_reciprocal.negation_use();
+    let use_value = scenario
+        .catalog
+        .negation_uses
+        .get(&reciprocal_use)
+        .expect("the admitted use must remain available")
+        .clone();
+    let relation_use = scenario
+        .catalog
+        .relation_uses
+        .get(&use_value.relation_use())
+        .expect("the admitted use's relation occurrence must remain available")
+        .clone();
+    let reciprocal_query = OpenQuery::new(
+        relation_use.relation(),
+        vec![PortBinding::new(
+            TypeSymbol::new("candidate").expect("port must be valid"),
+            scenario.candidate,
+        )],
+        vec![OpenPort::new(
+            TypeSymbol::new("source").expect("port must be valid"),
+            relation_use.mode(),
+        )],
+        RelationUseContext::new(
+            relation_use.scope(),
+            relation_use.applicability(),
+            relation_use.grain(),
+            relation_use.horizon(),
+            relation_use.mode(),
+            relation_use.support(),
+            relation_use.warrant(),
+        ),
+    );
+    reciprocal_query
+        .check(&scenario.catalog)
+        .expect("the return-oriented query must preserve the exact relation partition");
+
+    let adjunction_law = artifact(0x87);
+    let universal_relation = scenario.catalog.insert_schema(RelationSchema::new(
+        scenario.binding,
+        vec![
+            port("source", scenario.answer_type),
+            port("candidate", scenario.answer_type),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: artifact(0x88),
+        },
+        vec![adjunction_law],
+        Vec::new(),
+    ));
+    let universal_query = OpenQuery::new(
+        universal_relation,
+        vec![PortBinding::new(
+            TypeSymbol::new("candidate").expect("port must be valid"),
+            scenario.candidate,
+        )],
+        vec![OpenPort::new(
+            TypeSymbol::new("source").expect("port must be valid"),
+            DischargeMode::Check,
+        )],
+        RelationUseContext::new(
+            scenario.scope,
+            scenario.applicability,
+            scenario.grain,
+            scenario.horizon,
+            DischargeMode::Check,
+            SupportRef::from_artifact_ref(artifact(0x89)),
+            None,
+        ),
+    );
+    let left = ExactFinitePreorder::new(
+        scenario.binding,
+        scenario.answer_type,
+        vec![scenario.source],
+        vec![(scenario.source, scenario.source)],
+    )
+    .expect("the singleton source domain is a finite preorder");
+    let right = ExactFinitePreorder::new(
+        scenario.binding,
+        scenario.answer_type,
+        vec![scenario.candidate],
+        vec![(scenario.candidate, scenario.candidate)],
+    )
+    .expect("the singleton candidate domain is a finite preorder");
+    let adjunction = admit_finite_adjunction(
+        FiniteAdjunctionCandidate::new(
+            scenario.binding,
+            left,
+            right,
+            vec![(scenario.source, scenario.candidate)],
+            vec![(scenario.candidate, scenario.source)],
+        )
+        .expect("the singleton total maps must be well declared"),
+        &scenario.catalog,
+    )
+    .expect("the singleton adjunction law must hold exhaustively");
+
+    let renderer = artifact(0x8a);
+    let existential_coverage = CoverageRef::from_artifact_ref(artifact(0x8b));
+    let universal_coverage = CoverageRef::from_artifact_ref(artifact(0x8c));
+    let existential = render_existential_preimage(
+        renderer,
+        reciprocal_query.clone(),
+        existential_coverage,
+        vec![scenario.source],
+        &scenario.catalog,
+    )
+    .expect("the declared exact preimage must render without universal authority");
+    let universal = render_universal_adjoint(
+        renderer,
+        universal_query.clone(),
+        universal_coverage,
+        adjunction_law,
+        adjunction,
+        &scenario.catalog,
+    )
+    .expect("the independently admitted universal law must render");
+    let reciprocal = render_same_use_reciprocal_return(
+        renderer,
+        reciprocal_query.clone(),
+        &admitted_reciprocal,
+        scenario.candidate,
+        &scenario.catalog,
+    )
+    .expect("the admitted same-use reverse section must render");
+
+    assert_eq!(existential.rendered_text(), "under what conditions");
+    assert_eq!(universal.rendered_text(), existential.rendered_text());
+    assert_eq!(reciprocal.rendered_text(), existential.rendered_text());
+    assert_eq!(
+        [existential.kind(), universal.kind(), reciprocal.kind()],
+        [
+            ControlledBackwardKind::ExistentialPreimage,
+            ControlledBackwardKind::UniversalAdjoint,
+            ControlledBackwardKind::SameUseReciprocalReturn,
+        ]
+    );
+
+    let existential_query = reciprocal_query.query_ref().expect("query must encode");
+    let universal_query_ref = universal_query.query_ref().expect("query must encode");
+    let existential_elaboration = elaborate_controlled_interrogative(
+        &existential,
+        ControlledElaborationExpectation::new(
+            renderer,
+            existential_query,
+            ControlledBackwardKind::ExistentialPreimage,
+            ControlledCoverage::DeclaredExact(existential_coverage),
+            None,
+        ),
+        &scenario.catalog,
+    )
+    .expect("the existential contract must round-trip exactly");
+    let universal_elaboration = elaborate_controlled_interrogative(
+        &universal,
+        ControlledElaborationExpectation::new(
+            renderer,
+            universal_query_ref,
+            ControlledBackwardKind::UniversalAdjoint,
+            ControlledCoverage::DeclaredExact(universal_coverage),
+            None,
+        ),
+        &scenario.catalog,
+    )
+    .expect("the universal contract must round-trip exactly");
+    let reciprocal_elaboration = elaborate_controlled_interrogative(
+        &reciprocal,
+        ControlledElaborationExpectation::new(
+            renderer,
+            existential_query,
+            ControlledBackwardKind::SameUseReciprocalReturn,
+            ControlledCoverage::Negation(semantic_coverage),
+            Some(reciprocal_use),
+        ),
+        &scenario.catalog,
+    )
+    .expect("the reciprocal contract must round-trip with its exact use tag");
+    assert_eq!(existential_elaboration.query(), &reciprocal_query);
+    assert_eq!(universal_elaboration.query(), &universal_query);
+    assert_eq!(reciprocal_elaboration.query(), &reciprocal_query);
+    assert_eq!(existential_elaboration.binding(), scenario.binding);
+    assert_eq!(universal_elaboration.binding(), scenario.binding);
+    assert_eq!(reciprocal_elaboration.binding(), scenario.binding);
+
+    assert!(matches!(
+        elaborate_controlled_interrogative(
+            &existential,
+            ControlledElaborationExpectation::new(
+                renderer,
+                existential_query,
+                ControlledBackwardKind::UniversalAdjoint,
+                ControlledCoverage::DeclaredExact(existential_coverage),
+                None,
+            ),
+            &scenario.catalog,
+        ),
+        Err(ControlledRenderingError::ContractKindMismatch { .. })
+    ));
+    assert!(matches!(
+        elaborate_controlled_interrogative(
+            &universal,
+            ControlledElaborationExpectation::new(
+                renderer,
+                universal_query_ref,
+                ControlledBackwardKind::UniversalAdjoint,
+                ControlledCoverage::DeclaredExact(existential_coverage),
+                None,
+            ),
+            &scenario.catalog,
+        ),
+        Err(ControlledRenderingError::CoverageMismatch { .. })
+    ));
+    assert!(matches!(
+        elaborate_controlled_interrogative(
+            &reciprocal,
+            ControlledElaborationExpectation::new(
+                renderer,
+                existential_query,
+                ControlledBackwardKind::SameUseReciprocalReturn,
+                ControlledCoverage::Negation(semantic_coverage),
+                Some(NegationUseRef::from_artifact_ref(artifact(0x8d))),
+            ),
+            &scenario.catalog,
+        ),
+        Err(ControlledRenderingError::ReciprocalUseMismatch { .. })
+    ));
+    assert!(matches!(
+        elaborate_controlled_interrogative(
+            &existential,
+            ControlledElaborationExpectation::new(
+                artifact(0x8e),
+                existential_query,
+                ControlledBackwardKind::ExistentialPreimage,
+                ControlledCoverage::DeclaredExact(existential_coverage),
+                None,
+            ),
+            &scenario.catalog,
+        ),
+        Err(ControlledRenderingError::RendererVersionMismatch { .. })
+    ));
 }

@@ -11,6 +11,7 @@ mod bridge;
 mod claim;
 mod compression;
 mod context;
+mod controlled_rendering;
 mod cue;
 mod decoder;
 mod departure;
@@ -78,6 +79,12 @@ pub use compression::{
 };
 pub use context::{
     ApplicabilityRef, DischargeMode, GrainRef, HorizonRef, ScopeRef, SupportRef, WarrantRef,
+};
+pub use controlled_rendering::{
+    ControlledBackwardKind, ControlledCoverage, ControlledElaborationExpectation,
+    ControlledInterrogativeElaboration, ControlledInterrogativePrompt, ControlledInterrogativeRoot,
+    ControlledRenderingCatalog, ControlledRenderingError, elaborate_controlled_interrogative,
+    render_existential_preimage, render_same_use_reciprocal_return, render_universal_adjoint,
 };
 pub use cue::{
     AdmittedExactFiniteCue, EXACT_FINITE_CUE_ARTIFACT_KIND, EXACT_FINITE_CUE_SCHEMA_VERSION,
