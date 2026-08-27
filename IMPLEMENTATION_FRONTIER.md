@@ -2,40 +2,40 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `0318e97`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `f0506ce`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QASK-MIXED-MODE-004` established `MixedModeSourceAskDischarge`, the derived nonexecuting view of one source `Ask` whose open ports do not share a discharge mode. It partitions the exact re-walked occurrence's declared port field by mode, admits the Probe subset through the unchanged existing bundle checker, and requires each non-Probe port to carry an exact typed result, declared route, rechecked resolution path, and the occurrence's own versions and provenance in a record with no event field. The all-Probe entry point keeps its exact contract. No dispatch, event for a non-Probe mode, compiler procedure, resolver procedure, table, or opcode was added.
+`QASK-MIXED-RESOLVE-005` established the whole-question resolution gate over a checked mixed-mode view. Reaching it required a prerequisite the inspection uncovered: finite decode and the five-way classifier were single-open-port specializations, so a multi-port question had no lawful classification at all. Both now carry a shared answer-port scope whose arity-one entry points are unchanged and whose port-indexed entry points type a route against the named port's own schema carrier. Over that, `resolve_mixed_mode_question` requires every open port to be accounted for exactly once, takes the whole-question kind from the first non-Supported port with its residual intact, and admits a joint `Supported` only when every decoded completion agrees with each non-Probe port's checked typed result. `admit_mixed_mode_continuation` binds the exact occurrence continuation from that answer alone. Successor derivation was deliberately left out.
 
 ## Strongest live obligation
 
-Determine the smallest whole-question resolution gate over that mixed view: the point at which a mixed-mode occurrence's complete port evidence becomes exactly one `ResolutionOutcome`, and only `Supported` may reach the checked source continuation.
+Determine how a whole-question supported answer over several ports reaches the occurrence-indexed question successor, given that `QSucc` and its continuation binding are currently keyed to one single-event `AdmittedFiniteAnswerSet`.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QASK-MIXED-RESOLVE-005
+id: QSUCC-WHOLE-ANSWER-006
 plan_phase: 8
-goal: Derive the smallest whole-question resolution gate over one checked mixed-mode discharge view, so that Probe and non-Probe port evidence jointly determine exactly one of the five resolution outcomes and only Supported reaches the exact checked source continuation.
-protected_difference: The existing finite gate consumes an all-Probe bundle only, so a mixed occurrence currently has complete port evidence and no lawful way to become one outcome. Resolving port-by-port, or resolving from the Probe side alone, would let a Probe return select a continuation while a declared non-Probe port is still undischarged, and would manufacture a Cartesian answer the relation does not support. ExactEmpty, Undefined, Unsupported, and Unknown must stay separate from Supported and must never invoke the continuation.
-discriminator: Take one finite mixed-mode source Ask with one Probe and one non-Probe port and its existing checked mixed view. Accept exactly one whole-question outcome derived from every port's evidence together. Reject an outcome derived from a proper subset of the ports, a non-Supported outcome reaching the continuation, a Supported answer that omits the non-Probe port's contribution or its authority route, a foreign source program at the equal question, and any resolution that dispatches or re-decodes an event.
-horizon: one finite mixed-mode source Ask, its existing checked mixed view, caller-declared finite resolution leaves, and one linear continuation; no general resolver procedure artifact, executor, compiler procedure artifact, event for non-Probe modes, cross-binding bridge, scheduler, controller, table, or opcode
-relevant_decisions: D-0150, D-0156, D-0158, D-0159
+goal: Derive how one whole-question supported answer over several ports reaches the exact occurrence-indexed question successor, without collapsing it into a single port's answer set and without adding a second successor authority.
+protected_difference: QSucc, its capture-safe binding, and every passing successor fixture are keyed to one AdmittedFiniteAnswerSet, which is single-event and Probe-only by construction. A mixed-mode occurrence therefore reaches its checked continuation but cannot yet produce NextSourceControl. Passing one port's answer set into the existing successor would silently drop every other port's contribution and its declared mode and authority route, while equal questions and equal per-port answers must still reconstruct protected-different successors.
+discriminator: Take one finite mixed-mode occurrence whose whole-question answer is already admitted at its continuation. Derive exactly one NextSourceControl from the complete port field. Reject a successor derived from any proper subset of the ports, a successor that drops a non-Probe port's mode or authority route, two occurrences that share a question and every per-port answer yet require different successors being collapsed, and any derivation that dispatches, re-decodes, or executes the continuation.
+horizon: one finite mixed-mode occurrence, its existing whole-question supported answer and admitted continuation, and one linear successor; no second successor relation or history, no general executor, resolver procedure artifact, compiler procedure artifact, event for non-Probe modes, cross-binding bridge, scheduler, controller, table, or opcode
+relevant_decisions: D-0150, D-0156, D-0158, D-0159, D-0160, D-0161
 relevant_failures: F-0001, F-0002
 if_pass: rederive the strongest remaining Phase 7/8 residual from the stable plan and pending conformance; do not reopen passed QASK/QSUCC/QREADY/QACTUAL/QRESOLUTION fixtures without a new breaker
-if_fail: reopen the earliest whole-question coverage, outcome separation, supported-answer completeness, or continuation-admission relation; do not build a general resolver, executor, dispatcher, scheduler, controller, table, or opcode
+if_fail: reopen the earliest whole-answer coverage, per-port mode/route retention, successor identity, or continuation-binding relation; do not build a second successor authority, a general executor, a dispatcher, a scheduler, a controller, a table, or an opcode
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Reuse the existing checked mixed-mode view over one Probe and one non-Probe port. Derive one whole-question outcome from both ports' evidence, admit the exact source continuation only from `Supported`, and hold the other four outcomes to a typed residual or justified stop. Vary the port field, the outcome, and the source program to show that each is load-bearing.
+Reuse the admitted mixed-mode continuation. Derive one successor from the whole port field, then ablate the field: a successor built from the Probe port alone, or from an answer stripped of a non-Probe port's mode or route, must not be accepted as the same successor. Retain the existing single-port successor contract unchanged for single-port occurrences.
 
-The smallest wrong implementation resolves the Probe port alone, unions per-port outcomes instead of checking them jointly, lets a non-Supported outcome invoke the continuation, drops the non-Probe port's contribution or authority route from the supported answer, accepts an equal-question foreign source program, or redispatches while resolving.
+The smallest wrong implementation projects the whole-question answer down to one port's `AdmittedFiniteAnswerSet` and calls the existing successor, drops the non-Probe contributions, collapses two occurrences that share every per-port answer but differ in continuation, or normalizes by executing the continuation.
 
 ## Prohibitions at this boundary
 
+- Do not add a second successor relation, question history, or route authority.
 - Do not introduce a general executor, compiler, resolver procedure artifact, dispatcher, scheduler, controller, table, or opcode.
-- Do not create an event for a Pure, Generate, Check, or Warrant port merely because the whole-question gate resolves.
-- Do not let any of `ExactEmpty`, `Undefined`, `Unsupported`, or `Unknown` reach the checked continuation, and do not collapse them into one another.
+- Do not create an event for a Pure, Generate, Check, or Warrant port merely because a successor is derived.
 - Do not erase exact source occurrence, port/mode, compiler, runtime-program, Probe event/route/decoder/resolution, or non-Probe typed-result/authority identities.
 
 ## Exit

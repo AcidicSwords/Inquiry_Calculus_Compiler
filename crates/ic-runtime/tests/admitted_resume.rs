@@ -13,16 +13,17 @@ use std::{
 };
 
 use ic_core::{
-    ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef, ArtifactEnvelope,
-    ArtifactKind, ArtifactRef, AskOccurrence, BackendRef, BackendRequest, BindingVersionRef,
-    BoundaryChart, BoundaryRef, ClaimArtifact, ClaimRef, ClaimStatus, CompletionCandidate,
-    CompletionCandidateCatalog, CompletionCandidateRef, CoverageRef, DeclaredSupportClosure,
-    DischargeMode, EffectivityRef, EventRef, ExactFiniteCue, ExactFiniteCueAdmission,
-    ExactFiniteCueCatalog, ExactFiniteCueCheckError, ExactFiniteCueUnknown,
-    ExactFinitePresentChallenge, ExactFinitePresentReopenWitness, ExactFinitePresentUpdate,
-    ExactFiniteSignature, ExactFiniteSufficientPresent, ExactFiniteSufficientPresentResult,
-    ExactProtectedContinuation, ExtensionDomainRef, FiniteAnswerBindingError, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderRef, FiniteResolutionCoverage,
+    ActualDecodeError, ActualDecodeResult, ActualEvent, ActualEventCatalog, ApplicabilityRef,
+    ArtifactEnvelope, ArtifactKind, ArtifactRef, AskOccurrence, BackendRef, BackendRequest,
+    BindingVersionRef, BoundaryChart, BoundaryRef, ClaimArtifact, ClaimRef, ClaimStatus,
+    CompletionCandidate, CompletionCandidateCatalog, CompletionCandidateRef, CoverageRef,
+    DeclaredSupportClosure, DischargeMode, EffectivityRef, EventRef, ExactFiniteCue,
+    ExactFiniteCueAdmission, ExactFiniteCueCatalog, ExactFiniteCueCheckError,
+    ExactFiniteCueUnknown, ExactFinitePresentChallenge, ExactFinitePresentReopenWitness,
+    ExactFinitePresentUpdate, ExactFiniteSignature, ExactFiniteSufficientPresent,
+    ExactFiniteSufficientPresentResult, ExactProtectedContinuation, ExtensionDomainRef,
+    FiniteAnswerBindingError, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
+    FiniteDecoderRef, FiniteResolutionCoverage, FiniteResolutionGateError,
     FiniteResolutionLeafEntry, FiniteResolutionLeafTable, FiniteResolutionOutcome,
     FiniteResolutionOutcomeKind, FiniteResolutionRun, FiniteSupportedAnswerError, FormulaArtifact,
     FormulaCatalog, FormulaIR, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
@@ -41,26 +42,28 @@ use ic_core::{
     TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef, admit_exact_finite_cue,
     admit_finite_supported_answers, bind_finite_ask_continuation,
     challenge_exact_finite_sufficient_present, check_admitted_exact_finite_cue_basis,
-    classify_finite_question_resolution, decode_actual_event,
-    derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
-    match_decoded_observation_use, run_finite_resolution, standing_from_declared_support,
+    classify_finite_port_resolution, classify_finite_question_resolution, decode_actual_event,
+    decode_actual_event_for_port, derive_exact_finite_sufficient_present,
+    extend_exact_finite_sufficient_present, match_decoded_observation_use, run_finite_resolution,
+    standing_from_declared_support,
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
     MachineStep, MethodBridgeReentryError, MethodCuePlanning, MixedModeSourceAskDischarge,
-    MixedModeSourceAskDischargeError, NonProbePortDischargeEvidence,
-    OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaGenerateProvider,
-    OllamaHttpResponse, OllamaProviderError, PairedActualityTrace, PairedActualityTraversal,
-    PortLowering, ProbeDischargeBundleError, ProbeDispatchContext, ProbePortDischargeEvidence,
-    ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
+    MixedModeSourceAskDischargeError, MixedPortContribution, MixedQuestionResolutionError,
+    NonProbePortDischargeEvidence, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText,
+    OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError, PairedActualityTrace,
+    PairedActualityTraversal, PortLowering, ProbeDischargeBundleError, ProbeDispatchContext,
+    ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
     ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
     SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
-    TraversalCausalOrder, admit_finite_probe_discharge_bundle,
-    admit_probe_ports_of_mixed_discharge, check_source_event_link, dispatch_probe,
-    materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
+    TraversalCausalOrder, WholeQuestionOutcome, admit_finite_probe_discharge_bundle,
+    admit_mixed_mode_continuation, admit_probe_ports_of_mixed_discharge, check_source_event_link,
+    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
     replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
-    resolve_finite_probe_occurrence, route_separator_through_method_bridge,
+    resolve_finite_probe_occurrence, resolve_mixed_mode_question,
+    route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -5300,7 +5303,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         binding,
         vec![
             RelationPort::new(mixed_probe_port.clone(), roots.unit),
-            RelationPort::new(mixed_pure_port.clone(), roots.unit),
+            RelationPort::new(mixed_pure_port.clone(), roots.raw_type),
         ],
         RelationBodyIR::BindingNative {
             contract: stored_ref(&store, b"mixed-mode-relation-contract").await,
@@ -5322,9 +5325,11 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let mixed_query_value = OpenQuery::new(
         mixed_relation,
         Vec::new(),
+        // The non-Probe port is declared first so that no port-indexed check can pass by taking
+        // the first open port instead of the one it names.
         vec![
-            OpenPort::new(mixed_probe_port.clone(), DischargeMode::Probe),
             OpenPort::new(mixed_pure_port.clone(), DischargeMode::Pure),
+            OpenPort::new(mixed_probe_port.clone(), DischargeMode::Probe),
         ],
         query_context,
     );
@@ -6432,6 +6437,10 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let mixed_link =
         check_source_event_link(replay_mixed, cold_mixed_occurrence.clone(), &cold_catalog)
             .expect("the Probe port event must recheck against its source occurrence");
+    let mixed_link_event = mixed_link.event_ref();
+    cold_catalog
+        .events
+        .insert(mixed_link_event, mixed_link.actuality().event().clone());
 
     let cold_mixed_ports =
         OpenQueryCatalog::resolve_open_query(&cold_catalog, cold_mixed_occurrence.question())
@@ -6450,6 +6459,169 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     mixed_lowering
         .check_expected(&cold_mixed_occurrence, mixed_runtime_ref, &cold_catalog)
         .expect("the mixed-mode lowering must retain its exact occurrence and runtime");
+
+    // Post-return interpretation of the mixed question, regenerated cold from ordinary roots.
+    let cold_mixed_query_value = OpenQueryCatalog::resolve_open_query(&cold_catalog, mixed_query)
+        .expect("cold mixed-mode query must reload");
+    let mixed_query_context = *cold_mixed_query_value.context();
+    let derived_form_value = TypedForm::new(
+        binding,
+        roots.raw_type,
+        stored_ref(&reopened, b"mixed-mode-derived-result").await,
+    );
+    let derived_form = cold_catalog.insert_form(derived_form_value);
+    let other_derived_form_value = TypedForm::new(
+        binding,
+        roots.raw_type,
+        stored_ref(&reopened, b"mixed-mode-other-derived-result").await,
+    );
+    let other_derived_form = cold_catalog.insert_form(other_derived_form_value);
+    let mixed_support_value = SupportEnvironmentArtifact::new(
+        SupportSubjectRef::Relation(mixed_relation),
+        Vec::new(),
+        vec![roots.raw_return],
+        Vec::new(),
+        vec![stored_ref(&reopened, b"mixed-mode-support-assumption").await],
+        Vec::new(),
+        mixed_query_context.applicability(),
+        mixed_query_context.scope(),
+    )
+    .expect("mixed-mode support environment must encode");
+    let mixed_support = cold_catalog.insert_support(mixed_support_value);
+    let mixed_use_context = RelationUseContext::new(
+        mixed_query_context.scope(),
+        mixed_query_context.applicability(),
+        mixed_query_context.grain(),
+        mixed_query_context.horizon(),
+        mixed_query_context.mode(),
+        mixed_support.as_support_ref(),
+        mixed_query_context.warrant(),
+    );
+    let mixed_completion = |probe_value, derived_value| {
+        vec![
+            PortBinding::new(mixed_probe_port.clone(), probe_value),
+            PortBinding::new(mixed_pure_port.clone(), derived_value),
+        ]
+    };
+    let mixed_candidate_a = cold_catalog.insert_candidate(
+        cold_mixed_query_value
+            .plug(
+                mixed_completion(roots.answer_a, derived_form),
+                &cold_catalog,
+            )
+            .expect("first mixed-mode completion must fill both ports"),
+    );
+    let mixed_candidate_b = cold_catalog.insert_candidate(
+        cold_mixed_query_value
+            .plug(
+                mixed_completion(roots.answer_b, derived_form),
+                &cold_catalog,
+            )
+            .expect("second mixed-mode completion must fill both ports"),
+    );
+    let mixed_observation_a = cold_catalog.insert_relation_use(RelationUse::new(
+        mixed_relation,
+        mixed_completion(roots.answer_a, derived_form),
+        mixed_use_context,
+    ));
+    let mixed_observation_b = cold_catalog.insert_relation_use(RelationUse::new(
+        mixed_relation,
+        mixed_completion(roots.answer_b, derived_form),
+        mixed_use_context,
+    ));
+    let mixed_decoder = cold_catalog.insert_decoder(
+        FiniteDecoder::new(
+            mixed_query,
+            roots.raw_type,
+            vec![FiniteDecoderEntry::Decoded {
+                raw_return: roots.raw_return,
+                candidates: vec![mixed_candidate_a, mixed_candidate_b],
+            }],
+        )
+        .expect("mixed-mode decoder must encode"),
+    );
+    let mixed_decoded_path = cold_catalog.insert_path(ResolutionPath::new(
+        roots.raw_type,
+        roots.unit,
+        ResolutionPathIR::Decode {
+            decoder: mixed_decoder.as_decoder_ref(),
+        },
+    ));
+    let mixed_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            mixed_support,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &cold_catalog,
+    )
+    .expect("mixed-mode support must reconstruct cold");
+    let mixed_raw_value = roots.raw_return.as_artifact_ref();
+    let mixed_candidate_values = vec![
+        mixed_candidate_a.as_artifact_ref(),
+        mixed_candidate_b.as_artifact_ref(),
+    ];
+    let mixed_run = run_finite_resolution(
+        mixed_decoded_path,
+        mixed_raw_value,
+        &[FiniteResolutionLeafTable::new(
+            mixed_decoded_path,
+            vec![mixed_raw_value],
+            vec![FiniteResolutionLeafEntry::related(
+                mixed_raw_value,
+                mixed_candidate_values.clone(),
+            )],
+            FiniteResolutionCoverage::Exact(CoverageRef::from_artifact_ref(
+                stored_ref(&reopened, b"mixed-mode-resolution-coverage").await,
+            )),
+        )
+        .expect("mixed-mode decode leaf must be well formed")],
+        &cold_catalog,
+    )
+    .expect("mixed-mode decode must run finitely");
+    let ActualDecodeResult::Decoded(mixed_decoded) = decode_actual_event_for_port(
+        &mixed_probe_port,
+        mixed_link.actuality().event(),
+        &cold_catalog
+            .resolve_finite_decoder(mixed_decoder)
+            .expect("mixed-mode decoder must reload"),
+        mixed_decoded_path,
+        &cold_catalog,
+    )
+    .expect("the mixed-mode event must decode through its declared path") else {
+        panic!("the mixed-mode event must retain two decoded completions")
+    };
+    assert!(matches!(
+        decode_actual_event_for_port(
+            &TypeSymbol::new("absent").expect("port must be valid"),
+            mixed_link.actuality().event(),
+            &cold_catalog
+                .resolve_finite_decoder(mixed_decoder)
+                .expect("mixed-mode decoder must reload"),
+            mixed_decoded_path,
+            &cold_catalog,
+        ),
+        Err(ActualDecodeError::ForeignAnswerPort(_))
+    ));
+    let mixed_observations = vec![
+        match_decoded_observation_use(
+            &mixed_decoded,
+            mixed_candidate_a,
+            mixed_observation_a,
+            &cold_catalog,
+        )
+        .expect("first mixed-mode completion must retain its observation"),
+        match_decoded_observation_use(
+            &mixed_decoded,
+            mixed_candidate_b,
+            mixed_observation_b,
+            &cold_catalog,
+        )
+        .expect("second mixed-mode completion must retain its observation"),
+    ];
 
     // The all-Probe specialization must keep rejecting a question with any non-Probe port.
     assert!(matches!(
@@ -6480,7 +6652,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         vec![ProbePortDischargeEvidence::new(
             mixed_probe_port.clone(),
             route,
-            roots.decoded_path,
+            mixed_decoded_path,
             binding,
             roots.compiler_version,
             mixed_provenance,
@@ -6494,9 +6666,9 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let pure_evidence = NonProbePortDischargeEvidence::new(
         mixed_pure_port.clone(),
         DischargeMode::Pure,
-        roots.answer_a,
+        derived_form,
         route,
-        pure_path,
+        opaque_path,
         binding,
         roots.compiler_version,
         mixed_provenance,
@@ -6526,9 +6698,9 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Probe,
-            roots.answer_a,
+            derived_form,
             route,
-            pure_path,
+            opaque_path,
             binding,
             roots.compiler_version,
             mixed_provenance,
@@ -6540,9 +6712,9 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_probe_port.clone(),
             DischargeMode::Pure,
-            roots.answer_a,
+            derived_form,
             route,
-            pure_path,
+            opaque_path,
             binding,
             roots.compiler_version,
             mixed_provenance,
@@ -6554,9 +6726,9 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Warrant,
-            roots.answer_a,
+            derived_form,
             route,
-            pure_path,
+            opaque_path,
             binding,
             roots.compiler_version,
             mixed_provenance,
@@ -6578,7 +6750,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
             DischargeMode::Pure,
             TypedFormRef::from_artifact_ref(artifact(0xc7)),
             route,
-            pure_path,
+            opaque_path,
             binding,
             roots.compiler_version,
             mixed_provenance,
@@ -6592,9 +6764,9 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            roots.answer_a,
+            derived_form,
             route,
-            opaque_path,
+            pure_path,
             binding,
             roots.compiler_version,
             mixed_provenance,
@@ -6605,9 +6777,9 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            roots.answer_a,
+            derived_form,
             route,
-            pure_path,
+            opaque_path,
             binding,
             artifact(0xfe),
             mixed_provenance,
@@ -6618,9 +6790,9 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
             mixed_pure_port.clone(),
             DischargeMode::Pure,
-            roots.answer_a,
+            derived_form,
             route,
-            pure_path,
+            opaque_path,
             BindingVersionRef::from_artifact_ref(artifact(0xfd)),
             roots.compiler_version,
             mixed_provenance,
@@ -6629,11 +6801,11 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     ));
     assert!(matches!(
         mixed_foil(vec![NonProbePortDischargeEvidence::new(
-            mixed_pure_port,
+            mixed_pure_port.clone(),
             DischargeMode::Pure,
-            roots.answer_a,
+            derived_form,
             route,
-            pure_path,
+            opaque_path,
             binding,
             roots.compiler_version,
             ProvenanceRef::from_artifact_ref(artifact(0xfc)),
@@ -6642,20 +6814,227 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     ));
     // Another occurrence's structurally compatible Probe bundle is not interchangeable.
     assert!(matches!(
-        MixedModeSourceAskDischarge::new(mixed_lowering, bundle, vec![pure_evidence.clone()],)
-            .check(&cold_catalog),
+        MixedModeSourceAskDischarge::new(
+            mixed_lowering.clone(),
+            bundle,
+            vec![pure_evidence.clone()],
+        )
+        .check(&cold_catalog),
         Err(MixedModeSourceAskDischargeError::OccurrenceMismatch)
     ));
     // An all-Probe occurrence has no non-Probe side and stays outside this view.
     assert!(matches!(
         MixedModeSourceAskDischarge::new(
             cold_source_lowering,
-            mixed_probe_bundle,
-            vec![pure_evidence],
+            mixed_probe_bundle.clone(),
+            vec![pure_evidence.clone()],
         )
         .check(&cold_catalog),
         Err(MixedModeSourceAskDischargeError::NoNonProbePort)
     ));
+
+    // The whole-question gate. The five-way classifier is port-indexed here: the arity-one entry
+    // point must keep refusing a two-port question, and a run typed for one port must not be
+    // accepted for its sibling.
+    let classify_mixed_port = |port: &TypeSymbol| {
+        classify_finite_port_resolution(
+            port,
+            mixed_link_event,
+            mixed_query,
+            mixed_run.clone(),
+            Some(mixed_decoded.clone()),
+            mixed_observations.clone(),
+            &mixed_standing,
+            &cold_catalog,
+        )
+    };
+    assert!(matches!(
+        classify_finite_question_resolution(
+            mixed_link_event,
+            mixed_query,
+            mixed_run.clone(),
+            Some(mixed_decoded.clone()),
+            mixed_observations.clone(),
+            &mixed_standing,
+            &cold_catalog,
+        ),
+        Err(FiniteResolutionGateError::UnsupportedAnswerArity(2))
+    ));
+    assert!(matches!(
+        classify_mixed_port(&mixed_pure_port),
+        Err(FiniteResolutionGateError::ResolutionTypeMismatch(_))
+    ));
+    assert!(matches!(
+        classify_mixed_port(&TypeSymbol::new("absent").expect("port must be valid")),
+        Err(FiniteResolutionGateError::ForeignAnswerPort(_))
+    ));
+
+    let mixed_supported =
+        classify_mixed_port(&mixed_probe_port).expect("the Probe port must classify as Supported");
+    assert_eq!(
+        mixed_supported.kind(),
+        FiniteResolutionOutcomeKind::Supported
+    );
+    let whole = resolve_mixed_mode_question(
+        &mixed_view,
+        vec![(mixed_probe_port.clone(), mixed_supported)],
+        &cold_catalog,
+    )
+    .expect("one Probe outcome plus one checked Pure port must resolve the whole question");
+    assert_eq!(whole.kind(), FiniteResolutionOutcomeKind::Supported);
+    let WholeQuestionOutcome::Supported(whole_answer) = &whole else {
+        panic!("the joint outcome must be Supported")
+    };
+    assert_eq!(whole_answer.contributions().len(), 2);
+    assert_eq!(
+        whole_answer
+            .contributions()
+            .iter()
+            .map(MixedPortContribution::mode)
+            .collect::<Vec<_>>(),
+        vec![DischargeMode::Pure, DischargeMode::Probe],
+        "both declared modes survive the joint answer in canonical port order"
+    );
+    let MixedPortContribution::Probe { resolution, .. } = &whole_answer.contributions()[1] else {
+        panic!("the Probe port must contribute its event-linked resolution")
+    };
+    assert_eq!(
+        resolution.answer().candidates().len(),
+        2,
+        "the joint answer retains every decoded completion rather than selecting one"
+    );
+
+    // A Probe return alone cannot resolve the question while a port is unaccounted for.
+    assert!(matches!(
+        resolve_mixed_mode_question(&mixed_view, Vec::new(), &cold_catalog),
+        Err(MixedQuestionResolutionError::MissingPortOutcome(_))
+    ));
+    assert!(matches!(
+        resolve_mixed_mode_question(
+            &mixed_view,
+            vec![(
+                mixed_pure_port.clone(),
+                classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+            )],
+            &cold_catalog,
+        ),
+        Err(MixedQuestionResolutionError::ForeignPortOutcome(_))
+    ));
+    assert!(matches!(
+        resolve_mixed_mode_question(
+            &mixed_view,
+            vec![
+                (
+                    mixed_probe_port.clone(),
+                    classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+                ),
+                (
+                    mixed_probe_port.clone(),
+                    classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+                ),
+            ],
+            &cold_catalog,
+        ),
+        Err(MixedQuestionResolutionError::DuplicatePortOutcome(_))
+    ));
+
+    // A completion may not assign the non-Probe port a value its own evidence contradicts.
+    let contradicting_view = MixedModeSourceAskDischarge::new(
+        mixed_lowering.clone(),
+        mixed_probe_bundle.clone(),
+        vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            other_derived_form,
+            route,
+            opaque_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )],
+    );
+    contradicting_view
+        .check(&cold_catalog)
+        .expect("the contradicting evidence is itself well formed");
+    assert!(matches!(
+        resolve_mixed_mode_question(
+            &contradicting_view,
+            vec![(
+                mixed_probe_port.clone(),
+                classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+            )],
+            &cold_catalog,
+        ),
+        Err(MixedQuestionResolutionError::CompletionContradictsNonProbeResult { .. })
+    ));
+
+    // None of the other four outcomes may reach the continuation.
+    let cold_mixed_program = cold_catalog
+        .resolve_iprog(mixed_source_program)
+        .expect("mixed-mode source program must reload");
+    let partial_run = run_finite_resolution(
+        mixed_decoded_path,
+        mixed_raw_value,
+        &[FiniteResolutionLeafTable::new(
+            mixed_decoded_path,
+            vec![mixed_raw_value],
+            Vec::new(),
+            FiniteResolutionCoverage::Partial(CoverageRef::from_artifact_ref(
+                stored_ref(&reopened, b"mixed-mode-partial-coverage").await,
+            )),
+        )
+        .expect("a partial mixed-mode leaf must be well formed")],
+        &cold_catalog,
+    )
+    .expect("partial coverage must run without claiming closure");
+    let unknown = classify_finite_port_resolution(
+        &mixed_probe_port,
+        mixed_link_event,
+        mixed_query,
+        partial_run,
+        None,
+        Vec::new(),
+        &mixed_standing,
+        &cold_catalog,
+    )
+    .expect("incomplete coverage must classify as Unknown");
+    assert_eq!(unknown.kind(), FiniteResolutionOutcomeKind::Unknown);
+    let joint = resolve_mixed_mode_question(
+        &mixed_view,
+        vec![(mixed_probe_port.clone(), unknown)],
+        &cold_catalog,
+    )
+    .expect("a non-Supported port still yields exactly one whole-question outcome");
+    assert_eq!(joint.kind(), FiniteResolutionOutcomeKind::Unknown);
+    assert!(matches!(
+        admit_mixed_mode_continuation(joint, &mixed_view, &cold_mixed_program, &cold_catalog),
+        Err(MixedQuestionResolutionError::NonSupported(_))
+    ));
+
+    // Only Supported reaches the exact checked continuation, and only through its own source.
+    assert!(matches!(
+        admit_mixed_mode_continuation(
+            resolve_mixed_mode_question(
+                &mixed_view,
+                vec![(
+                    mixed_probe_port.clone(),
+                    classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+                )],
+                &cold_catalog,
+            )
+            .expect("the joint answer must reproduce"),
+            &mixed_view,
+            &cold_first_program,
+            &cold_catalog,
+        ),
+        Err(MixedQuestionResolutionError::SourceProgramMismatch { .. })
+    ));
+    let admitted =
+        admit_mixed_mode_continuation(whole, &mixed_view, &cold_mixed_program, &cold_catalog)
+            .expect("the joint Supported answer must reach its exact source continuation");
+    assert_eq!(admitted.question(), mixed_query);
+    assert_eq!(admitted.continuation(), roots.continuation);
+    assert_eq!(admitted.answer().contributions().len(), 2);
 
     assert_eq!(
         provider_calls.load(Ordering::SeqCst),

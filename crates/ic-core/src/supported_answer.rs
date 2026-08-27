@@ -17,7 +17,7 @@ use crate::{
     RelationUseSupportCatalog, RelationUseSupportError, ResolvedRelationUseSupport, Standing,
     SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
     SupportEnvironmentCatalog, SupportEnvironmentRef, TypeSymbol, check_actual_event,
-    decode_actual_event, match_decoded_observation_use, standing_relation_use_support,
+    match_decoded_observation_use, standing_relation_use_support,
 };
 
 /// Catalog boundary for finite event-linked supported-answer admission.
@@ -94,6 +94,22 @@ pub fn admit_finite_supported_answers<C: FiniteSupportedAnswerCatalog>(
     standing: &Standing,
     catalog: &C,
 ) -> Result<AdmittedFiniteAnswerSet, FiniteSupportedAnswerError> {
+    admit_finite_supported_answers_scoped(
+        crate::decoder::AnswerPortScope::SoleOpenPort,
+        decoded,
+        observations,
+        standing,
+        catalog,
+    )
+}
+
+pub(crate) fn admit_finite_supported_answers_scoped<C: FiniteSupportedAnswerCatalog>(
+    scope: crate::decoder::AnswerPortScope<'_>,
+    decoded: DecodedCandidateSet,
+    observations: Vec<DecodedObservationUse>,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<AdmittedFiniteAnswerSet, FiniteSupportedAnswerError> {
     let event_ref = decoded.event();
     let event = OperatorOccurrenceCatalog::resolve_actual_event(catalog, event_ref)
         .ok_or(FiniteSupportedAnswerError::UnresolvedEvent(event_ref))?;
@@ -108,7 +124,13 @@ pub fn admit_finite_supported_answers<C: FiniteSupportedAnswerCatalog>(
     let decoder_ref = decoded.decoder();
     let decoder = FiniteDecoderCatalog::resolve_finite_decoder(catalog, decoder_ref)
         .ok_or(FiniteSupportedAnswerError::UnresolvedDecoder(decoder_ref))?;
-    let rerun = decode_actual_event(&event, &decoder, decoded.path(), catalog)?;
+    let rerun = crate::decoder::decode_actual_event_scoped(
+        scope,
+        &event,
+        &decoder,
+        decoded.path(),
+        catalog,
+    )?;
     let ActualDecodeResult::Decoded(rerun) = rerun else {
         return Err(FiniteSupportedAnswerError::ResultNoLongerDecoded(event_ref));
     };

@@ -18,7 +18,7 @@ use crate::{
     RawReturnError, RawReturnRef, RelationUse, RelationUseCheckError, RelationUseError,
     RelationUseRef, ResolutionCatalog, ResolutionPathCheckError, ResolutionPathError,
     ResolutionPathIR, ResolutionPathRef, TypeCatalog, TypeCheckError, TypeError, TypeRef,
-    check_actual_event,
+    TypeSymbol, check_actual_event,
 };
 
 /// Canonical artifact kind for a declared finite exact decoder table.
@@ -554,6 +554,52 @@ pub fn decode_actual_event<C: ActualDecodeCatalog>(
     path_ref: ResolutionPathRef,
     catalog: &C,
 ) -> Result<ActualDecodeResult, ActualDecodeError> {
+    decode_actual_event_scoped(
+        AnswerPortScope::SoleOpenPort,
+        event,
+        decoder,
+        path_ref,
+        catalog,
+    )
+}
+
+/// Applies the same direct decoder route while typing its output against one named open port.
+///
+/// The decoded completions still range over the whole port field; only the route's declared output
+/// type is checked against the named port's carrier, so a question with several open ports can be
+/// decoded one port at a time without any port borrowing a sibling's carrier.
+pub fn decode_actual_event_for_port<C: ActualDecodeCatalog>(
+    port: &TypeSymbol,
+    event: &ActualEvent,
+    decoder: &FiniteDecoder,
+    path_ref: ResolutionPathRef,
+    catalog: &C,
+) -> Result<ActualDecodeResult, ActualDecodeError> {
+    decode_actual_event_scoped(
+        AnswerPortScope::NamedPort(port),
+        event,
+        decoder,
+        path_ref,
+        catalog,
+    )
+}
+
+/// Which open port's carrier a decoded route must land in.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(crate) enum AnswerPortScope<'a> {
+    /// The question has exactly one open port: the existing single-answer specialization.
+    SoleOpenPort,
+    /// One named open port of a question that may have several.
+    NamedPort(&'a TypeSymbol),
+}
+
+pub(crate) fn decode_actual_event_scoped<C: ActualDecodeCatalog>(
+    scope: AnswerPortScope<'_>,
+    event: &ActualEvent,
+    decoder: &FiniteDecoder,
+    path_ref: ResolutionPathRef,
+    catalog: &C,
+) -> Result<ActualDecodeResult, ActualDecodeError> {
     check_actual_event(event, catalog)?;
     decoder.check(catalog)?;
     let decoder_ref = decoder.finite_decoder_ref()?;
@@ -610,18 +656,29 @@ pub fn decode_actual_event<C: ActualDecodeCatalog>(
     }
     let query = ActualEventCatalog::resolve_open_query(catalog, decoder.query())
         .ok_or(ActualDecodeError::UnresolvedQuery(decoder.query()))?;
-    if query.open_ports().len() != 1 {
-        return Err(ActualDecodeError::UnsupportedAnswerArity {
-            actual: query.open_ports().len(),
-        });
-    }
+    let answer_port = match scope {
+        AnswerPortScope::SoleOpenPort => {
+            if query.open_ports().len() != 1 {
+                return Err(ActualDecodeError::UnsupportedAnswerArity {
+                    actual: query.open_ports().len(),
+                });
+            }
+            query.open_ports()[0].port()
+        }
+        AnswerPortScope::NamedPort(port) => query
+            .open_ports()
+            .iter()
+            .find(|open| open.port() == port)
+            .ok_or_else(|| ActualDecodeError::ForeignAnswerPort(port.clone()))?
+            .port(),
+    };
     let schema = catalog
         .resolve_relation_schema(query.relation())
         .ok_or(ActualDecodeError::UnresolvedRelation(query.relation()))?;
     let expected_output = schema
         .ports()
         .iter()
-        .find(|port| port.name() == query.open_ports()[0].port())
+        .find(|port| port.name() == answer_port)
         .expect("the checked open query has only schema ports")
         .ty();
     if path.output() != expected_output {
@@ -927,6 +984,8 @@ pub enum ActualDecodeError {
     UnresolvedRelation(crate::RelationRef),
     #[error("finite direct decode requires exactly one open answer port, got {actual}")]
     UnsupportedAnswerArity { actual: usize },
+    #[error("answer port {0} is not an open port of this question")]
+    ForeignAnswerPort(TypeSymbol),
     #[error("resolution path output {path} does not match query answer type {answer}")]
     PathOutputMismatch { path: TypeRef, answer: TypeRef },
 }

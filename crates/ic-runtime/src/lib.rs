@@ -8,6 +8,7 @@
 
 mod actuality;
 mod dispatch;
+mod mixed_question_resolution;
 mod ollama;
 mod openai;
 mod replay;
@@ -32,6 +33,11 @@ pub use ic_core::ProbeOperatorRef;
 use ic_core::{
     BoundFiniteAskContinuation, EventRef, IProgRef, RawReturnRef, TypeCatalog, TypeCheckError,
     TypeError, TypeRef, TypedForm, TypedFormRef,
+};
+pub use mixed_question_resolution::{
+    AdmittedMixedModeContinuation, MixedPortContribution, MixedQuestionResolutionCatalog,
+    MixedQuestionResolutionError, NonSupportedPort, WholeQuestionOutcome,
+    WholeQuestionSupportedAnswer, admit_mixed_mode_continuation, resolve_mixed_mode_question,
 };
 pub use ollama::{
     DecodedOllamaCandidates, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OLLAMA_DECODED_TEXT_SCHEMA_VERSION,

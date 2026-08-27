@@ -110,7 +110,8 @@ pub use decoder::{
     DecodedObservationError, DecodedObservationUse, FINITE_DECODER_ARTIFACT_KIND,
     FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderCheckError,
     FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome, FiniteDecoderRef,
-    ObservationResultCatalog, decode_actual_event, match_decoded_observation_use,
+    ObservationResultCatalog, decode_actual_event, decode_actual_event_for_port,
+    match_decoded_observation_use,
 };
 pub use departure::{
     AdmittedFiniteDeparture, DEPARTURE_WITNESS_ARTIFACT_KIND, DEPARTURE_WITNESS_SCHEMA_VERSION,
@@ -276,7 +277,8 @@ pub use resolution_gate::{
     FiniteResolutionOutcomeKind, FiniteResolutionResidual, FiniteResolutionRun,
     FiniteResolutionRunError, FiniteResolutionTableError, FiniteResolutionTypeMismatch,
     FiniteSupportResidual, FiniteSupportedResolution, UndefinedFiniteResolutionRun,
-    UnknownFiniteResolutionRun, classify_finite_question_resolution, run_finite_resolution,
+    UnknownFiniteResolutionRun, classify_finite_port_resolution,
+    classify_finite_question_resolution, run_finite_resolution,
 };
 pub use route_regeneration::{
     CheckedFiniteRouteNode, ExactFiniteRouteResidualFiber, ExactFiniteRouteResidualFiberError,

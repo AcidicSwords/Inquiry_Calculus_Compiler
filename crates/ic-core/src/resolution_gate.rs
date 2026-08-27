@@ -15,8 +15,8 @@ use crate::{
     DecodedCandidateSet, DecodedObservationUse, EventRef, FiniteSupportedAnswerCatalog,
     FiniteSupportedAnswerError, OpenQueryCheckError, OpenQueryError, OperatorOccurrenceCatalog,
     ProbeOperatorError, QueryRef, RelationUseRef, ResolutionCatalog, ResolutionPathCheckError,
-    ResolutionPathError, ResolutionPathIR, ResolutionPathRef, Standing, TypeRef,
-    admit_finite_supported_answers, check_actual_event,
+    ResolutionPathError, ResolutionPathIR, ResolutionPathRef, Standing, TypeRef, TypeSymbol,
+    check_actual_event,
 };
 
 /// Whether one caller-declared finite leaf table is exhaustive at its declared domain.
@@ -703,8 +703,65 @@ impl fmt::Display for FiniteResolutionOutcomeKind {
     }
 }
 
+use crate::decoder::AnswerPortScope;
+
 /// Classifies one checked finite run. Only a complete nonempty run attempts support admission.
+///
+/// This is the single-open-port specialization; a question with several open ports is classified
+/// one port at a time through `classify_finite_port_resolution`.
 pub fn classify_finite_question_resolution<C: FiniteSupportedAnswerCatalog + ResolutionCatalog>(
+    event_ref: EventRef,
+    query_ref: QueryRef,
+    run: FiniteResolutionRun,
+    decoded: Option<DecodedCandidateSet>,
+    observations: Vec<DecodedObservationUse>,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<FiniteResolutionOutcome, FiniteResolutionGateError> {
+    classify_finite_resolution(
+        AnswerPortScope::SoleOpenPort,
+        event_ref,
+        query_ref,
+        run,
+        decoded,
+        observations,
+        standing,
+        catalog,
+    )
+}
+
+/// Classifies one checked finite run against one named open port of its question.
+///
+/// The run must land in that exact port's schema carrier, so a run typed for a sibling port is
+/// rejected rather than accepted by arity coincidence. Every other check, including decoded
+/// candidate agreement and support admission, is identical to the single-port entry point: the
+/// decoded completions still range over the whole port field and no candidate is selected.
+#[allow(clippy::too_many_arguments)]
+pub fn classify_finite_port_resolution<C: FiniteSupportedAnswerCatalog + ResolutionCatalog>(
+    port: &TypeSymbol,
+    event_ref: EventRef,
+    query_ref: QueryRef,
+    run: FiniteResolutionRun,
+    decoded: Option<DecodedCandidateSet>,
+    observations: Vec<DecodedObservationUse>,
+    standing: &Standing,
+    catalog: &C,
+) -> Result<FiniteResolutionOutcome, FiniteResolutionGateError> {
+    classify_finite_resolution(
+        AnswerPortScope::NamedPort(port),
+        event_ref,
+        query_ref,
+        run,
+        decoded,
+        observations,
+        standing,
+        catalog,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn classify_finite_resolution<C: FiniteSupportedAnswerCatalog + ResolutionCatalog>(
+    scope: AnswerPortScope<'_>,
     event_ref: EventRef,
     query_ref: QueryRef,
     run: FiniteResolutionRun,
@@ -735,7 +792,7 @@ pub fn classify_finite_question_resolution<C: FiniteSupportedAnswerCatalog + Res
             run: run.input(),
         });
     }
-    check_resolution_types(run.path(), query_ref, event.operator(), catalog)?;
+    check_resolution_types(scope, run.path(), query_ref, event.operator(), catalog)?;
 
     match run {
         FiniteResolutionRun::Complete(run) if run.outputs.is_empty() => {
@@ -807,7 +864,13 @@ pub fn classify_finite_question_resolution<C: FiniteSupportedAnswerCatalog + Res
                 .iter()
                 .map(DecodedObservationUse::observation)
                 .collect();
-            match admit_finite_supported_answers(decoded.clone(), observations, standing, catalog) {
+            match crate::supported_answer::admit_finite_supported_answers_scoped(
+                scope,
+                decoded.clone(),
+                observations,
+                standing,
+                catalog,
+            ) {
                 Ok(answer) => Ok(FiniteResolutionOutcome::Supported(
                     FiniteSupportedResolution {
                         event: event_ref,
@@ -856,6 +919,7 @@ fn is_support_failure(error: &FiniteSupportedAnswerError) -> bool {
 }
 
 fn check_resolution_types<C: FiniteSupportedAnswerCatalog + ResolutionCatalog>(
+    scope: AnswerPortScope<'_>,
     path_ref: ResolutionPathRef,
     query_ref: QueryRef,
     operator_ref: crate::ProbeOperatorRef,
@@ -885,18 +949,29 @@ fn check_resolution_types<C: FiniteSupportedAnswerCatalog + ResolutionCatalog>(
         });
     }
     query.check(catalog)?;
-    if query.open_ports().len() != 1 {
-        return Err(FiniteResolutionGateError::UnsupportedAnswerArity(
-            query.open_ports().len(),
-        ));
-    }
+    let answer_port = match scope {
+        AnswerPortScope::SoleOpenPort => {
+            if query.open_ports().len() != 1 {
+                return Err(FiniteResolutionGateError::UnsupportedAnswerArity(
+                    query.open_ports().len(),
+                ));
+            }
+            query.open_ports()[0].port()
+        }
+        AnswerPortScope::NamedPort(port) => query
+            .open_ports()
+            .iter()
+            .find(|open| open.port() == port)
+            .ok_or_else(|| FiniteResolutionGateError::ForeignAnswerPort(port.clone()))?
+            .port(),
+    };
     let schema = crate::RelationCatalog::resolve_relation_schema(catalog, query.relation()).ok_or(
         FiniteResolutionGateError::UnresolvedRelation(query.relation()),
     )?;
     let answer_type = schema
         .ports()
         .iter()
-        .find(|port| port.name() == query.open_ports()[0].port())
+        .find(|port| port.name() == answer_port)
         .expect("a checked query contains only schema ports")
         .ty();
     if path.input() != operator.return_type() || path.output() != answer_type {
@@ -1000,6 +1075,8 @@ pub enum FiniteResolutionGateError {
     UnresolvedRelation(crate::RelationRef),
     #[error("finite resolution gate currently requires one open answer port, got {0}")]
     UnsupportedAnswerArity(usize),
+    #[error("answer port {0} is not an open port of this question")]
+    ForeignAnswerPort(TypeSymbol),
     #[error("resolution path type mismatch: {0}")]
     ResolutionTypeMismatch(Box<FiniteResolutionTypeMismatch>),
     #[error("non-supported finite run carried decoded/support evidence")]
