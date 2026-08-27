@@ -135,6 +135,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "finite_local_fixed_point_requires_exact_coverage_and_no_open_obligation",
     ),
+    "QIFP-REOPEN-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "positive_new_live_occurrence_reopens_only_its_exact_predecessor_field",
+    ),
 }
 
 ERRORS: list[str] = []

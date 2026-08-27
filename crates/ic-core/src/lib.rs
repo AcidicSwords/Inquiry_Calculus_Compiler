@@ -162,11 +162,13 @@ pub use live_question_frontier::{
     RequiredQuestionDischarge, derive_finite_live_question_frontier,
 };
 pub use local_interrogative_fixed_point::{
-    FiniteLocalEffectivityCoverage, FiniteLocalEffectivityCoverageError, LocalEffectivityEdge,
-    LocalInterrogativeContext, LocalInterrogativeFixedPoint, LocalInterrogativeFixedPointError,
-    LocalInterrogativeResidual, LocalQuestionAssessment, LocalQuestionClassification,
-    LocalQuestionClosingReason, LocalQuestionExit, OpenRequiredQuestion,
-    derive_finite_local_interrogative_fixed_point,
+    FiniteLocalEffectivityCoverage, FiniteLocalEffectivityCoverageError,
+    FiniteLocalInterrogativeView, LocalEffectivityEdge, LocalInterrogativeContext,
+    LocalInterrogativeFixedPoint, LocalInterrogativeFixedPointError, LocalInterrogativeReopening,
+    LocalInterrogativeReopeningError, LocalInterrogativeResidual, LocalQuestionAssessment,
+    LocalQuestionClassification, LocalQuestionClosingReason, LocalQuestionExit,
+    LocalReopeningReason, OpenRequiredQuestion, derive_finite_local_interrogative_fixed_point,
+    derive_local_interrogative_reopening,
 };
 pub use method::{
     BackendRef, CheckerRef, CostModelRef, CoverageRef, ExtensionDomainRef,

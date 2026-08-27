@@ -198,6 +198,14 @@ impl LocalQuestionAssessment {
     }
 
     #[must_use]
+    pub const fn live_productive(candidate: LiveQuestionCandidate) -> Self {
+        Self {
+            candidate,
+            classification: LocalQuestionClassification::LiveProductive,
+        }
+    }
+
+    #[must_use]
     pub const fn candidate(&self) -> &LiveQuestionCandidate {
         &self.candidate
     }
@@ -212,6 +220,7 @@ impl LocalQuestionAssessment {
 pub enum LocalQuestionClassification {
     Closed(LocalQuestionClosingReason),
     Exit(LocalQuestionExit),
+    LiveProductive,
 }
 
 /// One still-open exact required occurrence and all of its retained obligations.
@@ -252,25 +261,58 @@ impl LocalInterrogativeResidual {
     }
 }
 
+/// The complete inspectable field behind one exact local result.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct FiniteLocalInterrogativeView {
+    context: LocalInterrogativeContext,
+    roots: Vec<AskOccurrenceRef>,
+    reachable: Vec<AskOccurrenceRef>,
+    assessments: Vec<LocalQuestionAssessment>,
+    effectivity_edges: Vec<LocalEffectivityEdge>,
+}
+
+impl FiniteLocalInterrogativeView {
+    #[must_use]
+    pub const fn context(&self) -> LocalInterrogativeContext {
+        self.context
+    }
+
+    #[must_use]
+    pub fn roots(&self) -> &[AskOccurrenceRef] {
+        &self.roots
+    }
+
+    #[must_use]
+    pub fn reachable(&self) -> &[AskOccurrenceRef] {
+        &self.reachable
+    }
+
+    #[must_use]
+    pub fn assessments(&self) -> &[LocalQuestionAssessment] {
+        &self.assessments
+    }
+
+    #[must_use]
+    pub fn effectivity_edges(&self) -> &[LocalEffectivityEdge] {
+        &self.effectivity_edges
+    }
+}
+
 /// Result of one finite local fixed-point derivation.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum LocalInterrogativeFixedPoint {
     Closed {
-        context: LocalInterrogativeContext,
-        reachable: Vec<AskOccurrenceRef>,
-        assessments: Vec<LocalQuestionAssessment>,
+        view: FiniteLocalInterrogativeView,
     },
     Residual {
-        context: LocalInterrogativeContext,
-        reachable: Vec<AskOccurrenceRef>,
-        assessments: Vec<LocalQuestionAssessment>,
+        view: FiniteLocalInterrogativeView,
         exits: Vec<LocalInterrogativeResidual>,
     },
-    OpenRequired {
-        context: LocalInterrogativeContext,
-        reachable: Vec<AskOccurrenceRef>,
-        assessments: Vec<LocalQuestionAssessment>,
-        obligations: Vec<OpenRequiredQuestion>,
+    Open {
+        view: FiniteLocalInterrogativeView,
+        productive: Vec<AskOccurrenceRef>,
+        required: Vec<OpenRequiredQuestion>,
+        exits: Vec<LocalInterrogativeResidual>,
     },
     Unknown {
         context: LocalInterrogativeContext,
@@ -278,6 +320,171 @@ pub enum LocalInterrogativeFixedPoint {
         missing_occurrences: Vec<AskOccurrenceRef>,
         missing_edges: Vec<LocalEffectivityEdge>,
     },
+}
+
+/// The positive reason one newly covered occurrence reopens a predecessor local closure.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum LocalReopeningReason {
+    Productive(AskOccurrenceRef),
+    Required(OpenRequiredQuestion),
+}
+
+/// A monotone finite extension witness from one closed field to one newly open field.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct LocalInterrogativeReopening {
+    predecessor: FiniteLocalInterrogativeView,
+    successor: FiniteLocalInterrogativeView,
+    added_occurrences: Vec<AskOccurrenceRef>,
+    added_edges: Vec<LocalEffectivityEdge>,
+    reasons: Vec<LocalReopeningReason>,
+    successor_exits: Vec<LocalInterrogativeResidual>,
+}
+
+impl LocalInterrogativeReopening {
+    #[must_use]
+    pub const fn predecessor(&self) -> &FiniteLocalInterrogativeView {
+        &self.predecessor
+    }
+
+    #[must_use]
+    pub const fn successor(&self) -> &FiniteLocalInterrogativeView {
+        &self.successor
+    }
+
+    #[must_use]
+    pub fn added_occurrences(&self) -> &[AskOccurrenceRef] {
+        &self.added_occurrences
+    }
+
+    #[must_use]
+    pub fn added_edges(&self) -> &[LocalEffectivityEdge] {
+        &self.added_edges
+    }
+
+    #[must_use]
+    pub fn reasons(&self) -> &[LocalReopeningReason] {
+        &self.reasons
+    }
+
+    #[must_use]
+    pub fn successor_exits(&self) -> &[LocalInterrogativeResidual] {
+        &self.successor_exits
+    }
+}
+
+/// Admits reopening only through a positive newly covered productive or required occurrence.
+///
+/// This finite specialization requires the same roots, binding, effectivity relation, horizon,
+/// and resource bound. The successor must use a fresh coverage identity, monotonically preserve
+/// the predecessor occurrence and edge field, and add a reachable occurrence that is explicitly
+/// live. Context drift, removal, or a new field with no newly live occurrence is insufficient.
+pub fn derive_local_interrogative_reopening(
+    predecessor: &LocalInterrogativeFixedPoint,
+    successor: &LocalInterrogativeFixedPoint,
+) -> Result<LocalInterrogativeReopening, LocalInterrogativeReopeningError> {
+    let LocalInterrogativeFixedPoint::Closed {
+        view: predecessor_view,
+    } = predecessor
+    else {
+        return Err(LocalInterrogativeReopeningError::PredecessorNotClosed);
+    };
+    let LocalInterrogativeFixedPoint::Open {
+        view: successor_view,
+        productive,
+        required,
+        exits,
+    } = successor
+    else {
+        return Err(LocalInterrogativeReopeningError::SuccessorNotOpen);
+    };
+    check_reopening_context(predecessor_view, successor_view)?;
+    if predecessor_view.roots() != successor_view.roots() {
+        return Err(LocalInterrogativeReopeningError::RootFamilyChanged);
+    }
+
+    let predecessor_occurrences: BTreeSet<_> =
+        predecessor_view.reachable().iter().copied().collect();
+    let successor_occurrences: BTreeSet<_> = successor_view.reachable().iter().copied().collect();
+    if let Some(removed) = predecessor_occurrences
+        .difference(&successor_occurrences)
+        .next()
+    {
+        return Err(LocalInterrogativeReopeningError::RemovedOccurrence(
+            *removed,
+        ));
+    }
+    let predecessor_edges: BTreeSet<_> = predecessor_view
+        .effectivity_edges()
+        .iter()
+        .copied()
+        .collect();
+    let successor_edges: BTreeSet<_> = successor_view.effectivity_edges().iter().copied().collect();
+    if let Some(removed) = predecessor_edges.difference(&successor_edges).next() {
+        return Err(LocalInterrogativeReopeningError::RemovedEdge(*removed));
+    }
+    let added_occurrences: Vec<_> = successor_occurrences
+        .difference(&predecessor_occurrences)
+        .copied()
+        .collect();
+    let added_edges: Vec<_> = successor_edges
+        .difference(&predecessor_edges)
+        .copied()
+        .collect();
+    if added_occurrences.is_empty() || added_edges.is_empty() {
+        return Err(LocalInterrogativeReopeningError::NoPositiveExtension);
+    }
+
+    let added_set: BTreeSet<_> = added_occurrences.iter().copied().collect();
+    let mut reasons = Vec::new();
+    for occurrence in productive {
+        if added_set.contains(occurrence) {
+            reasons.push(LocalReopeningReason::Productive(*occurrence));
+        }
+    }
+    for obligation in required {
+        if added_set.contains(&obligation.occurrence()) {
+            reasons.push(LocalReopeningReason::Required(obligation.clone()));
+        }
+    }
+    if reasons.is_empty() {
+        return Err(LocalInterrogativeReopeningError::NoNewLiveOccurrence);
+    }
+    Ok(LocalInterrogativeReopening {
+        predecessor: predecessor_view.clone(),
+        successor: successor_view.clone(),
+        added_occurrences,
+        added_edges,
+        reasons,
+        successor_exits: exits.clone(),
+    })
+}
+
+fn check_reopening_context(
+    predecessor: &FiniteLocalInterrogativeView,
+    successor: &FiniteLocalInterrogativeView,
+) -> Result<(), LocalInterrogativeReopeningError> {
+    let before = predecessor.context();
+    let after = successor.context();
+    if before.binding() != after.binding() {
+        return Err(LocalInterrogativeReopeningError::ContextChanged("binding"));
+    }
+    if before.effectivity() != after.effectivity() {
+        return Err(LocalInterrogativeReopeningError::ContextChanged(
+            "effectivity",
+        ));
+    }
+    if before.horizon() != after.horizon() {
+        return Err(LocalInterrogativeReopeningError::ContextChanged("horizon"));
+    }
+    if before.resource_bound() != after.resource_bound() {
+        return Err(LocalInterrogativeReopeningError::ContextChanged(
+            "resource bound",
+        ));
+    }
+    if before.coverage() == after.coverage() {
+        return Err(LocalInterrogativeReopeningError::CoverageIdentityReused);
+    }
+    Ok(())
 }
 
 /// Computes reachability to a least fixed point, then classifies that exact local field.
@@ -374,7 +581,8 @@ pub fn derive_finite_local_interrogative_fixed_point<C: QuestionSuccessionCatalo
     }
 
     let reachable = least_reachable_fixed_point(&root_set, &actual_edges);
-    let mut open_required = Vec::new();
+    let mut productive = Vec::new();
+    let mut required = Vec::new();
     let mut exits = Vec::new();
     for occurrence in &reachable {
         let assessment = by_occurrence
@@ -382,11 +590,10 @@ pub fn derive_finite_local_interrogative_fixed_point<C: QuestionSuccessionCatalo
             .expect("exact coverage established every reachable assessment");
         let candidate = assessment.candidate();
         if candidate.is_required() {
-            open_required.push(OpenRequiredQuestion {
+            required.push(OpenRequiredQuestion {
                 occurrence: *occurrence,
                 discharges: candidate.required_discharges().to_vec(),
             });
-            continue;
         }
         match assessment.classification() {
             LocalQuestionClassification::Closed(LocalQuestionClosingReason::NonProductive {
@@ -405,6 +612,14 @@ pub fn derive_finite_local_interrogative_fixed_point<C: QuestionSuccessionCatalo
                     exit,
                 });
             }
+            LocalQuestionClassification::LiveProductive if !candidate.is_productive() => {
+                return Err(
+                    LocalInterrogativeFixedPointError::NonProductiveCandidateDeclaredLive(
+                        *occurrence,
+                    ),
+                );
+            }
+            LocalQuestionClassification::LiveProductive => productive.push(*occurrence),
         }
     }
     let reachable: Vec<_> = reachable.into_iter().collect();
@@ -417,27 +632,25 @@ pub fn derive_finite_local_interrogative_fixed_point<C: QuestionSuccessionCatalo
             .clone()
         })
         .collect();
-    if !open_required.is_empty() {
-        return Ok(LocalInterrogativeFixedPoint::OpenRequired {
-            context,
-            reachable,
-            assessments: reachable_assessments,
-            obligations: open_required,
-        });
-    }
-    if !exits.is_empty() {
-        return Ok(LocalInterrogativeFixedPoint::Residual {
-            context,
-            reachable,
-            assessments: reachable_assessments,
+    let view = FiniteLocalInterrogativeView {
+        context,
+        roots: root_set.into_iter().collect(),
+        reachable,
+        assessments: reachable_assessments,
+        effectivity_edges: actual_edges.into_iter().collect(),
+    };
+    if !productive.is_empty() || !required.is_empty() {
+        return Ok(LocalInterrogativeFixedPoint::Open {
+            view,
+            productive,
+            required,
             exits,
         });
     }
-    Ok(LocalInterrogativeFixedPoint::Closed {
-        context,
-        reachable,
-        assessments: reachable_assessments,
-    })
+    if !exits.is_empty() {
+        return Ok(LocalInterrogativeFixedPoint::Residual { view, exits });
+    }
+    Ok(LocalInterrogativeFixedPoint::Closed { view })
 }
 
 fn least_reachable_fixed_point(
@@ -562,4 +775,28 @@ pub enum LocalInterrogativeFixedPointError {
     DuplicateActualEdge(LocalEffectivityEdge),
     #[error("productive occurrence {0} was declared nonproductive")]
     ProductiveCandidateDeclaredNonProductive(AskOccurrenceRef),
+    #[error("nonproductive occurrence {0} was declared live and productive")]
+    NonProductiveCandidateDeclaredLive(AskOccurrenceRef),
+}
+
+#[derive(Clone, Debug, Eq, Error, PartialEq)]
+pub enum LocalInterrogativeReopeningError {
+    #[error("reopening predecessor is not a closed local field")]
+    PredecessorNotClosed,
+    #[error("reopening successor is not an open local field")]
+    SuccessorNotOpen,
+    #[error("reopening successor changed {0} without an admitted bridge")]
+    ContextChanged(&'static str),
+    #[error("reopening successor reused the predecessor coverage identity")]
+    CoverageIdentityReused,
+    #[error("reopening successor changed the declared root family")]
+    RootFamilyChanged,
+    #[error("reopening successor removed predecessor occurrence {0}")]
+    RemovedOccurrence(AskOccurrenceRef),
+    #[error("reopening successor removed predecessor edge {0:?}")]
+    RemovedEdge(LocalEffectivityEdge),
+    #[error("reopening successor added no occurrence-and-edge extension")]
+    NoPositiveExtension,
+    #[error("reopening successor added no productive or required occurrence")]
+    NoNewLiveOccurrence,
 }

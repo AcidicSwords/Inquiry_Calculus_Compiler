@@ -2,44 +2,44 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `b233d32`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `9358390`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QIFP-LOCAL-001` established finite local interrogative closure as least reachability under one exact root/effectivity coverage field followed by occurrence-local classification. Removing one covered edge yields `Unknown`; an undischarged required Check yields `OpenRequired`; and blocked, resource, authority, and extension exits remain non-success residuals. Binding, effectivity, coverage, and horizon provenance are exact. This adds no scheduler, controller, canonical artifact, table, opcode, or history.
+`QIFP-REOPEN-001` established that prior local closure reopens only through a positive, monotone, context-indexed extension. The witness retains predecessor and successor fields, fresh coverage identity, added occurrence and edge, and the newly productive or required reason. Coverage-only change with no new route and resource drift are rejected. This adds no scheduler, recurrence controller, canonical artifact, table, opcode, revision event, or history.
 
 ## Strongest live obligation
 
-Require positive, context-indexed evidence before a new separator, probe, representation, binding, horizon, or discharge obligation reopens a previously closed local interrogative field.
+Regenerate one removed question or answer position only when the retained basis collapses its protected residual fiber while preserving exact typing, authority, provenance, and reopening behavior.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QIFP-REOPEN-001
-plan_phase: 9,14
-goal: Derive an inspectable reopening witness that relates one previously closed finite local field to one admitted protected-different successor context and a newly live occurrence.
-protected_difference: A prior local fixed point remains valid only at its exact binding, effectivity, coverage, horizon, resource, and occurrence field. Context drift alone does not prove reopening, while a positively represented extension that creates a newly productive or required occurrence does.
-discriminator: Start from the demonstrated closed finite field, extend its exact coverage with one new reachable checked occurrence, and retain the extension route plus a newly productive or required candidate as a reopening witness. Reject unchanged fields, borrowed coverage, removed-only fields, and context changes with no new live occurrence.
-horizon: one predecessor `Closed` local field, one finite monotone context/coverage extension, one new reachable occurrence, and no global recurrence or revision claim
-relevant_decisions: D-0024, D-0097, D-0098, D-0127, D-0135, D-0139, D-0143, D-0144
+id: QROUTE-REGEN-001
+plan_phase: 8,16
+goal: Derive and check regeneration of one omitted occurrence-indexed route position from a retained finite basis, without substituting endpoint equality for the protected route contract.
+protected_difference: A removed question/answer position is recoverable only when every completion still compatible with the retained basis regenerates the same protected typing, authority, provenance, continuation, and reopening behavior. One selected reconstruction or equal endpoint is insufficient.
+discriminator: Remove one position from a finite checked Ask/answer/successor route, enumerate the exact residual completion fiber, and admit regeneration only when its full protected signature is singleton and reconstructs the omitted identity. Reject a fiber split by occurrence provenance or continuation even when all endpoints match.
+horizon: one finite transparent route, one omitted position, exact residual coverage, one protected signature family, no global route minimality or learned method claim
+relevant_decisions: D-0024, D-0083, D-0097, D-0127, D-0135, D-0139, D-0145
 relevant_failures: F-0003
-if_pass: QROUTE-REGEN-001 test regeneration of a removed question/answer position with protected behavior and provenance intact
-if_fail: reopen the smallest predecessor/extension/context/reachability/productivity/requirement distinction; do not add a scheduler, recurrence controller, authoritative table, revision event, or second history
+if_pass: QROUTE-ABLATE-001 require typing, authority, provenance, protected behavior, and reopening to survive actual route-node ablation
+if_fail: reopen the smallest retained-basis/residual-fiber/signature/provenance/reconstruction distinction; do not add a route history, cache authority, learned method, scheduler, or controller
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Retain the exact context, roots, coverage field, reachable occurrence set, and closing evidence from one `Closed` local result. Construct a monotone finite successor coverage field that preserves every predecessor occurrence and edge and adds one edge to one new source-rewalked occurrence.
+Construct one finite ordinary route from a checked `Ask` occurrence, a whole supported answer, and its derived successor. Define the protected route signature from the exact binding, occurrence, answer/event/raw/support provenance, continuation, successor, and reopening coordinates.
 
-Make the new occurrence protectedly productive or give it an exact required discharge. The reopening result must retain the predecessor context, successor context, added occurrence/edge, and the exact live reason. An identical field, a field that only removes coverage, a mismatched borrowed coverage identity, or context drift without a new live occurrence must not produce the witness.
+Omit one route position while retaining an exact finite set of compatible reconstructions. In the lawful case every member has the same protected signature and the omitted position is reconstructed. In the foil, keep the visible endpoint equal but vary occurrence provenance or continuation so the residual fiber splits; return the positive separator rather than selecting one member.
 
-The smallest wrong implementation treats any timestamp/context change as reopening or keeps using predecessor closure after a positive newly live occurrence enters exact coverage.
+The smallest wrong implementation regenerates from endpoint equality, one selected completion, or a cache value that cannot re-establish the full protected route signature and reopening path.
 
 ## Prohibitions at this boundary
 
-- Do not infer reopening from context drift, a generated possibility, or missing/removed coverage.
-- Do not discard predecessor closure provenance or the positive added occurrence/edge.
-- Do not let prior local closure suppress a newly productive or required occurrence.
-- Do not synthesize a scheduler, recurrence controller, global policy, authoritative table, revision event, or second history.
+- Do not call one selected reconstruction the whole residual fiber.
+- Do not collapse equal endpoints across protected-different occurrence, answer, event, support, continuation, or reopening provenance.
+- Do not promote a derived regeneration view into route history, cache authority, or semantic warrant.
+- Do not add a learned method, scheduler, controller, table, opcode, or second history at this boundary.
 
 ## Exit
 
-On pass, update conformance and any warranted append-only decision, replace the live block with `QROUTE-REGEN-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated predecessor/extension/context/reachability/productivity/requirement relation rather than broadening the architecture.
+On pass, update conformance and any warranted append-only decision, replace the live block with `QROUTE-ABLATE-001`, and continue. On failure, preserve the actual return and reopen the earliest implicated retained-basis/residual-fiber/signature/provenance/reconstruction relation rather than broadening the architecture.

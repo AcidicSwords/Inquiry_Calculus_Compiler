@@ -19,10 +19,10 @@ use ic_core::{
     GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
     IProgIR, IProgRef, LiveQuestionCandidate, LiveQuestionOrigin, LocalEffectivityEdge,
     LocalInterrogativeContext, LocalInterrogativeFixedPoint, LocalQuestionAssessment,
-    LocalQuestionClosingReason, LocalQuestionExit, NegationCoverage, NegationUse, NegationUseRef,
-    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence,
-    OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding, ProbeContractRef,
-    ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
+    LocalQuestionClosingReason, LocalQuestionExit, LocalReopeningReason, NegationCoverage,
+    NegationUse, NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
+    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
     ProtectedContinuationRef, ProtectedQuestionBranch, ProvenanceRef, QueryRef, QuestionReadiness,
     QuestionReadinessRequirement, QuestionSuccessionCatalog, QuestionSuccessor, RawReturn,
     RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR, RelationCatalog,
@@ -42,10 +42,11 @@ use ic_core::{
     check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     derive_finite_live_question_frontier, derive_finite_local_interrogative_fixed_point,
-    derive_question_readiness, derive_question_successor, match_decoded_observation_use,
-    resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
-    resolve_relation_use_support, standing_determination_presentation_support,
-    standing_from_declared_support, standing_relation_use_support,
+    derive_local_interrogative_reopening, derive_question_readiness, derive_question_successor,
+    match_decoded_observation_use, resolve_departure_witness_evidence_support,
+    resolve_determination_presentation_support, resolve_relation_use_support,
+    standing_determination_presentation_support, standing_from_declared_support,
+    standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -4088,14 +4089,12 @@ fn finite_local_fixed_point_requires_exact_coverage_and_no_open_obligation() {
     .expect("the exact finite field must be decidable");
     assert!(matches!(
         closed,
-        LocalInterrogativeFixedPoint::Closed {
-            reachable,
-            assessments,
-            ..
-        }
-            if reachable.len() == references.len()
-                && references.iter().all(|reference| reachable.contains(reference))
-                && assessments.len() == references.len()
+        LocalInterrogativeFixedPoint::Closed { view }
+            if view.reachable().len() == references.len()
+                && references
+                    .iter()
+                    .all(|reference| view.reachable().contains(reference))
+                && view.assessments().len() == references.len()
     ));
     let borrowed_coverage_context = LocalInterrogativeContext::new(
         scenario.binding,
@@ -4175,10 +4174,16 @@ fn finite_local_fixed_point_requires_exact_coverage_and_no_open_obligation() {
     .expect("open required work is a retained local result");
     assert!(matches!(
         required_open,
-        LocalInterrogativeFixedPoint::OpenRequired { obligations, .. }
-            if obligations.len() == 1
-                && obligations[0].occurrence() == references[4]
-                && obligations[0].discharges() == [required_discharge]
+        LocalInterrogativeFixedPoint::Open {
+            productive,
+            required,
+            exits,
+            ..
+        } if productive.is_empty()
+            && exits.is_empty()
+            && required.len() == 1
+            && required[0].occurrence() == references[4]
+            && required[0].discharges() == [required_discharge]
     ));
 
     let residual_assessments = vec![
@@ -4237,4 +4242,270 @@ fn finite_local_fixed_point_requires_exact_coverage_and_no_open_obligation() {
         exit.exit(),
         LocalQuestionExit::Extension { obligation } if obligation == artifact(0xc3)
     )));
+}
+
+#[test]
+// Test boundary QIFP-REOPEN-001:
+// F = a prior local closure suppresses a newly covered live occurrence, or mere context drift is
+//     accepted as reopening without a positive extension.
+// C = a monotone exact occurrence/edge extension under the same local context, a fresh coverage
+//     identity, and one added reachable occurrence that is productively or requiredly open.
+// Omega/M = one closed singleton field and one two-occurrence finite successor field.
+// P/V/E/U = both fields are independently source-rewalked and fixed-point checked; set difference
+//     checks monotonicity and retains the added route and live reason. Reopen for admitted binding,
+//     horizon, effectivity, or resource changes and for non-enumerative extension proofs.
+fn positive_new_live_occurrence_reopens_only_its_exact_predecessor_field() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite fixture must admit");
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.source,
+        },
+    ));
+    let root_program = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: scenario.source_observation.decoded().query(),
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let mut occurrence = |coordinate: u8| {
+        let source = SourceConfig::new(
+            scenario.answer_type,
+            root_program,
+            Vec::new(),
+            scenario.binding,
+            artifact(coordinate),
+            ProvenanceRef::from_artifact_ref(artifact(coordinate.wrapping_add(0x10))),
+        )
+        .expect("source configuration must canonicalize");
+        scenario.catalog.insert_source_config(source.clone());
+        source
+            .ask_occurrences(&scenario.catalog)
+            .expect("source must re-walk")
+            .into_iter()
+            .next()
+            .expect("source root must be Ask")
+    };
+    let predecessor_occurrence = occurrence(0xd0);
+    let added_occurrence = occurrence(0xd1);
+    let predecessor_ref = predecessor_occurrence
+        .ask_occurrence_ref()
+        .expect("predecessor occurrence must retain identity");
+    let added_ref = added_occurrence
+        .ask_occurrence_ref()
+        .expect("successor occurrence must retain identity");
+    let effectivity = EffectivityRef::from_artifact_ref(artifact(0xd2));
+    let predecessor_coverage_ref = CoverageRef::from_artifact_ref(artifact(0xd3));
+    let successor_coverage_ref = CoverageRef::from_artifact_ref(artifact(0xd4));
+    let predecessor_context = LocalInterrogativeContext::new(
+        scenario.binding,
+        effectivity,
+        predecessor_coverage_ref,
+        scenario.horizon,
+        artifact(0xd5),
+    );
+    let successor_context = LocalInterrogativeContext::new(
+        scenario.binding,
+        effectivity,
+        successor_coverage_ref,
+        scenario.horizon,
+        artifact(0xd5),
+    );
+    let protected_a = ProtectedContinuationRef::from_artifact_ref(artifact(0xd6));
+    let protected_b = ProtectedContinuationRef::from_artifact_ref(artifact(0xd7));
+    let make_candidate = |occurrence, tag: u8, productive: bool, required: bool| {
+        LiveQuestionCandidate::new(
+            occurrence,
+            vec![
+                ProtectedQuestionBranch::new(artifact(tag), protected_a),
+                ProtectedQuestionBranch::new(
+                    artifact(tag.wrapping_add(1)),
+                    if productive { protected_b } else { protected_a },
+                ),
+            ],
+            artifact(tag.wrapping_add(2)),
+            LiveQuestionOrigin::Existing {
+                provenance: artifact(tag.wrapping_add(3)),
+            },
+            if required {
+                vec![RequiredQuestionDischarge::new(
+                    RequiredDischargeKind::Check,
+                    artifact(tag.wrapping_add(4)),
+                    artifact(tag.wrapping_add(5)),
+                )]
+            } else {
+                Vec::new()
+            },
+        )
+        .expect("candidate must be well formed")
+    };
+    let predecessor_candidate = make_candidate(predecessor_occurrence.clone(), 0xe0, false, false);
+    let predecessor_assessment = LocalQuestionAssessment::closed(
+        predecessor_candidate.clone(),
+        LocalQuestionClosingReason::NonProductive {
+            evidence: artifact(0xe6),
+        },
+    );
+    let predecessor_coverage = FiniteLocalEffectivityCoverage::new(
+        effectivity,
+        predecessor_coverage_ref,
+        vec![predecessor_ref],
+        Vec::new(),
+    )
+    .expect("singleton predecessor coverage must be exact");
+    let predecessor = derive_finite_local_interrogative_fixed_point(
+        predecessor_context,
+        &[predecessor_ref],
+        std::slice::from_ref(&predecessor_assessment),
+        &[],
+        &predecessor_coverage,
+        &scenario.catalog,
+    )
+    .expect("predecessor field must derive");
+    assert!(matches!(
+        predecessor,
+        LocalInterrogativeFixedPoint::Closed { .. }
+    ));
+
+    let added_candidate = make_candidate(added_occurrence.clone(), 0xe8, true, false);
+    let successor_assessments = vec![
+        predecessor_assessment.clone(),
+        LocalQuestionAssessment::live_productive(added_candidate.clone()),
+    ];
+    let added_edge = LocalEffectivityEdge::new(predecessor_ref, added_ref);
+    let successor_coverage = FiniteLocalEffectivityCoverage::new(
+        effectivity,
+        successor_coverage_ref,
+        vec![predecessor_ref, added_ref],
+        vec![added_edge],
+    )
+    .expect("successor coverage must include its positive extension");
+    let successor = derive_finite_local_interrogative_fixed_point(
+        successor_context,
+        &[predecessor_ref],
+        &successor_assessments,
+        &[added_edge],
+        &successor_coverage,
+        &scenario.catalog,
+    )
+    .expect("successor field must derive");
+    let reopening = derive_local_interrogative_reopening(&predecessor, &successor)
+        .expect("the new productive occurrence must reopen the exact predecessor field");
+    assert_eq!(reopening.added_occurrences(), &[added_ref]);
+    assert_eq!(reopening.added_edges(), &[added_edge]);
+    assert_eq!(
+        reopening.reasons(),
+        &[LocalReopeningReason::Productive(added_ref)]
+    );
+    assert_eq!(reopening.predecessor().context(), predecessor_context);
+    assert_eq!(reopening.successor().context(), successor_context);
+
+    let required_candidate = make_candidate(added_occurrence, 0xf0, false, true);
+    let required_discharge = required_candidate.required_discharges()[0];
+    let required_successor = derive_finite_local_interrogative_fixed_point(
+        successor_context,
+        &[predecessor_ref],
+        &[
+            predecessor_assessment.clone(),
+            LocalQuestionAssessment::closed(
+                required_candidate,
+                LocalQuestionClosingReason::NonProductive {
+                    evidence: artifact(0xf6),
+                },
+            ),
+        ],
+        &[added_edge],
+        &successor_coverage,
+        &scenario.catalog,
+    )
+    .expect("required successor field must derive");
+    let required_reopening =
+        derive_local_interrogative_reopening(&predecessor, &required_successor)
+            .expect("the newly required occurrence must reopen the predecessor");
+    assert!(matches!(
+        required_reopening.reasons(),
+        [LocalReopeningReason::Required(obligation)]
+            if obligation.occurrence() == added_ref
+                && obligation.discharges() == [required_discharge]
+    ));
+
+    let changed_only_coverage = FiniteLocalEffectivityCoverage::new(
+        effectivity,
+        successor_coverage_ref,
+        vec![predecessor_ref],
+        Vec::new(),
+    )
+    .expect("the comparison foil has exact singleton coverage");
+    let changed_only_candidate = make_candidate(predecessor_occurrence, 0xf8, true, false);
+    let changed_only = derive_finite_local_interrogative_fixed_point(
+        successor_context,
+        &[predecessor_ref],
+        &[LocalQuestionAssessment::live_productive(
+            changed_only_candidate,
+        )],
+        &[],
+        &changed_only_coverage,
+        &scenario.catalog,
+    )
+    .expect("changed-only field must derive independently");
+    assert!(matches!(
+        derive_local_interrogative_reopening(&predecessor, &changed_only),
+        Err(ic_core::LocalInterrogativeReopeningError::NoPositiveExtension)
+    ));
+    let closed_extended_coverage = FiniteLocalEffectivityCoverage::new(
+        effectivity,
+        predecessor_coverage_ref,
+        vec![predecessor_ref, added_ref],
+        vec![added_edge],
+    )
+    .expect("the removal foil starts from one exact larger field");
+    let closed_extended = derive_finite_local_interrogative_fixed_point(
+        predecessor_context,
+        &[predecessor_ref],
+        &[
+            predecessor_assessment,
+            LocalQuestionAssessment::closed(
+                added_candidate,
+                LocalQuestionClosingReason::Determined {
+                    evidence: artifact(0xfe),
+                },
+            ),
+        ],
+        &[added_edge],
+        &closed_extended_coverage,
+        &scenario.catalog,
+    )
+    .expect("the larger predecessor field must close independently");
+    assert!(matches!(
+        derive_local_interrogative_reopening(&closed_extended, &changed_only),
+        Err(ic_core::LocalInterrogativeReopeningError::RemovedOccurrence(removed))
+            if removed == added_ref
+    ));
+
+    let drifted_context = LocalInterrogativeContext::new(
+        scenario.binding,
+        effectivity,
+        successor_coverage_ref,
+        scenario.horizon,
+        artifact(0xff),
+    );
+    let drifted = derive_finite_local_interrogative_fixed_point(
+        drifted_context,
+        &[predecessor_ref],
+        &successor_assessments,
+        &[added_edge],
+        &successor_coverage,
+        &scenario.catalog,
+    )
+    .expect("resource drift remains representable but is not self-admitting");
+    assert!(matches!(
+        derive_local_interrogative_reopening(&predecessor, &drifted),
+        Err(ic_core::LocalInterrogativeReopeningError::ContextChanged(
+            "resource bound"
+        ))
+    ));
 }
