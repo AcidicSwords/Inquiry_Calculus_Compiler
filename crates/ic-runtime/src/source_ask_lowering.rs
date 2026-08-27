@@ -8,7 +8,11 @@ use ic_core::{
 };
 use thiserror::Error;
 
-use crate::{RuntimeCatalog, RuntimeProgramArtifact, RuntimeProgramCheckError};
+use crate::{
+    ActualitySeparationCatalog, FiniteProbeDischargeBundle, ProbeDischargeBundleError,
+    RuntimeCatalog, RuntimeProgramArtifact, RuntimeProgramCheckError,
+    admit_finite_probe_discharge_bundle,
+};
 
 /// One declared lowering of exactly one checked open source port.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -35,6 +39,16 @@ impl PortLowering {
 /// The catalog needed to independently rewalk the source and verify its runtime program.
 pub trait SourceAskLoweringCatalog: QuestionSuccessionCatalog + RuntimeCatalog {}
 impl<T> SourceAskLoweringCatalog for T where T: QuestionSuccessionCatalog + RuntimeCatalog {}
+
+/// The catalog needed to recheck an execution-conditioned pairing without dispatching.
+pub trait SourceAskProbeDischargeCatalog:
+    SourceAskLoweringCatalog + ActualitySeparationCatalog
+{
+}
+impl<T> SourceAskProbeDischargeCatalog for T where
+    T: SourceAskLoweringCatalog + ActualitySeparationCatalog
+{
+}
 
 /// A derived source-to-runtime pairing, not a compiler, dispatch plan, or event record.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -174,6 +188,72 @@ impl SourceAskLowering {
     }
 }
 
+/// A derived pairing between one source lowering and the existing all-Probe discharge bundle.
+///
+/// The bundle remains the owner of event, route, decoder, and resolution provenance. This record
+/// only proves that it discharges this exact source lowering.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct SourceAskProbeDischarge {
+    lowering: SourceAskLowering,
+    bundle: FiniteProbeDischargeBundle,
+}
+
+impl SourceAskProbeDischarge {
+    #[must_use]
+    pub const fn new(lowering: SourceAskLowering, bundle: FiniteProbeDischargeBundle) -> Self {
+        Self { lowering, bundle }
+    }
+
+    #[must_use]
+    pub const fn lowering(&self) -> &SourceAskLowering {
+        &self.lowering
+    }
+
+    #[must_use]
+    pub const fn bundle(&self) -> &FiniteProbeDischargeBundle {
+        &self.bundle
+    }
+
+    /// Independently rechecks both operands and their exact source-port pairing.
+    pub fn check<C: SourceAskProbeDischargeCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), SourceAskProbeDischargeError> {
+        self.lowering.check(catalog)?;
+        for lowering in self.lowering.port_lowerings() {
+            if lowering.mode() != DischargeMode::Probe {
+                return Err(SourceAskProbeDischargeError::NonProbeLoweringPort(
+                    lowering.port().as_str().to_owned(),
+                ));
+            }
+        }
+        let rechecked_bundle = admit_finite_probe_discharge_bundle(
+            self.bundle.occurrence().clone(),
+            self.bundle.components().to_vec(),
+            self.bundle.shared_events().to_vec(),
+            catalog,
+        )?;
+        if rechecked_bundle.occurrence() != self.lowering.occurrence() {
+            return Err(SourceAskProbeDischargeError::OccurrenceMismatch);
+        }
+        let lowering_ports = self
+            .lowering
+            .port_lowerings()
+            .iter()
+            .map(|lowering| lowering.port().as_str())
+            .collect::<BTreeSet<_>>();
+        let bundle_ports = rechecked_bundle
+            .components()
+            .iter()
+            .map(|component| component.port().as_str())
+            .collect::<BTreeSet<_>>();
+        if lowering_ports != bundle_ports {
+            return Err(SourceAskProbeDischargeError::PortCoverageMismatch);
+        }
+        Ok(())
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum SourceAskLoweringCheckError {
     #[error(transparent)]
@@ -237,4 +317,18 @@ pub enum SourceAskLoweringCheckError {
         expected_mode: DischargeMode,
         lowering: DischargeMode,
     },
+}
+
+#[derive(Debug, Error)]
+pub enum SourceAskProbeDischargeError {
+    #[error(transparent)]
+    Lowering(#[from] SourceAskLoweringCheckError),
+    #[error(transparent)]
+    Bundle(#[from] ProbeDischargeBundleError),
+    #[error("finite Probe discharge bundle belongs to a different source Ask occurrence")]
+    OccurrenceMismatch,
+    #[error("source lowering port {0:?} is not Probe-mode for a finite Probe discharge bundle")]
+    NonProbeLoweringPort(String),
+    #[error("source lowering ports do not exactly match finite Probe bundle component ports")]
+    PortCoverageMismatch,
 }

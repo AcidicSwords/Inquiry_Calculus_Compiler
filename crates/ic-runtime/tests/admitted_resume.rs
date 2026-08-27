@@ -53,11 +53,11 @@ use ic_runtime::{
     ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
     ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
-    SourceEventLinkError, Terminator, TraversalCausalOrder, admit_finite_probe_discharge_bundle,
-    check_source_event_link, dispatch_probe, materialize_ollama_decoded_texts,
-    plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
-    replay_completed_finite_separator_inquiry, resolve_finite_probe_occurrence,
-    route_separator_through_method_bridge,
+    SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
+    TraversalCausalOrder, admit_finite_probe_discharge_bundle, check_source_event_link,
+    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
+    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
+    resolve_finite_probe_occurrence, route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -5617,6 +5617,55 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         &cold_catalog,
     )
     .expect("the exact one-port source event must form its discharge bundle");
+    let source_probe_discharge =
+        SourceAskProbeDischarge::new(cold_source_lowering.clone(), bundle_a.clone());
+    source_probe_discharge
+        .check(&cold_catalog)
+        .expect("exact source lowering and bundle must recheck together");
+    let bundle_b = admit_finite_probe_discharge_bundle(
+        cold_second_occurrence.clone(),
+        vec![ProbePortDischargeEvidence::new(
+            source_query
+                .open_ports()
+                .first()
+                .expect("finite resolution fixture has one answer port")
+                .port()
+                .clone(),
+            route,
+            roots.decoded_path,
+            binding,
+            roots.compiler_version,
+            second_provenance,
+            link_b.clone(),
+        )],
+        Vec::new(),
+        &cold_catalog,
+    )
+    .expect("second source event must form its own exact discharge bundle");
+    assert!(matches!(
+        SourceAskProbeDischarge::new(cold_source_lowering.clone(), bundle_b).check(&cold_catalog),
+        Err(SourceAskProbeDischargeError::OccurrenceMismatch)
+    ));
+    let non_probe_lowering = SourceAskLowering::new(
+        cold_first_occurrence.clone(),
+        vec![PortLowering::new(
+            source_query
+                .open_ports()
+                .first()
+                .expect("finite resolution fixture has one answer port")
+                .port()
+                .clone(),
+            DischargeMode::Generate,
+        )],
+        source_probe_discharge.lowering().runtime().clone(),
+    )
+    .expect("non-Probe lowering remains formable before source recheck");
+    assert!(matches!(
+        SourceAskProbeDischarge::new(non_probe_lowering, bundle_a.clone()).check(&cold_catalog),
+        Err(SourceAskProbeDischargeError::Lowering(
+            SourceAskLoweringCheckError::ModeMismatch { .. }
+        ))
+    ));
 
     let mut candidate_values = vec![
         roots.candidate_a.as_artifact_ref(),

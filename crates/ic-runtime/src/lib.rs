@@ -62,6 +62,7 @@ pub use runtime_code::{
 };
 pub use source_ask_lowering::{
     PortLowering, SourceAskLowering, SourceAskLoweringCatalog, SourceAskLoweringCheckError,
+    SourceAskProbeDischarge, SourceAskProbeDischargeCatalog, SourceAskProbeDischargeError,
 };
 use thiserror::Error;
 pub use trace::{
