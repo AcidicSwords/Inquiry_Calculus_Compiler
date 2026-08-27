@@ -10,9 +10,10 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use ic_core::{
-    AskOccurrenceRef, CompletionCandidateCatalog, DischargeMode, FiniteResolutionOutcome,
-    FiniteResolutionOutcomeKind, FiniteSupportedAnswerCatalog, FiniteSupportedResolution,
-    IProgArtifact, IProgError, IProgIR, IProgRef, QueryRef, TypeSymbol, TypedFormRef,
+    AskOccurrence, AskOccurrenceRef, CompletionCandidateCatalog, CompletionCandidateRef,
+    DischargeMode, FiniteResolutionOutcome, FiniteResolutionOutcomeKind,
+    FiniteSupportedAnswerCatalog, FiniteSupportedResolution, IProgArtifact, IProgError, IProgIR,
+    IProgRef, NextSourcePosition, QueryRef, TypeSymbol, TypedFormRef, derive_successor_position,
 };
 use thiserror::Error;
 
@@ -66,12 +67,19 @@ impl MixedPortContribution {
 
 /// One whole-question supported answer over the complete open-port field of one occurrence.
 ///
-/// This record exists only as the output of [`resolve_mixed_mode_question`]: it has no public
+/// Canonical `SuppAns(q)` is a proof-carrying record whose member projection is a nonempty set of
+/// completions of the whole question, carried alongside the route, evidence, and a
+/// component-indexed provenance map for every represented component of every member. This record
+/// keeps those two projections separate and in agreement: [`Self::members`] is the completion set,
+/// [`Self::contributions`] is the component-indexed map. The member set is never the component map.
+///
+/// The record exists only as the output of [`resolve_mixed_mode_question`]: it has no public
 /// constructor, so a partial port field cannot be presented as a whole-question answer.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct WholeQuestionSupportedAnswer {
     occurrence: AskOccurrenceRef,
     question: QueryRef,
+    members: Vec<CompletionCandidateRef>,
     contributions: Vec<MixedPortContribution>,
 }
 
@@ -86,7 +94,17 @@ impl WholeQuestionSupportedAnswer {
         self.question
     }
 
+    /// The nonempty member projection: every rechecked completion of the whole question.
+    ///
+    /// No member is selected and none is dropped; a consumer receives the whole set.
+    #[must_use]
+    pub fn members(&self) -> &[CompletionCandidateRef] {
+        &self.members
+    }
+
     /// Every open port's contribution, in canonical port order.
+    ///
+    /// This is the component-indexed route and provenance map, not the member set.
     #[must_use]
     pub fn contributions(&self) -> &[MixedPortContribution] {
         &self.contributions
@@ -197,6 +215,10 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
         }
     }
 
+    // The member set of the whole question. Every Probe port must witness the same completions:
+    // one question has one member projection, so ports that decode different completion fields do
+    // not jointly support one answer.
+    let mut members: Option<Vec<_>> = None;
     for (port, resolution) in &supported {
         if resolution.query() != question {
             return Err(MixedQuestionResolutionError::PortAnswerQuestionMismatch {
@@ -218,30 +240,53 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
                 port.as_str().to_owned(),
             ));
         }
-        for candidate_ref in resolution.answer().candidates() {
-            let candidate = catalog.resolve_completion_candidate(*candidate_ref).ok_or(
-                MixedQuestionResolutionError::UnresolvedCandidate(*candidate_ref),
-            )?;
-            for (non_probe_port, evidence) in &non_probe {
-                let bound = candidate
-                    .bindings()
-                    .iter()
-                    .find(|binding| binding.port() == non_probe_port)
-                    .ok_or_else(|| {
-                        MixedQuestionResolutionError::CompletionOmitsNonProbePort(
-                            non_probe_port.as_str().to_owned(),
-                        )
-                    })?;
-                if bound.value() != evidence.result() {
-                    return Err(
-                        MixedQuestionResolutionError::CompletionContradictsNonProbeResult {
-                            probe_port: port.as_str().to_owned(),
-                            non_probe_port: non_probe_port.as_str().to_owned(),
-                            completion: bound.value(),
-                            evidence: evidence.result(),
-                        },
-                    );
-                }
+        let port_members = resolution.answer().candidates().to_vec();
+        match &members {
+            None => members = Some(port_members),
+            Some(established) if *established == port_members => {}
+            Some(_) => {
+                return Err(MixedQuestionResolutionError::PortMemberSetsDisagree(
+                    port.as_str().to_owned(),
+                ));
+            }
+        }
+    }
+    let members = members.ok_or(MixedQuestionResolutionError::EmptyMemberSet)?;
+    if members.is_empty() {
+        return Err(MixedQuestionResolutionError::EmptyMemberSet);
+    }
+
+    // Each member must be a completion of the whole question, and must agree with every non-Probe
+    // port's own checked result. A Probe decode may not supply a port whose declared mode reserves
+    // discharge to another authority.
+    for candidate_ref in &members {
+        let candidate = catalog.resolve_completion_candidate(*candidate_ref).ok_or(
+            MixedQuestionResolutionError::UnresolvedCandidate(*candidate_ref),
+        )?;
+        candidate.check(catalog)?;
+        if candidate.source() != question {
+            return Err(MixedQuestionResolutionError::MemberQuestionMismatch(
+                *candidate_ref,
+            ));
+        }
+        for (non_probe_port, evidence) in &non_probe {
+            let bound = candidate
+                .bindings()
+                .iter()
+                .find(|binding| binding.port() == non_probe_port)
+                .ok_or_else(|| {
+                    MixedQuestionResolutionError::CompletionOmitsNonProbePort(
+                        non_probe_port.as_str().to_owned(),
+                    )
+                })?;
+            if bound.value() != evidence.result() {
+                return Err(
+                    MixedQuestionResolutionError::CompletionContradictsNonProbeResult {
+                        non_probe_port: non_probe_port.as_str().to_owned(),
+                        completion: bound.value(),
+                        evidence: evidence.result(),
+                    },
+                );
             }
         }
     }
@@ -264,6 +309,7 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
         WholeQuestionSupportedAnswer {
             occurrence: occurrence_ref,
             question,
+            members,
             contributions,
         },
     ))
@@ -275,7 +321,7 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AdmittedMixedModeContinuation {
     source: IProgRef,
-    occurrence: AskOccurrenceRef,
+    occurrence: AskOccurrence,
     question: QueryRef,
     answer_slot: TypeSymbol,
     answer: WholeQuestionSupportedAnswer,
@@ -289,8 +335,8 @@ impl AdmittedMixedModeContinuation {
     }
 
     #[must_use]
-    pub const fn occurrence(&self) -> AskOccurrenceRef {
-        self.occurrence
+    pub const fn occurrence(&self) -> &AskOccurrence {
+        &self.occurrence
     }
 
     #[must_use]
@@ -358,11 +404,56 @@ pub fn admit_mixed_mode_continuation<C: MixedQuestionResolutionCatalog>(
     }
     Ok(AdmittedMixedModeContinuation {
         source: source_ref,
-        occurrence: answer.occurrence,
+        occurrence: occurrence.clone(),
         question: *question,
         answer_slot: answer_slot.clone(),
         answer,
         continuation: *continuation,
+    })
+}
+
+/// One mixed-mode occurrence carried to its next source position by the whole-question answer.
+///
+/// The next position comes from `ic-core`'s single successor relation, which reads only the
+/// occurrence. This record adds the whole-question answer as that relation's carrier; it is not a
+/// second successor relation and appends no history.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MixedModeQuestionSuccessor {
+    occurrence: AskOccurrence,
+    answer: WholeQuestionSupportedAnswer,
+    next: NextSourcePosition,
+}
+
+impl MixedModeQuestionSuccessor {
+    #[must_use]
+    pub const fn occurrence(&self) -> &AskOccurrence {
+        &self.occurrence
+    }
+
+    #[must_use]
+    pub const fn answer(&self) -> &WholeQuestionSupportedAnswer {
+        &self.answer
+    }
+
+    #[must_use]
+    pub const fn next(&self) -> &NextSourcePosition {
+        &self.next
+    }
+}
+
+/// Derives the one next source position of an admitted mixed-mode continuation.
+///
+/// The whole answer is carried, never projected down to one port's answer set, and nothing here
+/// dispatches, re-decodes, or executes the continuation.
+pub fn derive_mixed_mode_successor<C: MixedQuestionResolutionCatalog>(
+    admitted: AdmittedMixedModeContinuation,
+    catalog: &C,
+) -> Result<MixedModeQuestionSuccessor, MixedQuestionResolutionError> {
+    let next = derive_successor_position(&admitted.occurrence, catalog)?;
+    Ok(MixedModeQuestionSuccessor {
+        occurrence: admitted.occurrence,
+        answer: admitted.answer,
+        next,
     })
 }
 
@@ -392,19 +483,28 @@ pub enum MixedQuestionResolutionError {
     PortMissingFromBundle(String),
     #[error("port {0:?} answered from an event outside its own bundle component")]
     PortAnswerEventMismatch(String),
+    #[error("Probe port {0:?} witnesses a different completion field than its sibling ports")]
+    PortMemberSetsDisagree(String),
+    #[error("a whole-question supported answer must project a nonempty member set")]
+    EmptyMemberSet,
     #[error("completion candidate {0} is unavailable")]
     UnresolvedCandidate(ic_core::CompletionCandidateRef),
+    #[error(transparent)]
+    MemberCheck(#[from] ic_core::CompletionCandidateCheckError),
+    #[error("member {0} completes a different question than this occurrence asks")]
+    MemberQuestionMismatch(ic_core::CompletionCandidateRef),
     #[error("a decoded completion omits non-Probe port {0:?}")]
     CompletionOmitsNonProbePort(String),
     #[error(
-        "a completion from Probe port {probe_port:?} binds non-Probe port {non_probe_port:?} to {completion}, but that port's checked evidence is {evidence}"
+        "a completion binds non-Probe port {non_probe_port:?} to {completion}, but that port's checked evidence is {evidence}"
     )]
     CompletionContradictsNonProbeResult {
-        probe_port: String,
         non_probe_port: String,
         completion: TypedFormRef,
         evidence: TypedFormRef,
     },
+    #[error(transparent)]
+    Successor(#[from] ic_core::QuestionSuccessorError),
     #[error("whole-question outcome {} cannot enter a source continuation", .0.kind())]
     NonSupported(Box<WholeQuestionOutcome>),
     #[error("whole-question answer belongs to a different source Ask occurrence")]

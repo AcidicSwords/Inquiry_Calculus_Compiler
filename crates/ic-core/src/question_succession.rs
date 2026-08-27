@@ -735,20 +735,47 @@ pub fn derive_question_successor<C: QuestionSuccessionCatalog>(
     answer: AdmittedFiniteAnswerSet,
     catalog: &C,
 ) -> Result<QuestionSuccessor, QuestionSuccessorError> {
-    occurrence.check(catalog)?;
     if answer.decoded().query() != occurrence.question() {
         return Err(QuestionSuccessorError::AnswerQuestionMismatch {
             occurrence: occurrence.question(),
             answer: answer.decoded().query(),
         });
     }
-    let continuation = resolve_program(occurrence.continuation(), catalog)?;
-    match continuation.program() {
-        IProgIR::Return { value } => Ok(QuestionSuccessor::Return {
+    Ok(match derive_successor_position(&occurrence, catalog)? {
+        NextSourcePosition::Return { value } => QuestionSuccessor::Return {
             occurrence,
             answer,
-            value: *value,
-        }),
+            value,
+        },
+        NextSourcePosition::Ask { successor } => QuestionSuccessor::Ask {
+            occurrence,
+            answer,
+            successor,
+        },
+    })
+}
+
+/// The next source position of one checked `Ask` occurrence.
+///
+/// This is the successor relation itself. It is derived from the occurrence's own continuation and
+/// source configuration alone: no supported answer participates in choosing it, so an answer
+/// carrier is never the thing that decides where an occurrence goes next.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum NextSourcePosition {
+    Return { value: TypedFormRef },
+    Ask { successor: Box<AskOccurrence> },
+}
+
+/// Derives the one next source position of a checked occurrence without executing its
+/// continuation, selecting an answer member, or appending any history.
+pub fn derive_successor_position<C: QuestionSuccessionCatalog>(
+    occurrence: &AskOccurrence,
+    catalog: &C,
+) -> Result<NextSourcePosition, QuestionSuccessorError> {
+    occurrence.check(catalog)?;
+    let continuation = resolve_program(occurrence.continuation(), catalog)?;
+    match continuation.program() {
+        IProgIR::Return { value } => Ok(NextSourcePosition::Return { value: *value }),
         IProgIR::Ask { .. } => {
             let source = catalog
                 .resolve_source_config(occurrence.source_config())
@@ -763,9 +790,7 @@ pub fn derive_question_successor<C: QuestionSuccessionCatalog>(
                 .into_iter()
                 .find(|candidate| candidate.position == position)
                 .ok_or(QuestionSuccessorError::SuccessorPositionNotDerived)?;
-            Ok(QuestionSuccessor::Ask {
-                occurrence,
-                answer,
+            Ok(NextSourcePosition::Ask {
                 successor: Box::new(successor),
             })
         }

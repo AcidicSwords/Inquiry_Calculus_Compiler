@@ -29,7 +29,7 @@ use ic_core::{
     FormulaCatalog, FormulaIR, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
     GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
     IProgIR, IProgRef, MethodBridge, MethodBridgeCatalog, MethodBridgeCheckError, MethodContract,
-    MethodRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    MethodRef, NextSourcePosition, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
     OperatorOccurrenceCatalog, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
     ProgramBinding, ProtectedCompletionFieldRef, ProtectedContinuationRef, ProvenanceRef, QueryRef,
     QuestionSuccessionCatalog, RawReturn, RawReturnCatalog, RawReturnRef, RelationBodyIR,
@@ -44,8 +44,8 @@ use ic_core::{
     challenge_exact_finite_sufficient_present, check_admitted_exact_finite_cue_basis,
     classify_finite_port_resolution, classify_finite_question_resolution, decode_actual_event,
     decode_actual_event_for_port, derive_exact_finite_sufficient_present,
-    extend_exact_finite_sufficient_present, match_decoded_observation_use, run_finite_resolution,
-    standing_from_declared_support,
+    derive_question_successor, extend_exact_finite_sufficient_present,
+    match_decoded_observation_use, run_finite_resolution, standing_from_declared_support,
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
@@ -60,10 +60,10 @@ use ic_runtime::{
     SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
     TraversalCausalOrder, WholeQuestionOutcome, admit_finite_probe_discharge_bundle,
     admit_mixed_mode_continuation, admit_probe_ports_of_mixed_discharge, check_source_event_link,
-    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
-    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
-    resolve_finite_probe_occurrence, resolve_mixed_mode_question,
-    route_separator_through_method_bridge,
+    derive_mixed_mode_successor, dispatch_probe, materialize_ollama_decoded_texts,
+    plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
+    replay_completed_finite_separator_inquiry, resolve_finite_probe_occurrence,
+    resolve_mixed_mode_question, route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -6918,6 +6918,36 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         "the joint answer retains every decoded completion rather than selecting one"
     );
 
+    // Canonical SuppAns carries a nonempty member set of whole completions beside its
+    // component-indexed map. The two projections are different objects and must agree.
+    assert_eq!(
+        whole_answer.members(),
+        [mixed_candidate_a, mixed_candidate_b],
+        "the member projection is the completion set, not the per-port contribution map"
+    );
+    assert_ne!(whole_answer.members().len(), 0);
+    for member in whole_answer.members() {
+        let completion = cold_catalog
+            .resolve_completion_candidate(*member)
+            .expect("every member must resolve");
+        assert_eq!(
+            completion.source(),
+            mixed_query,
+            "every member completes this exact question"
+        );
+        assert_eq!(
+            completion
+                .bindings()
+                .iter()
+                .map(|binding| binding.port().clone())
+                .collect::<std::collections::BTreeSet<_>>(),
+            [mixed_pure_port.clone(), mixed_probe_port.clone()]
+                .into_iter()
+                .collect::<std::collections::BTreeSet<_>>(),
+            "a member is a completion of the whole port field, not of one port"
+        );
+    }
+
     // A Probe return alone cannot resolve the question while a port is unaccounted for.
     assert!(matches!(
         resolve_mixed_mode_question(&mixed_view, Vec::new(), &cold_catalog),
@@ -7049,6 +7079,42 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     assert_eq!(admitted.question(), mixed_query);
     assert_eq!(admitted.continuation(), roots.continuation);
     assert_eq!(admitted.answer().contributions().len(), 2);
+    assert_eq!(admitted.answer().members().len(), 2);
+
+    // The successor relation reads only the occurrence, so the whole-question answer is a second
+    // carrier for the same relation rather than a second relation. Deriving the next position
+    // through the single-port carrier and through the whole-question carrier must agree.
+    let mixed_port_answer = classify_mixed_port(&mixed_probe_port)
+        .expect("Supported must reproduce")
+        .into_supported()
+        .expect("the Probe port is Supported")
+        .answer()
+        .clone();
+    let single_port_successor = derive_question_successor(
+        cold_mixed_occurrence.clone(),
+        mixed_port_answer,
+        &cold_catalog,
+    )
+    .expect("the single-port carrier must still derive this occurrence's successor");
+    let mixed_successor = derive_mixed_mode_successor(admitted, &cold_catalog)
+        .expect("the whole-question answer must carry the occurrence to its next position");
+    assert_eq!(
+        mixed_successor.answer().members().len(),
+        2,
+        "the successor carries the whole record, not one port's answer set"
+    );
+    assert_eq!(mixed_successor.answer().contributions().len(), 2);
+    let NextSourcePosition::Return { value } = mixed_successor.next() else {
+        panic!("this occurrence's continuation is a Return")
+    };
+    assert_eq!(*value, roots.answer_a);
+    assert!(
+        matches!(
+            &single_port_successor,
+            ic_core::QuestionSuccessor::Return { value: single, .. } if single == value
+        ),
+        "one successor relation, two answer carriers, one next position"
+    );
 
     assert_eq!(
         provider_calls.load(Ordering::SeqCst),
