@@ -6964,6 +6964,74 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         );
     }
 
+    // Canonical: equality of supported answers is equality of the whole proof-carrying record,
+    // explicitly not equality of its member projection. Two answers over one occurrence can agree
+    // on every member and on every port's typed result and still have been reached by different
+    // declared routes. The non-Probe route is retained but never cross-checked, so it is exactly
+    // the coordinate that can vary while everything else is held fixed.
+    let alternate_route =
+        RouteRef::from_artifact_ref(stored_ref(&reopened, b"mixed-mode-alternate-route").await);
+    assert_ne!(alternate_route, route);
+    let rerouted_view = MixedModeSourceAskDischarge::new(
+        mixed_lowering.clone(),
+        mixed_probe_bundle.clone(),
+        vec![NonProbePortDischargeEvidence::new(
+            mixed_pure_port.clone(),
+            DischargeMode::Pure,
+            NonProbePortOutput::Determined(derived_form),
+            alternate_route,
+            opaque_path,
+            binding,
+            roots.compiler_version,
+            mixed_provenance,
+        )],
+    );
+    rerouted_view
+        .check(&cold_catalog)
+        .expect("a different declared non-Probe route is itself lawful");
+    let rerouted = resolve_mixed_mode_question(
+        &rerouted_view,
+        vec![(
+            mixed_probe_port.clone(),
+            classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+        )],
+        &cold_catalog,
+    )
+    .expect("the rerouted answer must resolve");
+    let WholeQuestionOutcome::Supported(rerouted_answer) = &rerouted else {
+        panic!("the rerouted joint outcome must be Supported")
+    };
+    assert_eq!(
+        rerouted_answer.members(),
+        whole_answer.members(),
+        "the two answers agree on their whole member projection"
+    );
+    assert_eq!(
+        rerouted_answer.contributions().len(),
+        whole_answer.contributions().len()
+    );
+    assert_ne!(
+        rerouted_answer, whole_answer,
+        "equal member projections do not make one record: the declared route separates them"
+    );
+
+    // The Probe port keeps no route field of its own; its route is recovered from the retained
+    // event, which the bundle already checked against that component's declared route.
+    let probe_component = mixed_probe_bundle
+        .components()
+        .iter()
+        .find(|component| component.port() == &mixed_probe_port)
+        .expect("the Probe port has a bundle component");
+    let recovered_route =
+        OperatorOccurrenceCatalog::resolve_actual_event(&cold_catalog, resolution.answer().event())
+            .expect("the retained event must resolve")
+            .route();
+    assert_eq!(
+        recovered_route,
+        probe_component.route(),
+        "a Probe port's route is recoverable from its retained event"
+    );
+
     // A Probe return alone cannot resolve the question while a port is unaccounted for.
     assert!(matches!(
         resolve_mixed_mode_question(&mixed_view, Vec::new(), &cold_catalog),
