@@ -2,41 +2,41 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `7480d5f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `9739b1f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QPROGRAM-SUBSTITUTION-001` established the current first-order source normalizer as a derived identity-only relation: exact whole-answer binding plus source-occurrence rewalk exposes the named `Ask` or `Return` continuation under the fixed compiler coordinate. A same-question foreign source binding rejects; no answer member is selected and no runtime step, event, raw return, support, standing result, or warrant occurs. This adds no source operation syntax, evaluator, table, opcode, scheduler, controller, or persistence schema.
+`QPURE-REGISTRY-001` established that the present schema has no formable pure operation: the only accepted source tags are `Return` and `Ask`, both with direct nonexecuting heads. The compiler-version-indexed identity normalizer is therefore complete only at this grammar; an unknown operation tag rejects. This is an `Equivalent` no-addition result, adding no source syntax, registry, evaluator, table, opcode, scheduler, controller, or persistence schema.
 
 ## Strongest live obligation
 
-Determine whether an additional pure-operation registry is presently necessary, or whether the `Return`/`Ask` source grammar makes the existing compiler-version-indexed identity normalizer the complete current normal form.
+Derive the smallest checked `SourceAskLowering` relation that binds one exact source `Ask` occurrence, every declared open port and discharge mode, the compiler coordinate, and one verified runtime program without adding a new runtime opcode or dispatching a provider.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QPURE-REGISTRY-001
-plan_phase: 3
-goal: Establish the smallest admitted representation for pure source operations, or positively retain the current identity-only normalizer if no nonidentity operation is formable.
-protected_difference: Adding an unformable operation registry creates an authority surface with no protected behavior; silently applying a future nonidentity transformation under identity normalization changes continuation, type, or provenance without an admitted route.
-discriminator: Enumerate the current `IProgIR` constructors and prove that every checked source path reaches only its named `Ask` or `Return` continuation. Contrast this with one hypothetical nonidentity operation: it must be unformable/unrepresentable rather than silently accepted. If no current protected continuation distinguishes a registry, retain no new carrier; otherwise add only a finite explicit operation contract and a breaker.
-horizon: current `Return`/`Ask` source grammar and exact compiler-coordinate identity normalization only; no new source syntax, evaluator, dynamic loading, provider call, persistence policy, cross-binding bridge, or operation execution
-relevant_decisions: D-0125, D-0127, D-0154
+id: QASK-LOWERING-001
+plan_phase: 5
+goal: Derive a checked source-Ask-to-runtime lowering that preserves exact occurrence, per-port mode, compiler coordinate, and runtime program identity.
+protected_difference: A runtime program can have a compatible result/endpoint while lowering another source occurrence, omitting a source port, changing a declared discharge mode, or using another compiler coordinate. Such substitution changes the actual continuation/authority route even before dispatch.
+discriminator: Construct one checked finite source `Ask` with every open port named once and a verified `ProgramIR`. Accept only the exact source occurrence, port/mode list, compiler coordinate, and runtime identity; reject swapped occurrence, missing/duplicate/foreign port, changed mode, compiler, or runtime program. Prove verification does not dispatch or create an event.
+horizon: one finite checked source Ask, its exact open-port field, one verified runtime program, and no dispatch; no general compiler, port execution, provider call, event, resolver procedure artifact, cross-binding bridge, scheduler, controller, table, or opcode
+relevant_decisions: D-0125, D-0150, D-0154, D-0155
 relevant_failures: F-0001, F-0002
-if_pass: retain the identity-only normalizer without a registry and rederive the next strongest live residual from the stable plan; do not reopen passed QSUCC/QREADY fixtures without a new breaker
-if_fail: add only the smallest first-order pure-operation representation that the executable breaker proves necessary; do not introduce an evaluator authority, scheduler, controller, table, or opcode
+if_pass: rederive the strongest remaining Phase 5/6 residual from the stable plan and pending conformance; do not reopen passed QSUCC/QREADY/QACTUAL fixtures without a new breaker
+if_fail: reopen the earliest source occurrence, port/mode, compiler, runtime-program identity, or execution-separation relation; do not introduce a general compiler, dispatcher, scheduler, controller, table, or opcode
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Check the complete current `IProgIR` constructor set and rewalk the finite source fixture. The candidate nonidentity operation must fail formation because no source constructor names it; a `Return` and an `Ask` continuation must retain their direct normalized heads. Do not treat absence of a new constructor as negative semantic evidence outside this exact source grammar.
+Construct one checked source `Ask` with its exact finite open-port field and a verified runtime program. Its lowering must rewalk both source and runtime, require exactly one matching lowering per port and declared mode, and retain the source/compiler/runtime coordinates. Every structural substitution must reject before any provider boundary.
 
-The smallest wrong implementation invents a registry whose entries have no formable source use, or silently applies an operation not carried by `IProgIR`.
+The smallest wrong implementation names only the question or endpoint, treats every port as `Probe`, omits a port, accepts another compiler/runtime program, or dispatches while verifying.
 
 ## Prohibitions at this boundary
 
-- Do not add source syntax, an operation registry, evaluator, or dynamic-loading authority merely because the plan lists future pure operations.
-- Do not treat an unformable operation as a negative semantic result, or identity normalization as permission for future transformation.
-- Do not add a scheduler, controller, table, opcode, or persistence schema at this boundary.
+- Do not generalize the source lowering into a compiler, resolver, dispatcher, scheduler, controller, table, or opcode.
+- Do not execute or create an event merely because a source lowering verifies.
+- Do not erase exact occurrence, source port/mode, compiler, or runtime-program identities.
 
 ## Exit
 
-On pass, record the no-addition result and rederive the next strongest residual. On failure, preserve the actual return and reopen the earliest implicated source-formation/operation/normalization relation rather than broadening the architecture.
+On pass, update conformance and project state, then rederive the next strongest residual. On failure, preserve the actual return and reopen the earliest implicated lowering relation rather than broadening the architecture.

@@ -109,6 +109,64 @@ fn first_order_return_and_ask_round_trip_without_closures() {
 }
 
 #[test]
+fn current_source_grammar_has_only_direct_nonexecuting_heads() {
+    enum Head {
+        Return(TypedFormRef),
+        Ask {
+            question: QueryRef,
+            continuation: IProgRef,
+        },
+    }
+
+    fn head(program: &IProgArtifact) -> Head {
+        match program.program() {
+            IProgIR::Return { value } => Head::Return(*value),
+            IProgIR::Ask {
+                question,
+                continuation,
+                ..
+            } => Head::Ask {
+                question: *question,
+                continuation: *continuation,
+            },
+        }
+    }
+
+    let result = TypeRef::from_artifact_ref(artifact(0x71));
+    let value = TypedFormRef::from_artifact_ref(artifact(0x72));
+    let question = QueryRef::from_artifact_ref(artifact(0x73));
+    let continuation = IProgRef::from_artifact_ref(artifact(0x74));
+    assert!(matches!(
+        head(&IProgArtifact::new(result, IProgIR::Return { value })),
+        Head::Return(returned) if returned == value
+    ));
+    assert!(matches!(
+        head(&IProgArtifact::new(
+            result,
+            IProgIR::Ask {
+                question,
+                environment: Vec::new(),
+                answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+                continuation,
+            },
+        )),
+        Head::Ask { question: actual_question, continuation: actual_continuation }
+            if actual_question == question && actual_continuation == continuation
+    ));
+
+    // Schema v2 admits only the two direct source constructors. Any future pure operation
+    // must introduce a checked, versioned source representation rather than hiding in a normalizer.
+    let mut unknown_operation = IProgArtifact::new(result, IProgIR::Return { value })
+        .canonical_payload()
+        .expect("Return encodes");
+    unknown_operation[32] = 2;
+    assert!(matches!(
+        IProgArtifact::decode_payload(&unknown_operation),
+        Err(IProgError::UnknownTag(2))
+    ));
+}
+
+#[test]
 fn rejects_duplicate_explicit_environment_names() {
     let program = IProgArtifact::new(
         TypeRef::from_artifact_ref(artifact(0x11)),
