@@ -40,6 +40,7 @@ mod relation;
 mod relation_expr;
 mod relation_use;
 mod resolution;
+mod route_regeneration;
 mod seed;
 mod separator;
 mod sixfold;
@@ -240,6 +241,12 @@ pub use resolution::{
     DecoderRef, RESOLUTION_PATH_ARTIFACT_KIND, RESOLUTION_PATH_SCHEMA_VERSION, ResolutionCatalog,
     ResolutionPath, ResolutionPathCheckError, ResolutionPathError, ResolutionPathIR,
     ResolutionPathRef,
+};
+pub use route_regeneration::{
+    ExactFiniteRouteResidualFiber, ExactFiniteRouteResidualFiberError, FiniteRouteReconstruction,
+    FiniteRouteRegenerationError, FiniteRouteRegenerationResult, ProtectedRouteSignature,
+    ProtectedRouteSuccessor, RouteEndpoint, RouteRegenerationSeparator,
+    check_exact_finite_route_regeneration,
 };
 pub use seed::{SeedReorientation, SeedReorientationError};
 pub use separator::{

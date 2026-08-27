@@ -9,20 +9,22 @@ use ic_core::{
     DeclaredSupportClosure, DecodedObservationError, DecodedObservationUse, DecoderRef,
     DepartureCatalog, DepartureEvidenceSupportError, DepartureStandingCheckError, DepartureWitness,
     DeterminationCatalog, DeterminationPresentation, DeterminationPresentationRef,
-    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef, ExactFiniteSignature,
-    FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
-    FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
-    FiniteDepartureAdmissionError, FiniteDepartureEvidence, FiniteLiveQuestionFrontierError,
-    FiniteLocalEffectivityCoverage, FiniteResourcePreorder, FiniteSupportedAnswerError,
-    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
-    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
-    IProgIR, IProgRef, LiveQuestionCandidate, LiveQuestionOrigin, LocalEffectivityEdge,
-    LocalInterrogativeContext, LocalInterrogativeFixedPoint, LocalQuestionAssessment,
-    LocalQuestionClosingReason, LocalQuestionExit, LocalReopeningReason, NegationCoverage,
-    NegationUse, NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
-    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
-    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
+    DeterminationSupportError, DischargeMode, EffectivityRef, EventRef,
+    ExactFiniteRouteResidualFiber, ExactFiniteSignature, FINITE_DECODER_ARTIFACT_KIND,
+    FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
+    FiniteDecoderError, FiniteDecoderOutcome, FiniteDepartureAdmissionError,
+    FiniteDepartureEvidence, FiniteLiveQuestionFrontierError, FiniteLocalEffectivityCoverage,
+    FiniteResourcePreorder, FiniteRouteReconstruction, FiniteRouteRegenerationResult,
+    FiniteSupportedAnswerError, FiniteTypedIncompatibilityUseCatalog, FormulaArtifact,
+    FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
+    GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
+    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, LiveQuestionCandidate,
+    LiveQuestionOrigin, LocalEffectivityEdge, LocalInterrogativeContext,
+    LocalInterrogativeFixedPoint, LocalQuestionAssessment, LocalQuestionClosingReason,
+    LocalQuestionExit, LocalReopeningReason, NegationCoverage, NegationUse, NegationUseRef,
+    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence,
+    OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding, ProbeContractRef,
+    ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
     ProtectedContinuationRef, ProtectedQuestionBranch, ProvenanceRef, QueryRef, QuestionReadiness,
     QuestionReadinessRequirement, QuestionSuccessionCatalog, QuestionSuccessor, RawReturn,
     RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR, RelationCatalog,
@@ -39,8 +41,8 @@ use ic_core::{
     TypedFiniteObservation, TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
     admit_finite_negation_extension, admit_finite_supported_answers, admit_probed_finite_departure,
     await_question_readiness, bind_finite_ask_continuation,
-    check_departure_witness_standing_support, check_return_closure,
-    check_typed_finite_oriented_incompatibility_use, decode_actual_event,
+    check_departure_witness_standing_support, check_exact_finite_route_regeneration,
+    check_return_closure, check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     derive_finite_live_question_frontier, derive_finite_local_interrogative_fixed_point,
     derive_local_interrogative_reopening, derive_question_readiness, derive_question_successor,
     match_decoded_observation_use, resolve_departure_witness_evidence_support,
@@ -4508,4 +4510,123 @@ fn positive_new_live_occurrence_reopens_only_its_exact_predecessor_field() {
             "resource bound"
         ))
     ));
+}
+
+#[test]
+// Test boundary QROUTE-REGEN-001:
+// F = one selected reconstruction or an equal endpoint is treated as regeneration of an omitted
+//     route position despite protected-different occurrence or continuation provenance.
+// C = every member of one exact finite residual completion fiber reconstructs and has the same
+//     full binding/occurrence/answer/event/support/continuation/successor/reopening signature.
+// Omega/M = one two-member constant route fiber and one equal-Return-endpoint fiber split solely
+//     by checked source occurrence provenance.
+// P/V/E/U = source re-walk, whole supported-answer succession, exact finite enumeration, and
+//     structural signature equality; partial/intensional fibers and replay recipes reopen it.
+fn route_regeneration_requires_the_whole_protected_residual_fiber() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite fixture must admit");
+    let answer = admit_finite_supported_answers(
+        scenario.source_observation.decoded().clone(),
+        vec![scenario.source_observation.clone()],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("the source observation must form one whole supported answer");
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.source,
+        },
+    ));
+    let root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: answer.decoded().query(),
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let mut route = |coordinate: u8| {
+        let source = SourceConfig::new(
+            scenario.answer_type,
+            root,
+            Vec::new(),
+            scenario.binding,
+            artifact(coordinate),
+            ProvenanceRef::from_artifact_ref(artifact(coordinate.wrapping_add(1))),
+        )
+        .expect("source configuration must canonicalize");
+        scenario.catalog.insert_source_config(source.clone());
+        let occurrence = source
+            .ask_occurrences(&scenario.catalog)
+            .expect("source must re-walk")
+            .into_iter()
+            .next()
+            .expect("source root must be Ask");
+        derive_question_successor(occurrence, answer.clone(), &scenario.catalog)
+            .expect("checked occurrence and whole answer must reconstruct their route")
+    };
+    let first_route = route(0x60);
+    let foreign_route = route(0x62);
+    assert!(matches!(
+        (&first_route, &foreign_route),
+        (
+            QuestionSuccessor::Return { value: first, .. },
+            QuestionSuccessor::Return { value: second, .. }
+        ) if first == second
+    ));
+
+    let reopening = artifact(0x64);
+    let exact_fiber = ExactFiniteRouteResidualFiber::new(
+        CoverageRef::from_artifact_ref(artifact(0x65)),
+        vec![
+            FiniteRouteReconstruction::new(artifact(0x66), first_route.clone(), reopening),
+            FiniteRouteReconstruction::new(artifact(0x67), first_route.clone(), reopening),
+        ],
+    )
+    .expect("two distinct completion coordinates may reconstruct one protected route");
+    let regenerated = check_exact_finite_route_regeneration(&exact_fiber, &scenario.catalog)
+        .expect("every exact fiber member must recheck");
+    let FiniteRouteRegenerationResult::Regenerated {
+        completions,
+        route: retained_route,
+        signature,
+        ..
+    } = regenerated
+    else {
+        panic!("constant full signatures must regenerate the omitted route")
+    };
+    assert_eq!(completions, vec![artifact(0x66), artifact(0x67)]);
+    assert_eq!(*retained_route, first_route);
+    assert_eq!(signature.reopening(), reopening);
+    assert_eq!(signature.answer_candidates(), answer.candidates());
+    assert_eq!(signature.event(), answer.event());
+    assert_eq!(signature.raw_return(), answer.raw_return());
+
+    let split_fiber = ExactFiniteRouteResidualFiber::new(
+        CoverageRef::from_artifact_ref(artifact(0x68)),
+        vec![
+            FiniteRouteReconstruction::new(artifact(0x69), first_route, reopening),
+            FiniteRouteReconstruction::new(artifact(0x6a), foreign_route, reopening),
+        ],
+    )
+    .expect("the equal-endpoint foil remains one exact residual field");
+    let split = check_exact_finite_route_regeneration(&split_fiber, &scenario.catalog)
+        .expect("a protected split is a positive result, not a checker failure");
+    let FiniteRouteRegenerationResult::Split { separator, .. } = split else {
+        panic!("equal endpoints must not erase occurrence provenance")
+    };
+    assert_eq!(separator.first_completion(), artifact(0x69));
+    assert_eq!(separator.second_completion(), artifact(0x6a));
+    assert_eq!(
+        separator.first_signature().successor(),
+        separator.second_signature().successor(),
+        "the foil deliberately keeps the Return endpoint equal"
+    );
+    assert_ne!(
+        separator.first_signature().occurrence(),
+        separator.second_signature().occurrence(),
+        "the positive separator must retain protected route provenance"
+    );
 }

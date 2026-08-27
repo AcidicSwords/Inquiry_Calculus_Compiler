@@ -139,6 +139,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "positive_new_live_occurrence_reopens_only_its_exact_predecessor_field",
     ),
+    "QROUTE-REGEN-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "route_regeneration_requires_the_whole_protected_residual_fiber",
+    ),
 }
 
 ERRORS: list[str] = []
