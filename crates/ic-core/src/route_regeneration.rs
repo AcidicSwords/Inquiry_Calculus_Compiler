@@ -45,6 +45,28 @@ pub struct ProtectedRouteSignature {
     reopening: ArtifactRef,
 }
 
+/// One checked route node proposed for removal.
+///
+/// Checking establishes the node's pre-ablation protected signature. It does not establish that
+/// the node is transparent or authorize its removal.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CheckedFiniteRouteNode {
+    identity: ArtifactRef,
+    signature: ProtectedRouteSignature,
+}
+
+impl CheckedFiniteRouteNode {
+    #[must_use]
+    pub const fn identity(&self) -> ArtifactRef {
+        self.identity
+    }
+
+    #[must_use]
+    pub const fn signature(&self) -> &ProtectedRouteSignature {
+        &self.signature
+    }
+}
+
 impl ProtectedRouteSignature {
     #[must_use]
     pub const fn occurrence(&self) -> AskOccurrenceRef {
@@ -235,6 +257,127 @@ pub enum FiniteRouteRegenerationResult {
         coverage: CoverageRef,
         separator: Box<RouteRegenerationSeparator>,
     },
+}
+
+/// Positive reason why a separately regenerable retained basis does not authorize ablation.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum FiniteRouteAblationRefusal {
+    ResidualFiberSplit(Box<RouteRegenerationSeparator>),
+    ProtectedSignatureChanged {
+        before: Box<ProtectedRouteSignature>,
+        after: Box<ProtectedRouteSignature>,
+    },
+}
+
+/// Derived evidence that one checked node can be removed and exactly reconstructed.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct FiniteRouteAblationWitness {
+    removed_node: ArtifactRef,
+    coverage: CoverageRef,
+    completions: Vec<ArtifactRef>,
+    regenerated_route: Box<QuestionSuccessor>,
+    protected_signature: Box<ProtectedRouteSignature>,
+}
+
+impl FiniteRouteAblationWitness {
+    #[must_use]
+    pub const fn removed_node(&self) -> ArtifactRef {
+        self.removed_node
+    }
+
+    #[must_use]
+    pub const fn coverage(&self) -> CoverageRef {
+        self.coverage
+    }
+
+    #[must_use]
+    pub fn completions(&self) -> &[ArtifactRef] {
+        &self.completions
+    }
+
+    #[must_use]
+    pub const fn regenerated_route(&self) -> &QuestionSuccessor {
+        &self.regenerated_route
+    }
+
+    #[must_use]
+    pub const fn protected_signature(&self) -> &ProtectedRouteSignature {
+        &self.protected_signature
+    }
+}
+
+/// Result of attempting actual removal through an independently rechecked retained basis.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum FiniteRouteAblationResult {
+    Ablated(Box<FiniteRouteAblationWitness>),
+    Refused {
+        node: ArtifactRef,
+        reason: Box<FiniteRouteAblationRefusal>,
+    },
+}
+
+/// Rechecks the proposed node and seals the pre-ablation protected signature.
+pub fn check_finite_route_node<C: QuestionSuccessionCatalog>(
+    identity: ArtifactRef,
+    route: QuestionSuccessor,
+    reopening: ArtifactRef,
+    catalog: &C,
+) -> Result<CheckedFiniteRouteNode, FiniteRouteRegenerationError> {
+    let rebuilt = rebuild_route(&route, catalog)?;
+    if rebuilt != route {
+        return Err(FiniteRouteRegenerationError::RouteNoLongerReconstructs(
+            identity,
+        ));
+    }
+    Ok(CheckedFiniteRouteNode {
+        identity,
+        signature: protected_route_signature(&rebuilt, reopening)?,
+    })
+}
+
+/// Attempts to remove a checked node through a retained basis that is rechecked without using the
+/// node's sealed signature as regeneration evidence.
+///
+/// Regeneration is necessary but not self-authorizing. The reconstructed whole-fiber signature
+/// must also equal the independently sealed pre-ablation signature.
+pub fn ablate_exact_finite_route_node<C: QuestionSuccessionCatalog>(
+    node: &CheckedFiniteRouteNode,
+    retained_basis: &ExactFiniteRouteResidualFiber,
+    catalog: &C,
+) -> Result<FiniteRouteAblationResult, FiniteRouteRegenerationError> {
+    match check_exact_finite_route_regeneration(retained_basis, catalog)? {
+        FiniteRouteRegenerationResult::Split { separator, .. } => {
+            Ok(FiniteRouteAblationResult::Refused {
+                node: node.identity(),
+                reason: Box::new(FiniteRouteAblationRefusal::ResidualFiberSplit(separator)),
+            })
+        }
+        FiniteRouteRegenerationResult::Regenerated {
+            coverage,
+            completions,
+            route,
+            signature,
+        } => {
+            if signature.as_ref() != node.signature() {
+                return Ok(FiniteRouteAblationResult::Refused {
+                    node: node.identity(),
+                    reason: Box::new(FiniteRouteAblationRefusal::ProtectedSignatureChanged {
+                        before: Box::new(node.signature().clone()),
+                        after: signature,
+                    }),
+                });
+            }
+            Ok(FiniteRouteAblationResult::Ablated(Box::new(
+                FiniteRouteAblationWitness {
+                    removed_node: node.identity(),
+                    coverage,
+                    completions,
+                    regenerated_route: route,
+                    protected_signature: signature,
+                },
+            )))
+        }
+    }
 }
 
 /// Rechecks every represented route and admits regeneration only when the full protected

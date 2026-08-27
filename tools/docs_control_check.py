@@ -143,6 +143,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "route_regeneration_requires_the_whole_protected_residual_fiber",
     ),
+    "QROUTE-ABLATE-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "route_node_ablation_requires_independent_regeneration_and_protected_equality",
+    ),
 }
 
 ERRORS: list[str] = []

@@ -243,10 +243,11 @@ pub use resolution::{
     ResolutionPathRef,
 };
 pub use route_regeneration::{
-    ExactFiniteRouteResidualFiber, ExactFiniteRouteResidualFiberError, FiniteRouteReconstruction,
-    FiniteRouteRegenerationError, FiniteRouteRegenerationResult, ProtectedRouteSignature,
-    ProtectedRouteSuccessor, RouteEndpoint, RouteRegenerationSeparator,
-    check_exact_finite_route_regeneration,
+    CheckedFiniteRouteNode, ExactFiniteRouteResidualFiber, ExactFiniteRouteResidualFiberError,
+    FiniteRouteAblationRefusal, FiniteRouteAblationResult, FiniteRouteAblationWitness,
+    FiniteRouteReconstruction, FiniteRouteRegenerationError, FiniteRouteRegenerationResult,
+    ProtectedRouteSignature, ProtectedRouteSuccessor, RouteEndpoint, RouteRegenerationSeparator,
+    ablate_exact_finite_route_node, check_exact_finite_route_regeneration, check_finite_route_node,
 };
 pub use seed::{SeedReorientation, SeedReorientationError};
 pub use separator::{

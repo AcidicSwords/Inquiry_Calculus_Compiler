@@ -14,17 +14,17 @@ use ic_core::{
     FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder, FiniteDecoderCatalog, FiniteDecoderEntry,
     FiniteDecoderError, FiniteDecoderOutcome, FiniteDepartureAdmissionError,
     FiniteDepartureEvidence, FiniteLiveQuestionFrontierError, FiniteLocalEffectivityCoverage,
-    FiniteResourcePreorder, FiniteRouteReconstruction, FiniteRouteRegenerationResult,
-    FiniteSupportedAnswerError, FiniteTypedIncompatibilityUseCatalog, FormulaArtifact,
-    FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
-    GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
-    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, LiveQuestionCandidate,
-    LiveQuestionOrigin, LocalEffectivityEdge, LocalInterrogativeContext,
-    LocalInterrogativeFixedPoint, LocalQuestionAssessment, LocalQuestionClosingReason,
-    LocalQuestionExit, LocalReopeningReason, NegationCoverage, NegationUse, NegationUseRef,
-    ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence,
-    OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding, ProbeContractRef,
-    ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
+    FiniteResourcePreorder, FiniteRouteAblationRefusal, FiniteRouteAblationResult,
+    FiniteRouteReconstruction, FiniteRouteRegenerationResult, FiniteSupportedAnswerError,
+    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
+    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
+    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgIR, IProgRef, LiveQuestionCandidate, LiveQuestionOrigin, LocalEffectivityEdge,
+    LocalInterrogativeContext, LocalInterrogativeFixedPoint, LocalQuestionAssessment,
+    LocalQuestionClosingReason, LocalQuestionExit, LocalReopeningReason, NegationCoverage,
+    NegationUse, NegationUseRef, ObservationResultCatalog, OpenPort, OpenQuery, OpenQueryCatalog,
+    OperatorOccurrence, OperatorOccurrenceCatalog, OperatorOccurrenceCheckError, PortBinding,
+    ProbeContractRef, ProbeOperator, ProbeOperatorRef, ProgramBinding, ProtectedCompletionFieldRef,
     ProtectedContinuationRef, ProtectedQuestionBranch, ProvenanceRef, QueryRef, QuestionReadiness,
     QuestionReadinessRequirement, QuestionSuccessionCatalog, QuestionSuccessor, RawReturn,
     RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR, RelationCatalog,
@@ -39,10 +39,11 @@ use ic_core::{
     TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
     TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable, TypedFiniteNegationExtension,
     TypedFiniteObservation, TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
-    admit_finite_negation_extension, admit_finite_supported_answers, admit_probed_finite_departure,
-    await_question_readiness, bind_finite_ask_continuation,
-    check_departure_witness_standing_support, check_exact_finite_route_regeneration,
-    check_return_closure, check_typed_finite_oriented_incompatibility_use, decode_actual_event,
+    ablate_exact_finite_route_node, admit_finite_negation_extension,
+    admit_finite_supported_answers, admit_probed_finite_departure, await_question_readiness,
+    bind_finite_ask_continuation, check_departure_witness_standing_support,
+    check_exact_finite_route_regeneration, check_finite_route_node, check_return_closure,
+    check_typed_finite_oriented_incompatibility_use, decode_actual_event,
     derive_finite_live_question_frontier, derive_finite_local_interrogative_fixed_point,
     derive_local_interrogative_reopening, derive_question_readiness, derive_question_successor,
     match_decoded_observation_use, resolve_departure_witness_evidence_support,
@@ -4629,4 +4630,195 @@ fn route_regeneration_requires_the_whole_protected_residual_fiber() {
         separator.second_signature().occurrence(),
         "the positive separator must retain protected route provenance"
     );
+}
+
+#[test]
+// Test boundary QROUTE-ABLATE-001:
+// F = a route node or its retained cache self-authorizes removal after regenerating only an equal
+//     visible endpoint while authority provenance or reopening changes.
+// C = independent whole-fiber regeneration followed by exact equality with the node's separately
+//     sealed pre-ablation protected signature.
+// Omega/M = one checked finite Return-route node, one lawful two-member retained basis, and two
+//     independently regenerable equal-endpoint foils changing provenance and reopening.
+// P/V/E/U = source re-walk, whole-answer route reconstruction, structural signature comparison,
+//     and positive refusal witnesses; Ask successors and general method promotion remain open.
+fn route_node_ablation_requires_independent_regeneration_and_protected_equality() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite fixture must admit");
+    let answer = admit_finite_supported_answers(
+        scenario.source_observation.decoded().clone(),
+        vec![scenario.source_observation.clone()],
+        &scenario.standing,
+        &scenario.catalog,
+    )
+    .expect("the source observation must form one whole supported answer");
+    let query = scenario
+        .catalog
+        .queries
+        .get(&answer.decoded().query())
+        .expect("the decoded query must remain available")
+        .clone();
+    let alternate_environment = scenario.catalog.insert_support_environment(
+        SupportEnvironmentArtifact::new(
+            SupportSubjectRef::Relation(query.relation()),
+            Vec::new(),
+            vec![scenario.admitted.source_raw_return()],
+            vec![artifact(0x80)],
+            Vec::new(),
+            Vec::new(),
+            query.context().applicability(),
+            query.context().scope(),
+        )
+        .expect("the alternate post-return support route must canonicalize"),
+    );
+    let original_candidate = scenario
+        .catalog
+        .candidates
+        .get(&scenario.source_observation.candidate())
+        .expect("the decoded candidate must remain available")
+        .clone();
+    let alternate_observation = scenario.catalog.insert_relation_use(RelationUse::new(
+        query.relation(),
+        original_candidate.bindings().to_vec(),
+        RelationUseContext::new(
+            query.context().scope(),
+            query.context().applicability(),
+            query.context().grain(),
+            query.context().horizon(),
+            query.context().mode(),
+            alternate_environment.as_support_ref(),
+            query.context().warrant(),
+        ),
+    ));
+    let alternate_match = match_decoded_observation_use(
+        answer.decoded(),
+        scenario.source_observation.candidate(),
+        alternate_observation,
+        &scenario.catalog,
+    )
+    .expect("the same decoded completion may have a distinct checked support route");
+    let alternate_standing = standing_from_declared_support(
+        Vec::new(),
+        &[DeclaredSupportClosure::for_subjects(
+            alternate_environment,
+            Vec::new(),
+            true,
+            true,
+            false,
+        )],
+        &scenario.catalog,
+    )
+    .expect("the alternate support environment must close independently");
+    let authority_answer = admit_finite_supported_answers(
+        answer.decoded().clone(),
+        vec![alternate_match],
+        &alternate_standing,
+        &scenario.catalog,
+    )
+    .expect("the alternate standing route must admit the same decoded completion");
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: scenario.source,
+        },
+    ));
+    let root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: answer.decoded().query(),
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let mut route = |coordinate: u8, route_answer: &ic_core::AdmittedFiniteAnswerSet| {
+        let source = SourceConfig::new(
+            scenario.answer_type,
+            root,
+            Vec::new(),
+            scenario.binding,
+            artifact(coordinate),
+            ProvenanceRef::from_artifact_ref(artifact(coordinate.wrapping_add(1))),
+        )
+        .expect("source configuration must canonicalize");
+        scenario.catalog.insert_source_config(source.clone());
+        let occurrence = source
+            .ask_occurrences(&scenario.catalog)
+            .expect("source must re-walk")
+            .into_iter()
+            .next()
+            .expect("source root must be Ask");
+        derive_question_successor(occurrence, route_answer.clone(), &scenario.catalog)
+            .expect("checked occurrence and whole answer must reconstruct their route")
+    };
+    let original_route = route(0x70, &answer);
+    let authority_route = route(0x70, &authority_answer);
+    let reopening = artifact(0x74);
+    let node = check_finite_route_node(
+        artifact(0x75),
+        original_route.clone(),
+        reopening,
+        &scenario.catalog,
+    )
+    .expect("the candidate node must seal its checked pre-ablation signature");
+
+    let lawful_basis = ExactFiniteRouteResidualFiber::new(
+        CoverageRef::from_artifact_ref(artifact(0x76)),
+        vec![
+            FiniteRouteReconstruction::new(artifact(0x77), original_route.clone(), reopening),
+            FiniteRouteReconstruction::new(artifact(0x78), original_route.clone(), reopening),
+        ],
+    )
+    .expect("the retained basis must declare its exact finite completion field");
+    let ablated = ablate_exact_finite_route_node(&node, &lawful_basis, &scenario.catalog)
+        .expect("the retained basis must recheck without using the node as evidence");
+    let FiniteRouteAblationResult::Ablated(witness) = ablated else {
+        panic!("exact regeneration and protected equality must authorize removal")
+    };
+    assert_eq!(witness.removed_node(), artifact(0x75));
+    assert_eq!(witness.completions(), &[artifact(0x77), artifact(0x78)]);
+    assert_eq!(witness.regenerated_route(), &original_route);
+    assert_eq!(witness.protected_signature(), node.signature());
+
+    let authority_foil = ExactFiniteRouteResidualFiber::new(
+        CoverageRef::from_artifact_ref(artifact(0x79)),
+        vec![
+            FiniteRouteReconstruction::new(artifact(0x7a), authority_route.clone(), reopening),
+            FiniteRouteReconstruction::new(artifact(0x7b), authority_route, reopening),
+        ],
+    )
+    .expect("the alternate-authority basis is internally exact and independently regenerable");
+    let refused = ablate_exact_finite_route_node(&node, &authority_foil, &scenario.catalog)
+        .expect("protected difference is a positive refusal, not a checker failure");
+    let FiniteRouteAblationResult::Refused { reason, .. } = refused else {
+        panic!("an alternate authority route must not authorize removal")
+    };
+    let FiniteRouteAblationRefusal::ProtectedSignatureChanged { before, after } = *reason else {
+        panic!("the constant alternate basis should fail against the sealed node signature")
+    };
+    assert_eq!(before.successor(), after.successor());
+    assert_eq!(before.occurrence(), after.occurrence());
+    assert_ne!(before.observations(), after.observations());
+    assert_ne!(before.support(), after.support());
+    assert_eq!(before.reopening(), after.reopening());
+
+    let reopening_foil = ExactFiniteRouteResidualFiber::new(
+        CoverageRef::from_artifact_ref(artifact(0x7c)),
+        vec![
+            FiniteRouteReconstruction::new(artifact(0x7d), original_route.clone(), artifact(0x7f)),
+            FiniteRouteReconstruction::new(artifact(0x7e), original_route, artifact(0x7f)),
+        ],
+    )
+    .expect("the changed-reopening basis is internally exact and independently regenerable");
+    let refused = ablate_exact_finite_route_node(&node, &reopening_foil, &scenario.catalog)
+        .expect("changed reopening is a positive refusal, not a checker failure");
+    let FiniteRouteAblationResult::Refused { reason, .. } = refused else {
+        panic!("a changed reopening route must not authorize removal")
+    };
+    let FiniteRouteAblationRefusal::ProtectedSignatureChanged { before, after } = *reason else {
+        panic!("the changed reopening should fail against the sealed node signature")
+    };
+    assert_eq!(before.occurrence(), after.occurrence());
+    assert_eq!(before.successor(), after.successor());
+    assert_ne!(before.reopening(), after.reopening());
 }
