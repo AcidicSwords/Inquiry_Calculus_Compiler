@@ -240,9 +240,10 @@ pub use question_succession::{
     ASK_OCCURRENCE_ARTIFACT_KIND, ASK_OCCURRENCE_SCHEMA_VERSION, AskOccurrence,
     AskOccurrenceCheckError, AskOccurrenceError, AskOccurrenceRef, PROGRAM_POSITION_ARTIFACT_KIND,
     PROGRAM_POSITION_SCHEMA_VERSION, ProgramPosition, ProgramPositionError, ProgramPositionRef,
-    QuestionSuccessionCatalog, QuestionSuccessor, QuestionSuccessorError,
-    SOURCE_CONFIG_ARTIFACT_KIND, SOURCE_CONFIG_SCHEMA_VERSION, SourceConfig,
-    SourceConfigCheckError, SourceConfigError, SourceConfigRef, derive_question_successor,
+    PureNormalizationError, PureNormalizedAskContinuation, QuestionSuccessionCatalog,
+    QuestionSuccessor, QuestionSuccessorError, SOURCE_CONFIG_ARTIFACT_KIND,
+    SOURCE_CONFIG_SCHEMA_VERSION, SourceConfig, SourceConfigCheckError, SourceConfigError,
+    SourceConfigRef, derive_question_successor, normalize_bound_finite_ask_continuation,
 };
 pub use raw_return::{
     RAW_RETURN_ARTIFACT_KIND, RAW_RETURN_SCHEMA_VERSION, RawReturn, RawReturnError, RawReturnRef,

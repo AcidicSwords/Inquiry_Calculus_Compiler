@@ -53,11 +53,11 @@ use ic_core::{
     derive_finite_local_interrogative_fixed_point, derive_local_interrogative_reopening,
     derive_question_readiness, derive_question_successor, elaborate_controlled_interrogative,
     lift_finite_supported_family, lower_annotated_interrogative_route,
-    match_decoded_observation_use, render_existential_preimage, render_same_use_reciprocal_return,
-    render_universal_adjoint, resolve_departure_witness_evidence_support,
-    resolve_determination_presentation_support, resolve_relation_use_support,
-    standing_determination_presentation_support, standing_from_declared_support,
-    standing_relation_use_support,
+    match_decoded_observation_use, normalize_bound_finite_ask_continuation,
+    render_existential_preimage, render_same_use_reciprocal_return, render_universal_adjoint,
+    resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
+    resolve_relation_use_support, standing_determination_presentation_support,
+    standing_from_declared_support, standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -2803,6 +2803,49 @@ fn occurrence_indexed_successor_retains_every_member_of_a_supported_answer() {
     let successor =
         derive_question_successor(occurrence.clone(), answer.clone(), &scenario.catalog)
             .expect("a whole admitted answer must reach the checked Return continuation");
+    let source_ask = scenario
+        .catalog
+        .programs
+        .get(&root)
+        .expect("source Ask must remain available")
+        .clone();
+    let bound = bind_finite_ask_continuation(&source_ask, answer.clone(), &scenario.catalog)
+        .expect("whole answer must bind before pure normalization");
+    let normalized =
+        normalize_bound_finite_ask_continuation(occurrence.clone(), bound, &scenario.catalog)
+            .expect("exact bound source Ask normalizes without executing");
+    assert_eq!(normalized.normalization_version(), artifact(0x68));
+    assert!(matches!(
+        normalized.successor(),
+        QuestionSuccessor::Return { answer: retained, value, .. }
+            if retained.candidates() == answer.candidates() && *value == alternate_answer
+    ));
+    let foreign_source = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: answer.decoded().query(),
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("other_answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let foreign_program = scenario
+        .catalog
+        .programs
+        .get(&foreign_source)
+        .expect("foreign source must remain available")
+        .clone();
+    let foreign_binding =
+        bind_finite_ask_continuation(&foreign_program, answer.clone(), &scenario.catalog)
+            .expect("same question may bind to a distinct source before occurrence checking");
+    assert!(matches!(
+        normalize_bound_finite_ask_continuation(
+            occurrence.clone(),
+            foreign_binding,
+            &scenario.catalog
+        ),
+        Err(ic_core::PureNormalizationError::SourceMismatch { .. })
+    ));
     let QuestionSuccessor::Return {
         occurrence: retained_occurrence,
         answer: retained_answer,
@@ -3179,6 +3222,23 @@ fn occurrence_indexed_successors_keep_equal_questions_and_answers_distinct() {
         } if occurrence == &right
             && retained.candidates() == answer.candidates()
             && successor.question() == other_question
+    ));
+    let left_program = scenario
+        .catalog
+        .programs
+        .get(&left.position().target())
+        .expect("left source Ask must remain available")
+        .clone();
+    let left_binding =
+        bind_finite_ask_continuation(&left_program, answer.clone(), &scenario.catalog)
+            .expect("left whole answer binds");
+    let left_normalized =
+        normalize_bound_finite_ask_continuation(left.clone(), left_binding, &scenario.catalog)
+            .expect("left exact source normalizes to Ask");
+    assert!(matches!(
+        left_normalized.successor(),
+        QuestionSuccessor::Ask { successor, answer: retained, .. }
+            if successor.question() == question && retained.candidates() == answer.candidates()
     ));
 
     let forge = |position,

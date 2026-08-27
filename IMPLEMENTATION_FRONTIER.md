@@ -2,41 +2,41 @@
 
 This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
 
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `89cac5f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `7480d5f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
 
 ## Immediate demonstrated predecessor
 
-`QCODE-TYPING-001` established typed nonexecuting quotation as an immutable source/runtime identity boundary. Cold-decoded source, runtime, and quotation envelopes retain kind, result, binding, compiler, and referent coordinates. Exact catalog admission returns only a program reference; binding/compiler/result substitutions refuse without a step, event, raw return, support, standing result, or warrant. This adds no evaluator, loader, provider path, table, opcode, scheduler, controller, or persistence schema.
+`QPROGRAM-SUBSTITUTION-001` established the current first-order source normalizer as a derived identity-only relation: exact whole-answer binding plus source-occurrence rewalk exposes the named `Ask` or `Return` continuation under the fixed compiler coordinate. A same-question foreign source binding rejects; no answer member is selected and no runtime step, event, raw return, support, standing result, or warrant occurs. This adds no source operation syntax, evaluator, table, opcode, scheduler, controller, or persistence schema.
 
 ## Strongest live obligation
 
-Derive the smallest capture-safe whole-answer substitution and pure source normalization relation needed to expose the next `Ask` or `Return` from one checked occurrence, without selecting an answer member or introducing an executable evaluator.
+Determine whether an additional pure-operation registry is presently necessary, or whether the `Return`/`Ask` source grammar makes the existing compiler-version-indexed identity normalizer the complete current normal form.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QPROGRAM-SUBSTITUTION-001
+id: QPURE-REGISTRY-001
 plan_phase: 3
-goal: Derive capture-safe whole-supported-answer substitution into an exact `Ask` continuation and deterministic pure normalization to its next `Ask` or `Return`.
-protected_difference: Two source occurrences can share a question and answer while retaining different lexical environments and continuations. Selecting one completion, capturing an existing binding, or treating a normalized endpoint as an executable transition changes the protected successor or authority route.
-discriminator: Construct two checked occurrences with equal questions and whole answers but distinct environments/continuations. Substitute the entire answer only at its exact slot, normalize deterministically, preserve all existing bindings, and reject duplicate/captured/foreign-slot substitutions. Show one normalized successor reaches `Ask`, another `Return`, with neither performing a runtime step nor creating actuality.
-horizon: one finite whole supported answer, two equal-question occurrences, one nested `Ask` successor, one `Return` successor, explicit lexical environments, one deterministic normalization version; no dynamic evaluator, provider call, persistence schema, general reduction engine, cross-binding bridge, or normalization policy
-relevant_decisions: D-0125, D-0127, D-0153
+goal: Establish the smallest admitted representation for pure source operations, or positively retain the current identity-only normalizer if no nonidentity operation is formable.
+protected_difference: Adding an unformable operation registry creates an authority surface with no protected behavior; silently applying a future nonidentity transformation under identity normalization changes continuation, type, or provenance without an admitted route.
+discriminator: Enumerate the current `IProgIR` constructors and prove that every checked source path reaches only its named `Ask` or `Return` continuation. Contrast this with one hypothetical nonidentity operation: it must be unformable/unrepresentable rather than silently accepted. If no current protected continuation distinguishes a registry, retain no new carrier; otherwise add only a finite explicit operation contract and a breaker.
+horizon: current `Return`/`Ask` source grammar and exact compiler-coordinate identity normalization only; no new source syntax, evaluator, dynamic loading, provider call, persistence policy, cross-binding bridge, or operation execution
+relevant_decisions: D-0125, D-0127, D-0154
 relevant_failures: F-0001, F-0002
-if_pass: rederive the single strongest residual from the stable Phase 3 plan and pending conformance; QREADY-UNLOCK-001 and QREADY-NONUNLOCK-001 already pass and must not be reopened without a new breaker
-if_fail: reopen the earliest answer-carrier, lexical-environment, capture, continuation, normalization, or execution-separation relation; do not introduce an evaluator authority, scheduler, controller, table, or opcode
+if_pass: retain the identity-only normalizer without a registry and rederive the next strongest live residual from the stable plan; do not reopen passed QSUCC/QREADY fixtures without a new breaker
+if_fail: add only the smallest first-order pure-operation representation that the executable breaker proves necessary; do not introduce an evaluator authority, scheduler, controller, table, or opcode
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive fixture
 
-Construct two first-order `Ask` source occurrences with an equal question and one whole supported answer but distinct lexical environments and continuations. Bind only the exact answer slot, normalize the resulting source data under a named version, and independently check the next `Ask`/`Return` presentation. The missing, foreign, selected-member, or capturing variants must refuse rather than silently selecting, executing, or calling the result a negative answer.
+Check the complete current `IProgIR` constructor set and rewalk the finite source fixture. The candidate nonidentity operation must fail formation because no source constructor names it; a `Return` and an `Ask` continuation must retain their direct normalized heads. Do not treat absence of a new constructor as negative semantic evidence outside this exact source grammar.
 
-The smallest wrong implementation replaces the whole supported answer with one candidate, merges equal-question occurrences, overwrites a pre-existing lexical binding, ignores a foreign answer slot, or executes while normalizing.
+The smallest wrong implementation invents a registry whose entries have no formable source use, or silently applies an operation not carried by `IProgIR`.
 
 ## Prohibitions at this boundary
 
-- Do not select a completion from a whole supported answer or erase occurrence/environment/continuation identity.
-- Do not treat substitution/normalization as runtime execution, actuality, decoding, support, standing, or warrant.
-- Do not add a dynamic evaluator, scheduler, controller, table, opcode, or persistence schema before a finite source-normalization breaker proves ordinary first-order data insufficient.
+- Do not add source syntax, an operation registry, evaluator, or dynamic-loading authority merely because the plan lists future pure operations.
+- Do not treat an unformable operation as a negative semantic result, or identity normalization as permission for future transformation.
+- Do not add a scheduler, controller, table, opcode, or persistence schema at this boundary.
 
 ## Exit
 
-On pass, update conformance and any warranted append-only decision, then rederive the next Phase 3 residual. On failure, preserve the actual return and reopen the earliest implicated answer-carrier/environment/capture/continuation/normalization relation rather than broadening the architecture.
+On pass, record the no-addition result and rederive the next strongest residual. On failure, preserve the actual return and reopen the earliest implicated source-formation/operation/normalization relation rather than broadening the architecture.

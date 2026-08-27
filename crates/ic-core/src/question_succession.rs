@@ -10,9 +10,9 @@ use thiserror::Error;
 
 use crate::{
     AdmittedFiniteAnswerSet, ArtifactEnvelope, ArtifactError, ArtifactKind, ArtifactRef,
-    BindingVersionRef, IProgArtifact, IProgCatalog, IProgCheckError, IProgError, IProgIR, IProgRef,
-    ProgramBinding, ProvenanceRef, QueryRef, TypeCheckError, TypeError, TypeRef, TypeSymbol,
-    TypedFormRef,
+    BindingVersionRef, BoundFiniteAskContinuation, IProgArtifact, IProgCatalog, IProgCheckError,
+    IProgError, IProgIR, IProgRef, ProgramBinding, ProvenanceRef, QueryRef, TypeCheckError,
+    TypeError, TypeRef, TypeSymbol, TypedFormRef,
 };
 
 /// Canonical artifact kind for checked source-program configurations.
@@ -622,6 +622,110 @@ pub enum QuestionSuccessor {
     },
 }
 
+/// A derived, nonexecuting normalization of one already bound `Ask` continuation.
+///
+/// The current first-order source grammar has no hidden pure expression nodes between an `Ask`
+/// and its named continuation. Therefore its complete registered normalizer is identity on the
+/// checked continuation reference, indexed by the source configuration's compiler coordinate.
+/// This record retains the whole supported answer and exact occurrence rather than rewriting a
+/// source artifact, selecting a completion, or stepping a runtime program.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct PureNormalizedAskContinuation {
+    occurrence: AskOccurrence,
+    binding: BoundFiniteAskContinuation,
+    normalization_version: ArtifactRef,
+    successor: QuestionSuccessor,
+}
+
+impl PureNormalizedAskContinuation {
+    #[must_use]
+    pub const fn occurrence(&self) -> &AskOccurrence {
+        &self.occurrence
+    }
+
+    #[must_use]
+    pub const fn binding(&self) -> &BoundFiniteAskContinuation {
+        &self.binding
+    }
+
+    /// Returns the fixed compiler coordinate that versions the current identity normalizer.
+    #[must_use]
+    pub const fn normalization_version(&self) -> ArtifactRef {
+        self.normalization_version
+    }
+
+    #[must_use]
+    pub const fn successor(&self) -> &QuestionSuccessor {
+        &self.successor
+    }
+}
+
+/// Rechecks that a whole answer is bound to this exact source `Ask`, then performs the current
+/// deterministic pure source normalization.
+///
+/// This is deliberately a derived composition of `bind_finite_ask_continuation` and
+/// `derive_question_successor`, not a second source language, evaluator, or execution step.
+pub fn normalize_bound_finite_ask_continuation<C: QuestionSuccessionCatalog>(
+    occurrence: AskOccurrence,
+    binding: BoundFiniteAskContinuation,
+    catalog: &C,
+) -> Result<PureNormalizedAskContinuation, PureNormalizationError> {
+    occurrence.check(catalog)?;
+    let source_ref = occurrence.position().target();
+    if binding.source() != source_ref {
+        return Err(PureNormalizationError::SourceMismatch {
+            occurrence: source_ref,
+            binding: binding.source(),
+        });
+    }
+    let source = resolve_program(source_ref, catalog)?;
+    let IProgIR::Ask {
+        question,
+        environment,
+        answer_slot,
+        continuation,
+    } = source.program()
+    else {
+        return Err(PureNormalizationError::SourceIsNotAsk(source_ref));
+    };
+    if binding.question() != *question || binding.answer().decoded().query() != *question {
+        return Err(PureNormalizationError::QuestionMismatch {
+            occurrence: *question,
+            binding: binding.question(),
+            answer: binding.answer().decoded().query(),
+        });
+    }
+    if binding.environment() != environment {
+        return Err(PureNormalizationError::EnvironmentMismatch);
+    }
+    if binding.answer_slot() != answer_slot {
+        return Err(PureNormalizationError::AnswerSlotMismatch {
+            occurrence: answer_slot.as_str().to_owned(),
+            binding: binding.answer_slot().as_str().to_owned(),
+        });
+    }
+    if binding.continuation() != *continuation {
+        return Err(PureNormalizationError::ContinuationMismatch {
+            occurrence: *continuation,
+            binding: binding.continuation(),
+        });
+    }
+    if occurrence.question() != *question
+        || occurrence.answer_slot() != answer_slot
+        || occurrence.continuation() != *continuation
+    {
+        return Err(PureNormalizationError::OccurrenceMismatch);
+    }
+    let successor =
+        derive_question_successor(occurrence.clone(), binding.answer().clone(), catalog)?;
+    Ok(PureNormalizedAskContinuation {
+        normalization_version: occurrence.compiler_version(),
+        occurrence,
+        binding,
+        successor,
+    })
+}
+
 /// Reconstructs the first successor from one checked occurrence and the complete supported answer.
 ///
 /// This phase's first-order syntax has no hidden pure node between an `Ask` continuation and its
@@ -1176,4 +1280,37 @@ pub enum QuestionSuccessorError {
     },
     #[error("the continuation Ask position is not derived by the source configuration")]
     SuccessorPositionNotDerived,
+}
+
+/// Failures from exact bound-continuation normalization.
+#[derive(Debug, Error)]
+pub enum PureNormalizationError {
+    #[error(transparent)]
+    Occurrence(#[from] AskOccurrenceCheckError),
+    #[error(transparent)]
+    Successor(#[from] QuestionSuccessorError),
+    #[error("bound source {binding} differs from Ask occurrence source {occurrence}")]
+    SourceMismatch {
+        occurrence: IProgRef,
+        binding: IProgRef,
+    },
+    #[error("source program {0} is not an Ask")]
+    SourceIsNotAsk(IProgRef),
+    #[error("question mismatch: occurrence {occurrence}, binding {binding}, answer {answer}")]
+    QuestionMismatch {
+        occurrence: QueryRef,
+        binding: QueryRef,
+        answer: QueryRef,
+    },
+    #[error("bound lexical environment differs from the exact source Ask environment")]
+    EnvironmentMismatch,
+    #[error("answer slot {binding:?} differs from source Ask slot {occurrence:?}")]
+    AnswerSlotMismatch { occurrence: String, binding: String },
+    #[error("bound continuation {binding} differs from source Ask continuation {occurrence}")]
+    ContinuationMismatch {
+        occurrence: IProgRef,
+        binding: IProgRef,
+    },
+    #[error("the supplied occurrence differs from its rechecked source Ask")]
+    OccurrenceMismatch,
 }
