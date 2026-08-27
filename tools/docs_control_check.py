@@ -127,6 +127,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "independently_admitted_sides_form_one_reciprocal_occurrence_vertical_slice",
     ),
+    "QFRONTIER-REQDISCHARGE-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "required_discharge_survives_nondominance_without_promoting_generation",
+    ),
 }
 
 ERRORS: list[str] = []

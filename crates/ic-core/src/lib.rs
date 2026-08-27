@@ -23,6 +23,7 @@ mod finite_cell;
 mod formula;
 mod frontier;
 mod iprog;
+mod live_question_frontier;
 mod method;
 mod negation;
 mod negation_query;
@@ -153,6 +154,11 @@ pub use frontier::{
 pub use iprog::{
     IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgCatalog, IProgCheckError,
     IProgError, IProgIR, IProgRef, ProgramBinding,
+};
+pub use live_question_frontier::{
+    FiniteLiveQuestionFrontier, FiniteLiveQuestionFrontierError, LiveQuestionCandidate,
+    LiveQuestionCandidateError, LiveQuestionOrigin, ProtectedQuestionBranch, RequiredDischargeKind,
+    RequiredQuestionDischarge, derive_finite_live_question_frontier,
 };
 pub use method::{
     BackendRef, CheckerRef, CostModelRef, CoverageRef, ExtensionDomainRef,

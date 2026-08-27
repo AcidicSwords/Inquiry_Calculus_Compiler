@@ -12,35 +12,38 @@ use ic_core::{
     DeterminationSupportError, DischargeMode, EffectivityRef, EventRef, ExactFiniteSignature,
     FINITE_DECODER_ARTIFACT_KIND, FINITE_DECODER_SCHEMA_VERSION, FiniteDecoder,
     FiniteDecoderCatalog, FiniteDecoderEntry, FiniteDecoderError, FiniteDecoderOutcome,
-    FiniteDepartureAdmissionError, FiniteDepartureEvidence, FiniteSupportedAnswerError,
-    FiniteTypedIncompatibilityUseCatalog, FormulaArtifact, FormulaCatalog, FormulaRef,
-    GeneratedInquiry, GeneratedInquiryCatalog, GeneratedInquiryCheckError, GeneratorCoverageRef,
-    GeneratorRegimeRef, GrainRef, HorizonRef, IProgArtifact, IProgCatalog, IProgCheckError,
-    IProgIR, IProgRef, NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog,
+    FiniteDepartureAdmissionError, FiniteDepartureEvidence, FiniteLiveQuestionFrontierError,
+    FiniteResourcePreorder, FiniteSupportedAnswerError, FiniteTypedIncompatibilityUseCatalog,
+    FormulaArtifact, FormulaCatalog, FormulaRef, GeneratedInquiry, GeneratedInquiryCatalog,
+    GeneratedInquiryCheckError, GeneratorCoverageRef, GeneratorRegimeRef, GrainRef, HorizonRef,
+    IProgArtifact, IProgCatalog, IProgCheckError, IProgIR, IProgRef, LiveQuestionCandidate,
+    LiveQuestionOrigin, NegationCoverage, NegationUse, NegationUseRef, ObservationResultCatalog,
     OpenPort, OpenQuery, OpenQueryCatalog, OperatorOccurrence, OperatorOccurrenceCatalog,
     OperatorOccurrenceCheckError, PortBinding, ProbeContractRef, ProbeOperator, ProbeOperatorRef,
-    ProgramBinding, ProtectedCompletionFieldRef, ProvenanceRef, QueryRef, QuestionReadiness,
-    QuestionReadinessRequirement, QuestionSuccessionCatalog, QuestionSuccessor, RawReturn,
-    RawReturnCatalog, RawReturnRef, ReciprocalOccurrence, RelationBodyIR, RelationCatalog,
-    RelationPort, RelationRef, RelationSchema, RelationSignature, RelationUse, RelationUseContext,
-    RelationUseRef, RelationUseSupportCatalog, RelationUseSupportError, ResolutionCatalog,
-    ResolutionPath, ResolutionPathIR, ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef,
-    ScopeRef, SeedReorientation, SelectedReturn, SeparatorProblem, SeparatorProblemRef,
-    SignatureContext, SourceConfig, SourceConfigRef, Standing, StateRef, StructureViewRef,
-    SupportEnvironmentArtifact, SupportEnvironmentArtifactCheckError,
-    SupportEnvironmentArtifactError, SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef,
-    SupportSubjectRef, TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef,
-    TypeRef, TypeSymbol, TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable,
-    TypedFiniteNegationExtension, TypedFiniteObservation,
-    TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
+    ProgramBinding, ProtectedCompletionFieldRef, ProtectedContinuationRef, ProtectedQuestionBranch,
+    ProvenanceRef, QueryRef, QuestionReadiness, QuestionReadinessRequirement,
+    QuestionSuccessionCatalog, QuestionSuccessor, RawReturn, RawReturnCatalog, RawReturnRef,
+    ReciprocalOccurrence, RelationBodyIR, RelationCatalog, RelationPort, RelationRef,
+    RelationSchema, RelationSignature, RelationUse, RelationUseContext, RelationUseRef,
+    RelationUseSupportCatalog, RelationUseSupportError, RequiredDischargeKind,
+    RequiredQuestionDischarge, ResolutionCatalog, ResolutionPath, ResolutionPathIR,
+    ResolutionPathRef, ReturnClosure, RoleComparison, RouteRef, ScopeRef, SeedReorientation,
+    SelectedReturn, SeparatorProblem, SeparatorProblemRef, SignatureContext, SourceConfig,
+    SourceConfigRef, Standing, StateRef, StructureViewRef, SupportEnvironmentArtifact,
+    SupportEnvironmentArtifactCheckError, SupportEnvironmentArtifactError,
+    SupportEnvironmentCatalog, SupportEnvironmentRef, SupportRef, SupportSubjectRef,
+    TaggedExteriorCatalog, TyIR, TypeArtifact, TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol,
+    TypedFiniteIncompatibilityRoles, TypedFiniteIncompatibilityTable, TypedFiniteNegationExtension,
+    TypedFiniteObservation, TypedFiniteOrientedIncompatibilityUseResult, TypedForm, TypedFormRef,
     admit_finite_negation_extension, admit_finite_supported_answers, admit_probed_finite_departure,
     await_question_readiness, bind_finite_ask_continuation,
     check_departure_witness_standing_support, check_return_closure,
     check_typed_finite_oriented_incompatibility_use, decode_actual_event,
-    derive_question_readiness, derive_question_successor, match_decoded_observation_use,
-    resolve_departure_witness_evidence_support, resolve_determination_presentation_support,
-    resolve_relation_use_support, standing_determination_presentation_support,
-    standing_from_declared_support, standing_relation_use_support,
+    derive_finite_live_question_frontier, derive_question_readiness, derive_question_successor,
+    match_decoded_observation_use, resolve_departure_witness_evidence_support,
+    resolve_determination_presentation_support, resolve_relation_use_support,
+    standing_determination_presentation_support, standing_from_declared_support,
+    standing_relation_use_support,
 };
 
 #[derive(Clone, Default)]
@@ -3742,5 +3745,190 @@ fn independently_admitted_sides_form_one_reciprocal_occurrence_vertical_slice() 
     assert!(matches!(
         not_reciprocal.check(&scenario.catalog),
         Err(ic_core::ReciprocalOccurrenceError::OrientationDidNotReverse(ic_core::Orientation::X))
+    ));
+}
+
+#[test]
+// Test boundary QFRONTIER-REQDISCHARGE-001:
+// F = productivity or resource pruning suppresses an exact required discharge, or generation
+//     silently promotes its own question to required authority.
+// C = Req(C) union ordinary nondominated(Productive(C) union Req(C)), keyed by checked Ask
+//     occurrence with explicit obligation provenance and a finite declared resource preorder.
+// Omega/M = four finite occurrence-indexed candidates: one dominated required Check, one cheaper
+//     productive optional, one incomparable generated optional, and one dominated optional.
+// P/V/E/U = source re-walk plus exhaustive finite preorder comparison; the checker separately
+//     observes membership, obligation provenance, generation origin, and dominated exits. Reopen
+//     for intensional/partial productivity, unexecutable required residuals, or non-finite orders.
+fn required_discharge_survives_nondominance_without_promoting_generation() {
+    let mut scenario =
+        build_finite_departure_scenario(true, true).expect("the finite fixture must admit");
+    let terminal_value = scenario.source;
+    let terminal = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Return {
+            value: terminal_value,
+        },
+    ));
+    let root = scenario.catalog.insert_program(IProgArtifact::new(
+        scenario.answer_type,
+        IProgIR::Ask {
+            question: scenario.source_observation.decoded().query(),
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("answer").expect("slot must be valid"),
+            continuation: terminal,
+        },
+    ));
+    let mut occurrence = |coordinate: u8| {
+        let source = SourceConfig::new(
+            scenario.answer_type,
+            root,
+            Vec::new(),
+            scenario.binding,
+            artifact(coordinate),
+            ProvenanceRef::from_artifact_ref(artifact(coordinate.wrapping_add(0x10))),
+        )
+        .expect("source configuration must canonicalize");
+        scenario.catalog.insert_source_config(source.clone());
+        source
+            .ask_occurrences(&scenario.catalog)
+            .expect("source must re-walk")
+            .into_iter()
+            .next()
+            .expect("source root must be Ask")
+    };
+    let required_occurrence = occurrence(0x90);
+    let cheap_occurrence = occurrence(0x91);
+    let generated_occurrence = occurrence(0x92);
+    let dominated_occurrence = occurrence(0x93);
+
+    let protected_a = ProtectedContinuationRef::from_artifact_ref(artifact(0xa0));
+    let protected_b = ProtectedContinuationRef::from_artifact_ref(artifact(0xa1));
+    let protected_c = ProtectedContinuationRef::from_artifact_ref(artifact(0xa2));
+    let protected_d = ProtectedContinuationRef::from_artifact_ref(artifact(0xa3));
+    let branches = |first, second| {
+        vec![
+            ProtectedQuestionBranch::new(artifact(0xb0), first),
+            ProtectedQuestionBranch::new(artifact(0xb1), second),
+        ]
+    };
+    let required_discharge = RequiredQuestionDischarge::new(
+        RequiredDischargeKind::Check,
+        artifact(0xc0),
+        artifact(0xc1),
+    );
+    let required_resource = artifact(0xd0);
+    let cheap_resource = artifact(0xd1);
+    let generated_resource = artifact(0xd2);
+    let dominated_resource = artifact(0xd3);
+    let required = LiveQuestionCandidate::new(
+        required_occurrence,
+        branches(protected_a, protected_a),
+        required_resource,
+        LiveQuestionOrigin::Existing {
+            provenance: artifact(0xe0),
+        },
+        vec![required_discharge],
+    )
+    .expect("required candidate must be well formed");
+    assert!(!required.is_productive());
+    let cheap = LiveQuestionCandidate::new(
+        cheap_occurrence,
+        branches(protected_a, protected_b),
+        cheap_resource,
+        LiveQuestionOrigin::Existing {
+            provenance: artifact(0xe1),
+        },
+        Vec::new(),
+    )
+    .expect("cheap optional candidate must be well formed");
+    let generated = LiveQuestionCandidate::new(
+        generated_occurrence,
+        branches(protected_a, protected_c),
+        generated_resource,
+        LiveQuestionOrigin::Generated {
+            proposal: artifact(0xe2),
+        },
+        Vec::new(),
+    )
+    .expect("generated proposal must remain representable");
+    let dominated = LiveQuestionCandidate::new(
+        dominated_occurrence,
+        branches(protected_a, protected_d),
+        dominated_resource,
+        LiveQuestionOrigin::Existing {
+            provenance: artifact(0xe3),
+        },
+        Vec::new(),
+    )
+    .expect("dominated optional candidate must be well formed");
+    let resources = FiniteResourcePreorder::new(vec![
+        (required_resource, required_resource),
+        (cheap_resource, cheap_resource),
+        (generated_resource, generated_resource),
+        (dominated_resource, dominated_resource),
+        (cheap_resource, required_resource),
+        (required_resource, dominated_resource),
+        (cheap_resource, dominated_resource),
+    ])
+    .expect("the declared resource order must be finite and duplicate free");
+
+    let frontier = derive_finite_live_question_frontier(
+        &[
+            required.clone(),
+            cheap.clone(),
+            generated.clone(),
+            dominated.clone(),
+        ],
+        &resources,
+        &scenario.catalog,
+    )
+    .expect("the exact finite frontier must derive");
+
+    assert_eq!(
+        frontier.members(),
+        &[required.clone(), cheap, generated.clone()]
+    );
+    assert_eq!(frontier.dominated_optional(), &[dominated]);
+    assert!(frontier.inactive_optional().is_empty());
+    assert_eq!(required.required_discharges(), &[required_discharge]);
+    assert!(matches!(
+        generated.origin(),
+        LiveQuestionOrigin::Generated { proposal } if proposal == artifact(0xe2)
+    ));
+    assert!(generated.is_productive());
+    assert!(!generated.is_required());
+    assert!(matches!(
+        derive_finite_live_question_frontier(
+            &[generated.clone(), generated.clone()],
+            &resources,
+            &scenario.catalog,
+        ),
+        Err(FiniteLiveQuestionFrontierError::DuplicateOccurrence(reference))
+            if reference
+                == generated
+                    .occurrence()
+                    .ask_occurrence_ref()
+                    .expect("checked occurrence must retain identity")
+    ));
+
+    let missing_reflexivity =
+        FiniteResourcePreorder::new(vec![(required_resource, required_resource)])
+            .expect("an incomplete declaration remains a candidate until checked over its field");
+    let generated_with_unlisted_resource = LiveQuestionCandidate::new(
+        generated.occurrence().clone(),
+        branches(protected_a, protected_c),
+        cheap_resource,
+        generated.origin(),
+        Vec::new(),
+    )
+    .expect("candidate must reconstruct");
+    assert!(matches!(
+        derive_finite_live_question_frontier(
+            &[generated_with_unlisted_resource],
+            &missing_reflexivity,
+            &scenario.catalog,
+        ),
+        Err(FiniteLiveQuestionFrontierError::NonReflexiveResource(resource))
+            if resource == cheap_resource
     ));
 }
