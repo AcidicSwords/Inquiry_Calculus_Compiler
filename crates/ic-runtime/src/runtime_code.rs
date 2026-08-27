@@ -141,6 +141,25 @@ impl RuntimeProgramArtifact {
             self.envelope()?.artifact_ref()?,
         ))
     }
+    /// Direct immutable dependencies required to recheck this runtime program after reload.
+    #[must_use]
+    pub fn referenced_artifacts(&self) -> Vec<ArtifactRef> {
+        let mut references = vec![
+            self.binding.as_artifact_ref(),
+            self.compiler_version,
+            self.program.result().as_artifact_ref(),
+        ];
+        for block in self.program.blocks() {
+            match block.terminator() {
+                Terminator::Return { value } => references.push(value.as_artifact_ref()),
+                Terminator::Branch { .. } => {}
+                Terminator::Probe { operator, .. } => {
+                    references.push(operator.as_artifact_ref());
+                }
+            }
+        }
+        references
+    }
     pub fn from_envelope(envelope: &ArtifactEnvelope) -> Result<Self, RuntimeProgramError> {
         if envelope.kind().as_str() != RUNTIME_PROGRAM_ARTIFACT_KIND {
             return Err(RuntimeProgramError::UnexpectedArtifactKind {

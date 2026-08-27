@@ -4819,6 +4819,19 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let source_runtime_ref = source_runtime
         .runtime_program_ref()
         .expect("source runtime identity must encode");
+    let persisted_source_runtime = persist(
+        &store,
+        &source_runtime
+            .envelope()
+            .expect("source runtime artifact must encode"),
+        &source_runtime.referenced_artifacts(),
+    )
+    .await;
+    assert_eq!(
+        persisted_source_runtime,
+        source_runtime_ref.as_artifact_ref(),
+        "runtime artifact must persist under its exact derived identity"
+    );
     let source_lowering = SourceAskLowering::new(
         first_occurrence.clone(),
         source_ports.clone(),
@@ -5314,6 +5327,19 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         cold_catalog.insert_source_config(cold_second_source),
         second_source_ref
     );
+    let cold_source_runtime = RuntimeProgramArtifact::from_envelope(
+        &load_envelope(&reopened, source_runtime_ref.as_artifact_ref()).await,
+    )
+    .expect("source runtime artifact must cold decode");
+    assert_eq!(
+        cold_source_runtime
+            .runtime_program_ref()
+            .expect("cold runtime identity must encode"),
+        source_runtime_ref
+    );
+    cold_source_runtime
+        .check(&cold_catalog)
+        .expect("cold runtime artifact must independently recheck");
     let cold_first_occurrence = AskOccurrence::from_envelope(
         &load_envelope(&reopened, first_occurrence_ref.as_artifact_ref()).await,
     )
@@ -5322,6 +5348,64 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         &load_envelope(&reopened, second_occurrence_ref.as_artifact_ref()).await,
     )
     .expect("second occurrence must cold decode");
+    let cold_port_lowerings =
+        OpenQueryCatalog::resolve_open_query(&cold_catalog, cold_first_occurrence.question())
+            .expect("cold source query must reload")
+            .open_ports()
+            .iter()
+            .map(|open| PortLowering::new(open.port().clone(), open.mode()))
+            .collect::<Vec<_>>();
+    let provider_calls_before_cold_lowering = provider_calls.load(Ordering::SeqCst);
+    let cold_source_lowering = SourceAskLowering::new(
+        cold_first_occurrence.clone(),
+        cold_port_lowerings.clone(),
+        cold_source_runtime,
+    )
+    .expect("cold source lowering must form from ordinary roots");
+    cold_source_lowering
+        .check_expected(&cold_first_occurrence, source_runtime_ref, &cold_catalog)
+        .expect("cold source lowering must exactly recheck");
+    assert!(matches!(
+        cold_source_lowering.check_expected(
+            &cold_second_occurrence,
+            source_runtime_ref,
+            &cold_catalog,
+        ),
+        Err(SourceAskLoweringCheckError::ExpectedOccurrenceMismatch)
+    ));
+    let changed_cold_runtime = RuntimeProgramArtifact::new(
+        binding,
+        roots.compiler_version,
+        ProgramIR::new(
+            roots.unit,
+            BlockTarget::new(0),
+            vec![BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            )],
+        ),
+    );
+    let changed_cold_lowering = SourceAskLowering::new(
+        cold_first_occurrence.clone(),
+        cold_port_lowerings,
+        changed_cold_runtime,
+    )
+    .expect("changed cold runtime remains formable before expected comparison");
+    assert!(matches!(
+        changed_cold_lowering.check_expected(
+            &cold_first_occurrence,
+            source_runtime_ref,
+            &cold_catalog,
+        ),
+        Err(SourceAskLoweringCheckError::ExpectedRuntimeMismatch { .. })
+    ));
+    assert_eq!(
+        provider_calls.load(Ordering::SeqCst),
+        provider_calls_before_cold_lowering,
+        "cold lowering regeneration must not dispatch a provider"
+    );
     let replay_a = reopened
         .replay_completed_external_effect(token_a)
         .await
