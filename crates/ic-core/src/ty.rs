@@ -195,7 +195,7 @@ impl FromStr for TypeSymbol {
 /// The accepted canonical v1.1 Phase 1 type grammar.
 ///
 /// The variants deliberately follow the canonical grammar: binary `Product` and `Sum`,
-/// `Prog(A)`, and unary `Code(A)`. Plan-only candidates such as `Int`, `Text`, `Bytes`,
+/// `IProg(A)`, `Prog(A)`, and unary `Code(A)`. Plan-only candidates such as `Int`, `Text`, `Bytes`,
 /// n-ary products/sums, and input/output `Code` are not semantic constructors here.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum TyIR {
@@ -227,6 +227,7 @@ pub enum TyIR {
     List(TypeRef),
     Raw(TypeRef),
     Result(TypeRef),
+    IProg(TypeRef),
     Prog(TypeRef),
     Code(TypeRef),
 }
@@ -243,6 +244,7 @@ impl TyIR {
             | Self::List(inner)
             | Self::Raw(inner)
             | Self::Result(inner)
+            | Self::IProg(inner)
             | Self::Prog(inner)
             | Self::Code(inner) => vec![*inner],
         }
@@ -338,6 +340,10 @@ impl TypeArtifact {
                 encoded.push(13);
                 write_type_reference(&mut encoded, *inner);
             }
+            TyIR::IProg(inner) => {
+                encoded.push(14);
+                write_type_reference(&mut encoded, *inner);
+            }
         }
 
         Ok(encoded)
@@ -379,6 +385,7 @@ impl TypeArtifact {
             11 => TyIR::Result(TypeRef::from_artifact_ref(cursor.read_reference()?)),
             12 => TyIR::Prog(TypeRef::from_artifact_ref(cursor.read_reference()?)),
             13 => TyIR::Code(TypeRef::from_artifact_ref(cursor.read_reference()?)),
+            14 => TyIR::IProg(TypeRef::from_artifact_ref(cursor.read_reference()?)),
             other => return Err(TypeError::UnknownTypeTag(other)),
         };
 
@@ -432,6 +439,7 @@ impl TypeArtifact {
             | TyIR::List(inner)
             | TyIR::Raw(inner)
             | TyIR::Result(inner)
+            | TyIR::IProg(inner)
             | TyIR::Prog(inner)
             | TyIR::Code(inner) => references.push(inner.as_artifact_ref()),
         }
@@ -643,6 +651,7 @@ fn check_type_node<C: TypeCatalog>(
         | TyIR::List(inner)
         | TyIR::Raw(inner)
         | TyIR::Result(inner)
+        | TyIR::IProg(inner)
         | TyIR::Prog(inner)
         | TyIR::Code(inner) => {
             check_type_ref(*inner, expected_binding, catalog, visiting, completed)

@@ -12,6 +12,7 @@ mod ollama;
 mod openai;
 mod replay;
 mod resolved_occurrence;
+mod runtime_code;
 mod trace;
 
 use std::collections::BTreeMap;
@@ -53,6 +54,10 @@ pub use replay::{
 pub use resolved_occurrence::{
     ResolvedFiniteProbeOccurrence, ResolvedFiniteProbeOccurrenceError,
     resolve_finite_probe_occurrence,
+};
+pub use runtime_code::{
+    RUNTIME_PROGRAM_ARTIFACT_KIND, RUNTIME_PROGRAM_SCHEMA_VERSION, RuntimeProgramArtifact,
+    RuntimeProgramCheckError, RuntimeProgramError,
 };
 use thiserror::Error;
 pub use trace::{

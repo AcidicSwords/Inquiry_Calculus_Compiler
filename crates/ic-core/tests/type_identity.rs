@@ -126,6 +126,7 @@ fn canonical_type_grammar_round_trips_and_domain_separates() {
         TyIR::List(type_ref),
         TyIR::Raw(type_ref),
         TyIR::Result(type_ref),
+        TyIR::IProg(type_ref),
         TyIR::Prog(type_ref),
         TyIR::Code(type_ref),
     ];
@@ -139,8 +140,13 @@ fn canonical_type_grammar_round_trips_and_domain_separates() {
         );
     }
 
+    let iprog = TypeArtifact::new(binding, TyIR::IProg(type_ref));
     let prog = TypeArtifact::new(binding, TyIR::Prog(type_ref));
     let code = TypeArtifact::new(binding, TyIR::Code(type_ref));
+    assert_ne!(
+        iprog.type_ref().expect("inquiry program type must hash"),
+        prog.type_ref().expect("program type must hash")
+    );
     assert_ne!(
         prog.type_ref().expect("program type must hash"),
         code.type_ref().expect("code type must hash")

@@ -9,6 +9,7 @@ mod backend;
 mod boundary;
 mod bridge;
 mod claim;
+mod code;
 mod compression;
 mod context;
 mod controlled_rendering;
@@ -74,6 +75,11 @@ pub use bridge::{BindingBridgeCheckError, BindingBridgeError, BindingBridgeIR, B
 pub use claim::{
     CLAIM_ARTIFACT_KIND, CLAIM_SCHEMA_VERSION, ClaimArtifact, ClaimCatalog, ClaimCheckError,
     ClaimError, ClaimStatus,
+};
+pub use code::{
+    CODE_ARTIFACT_KIND, CODE_SCHEMA_VERSION, CodeArtifact, CodeCatalog, CodeCheckError, CodeError,
+    CodeIR, CodeInterpretation, CodeInterpretationError, CodeInterpretationKind, CodeRef,
+    RuntimeProgramRef, interpret_code, quote_iprog, quote_program,
 };
 pub use compression::{
     COMPRESSION_LICENSE_ARTIFACT_KIND, COMPRESSION_LICENSE_SCHEMA_VERSION, CompressionKind,
