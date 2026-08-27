@@ -48,14 +48,15 @@ use ic_core::{
     match_decoded_observation_use, run_finite_resolution, standing_from_declared_support,
 };
 use ic_runtime::{
-    AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, MethodBridgeReentryError, MethodCuePlanning, MixedModeSourceAskDischarge,
-    MixedModeSourceAskDischargeError, MixedPortContribution, MixedQuestionResolutionError,
-    NonProbePortDischargeEvidence, NonProbePortOutput, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
-    OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
-    PairedActualityTrace, PairedActualityTraversal, PortLowering, ProbeDischargeBundleError,
-    ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
-    ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
+    AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteCompletionMembership,
+    FiniteProbeReplayError, MachineStep, MethodBridgeReentryError, MethodCuePlanning,
+    MixedModeSourceAskDischarge, MixedModeSourceAskDischargeError, MixedPortContribution,
+    MixedQuestionResolutionError, NonProbePortDischargeEvidence, NonProbePortOutput,
+    OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OllamaDecodedText, OllamaGenerateProvider,
+    OllamaHttpResponse, OllamaProviderError, PairedActualityTrace, PairedActualityTraversal,
+    PortLowering, ProbeDischargeBundleError, ProbeDispatchContext, ProbePortDischargeEvidence,
+    ProbeProvider, ProgramIR, ProviderReturn, ReplayObservation,
+    ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
     SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
     TraversalCausalOrder, WholeQuestionOutcome, admit_finite_probe_discharge_bundle,
@@ -6945,6 +6946,18 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         Err(FiniteResolutionGateError::ForeignAnswerPort(_))
     ));
 
+    // The relation's own constraint over the whole port field, declared finitely by the caller.
+    // Nothing computes it: a completion candidate records no relation evaluation, and standing is
+    // relation-level, so two tuples of one relation are indistinguishable to support alone.
+    let membership_coverage = FiniteResolutionCoverage::Exact(CoverageRef::from_artifact_ref(
+        stored_ref(&reopened, b"mixed-mode-membership-coverage").await,
+    ));
+    let mixed_membership = FiniteCompletionMembership::new(
+        mixed_relation,
+        vec![mixed_candidate_a, mixed_candidate_b],
+        membership_coverage,
+    );
+
     let mixed_supported =
         classify_mixed_port(&mixed_probe_port).expect("the Probe port must classify as Supported");
     assert_eq!(
@@ -6954,6 +6967,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let whole = resolve_mixed_mode_question(
         &mixed_view,
         vec![(mixed_probe_port.clone(), mixed_supported)],
+        &mixed_membership,
         &cold_catalog,
     )
     .expect("one Probe outcome plus one checked Pure port must resolve the whole question");
@@ -7041,6 +7055,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
             mixed_probe_port.clone(),
             classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
         )],
+        &mixed_membership,
         &cold_catalog,
     )
     .expect("the rerouted answer must resolve");
@@ -7107,6 +7122,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
             mixed_probe_port.clone(),
             classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
         )],
+        &mixed_membership,
         &cold_catalog,
     )
     .expect("the repathed answer must resolve");
@@ -7164,6 +7180,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let resupported = resolve_mixed_mode_question(
         &mixed_view,
         vec![(mixed_probe_port.clone(), alternate_supported)],
+        &mixed_membership,
         &cold_catalog,
     )
     .expect("the resupported answer must resolve");
@@ -7188,9 +7205,90 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
         "the same members supported through a second environment is a different record"
     );
 
+    let cold_mixed_program = cold_catalog
+        .resolve_iprog(mixed_source_program)
+        .expect("mixed-mode source program must reload");
+
+    // The cross-port relation constraint. Both ports of the second completion are individually
+    // supported: its Probe value is decoded and standing-supported, its non-Probe value is the
+    // port's own checked result. Only the combination is excluded, and only the relation can say
+    // so. A table admitting the first completion alone must refuse the whole answer.
+    let excluding_membership = FiniteCompletionMembership::new(
+        mixed_relation,
+        vec![mixed_candidate_a],
+        membership_coverage,
+    );
+    let excluded = resolve_mixed_mode_question(
+        &mixed_view,
+        vec![(
+            mixed_probe_port.clone(),
+            classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+        )],
+        &excluding_membership,
+        &cold_catalog,
+    )
+    .expect("an excluded completion is a lawful outcome, not a checker failure");
+    assert_eq!(excluded.kind(), FiniteResolutionOutcomeKind::Unsupported);
+    let WholeQuestionOutcome::RelationExcluded(excluded_completion) = &excluded else {
+        panic!("the relation, not a port, refuses this answer")
+    };
+    assert_eq!(excluded_completion.relation(), mixed_relation);
+    assert_eq!(excluded_completion.completion(), mixed_candidate_b);
+    assert!(matches!(
+        admit_mixed_mode_continuation(excluded, &mixed_view, &cold_mixed_program, &cold_catalog),
+        Err(MixedQuestionResolutionError::NonSupported(_))
+    ));
+
+    // The same absence under partial coverage is undecided, never excluded. Unknown is not
+    // Negative: a table that does not claim to decide this completion may not condemn it.
+    let partial_membership = FiniteCompletionMembership::new(
+        mixed_relation,
+        vec![mixed_candidate_a],
+        FiniteResolutionCoverage::Partial(CoverageRef::from_artifact_ref(
+            stored_ref(&reopened, b"mixed-mode-membership-partial").await,
+        )),
+    );
+    let undecided = resolve_mixed_mode_question(
+        &mixed_view,
+        vec![(
+            mixed_probe_port.clone(),
+            classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+        )],
+        &partial_membership,
+        &cold_catalog,
+    )
+    .expect("an undecided completion is a lawful outcome");
+    assert_eq!(undecided.kind(), FiniteResolutionOutcomeKind::Unknown);
+    let WholeQuestionOutcome::MembershipUndecided(undecided_completion) = &undecided else {
+        panic!("partial coverage leaves membership undecided rather than excluded")
+    };
+    assert_eq!(undecided_completion.completion(), mixed_candidate_b);
+    assert!(matches!(
+        admit_mixed_mode_continuation(undecided, &mixed_view, &cold_mixed_program, &cold_catalog),
+        Err(MixedQuestionResolutionError::NonSupported(_))
+    ));
+
+    // A table deciding another relation cannot stand in for this question's.
+    assert!(matches!(
+        resolve_mixed_mode_question(
+            &mixed_view,
+            vec![(
+                mixed_probe_port.clone(),
+                classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
+            )],
+            &FiniteCompletionMembership::new(
+                roots.relation,
+                vec![mixed_candidate_a, mixed_candidate_b],
+                membership_coverage,
+            ),
+            &cold_catalog,
+        ),
+        Err(MixedQuestionResolutionError::MembershipRelationMismatch { .. })
+    ));
+
     // A Probe return alone cannot resolve the question while a port is unaccounted for.
     assert!(matches!(
-        resolve_mixed_mode_question(&mixed_view, Vec::new(), &cold_catalog),
+        resolve_mixed_mode_question(&mixed_view, Vec::new(), &mixed_membership, &cold_catalog),
         Err(MixedQuestionResolutionError::MissingPortOutcome(_))
     ));
     assert!(matches!(
@@ -7200,6 +7298,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
                 mixed_pure_port.clone(),
                 classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
             )],
+            &mixed_membership,
             &cold_catalog,
         ),
         Err(MixedQuestionResolutionError::ForeignPortOutcome(_))
@@ -7217,6 +7316,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
                     classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
                 ),
             ],
+            &mixed_membership,
             &cold_catalog,
         ),
         Err(MixedQuestionResolutionError::DuplicatePortOutcome(_))
@@ -7247,15 +7347,13 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
                 mixed_probe_port.clone(),
                 classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
             )],
+            &mixed_membership,
             &cold_catalog,
         ),
         Err(MixedQuestionResolutionError::CompletionContradictsNonProbeResult { .. })
     ));
 
     // None of the other four outcomes may reach the continuation.
-    let cold_mixed_program = cold_catalog
-        .resolve_iprog(mixed_source_program)
-        .expect("mixed-mode source program must reload");
     let partial_run = run_finite_resolution(
         mixed_decoded_path,
         mixed_raw_value,
@@ -7286,6 +7384,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     let joint = resolve_mixed_mode_question(
         &mixed_view,
         vec![(mixed_probe_port.clone(), unknown)],
+        &mixed_membership,
         &cold_catalog,
     )
     .expect("a non-Supported port still yields exactly one whole-question outcome");
@@ -7304,6 +7403,7 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
                     mixed_probe_port.clone(),
                     classify_mixed_port(&mixed_probe_port).expect("Supported must reproduce"),
                 )],
+                &mixed_membership,
                 &cold_catalog,
             )
             .expect("the joint answer must reproduce"),

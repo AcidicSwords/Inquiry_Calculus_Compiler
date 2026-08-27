@@ -35,10 +35,11 @@ use ic_core::{
     TypeError, TypeRef, TypedForm, TypedFormRef,
 };
 pub use mixed_question_resolution::{
-    AdmittedMixedModeContinuation, MixedModeQuestionSuccessor, MixedPortContribution,
-    MixedQuestionResolutionCatalog, MixedQuestionResolutionError, NonSupportedPort,
-    WholeQuestionOutcome, WholeQuestionSupportedAnswer, admit_mixed_mode_continuation,
-    derive_mixed_mode_successor, resolve_mixed_mode_question,
+    AdmittedMixedModeContinuation, ExcludedCompletion, FiniteCompletionMembership,
+    MixedModeQuestionSuccessor, MixedPortContribution, MixedQuestionResolutionCatalog,
+    MixedQuestionResolutionError, NonSupportedPort, UndecidedCompletion, WholeQuestionOutcome,
+    WholeQuestionSupportedAnswer, admit_mixed_mode_continuation, derive_mixed_mode_successor,
+    resolve_mixed_mode_question,
 };
 pub use ollama::{
     DecodedOllamaCandidates, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OLLAMA_DECODED_TEXT_SCHEMA_VERSION,

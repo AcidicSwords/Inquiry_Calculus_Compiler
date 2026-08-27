@@ -11,9 +11,10 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use ic_core::{
     AskOccurrence, AskOccurrenceRef, CompletionCandidateCatalog, CompletionCandidateRef,
-    DischargeMode, FiniteResolutionOutcome, FiniteResolutionOutcomeKind,
+    DischargeMode, FiniteResolutionCoverage, FiniteResolutionOutcome, FiniteResolutionOutcomeKind,
     FiniteSupportedAnswerCatalog, FiniteSupportedResolution, IProgArtifact, IProgError, IProgIR,
-    IProgRef, NextSourcePosition, QueryRef, TypeSymbol, TypedFormRef, derive_successor_position,
+    IProgRef, NextSourcePosition, QueryRef, RelationRef, TypeSymbol, TypedFormRef,
+    derive_successor_position,
 };
 use thiserror::Error;
 
@@ -130,11 +131,113 @@ impl NonSupportedPort {
     }
 }
 
+/// A caller-declared finite decision about which completions of a question its relation admits.
+///
+/// Membership is read from this table, never computed: a completion candidate records no relation
+/// evaluation and no membership in a completion fiber, and relation-level standing cannot
+/// discriminate one tuple from another. The declared coverage is what licenses a negative reading.
+/// Under `Exact`, a completion absent from the admitted list is excluded by the relation. Under
+/// `Partial`, the same absence is merely undecided, and `Unknown` is not `Negative`.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct FiniteCompletionMembership {
+    relation: RelationRef,
+    admitted: Vec<CompletionCandidateRef>,
+    coverage: FiniteResolutionCoverage,
+}
+
+impl FiniteCompletionMembership {
+    #[must_use]
+    pub fn new(
+        relation: RelationRef,
+        mut admitted: Vec<CompletionCandidateRef>,
+        coverage: FiniteResolutionCoverage,
+    ) -> Self {
+        admitted.sort_unstable();
+        admitted.dedup();
+        Self {
+            relation,
+            admitted,
+            coverage,
+        }
+    }
+
+    #[must_use]
+    pub const fn relation(&self) -> RelationRef {
+        self.relation
+    }
+
+    #[must_use]
+    pub fn admitted(&self) -> &[CompletionCandidateRef] {
+        &self.admitted
+    }
+
+    #[must_use]
+    pub const fn coverage(&self) -> FiniteResolutionCoverage {
+        self.coverage
+    }
+}
+
+/// One decoded completion the relation excludes, retained with the coverage that licensed it.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ExcludedCompletion {
+    relation: RelationRef,
+    completion: CompletionCandidateRef,
+    coverage: FiniteResolutionCoverage,
+}
+
+impl ExcludedCompletion {
+    #[must_use]
+    pub const fn relation(&self) -> RelationRef {
+        self.relation
+    }
+
+    #[must_use]
+    pub const fn completion(&self) -> CompletionCandidateRef {
+        self.completion
+    }
+
+    #[must_use]
+    pub const fn coverage(&self) -> FiniteResolutionCoverage {
+        self.coverage
+    }
+}
+
+/// One decoded completion the declared coverage does not reach, so its membership is undecided.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct UndecidedCompletion {
+    relation: RelationRef,
+    completion: CompletionCandidateRef,
+    coverage: FiniteResolutionCoverage,
+}
+
+impl UndecidedCompletion {
+    #[must_use]
+    pub const fn relation(&self) -> RelationRef {
+        self.relation
+    }
+
+    #[must_use]
+    pub const fn completion(&self) -> CompletionCandidateRef {
+        self.completion
+    }
+
+    #[must_use]
+    pub const fn coverage(&self) -> FiniteResolutionCoverage {
+        self.coverage
+    }
+}
+
 /// Exactly one whole-question outcome. Its kind is one of the same five as a single port's.
+///
+/// The last two arise only at the whole question: a port's own evidence cannot fail a constraint
+/// that ranges over the other ports' values, so a cross-port relation constraint is the one thing
+/// that can refuse an answer every port already supports.
 #[derive(Debug)]
 pub enum WholeQuestionOutcome {
     Supported(WholeQuestionSupportedAnswer),
     NotSupported(Box<NonSupportedPort>),
+    RelationExcluded(Box<ExcludedCompletion>),
+    MembershipUndecided(Box<UndecidedCompletion>),
 }
 
 impl WholeQuestionOutcome {
@@ -143,6 +246,8 @@ impl WholeQuestionOutcome {
         match self {
             Self::Supported(_) => FiniteResolutionOutcomeKind::Supported,
             Self::NotSupported(port) => port.outcome.kind(),
+            Self::RelationExcluded(_) => FiniteResolutionOutcomeKind::Unsupported,
+            Self::MembershipUndecided(_) => FiniteResolutionOutcomeKind::Unknown,
         }
     }
 }
@@ -158,6 +263,7 @@ impl WholeQuestionOutcome {
 pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
     view: &MixedModeSourceAskDischarge,
     port_outcomes: Vec<(TypeSymbol, FiniteResolutionOutcome)>,
+    membership: &FiniteCompletionMembership,
     catalog: &C,
 ) -> Result<WholeQuestionOutcome, MixedQuestionResolutionError> {
     view.check(catalog)?;
@@ -289,6 +395,41 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
                 );
             }
         }
+    }
+
+    // Cross-port relation constraint. Every check above ranges over one port at a time: a port's
+    // own evidence cannot see what the other ports were assigned, so nothing so far can refuse a
+    // tuple the relation forbids. Membership is read from the caller's declared table, never
+    // computed, and only `Exact` coverage licenses reading an absence as exclusion.
+    let relation = ic_core::OpenQueryCatalog::resolve_open_query(catalog, question)
+        .ok_or(MixedQuestionResolutionError::UnresolvedQuestion(question))?
+        .relation();
+    if membership.relation != relation {
+        return Err(MixedQuestionResolutionError::MembershipRelationMismatch {
+            question: relation,
+            table: membership.relation,
+        });
+    }
+    for candidate_ref in &members {
+        if membership.admitted.binary_search(candidate_ref).is_ok() {
+            continue;
+        }
+        return Ok(match membership.coverage {
+            FiniteResolutionCoverage::Exact(_) => {
+                WholeQuestionOutcome::RelationExcluded(Box::new(ExcludedCompletion {
+                    relation: membership.relation,
+                    completion: *candidate_ref,
+                    coverage: membership.coverage,
+                }))
+            }
+            FiniteResolutionCoverage::Partial(_) => {
+                WholeQuestionOutcome::MembershipUndecided(Box::new(UndecidedCompletion {
+                    relation: membership.relation,
+                    completion: *candidate_ref,
+                    coverage: membership.coverage,
+                }))
+            }
+        });
     }
 
     let mut contributions = Vec::with_capacity(supported.len() + non_probe.len());
@@ -493,6 +634,13 @@ pub enum MixedQuestionResolutionError {
     MemberCheck(#[from] ic_core::CompletionCandidateCheckError),
     #[error("member {0} completes a different question than this occurrence asks")]
     MemberQuestionMismatch(ic_core::CompletionCandidateRef),
+    #[error("question {0} is unavailable")]
+    UnresolvedQuestion(QueryRef),
+    #[error("membership table decides relation {table}, but this question relates {question}")]
+    MembershipRelationMismatch {
+        question: RelationRef,
+        table: RelationRef,
+    },
     #[error("a decoded completion omits non-Probe port {0:?}")]
     CompletionOmitsNonProbePort(String),
     #[error(
