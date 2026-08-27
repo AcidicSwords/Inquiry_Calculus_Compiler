@@ -151,6 +151,10 @@ V2_PASS_EVIDENCE = {
         "crates/ic-core/tests/decoder_identity.rs",
         "controlled_rendering_never_promotes_shared_words_into_semantic_authority",
     ),
+    "QLOWER-001": (
+        "crates/ic-core/tests/decoder_identity.rs",
+        "interrogative_annotations_erase_only_to_the_checked_ordinary_program",
+    ),
 }
 
 ERRORS: list[str] = []

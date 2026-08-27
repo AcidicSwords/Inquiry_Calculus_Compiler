@@ -23,6 +23,7 @@ mod fiber;
 mod finite_cell;
 mod formula;
 mod frontier;
+mod interrogative_lowering;
 mod iprog;
 mod live_question_frontier;
 mod local_interrogative_fixed_point;
@@ -159,6 +160,11 @@ pub use formula::{
 pub use frontier::{
     ActiveNegationUse, CollectiveCoverageRef, GeneratorCoverageRef, NegationFrontierError,
     NegationFrontierView,
+};
+pub use interrogative_lowering::{
+    AnnotatedInterrogativeRoute, DerivedInterrogativeAnnotation, InterrogativeLoweringCatalog,
+    InterrogativeLoweringError, ProtectedInterrogativeLoweringSignature,
+    check_unannotated_interrogative_route, lower_annotated_interrogative_route,
 };
 pub use iprog::{
     IPROG_ARTIFACT_KIND, IPROG_SCHEMA_VERSION, IProgArtifact, IProgCatalog, IProgCheckError,
