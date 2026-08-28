@@ -59,12 +59,13 @@ use ic_runtime::{
     ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
     SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
-    TraversalCausalOrder, WholeQuestionOutcome, admit_finite_probe_discharge_bundle,
-    admit_mixed_mode_continuation, admit_probe_ports_of_mixed_discharge, check_source_event_link,
-    derive_mixed_mode_successor, dispatch_probe, materialize_ollama_decoded_texts,
-    plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
-    replay_completed_finite_separator_inquiry, resolve_finite_probe_occurrence,
-    resolve_mixed_mode_question, route_separator_through_method_bridge,
+    TraversalCausalOrder, WholeQuestionCoverageResidual, WholeQuestionOutcome,
+    admit_finite_probe_discharge_bundle, admit_mixed_mode_continuation,
+    admit_probe_ports_of_mixed_discharge, check_source_event_link, derive_mixed_mode_successor,
+    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
+    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
+    resolve_finite_probe_occurrence, resolve_mixed_mode_question,
+    route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -7259,10 +7260,14 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     )
     .expect("an undecided completion is a lawful outcome");
     assert_eq!(undecided.kind(), FiniteResolutionOutcomeKind::Unknown);
-    let WholeQuestionOutcome::MembershipUndecided(undecided_completion) = &undecided else {
+    let WholeQuestionOutcome::Undecided(undecided_residual) = &undecided else {
         panic!("partial coverage leaves membership undecided rather than excluded")
     };
-    assert_eq!(undecided_completion.completion(), mixed_candidate_b);
+    assert!(matches!(
+        undecided_residual.as_ref(),
+        WholeQuestionCoverageResidual::UndecidedMembership { completion, .. }
+            if *completion == mixed_candidate_b
+    ));
     assert!(matches!(
         admit_mixed_mode_continuation(undecided, &mixed_view, &cold_mixed_program, &cold_catalog),
         Err(MixedQuestionResolutionError::NonSupported(_))

@@ -37,9 +37,9 @@ use ic_core::{
 pub use mixed_question_resolution::{
     AdmittedMixedModeContinuation, ExcludedCompletion, FiniteCompletionMembership,
     MixedModeQuestionSuccessor, MixedPortContribution, MixedQuestionResolutionCatalog,
-    MixedQuestionResolutionError, NonSupportedPort, UndecidedCompletion, WholeQuestionOutcome,
-    WholeQuestionSupportedAnswer, admit_mixed_mode_continuation, derive_mixed_mode_successor,
-    resolve_mixed_mode_question,
+    MixedQuestionResolutionError, NonSupportedPort, NonSupportedPorts,
+    WholeQuestionCoverageResidual, WholeQuestionOutcome, WholeQuestionSupportedAnswer,
+    admit_mixed_mode_continuation, derive_mixed_mode_successor, resolve_mixed_mode_question,
 };
 pub use ollama::{
     DecodedOllamaCandidates, OLLAMA_DECODED_TEXT_ARTIFACT_KIND, OLLAMA_DECODED_TEXT_SCHEMA_VERSION,

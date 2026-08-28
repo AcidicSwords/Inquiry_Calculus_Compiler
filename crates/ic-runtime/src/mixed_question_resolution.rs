@@ -131,6 +131,40 @@ impl NonSupportedPort {
     }
 }
 
+/// Every port that did not resolve as `Supported`, in canonical port order.
+///
+/// All residuals are retained. Reporting one port and discarding the rest would present the
+/// discarded failures as absent, and a later reopening would have nothing to reopen from.
+#[derive(Debug)]
+pub struct NonSupportedPorts {
+    ports: Vec<NonSupportedPort>,
+}
+
+impl NonSupportedPorts {
+    #[must_use]
+    pub fn ports(&self) -> &[NonSupportedPort] {
+        &self.ports
+    }
+
+    /// The whole question's kind.
+    ///
+    /// `Unknown` dominates: while any port's coverage leaves its region undetermined, the question
+    /// cannot be reported as a definite negative, whatever the other ports established. Among the
+    /// determinate kinds the first in canonical port order is reported, and because every residual
+    /// is retained that choice presents nothing as absent.
+    #[must_use]
+    pub fn kind(&self) -> FiniteResolutionOutcomeKind {
+        if self
+            .ports
+            .iter()
+            .any(|port| port.outcome.kind() == FiniteResolutionOutcomeKind::Unknown)
+        {
+            return FiniteResolutionOutcomeKind::Unknown;
+        }
+        self.ports[0].outcome.kind()
+    }
+}
+
 /// A caller-declared finite decision about which completions of a question its relation admits.
 ///
 /// Membership is read from this table, never computed: a completion candidate records no relation
@@ -202,29 +236,25 @@ impl ExcludedCompletion {
     }
 }
 
-/// One decoded completion the declared coverage does not reach, so its membership is undecided.
+/// What prevents this question from reaching either support or exact emptiness.
+///
+/// Canonical's coverage residual identifies "the uncovered completion region or unresolved
+/// components". Both arise here and share this one carrier rather than two outcome variants: a
+/// completion the membership table does not claim to decide, and Probe ports that do not agree on
+/// which completions the question even has.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct UndecidedCompletion {
-    relation: RelationRef,
-    completion: CompletionCandidateRef,
-    coverage: FiniteResolutionCoverage,
-}
-
-impl UndecidedCompletion {
-    #[must_use]
-    pub const fn relation(&self) -> RelationRef {
-        self.relation
-    }
-
-    #[must_use]
-    pub const fn completion(&self) -> CompletionCandidateRef {
-        self.completion
-    }
-
-    #[must_use]
-    pub const fn coverage(&self) -> FiniteResolutionCoverage {
-        self.coverage
-    }
+pub enum WholeQuestionCoverageResidual {
+    /// The declared membership coverage does not reach this completion.
+    UndecidedMembership {
+        relation: RelationRef,
+        completion: CompletionCandidateRef,
+        coverage: FiniteResolutionCoverage,
+    },
+    /// Two Probe ports witness different completion fields, so the question has no one member set.
+    DisagreeingMemberFields {
+        established: TypeSymbol,
+        disagreeing: TypeSymbol,
+    },
 }
 
 /// Exactly one whole-question outcome. Its kind is one of the same five as a single port's.
@@ -235,19 +265,19 @@ impl UndecidedCompletion {
 #[derive(Debug)]
 pub enum WholeQuestionOutcome {
     Supported(WholeQuestionSupportedAnswer),
-    NotSupported(Box<NonSupportedPort>),
+    NotSupported(Box<NonSupportedPorts>),
     RelationExcluded(Box<ExcludedCompletion>),
-    MembershipUndecided(Box<UndecidedCompletion>),
+    Undecided(Box<WholeQuestionCoverageResidual>),
 }
 
 impl WholeQuestionOutcome {
     #[must_use]
-    pub const fn kind(&self) -> FiniteResolutionOutcomeKind {
+    pub fn kind(&self) -> FiniteResolutionOutcomeKind {
         match self {
             Self::Supported(_) => FiniteResolutionOutcomeKind::Supported,
-            Self::NotSupported(port) => port.outcome.kind(),
+            Self::NotSupported(ports) => ports.kind(),
             Self::RelationExcluded(_) => FiniteResolutionOutcomeKind::Unsupported,
-            Self::MembershipUndecided(_) => FiniteResolutionOutcomeKind::Unknown,
+            Self::Undecided(_) => FiniteResolutionOutcomeKind::Unknown,
         }
     }
 }
@@ -303,28 +333,31 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
         }
     }
 
-    // The whole question takes the first non-Supported port's outcome, residual intact.
+    // Every non-Supported port is retained, not just the first: a discarded residual would
+    // present that port's failure as absent and leave a later reopening nothing to reopen from.
     let mut supported = BTreeMap::new();
+    let mut refused = Vec::new();
     for (port, outcome) in supplied {
         match outcome.into_supported() {
             Ok(resolution) => {
                 supported.insert(port, resolution);
             }
-            Err(outcome) => {
-                return Ok(WholeQuestionOutcome::NotSupported(Box::new(
-                    NonSupportedPort {
-                        port,
-                        outcome: *outcome,
-                    },
-                )));
-            }
+            Err(outcome) => refused.push(NonSupportedPort {
+                port,
+                outcome: *outcome,
+            }),
         }
+    }
+    if !refused.is_empty() {
+        return Ok(WholeQuestionOutcome::NotSupported(Box::new(
+            NonSupportedPorts { ports: refused },
+        )));
     }
 
     // The member set of the whole question. Every Probe port must witness the same completions:
     // one question has one member projection, so ports that decode different completion fields do
     // not jointly support one answer.
-    let mut members: Option<Vec<_>> = None;
+    let mut members: Option<(TypeSymbol, Vec<CompletionCandidateRef>)> = None;
     for (port, resolution) in &supported {
         if resolution.query() != question {
             return Err(MixedQuestionResolutionError::PortAnswerQuestionMismatch {
@@ -348,16 +381,23 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
         }
         let port_members = resolution.answer().candidates().to_vec();
         match &members {
-            None => members = Some(port_members),
-            Some(established) if *established == port_members => {}
-            Some(_) => {
-                return Err(MixedQuestionResolutionError::PortMemberSetsDisagree(
-                    port.as_str().to_owned(),
-                ));
+            None => members = Some((port.clone(), port_members)),
+            Some((_, established)) if *established == port_members => {}
+            Some((established_port, _)) => {
+                // Two independently Supported ports witnessing different completion fields is not
+                // malformed input: each port's own evidence checked out. The question simply has
+                // no one member set at this horizon, where equality is the admitted agreement
+                // relation, so its coverage leaves the joint field undetermined.
+                return Ok(WholeQuestionOutcome::Undecided(Box::new(
+                    WholeQuestionCoverageResidual::DisagreeingMemberFields {
+                        established: established_port.clone(),
+                        disagreeing: port.clone(),
+                    },
+                )));
             }
         }
     }
-    let members = members.ok_or(MixedQuestionResolutionError::EmptyMemberSet)?;
+    let (_, members) = members.ok_or(MixedQuestionResolutionError::EmptyMemberSet)?;
     if members.is_empty() {
         return Err(MixedQuestionResolutionError::EmptyMemberSet);
     }
@@ -422,13 +462,13 @@ pub fn resolve_mixed_mode_question<C: MixedQuestionResolutionCatalog>(
                     coverage: membership.coverage,
                 }))
             }
-            FiniteResolutionCoverage::Partial(_) => {
-                WholeQuestionOutcome::MembershipUndecided(Box::new(UndecidedCompletion {
+            FiniteResolutionCoverage::Partial(_) => WholeQuestionOutcome::Undecided(Box::new(
+                WholeQuestionCoverageResidual::UndecidedMembership {
                     relation: membership.relation,
                     completion: *candidate_ref,
                     coverage: membership.coverage,
-                }))
-            }
+                },
+            )),
         });
     }
 
@@ -624,8 +664,6 @@ pub enum MixedQuestionResolutionError {
     PortMissingFromBundle(String),
     #[error("port {0:?} answered from an event outside its own bundle component")]
     PortAnswerEventMismatch(String),
-    #[error("Probe port {0:?} witnesses a different completion field than its sibling ports")]
-    PortMemberSetsDisagree(String),
     #[error("a whole-question supported answer must project a nonempty member set")]
     EmptyMemberSet,
     #[error("completion candidate {0} is unavailable")]
