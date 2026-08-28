@@ -37,9 +37,9 @@ use ic_core::{
     ResolutionCatalog, ResolutionPath, ResolutionPathIR, ResolutionPathRef, RouteRef, ScopeRef,
     SeparatorProblem, SeparatorProblemRef, SignatureContext, SourceConfig, SourceConfigRef,
     StateRef, StructureViewRef, SupportEnvironmentArtifact, SupportEnvironmentCatalog,
-    SupportEnvironmentRef, SupportSubjectRef, SurfacePlan, TyIR, TypeArtifact, TypeCatalog,
-    TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef, admit_exact_finite_cue,
-    admit_finite_supported_answers, bind_finite_ask_continuation,
+    SupportEnvironmentRef, SupportRef, SupportSubjectRef, SurfacePlan, TyIR, TypeArtifact,
+    TypeCatalog, TypeFamilyRef, TypeRef, TypeSymbol, TypedForm, TypedFormRef,
+    admit_exact_finite_cue, admit_finite_supported_answers, bind_finite_ask_continuation,
     challenge_exact_finite_sufficient_present, check_admitted_exact_finite_cue_basis,
     classify_finite_question_resolution, decode_actual_event,
     derive_exact_finite_sufficient_present, extend_exact_finite_sufficient_present,
@@ -54,12 +54,13 @@ use ic_runtime::{
     ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
     ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
-    SourceAskMixedDischarge, SourceAskProbeDischarge, SourceAskProbeDischargeError,
-    SourceEventLinkError, Terminator, TraversalCausalOrder, admit_finite_mixed_discharge_bundle,
-    admit_finite_probe_discharge_bundle, check_source_event_link, dispatch_probe,
-    materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
-    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
-    resolve_finite_probe_occurrence, route_separator_through_method_bridge,
+    SourceAskMixedDischarge, SourceAskMixedDischargeError, SourceAskProbeDischarge,
+    SourceAskProbeDischargeError, SourceEventLinkError, Terminator, TraversalCausalOrder,
+    admit_finite_mixed_discharge_bundle, admit_finite_probe_discharge_bundle,
+    check_source_event_link, dispatch_probe, materialize_ollama_decoded_texts,
+    plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
+    replay_completed_finite_separator_inquiry, resolve_finite_probe_occurrence,
+    route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -6346,6 +6347,23 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
             ),
         ],
     );
+    let runtime_artifact =
+        RuntimeProgramArtifact::new(binding, roots.compiler_version, runtime.clone());
+    let runtime_ref = runtime_artifact
+        .runtime_program_ref()
+        .expect("mixed-mode runtime identity must encode");
+    assert_eq!(
+        persist(
+            &store,
+            &runtime_artifact
+                .envelope()
+                .expect("mixed-mode runtime artifact must encode"),
+            &runtime_artifact.referenced_artifacts(),
+        )
+        .await,
+        runtime_ref.as_artifact_ref(),
+        "mixed-mode runtime must persist under its direct identity"
+    );
     let MachineStep::Suspended(suspension) = runtime
         .step(runtime.start())
         .expect("mixed-mode runtime must suspend")
@@ -6385,6 +6403,10 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
     let link = check_source_event_link(replay, occurrence.clone(), &catalog)
         .expect("mixed-mode source event must recheck");
     let calls_before_check = provider_calls.load(Ordering::SeqCst);
+    let generate_route =
+        RouteRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-generate-route").await);
+    let foreign_support =
+        SupportRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-foreign-support").await);
     let mixed = admit_finite_mixed_discharge_bundle(
         occurrence.clone(),
         vec![
@@ -6401,7 +6423,7 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
                 generate_port.clone(),
                 DischargeMode::Generate,
                 roots.answer_a,
-                RouteRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-generate-route").await),
+                generate_route,
                 binding,
                 roots.compiler_version,
                 provenance,
@@ -6420,9 +6442,12 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
             .iter()
             .map(|open| PortLowering::new(open.port().clone(), open.mode()))
             .collect(),
-        RuntimeProgramArtifact::new(binding, roots.compiler_version, runtime.clone()),
+        runtime_artifact.clone(),
     )
     .expect("mixed-mode source lowering must form");
+    lowering
+        .check_expected(&occurrence, runtime_ref, &catalog)
+        .expect("mixed-mode source lowering must retain its exact runtime identity");
     SourceAskMixedDischarge::new(lowering, mixed.clone())
         .check(&catalog)
         .expect("mixed field must pair only with its exact checked lowering");
@@ -6433,7 +6458,7 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
             occurrence,
             vec![
                 MixedPortDischargeEvidence::Probe(Box::new(ProbePortDischargeEvidence::new(
-                    probe_port,
+                    probe_port.clone(),
                     actual.event().route(),
                     roots.decoded_path,
                     binding,
@@ -6442,7 +6467,7 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
                     link,
                 ))),
                 MixedPortDischargeEvidence::Probe(Box::new(ProbePortDischargeEvidence::new(
-                    generate_port,
+                    generate_port.clone(),
                     actual.event().route(),
                     roots.decoded_path,
                     binding,
@@ -6468,6 +6493,240 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
         ),
         Err(MixedDischargeBundleError::ModeMismatch(_))
     ));
+    let foreign_provenance = ProvenanceRef::from_artifact_ref(
+        stored_ref(&store, b"mixed-mode-foreign-occurrence-provenance").await,
+    );
+    let foreign_source_value = SourceConfig::new(
+        roots.unit,
+        source_program,
+        Vec::new(),
+        binding,
+        roots.compiler_version,
+        foreign_provenance,
+    )
+    .expect("foreign mixed-mode source configuration must encode");
+    let foreign_source = SourceConfigRef::from_artifact_ref(
+        persist(
+            &store,
+            &foreign_source_value
+                .envelope()
+                .expect("foreign mixed-mode source configuration must encode"),
+            &foreign_source_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(
+        catalog.insert_source_config(foreign_source_value.clone()),
+        foreign_source
+    );
+    let foreign_occurrence = foreign_source_value
+        .ask_occurrences(&catalog)
+        .expect("foreign mixed-mode source must rewalk")
+        .into_iter()
+        .next()
+        .expect("foreign mixed-mode source must contain Ask");
     store.close().await;
+    let reopened = ArtifactStore::open(&url)
+        .await
+        .expect("mixed-mode store must reopen after actuality");
+    reopened
+        .migrate()
+        .await
+        .expect("mixed-mode migrations must remain repeatable after actuality");
+    let mut cold_catalog = load_cold_replay_catalog(&reopened, roots).await;
+
+    let cold_relation =
+        RelationSchema::from_envelope(&load_envelope(&reopened, relation.as_artifact_ref()).await)
+            .expect("mixed-mode relation must cold decode");
+    assert_eq!(cold_catalog.insert_schema(cold_relation), relation);
+    let cold_query =
+        OpenQuery::from_envelope(&load_envelope(&reopened, query.as_artifact_ref()).await)
+            .expect("mixed-mode query must cold decode");
+    assert_eq!(cold_catalog.insert_query(cold_query), query);
+    let cold_chart =
+        BoundaryChart::from_envelope(&load_envelope(&reopened, chart.as_artifact_ref()).await)
+            .expect("mixed-mode chart must cold decode");
+    assert_eq!(cold_chart.boundary_ref().ok(), Some(chart));
+    cold_catalog.charts.insert(chart, cold_chart);
+    let cold_operator =
+        ProbeOperator::from_envelope(&load_envelope(&reopened, operator.as_artifact_ref()).await)
+            .expect("mixed-mode operator must cold decode");
+    assert_eq!(cold_operator.probe_operator_ref().ok(), Some(operator));
+    cold_catalog.operators.insert(operator, cold_operator);
+    let cold_source_program = IProgArtifact::from_envelope(
+        &load_envelope(&reopened, source_program.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode source program must cold decode");
+    assert_eq!(
+        cold_catalog.insert_program(cold_source_program),
+        source_program
+    );
+    let cold_source =
+        SourceConfig::from_envelope(&load_envelope(&reopened, source.as_artifact_ref()).await)
+            .expect("mixed-mode source configuration must cold decode");
+    assert_eq!(
+        cold_catalog.insert_source_config(cold_source.clone()),
+        source
+    );
+    let cold_occurrence = cold_source
+        .ask_occurrences(&cold_catalog)
+        .expect("mixed-mode source must cold rewalk")
+        .into_iter()
+        .next()
+        .expect("mixed-mode source must retain its Ask");
+    let persisted_occurrence = AskOccurrence::from_envelope(
+        &load_envelope(&reopened, occurrence_ref.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode occurrence must cold decode");
+    assert_eq!(cold_occurrence, persisted_occurrence);
+    let cold_runtime = RuntimeProgramArtifact::from_envelope(
+        &load_envelope(&reopened, runtime_ref.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode runtime must cold decode");
+    assert_eq!(
+        cold_runtime
+            .runtime_program_ref()
+            .expect("cold runtime identity must encode"),
+        runtime_ref
+    );
+    let cold_replay = reopened
+        .replay_completed_external_effect(token)
+        .await
+        .expect("mixed-mode actual event must cold replay");
+    assert_eq!(
+        provider_calls.load(Ordering::SeqCst),
+        calls_before_check,
+        "cold reconstruction must not redispatch the provider"
+    );
+    let cold_link =
+        check_source_event_link(cold_replay.clone(), cold_occurrence.clone(), &cold_catalog)
+            .expect("cold mixed-mode source event link must recheck");
+    let cold_mixed = admit_finite_mixed_discharge_bundle(
+        cold_occurrence.clone(),
+        vec![
+            MixedPortDischargeEvidence::Probe(Box::new(ProbePortDischargeEvidence::new(
+                probe_port.clone(),
+                cold_replay.event().route(),
+                roots.decoded_path,
+                binding,
+                roots.compiler_version,
+                provenance,
+                cold_link,
+            ))),
+            MixedPortDischargeEvidence::NonProbe(Box::new(NonProbePortDischargeEvidence::new(
+                generate_port.clone(),
+                DischargeMode::Generate,
+                roots.answer_a,
+                generate_route,
+                binding,
+                roots.compiler_version,
+                provenance,
+                context.support(),
+                context.warrant(),
+            ))),
+        ],
+        &cold_catalog,
+    )
+    .expect("mixed-mode field must cold regenerate from ordinary roots");
+    let cold_port_lowerings = OpenQueryCatalog::resolve_open_query(&cold_catalog, query)
+        .expect("mixed-mode cold query must resolve")
+        .open_ports()
+        .iter()
+        .map(|open| PortLowering::new(open.port().clone(), open.mode()))
+        .collect::<Vec<_>>();
+    let cold_lowering = SourceAskLowering::new(
+        cold_occurrence.clone(),
+        cold_port_lowerings.clone(),
+        cold_runtime.clone(),
+    )
+    .expect("mixed-mode source lowering must cold regenerate");
+    cold_lowering
+        .check_expected(&cold_occurrence, runtime_ref, &cold_catalog)
+        .expect("cold lowering must retain exact runtime identity");
+    SourceAskMixedDischarge::new(cold_lowering, cold_mixed.clone())
+        .check(&cold_catalog)
+        .expect("cold mixed field must pair only with its exact checked lowering");
+
+    let cold_foreign_source = SourceConfig::from_envelope(
+        &load_envelope(&reopened, foreign_source.as_artifact_ref()).await,
+    )
+    .expect("foreign mixed-mode source configuration must cold decode");
+    assert_eq!(
+        cold_catalog.insert_source_config(cold_foreign_source.clone()),
+        foreign_source
+    );
+    let cold_foreign_occurrence = cold_foreign_source
+        .ask_occurrences(&cold_catalog)
+        .expect("foreign mixed-mode source must cold rewalk")
+        .into_iter()
+        .next()
+        .expect("foreign mixed-mode source must retain its Ask");
+    assert_eq!(cold_foreign_occurrence, foreign_occurrence);
+    let foreign_lowering = SourceAskLowering::new(
+        cold_foreign_occurrence,
+        cold_port_lowerings.clone(),
+        cold_runtime.clone(),
+    )
+    .expect("foreign lowering remains structurally formable");
+    assert!(matches!(
+        SourceAskMixedDischarge::new(foreign_lowering, cold_mixed.clone()).check(&cold_catalog),
+        Err(SourceAskMixedDischargeError::OccurrenceMismatch)
+    ));
+    let changed_runtime = RuntimeProgramArtifact::new(
+        binding,
+        roots.compiler_version,
+        ProgramIR::new(
+            roots.unit,
+            BlockTarget::new(0),
+            vec![BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            )],
+        ),
+    );
+    let changed_lowering = SourceAskLowering::new(
+        cold_occurrence.clone(),
+        cold_port_lowerings,
+        changed_runtime,
+    )
+    .expect("changed mixed-mode runtime remains structurally formable");
+    assert!(matches!(
+        changed_lowering.check_expected(&cold_occurrence, runtime_ref, &cold_catalog),
+        Err(SourceAskLoweringCheckError::ExpectedRuntimeMismatch { .. })
+    ));
+    assert!(matches!(
+        admit_finite_mixed_discharge_bundle(
+            cold_occurrence,
+            vec![
+                MixedPortDischargeEvidence::Probe(Box::new(ProbePortDischargeEvidence::new(
+                    probe_port,
+                    cold_replay.event().route(),
+                    roots.decoded_path,
+                    binding,
+                    roots.compiler_version,
+                    provenance,
+                    check_source_event_link(cold_replay, persisted_occurrence, &cold_catalog)
+                        .expect("replayed event must retain exact occurrence"),
+                ))),
+                MixedPortDischargeEvidence::NonProbe(Box::new(NonProbePortDischargeEvidence::new(
+                    generate_port,
+                    DischargeMode::Generate,
+                    roots.answer_a,
+                    generate_route,
+                    binding,
+                    roots.compiler_version,
+                    provenance,
+                    foreign_support,
+                    context.warrant(),
+                ))),
+            ],
+            &cold_catalog,
+        ),
+        Err(MixedDischargeBundleError::NonProbeAuthorityMismatch(_))
+    ));
+    assert_eq!(provider_calls.load(Ordering::SeqCst), calls_before_check);
+    reopened.close().await;
     std::fs::remove_file(path).expect("mixed-mode database must be removable");
 }
