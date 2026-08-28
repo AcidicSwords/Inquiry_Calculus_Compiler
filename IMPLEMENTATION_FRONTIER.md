@@ -1,42 +1,49 @@
-# Implementation Frontier
+# Formal Successor Frontier
 
-This file is the sole live implementation cursor. Historical work belongs in Git, demonstrated behavior in `CONFORMANCE_STATUS.md`, and accepted choices or failures in the JSONL ledgers.
-
-Repository actuality must be probed before acting. The current residual was derived from demonstrated implementation behavior through predecessor coordinate `9fde98f`; that coordinate is ancestry, not a claim that a tracked document can name its own final commit or worktree state.
+This is the single live autonomous cursor on `codex/formal-successor`. The predecessor Rust cursor
+at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recorded in
+`formal-successor/PREDECESSOR_BASELINE.md`; Git retains its exact content.
 
 ## Immediate demonstrated predecessor
 
-`QASK-MIXED-COLD-REGEN-006` established file-backed cold regeneration of the derived finite mixed field/lowering pair. The fixture persists ordinary source/configuration/occurrence/runtime, event, resolution, typed-form, and authority roots; rebuilds a fresh catalog after reopen; regenerates both views with zero provider calls; and rejects foreign occurrence, runtime, and non-Probe-authority substitutions. No derived view, compiler, executor, resolver, table, or opcode was persisted or added.
+`FORMAL-SETUP-001` establishes branch/control separation, byte-pinned active inputs, a pinned Lean
+project, a buildable ambient-boundary module, formal CI, a predecessor freeze check, and separate
+successor state ledgers. It establishes setup only, not a successor semantic theorem or Gate A.
 
 ## Strongest live obligation
 
-Demonstrate the smallest exact program-wide resolution gate that may compile a cold-regenerated mixed Probe/Generate field into one source continuation without collapsing its mixed evidence or selecting an answer member.
+Complete Phase A's exhaustive, reviewable predecessor inventory without interpreting Rust as
+semantic authority or silently repairing v2.0 claims.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: QASK-MIXED-RESOLUTION-007
-plan_phase: 8
-goal: Admit one source continuation only from a complete exact mixed Probe/Generate field and one whole proof-carrying supported answer, then regenerate that result after restart without provider redispatch.
-protected_difference: A checked mixed field can retain one actual Probe result and one typed Generate result while a continuation gate either ignores the non-Probe coordinate, creates a fictitious event, selects one answer completion, or reuses warm control state.
-discriminator: Build one file-backed Probe/Generate source Ask whose complete mixed field is paired with exact lowering. Reconstruct a complete supported answer only through the declared five-way resolution outcome, bind the whole answer capture-safely, normalize its exact continuation, and reject unsupported, undefined, unknown, partial, foreign-occurrence, wrong-runtime, or non-Probe-authority inputs with zero provider calls after reopen.
-horizon: one finite file-backed Probe/Generate Ask with one actual event and one typed non-Probe result, one declared finite resolution field, one whole supported answer, and a Return or next Ask continuation; no persisted derived bundle/resumption, compiler procedure, general executor, resolver procedure artifact, event for non-Probe modes, cross-binding bridge, scheduler, controller, table, or opcode
-relevant_decisions: D-0125, D-0136, D-0152, D-0156, D-0157, D-0159, D-0160, D-0161
-relevant_failures: F-0001, F-0002
-if_pass: rederive the strongest remaining Phase 8 actuality/resolution residual from the stable plan and pending conformance; do not reopen passed QASK/QSUCC/QREADY/QACTUAL fixtures without a new breaker
-if_fail: reopen the earliest mixed-field, resolution-outcome, whole-answer, occurrence, continuation, cold-root, or authority-route relation; do not persist the derived views or build a general compiler, executor, dispatcher, scheduler, controller, table, or opcode
+id: FORMAL-A-INVENTORY-001
+plan_phase: A
+goal: Give every consequential v2.0 declaration and normative claim, current Rust semantic module, and relevant conformance fixture a stable inventory identity and a formalization destination or explicit disposition.
+protected_difference: An exhaustive traceable predecessor surface can reveal omissions and correction obligations, while a hand-selected list can make Gate A appear complete by silently dropping inconvenient claims or implementation surfaces.
+discriminator: Generate inventories from the canonical TeX and repository, independently check source coverage and stable identities, then require every item to name its source locus, category, destination or disposition, and evidence status with no unmatched consequential source item under the declared extraction grammar.
+horizon: Phase A inventory only across Inquiry_Calculus_v2_0.tex, current Rust semantic modules, public schemas, and registered conformance fixtures at branch point 4a18e2e; no semantic repair, primitive selection, Gate A promotion, or successor-driven Rust change
+relevant_decisions: D-9001, D-9002, D-9003, D-9004, D-9005
+relevant_failures: F-9001, F-9002
+if_pass: open the smallest unresolved Phase B ambient-boundary or predecessor-surface formalization residual while retaining inventory coverage checks
+if_fail: reopen the earliest extraction grammar, source classification, stable identity, destination, or coverage relation; do not hand-fill the missing item without updating the generator/checker
 <!-- LIVE_FRONTIER_END -->
 
-## Smallest decisive fixture
+## Smallest decisive breaker
 
-Use one complete finite mixed field and one declared finite resolution outcome field. Only a whole `Supported` answer may bind the exact rewalked source continuation. Close/reopen and reconstruct the same result from ordinary roots; every non-supported outcome, occurrence/runtime substitution, partial answer, or changed non-Probe authority must remain a distinct refusal with no provider call.
-
-The smallest wrong implementation treats the Probe component as the whole answer, turns the Generate component into an event, selects one resolution completion, accepts a same-question occurrence or compatible runtime, reuses a warm continuation, or dispatches while regenerating.
+Delete or alter one extracted TeX declaration, normative claim, semantic Rust module, public schema,
+or registered conformance fixture and require the inventory coverage check to fail at that exact
+source identity. The smallest wrong implementation is a manually curated checklist whose own
+omissions are invisible.
 
 ## Prohibitions at this boundary
 
-- Do not persist a mixed field, mixed lowering, or mixed resumption view, or introduce a compiler, general executor, resolver procedure artifact, dispatcher, scheduler, controller, table, or opcode.
-- Do not create an event for a Pure, Generate, Check, or Warrant port merely because source continuation is considered.
-- Do not erase exact source occurrence, port/mode, compiler, runtime-program, Probe event/route/decoder/resolution, non-Probe typed-result/authority, or whole-answer identities.
+- Do not rewrite v2.0, infer successor truth from Rust, or select a primitive basis.
+- Do not mark Gate A passed from file presence or a green Lean build.
+- Do not advance the deferred v2 Rust frontier.
+- Do not mix successor state into the predecessor ledgers.
 
 ## Exit
 
-On pass, update conformance and project state, then rederive the next strongest residual. On failure, preserve the actual return and reopen the earliest implicated persisted-root or field/lowering relation rather than broadening the architecture.
+On pass, record the exact extraction grammar, source coverage, checker, evidence, and reopen
+condition in `formal-successor/CONFORMANCE_STATUS.md`, then derive the next Phase B residual. On
+failure, preserve the return and reopen the earliest inventory relation.

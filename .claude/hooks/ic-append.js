@@ -6,6 +6,11 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const {
+  validatePolicy,
+  validateQuestionProgram,
+  validateStoredQuestion,
+} = require("./ic-question-program.js");
 
 const [operation, tracePath, fuelPath] = process.argv.slice(2);
 if (!new Set(["validate", "append"]).has(operation) || !tracePath) {
@@ -148,6 +153,16 @@ function validatedRecords() {
     }
     return record;
   });
+  const policies = records.filter((record) => record.kind === "policy");
+  if (policies.length > 1 || (policies.length === 1 && policies[0].seq !== 1)) {
+    fail("question-program policy must occur exactly once at the first record");
+  }
+  if (policies.length === 1) {
+    validatePolicy(policies[0]);
+    for (const record of records) {
+      if (record.kind === "question") validateStoredQuestion(record, policies[0]);
+    }
+  }
   validateStateMachine(records);
   return records;
 }
@@ -160,20 +175,35 @@ function validateStateMachine(records) {
   let cycle = null;
   let lastResidual = 0;
   let lastStop = 0;
+  let questionProgramPolicy = false;
 
   for (const record of records) {
     switch (record.kind) {
+      case "policy":
+        questionProgramPolicy = true;
+        break;
+      case "question":
+        if (
+          questionProgramPolicy &&
+          cycle !== null &&
+          cycle.uncomposedReturns > 0
+        ) {
+          cycle.questions += 1;
+          cycle.uncomposedReturns -= 1;
+        }
+        break;
       case "seal":
         if (cycle !== null) {
           fail(`line ${record.seq} opens a seal before the prior cycle closes`);
         }
-        cycle = { raw: 0, check: 0 };
+        cycle = { raw: 0, check: 0, questions: 0, uncomposedReturns: 0 };
         break;
       case "raw":
         if (cycle === null) {
           fail(`line ${record.seq} records a raw return without an open seal`);
         }
         cycle.raw += 1;
+        cycle.uncomposedReturns += 1;
         break;
       case "check":
         if (cycle === null || cycle.raw === 0) {
@@ -182,9 +212,15 @@ function validateStateMachine(records) {
         cycle.check += 1;
         break;
       case "residual":
-        if (cycle === null || cycle.raw === 0 || cycle.check === 0) {
+        if (
+          cycle === null ||
+          cycle.raw === 0 ||
+          cycle.check === 0 ||
+          (questionProgramPolicy &&
+            (cycle.questions === 0 || cycle.uncomposedReturns !== 0))
+        ) {
           fail(
-            `line ${record.seq} closes a cycle before seal, raw return, and check`,
+            `line ${record.seq} closes a cycle before every raw return has a subsequent question program and check`,
           );
         }
         cycle = null;
@@ -277,6 +313,12 @@ try {
       ) {
         fail("question record requires nonempty fp and string answer");
       }
+      record.question_program_check = validateQuestionProgram(
+        record,
+        path.resolve(__dirname, "../.."),
+      );
+      const policy = records.find((prior) => prior.kind === "policy");
+      if (policy) validateStoredQuestion(record, policy);
       if (
         records.some(
           (prior) => prior.fp === record.fp && prior.answer === record.answer,
@@ -287,6 +329,10 @@ try {
             "horizon, coverage, repository actuality, and answer",
         );
       }
+    }
+    if (record.kind === "policy") {
+      if (records.length !== 0) fail("question-program policy must be the first record");
+      validatePolicy(record);
     }
     const expectedSeq = records.length + 1;
     const stored = {

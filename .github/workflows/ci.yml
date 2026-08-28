@@ -3,7 +3,7 @@ name: CI
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, codex/formal-successor]
   pull_request:
     branches: [main]
 
@@ -11,6 +11,32 @@ permissions:
   contents: read
 
 jobs:
+  formal-successor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Check successor authority and predecessor freeze
+        run: node tools/successor_control_check.js
+
+      - name: Build and independently check the formal successor
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          build: true
+          build-args: --wfail
+          test: false
+          leanchecker: true
+          axiom-audit: true
+          axiom-audit-root: InquiryCalculus
+          nanoda: true
+          nanoda-allow-sorry: false
+
   phase-0:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -80,6 +106,7 @@ jobs:
           set -euo pipefail
           node --check .claude/hooks/ic-run.js
           node --check .claude/hooks/ic-append.js
+          node --check .claude/hooks/ic-question-program.js
           node --check tools/harness_control_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard

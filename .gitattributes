@@ -2,4 +2,5 @@
 *.jsonl text eol=lf
 *.sql text eol=lf
 *.tex text eol=lf
+formal-successor/Questions.txt -text -whitespace
 research/final-2026-08-25/** -whitespace

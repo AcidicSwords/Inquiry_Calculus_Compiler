@@ -116,6 +116,15 @@ init)
         die "cannot create trace"
     printf '%s' "$(basename "$created")" >"$STATE"
     printf '%s' "$DEFAULT_FUEL" >"$FUEL"
+    source_digest="$(sha256sum "$ROOT/formal-successor/Questions.txt" 2>/dev/null | cut -d' ' -f1)"
+    manifest_digest="$(sha256sum "$ROOT/formal-successor/ENGINEERING_QUESTION_PROGRAMS.json" 2>/dev/null | cut -d' ' -f1)"
+    [ "${#source_digest}" -eq 64 ] || die "cannot pin Questions.txt for the new trace"
+    [ "${#manifest_digest}" -eq 64 ] || die "cannot pin engineering question programs for the new trace"
+    policy_record="$(printf '{\"ts\":\"%s\",\"kind\":\"policy\",\"question_program_schema\":\"1\",\"source_digest\":\"%s\",\"program_manifest_digest\":\"%s\"}\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$source_digest" "$manifest_digest")"
+    printf '%s\n' "$policy_record" |
+        node "$ROOT/.claude/hooks/ic-append.js" append "$created" >/dev/null ||
+        die "cannot initialize question-program policy"
     printf 'trace: .claude/trace/%s (fuel %s)\n' "$(basename "$created")" "$DEFAULT_FUEL"
     exit 0
     ;;
@@ -218,7 +227,9 @@ need() {
 case "$cmd" in
 ensure) need task authority invariants ;;
 question)
-    need q mode answer branch occurrence continuation bindings horizon coverage authority evidence
+    need q mode answer branch occurrence continuation bindings horizon coverage authority evidence \
+        program coding_questions reciprocal_applicability reciprocal_pairs reciprocal_reason \
+        source_digest program_manifest_digest
     in_list "${kv[mode]}" "$MODES" || die "mode must be one of: $MODES"
     ;;
 seal) need should_change invariants discriminator wrong_impl ;;
@@ -288,7 +299,8 @@ if [ "$cmd" = "question" ]; then
     kv[coverage_normalized]="$(normalize_coordinate "${kv[coverage]}")"
     kv[authority_normalized]="$(normalize_coordinate "${kv[authority]}")"
     kv[evidence_normalized]="$(normalize_coordinate "${kv[evidence]}")"
-    fp="$(fingerprint "${kv[q]}" "${kv[occurrence]}" "${kv[continuation]}" "${kv[bindings_normalized]}" "${kv[horizon_normalized]}" "${kv[coverage_normalized]}" "${kv[authority_normalized]}" "${kv[evidence_normalized]}")"
+    q_program_context="${kv[q]}|${kv[program]}|${kv[coding_questions]}|${kv[reciprocal_applicability]}|${kv[reciprocal_pairs]}|${kv[source_digest]}|${kv[program_manifest_digest]}"
+    fp="$(fingerprint "$q_program_context" "${kv[occurrence]}" "${kv[continuation]}" "${kv[bindings_normalized]}" "${kv[horizon_normalized]}" "${kv[coverage_normalized]}" "${kv[authority_normalized]}" "${kv[evidence_normalized]}")"
 fi
 
 record="$({

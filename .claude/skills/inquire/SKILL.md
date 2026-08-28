@@ -55,16 +55,28 @@ the trace lawfully first.
 
 Record a consequential answer with all recurrence coordinates:
 
+    source_digest="$(sha256sum formal-successor/Questions.txt | cut -d' ' -f1)"
+    program_manifest_digest="$(sha256sum formal-successor/ENGINEERING_QUESTION_PROGRAMS.json | cut -d' ' -f1)"
     .claude/hooks/ic-trace question \
       q=... mode=Pure \
       answer=... branch=... \
       occurrence=... continuation=... \
       bindings=... horizon=... coverage=... \
-      authority=... evidence=...
+      authority=... evidence=... \
+      program=QP-CODING-RECIPROCAL-RATCHET \
+      coding_questions=<comma-separated-QP-CODING-source-lines> \
+      reciprocal_applicability=applicable \
+      reciprocal_pairs=<left:right-pairs-separated-by-semicolons> \
+      reciprocal_reason=... \
+      source_digest="$source_digest" \
+      program_manifest_digest="$program_manifest_digest"
 
 The occurrence identifies the checked Ask/engineering question use; continuation identifies the
 answer-dependent branch program. Use explicit values such as none only when that coordinate truly
-does not apply.
+does not apply. For a typed reverse-direction inapplicability, record
+`reciprocal_applicability=inapplicable` and `reciprocal_pairs=none` with the reason. New traces pin
+both input digests in their first record, and the harness refuses a residual until the active cycle
+contains a policy-accepted question after every raw return.
 
 An optional derived route occurrence may be recorded:
 

@@ -1,0 +1,23 @@
+name = "inquiry_calculus_formal_successor"
+version = "0.1.0"
+defaultTargets = ["InquiryCalculus", "Spec"]
+
+[leanOptions]
+autoImplicit = false
+warningAsError = true
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "0df444a360eaa60ab8c11dca51a86af692955474"
+
+[[require]]
+name = "verso"
+git = "https://github.com/leanprover/verso.git"
+rev = "3bdedf29bada13d8103e6c979001c51dcee210c8"
+
+[[lean_lib]]
+name = "InquiryCalculus"
+
+[[lean_lib]]
+name = "Spec"

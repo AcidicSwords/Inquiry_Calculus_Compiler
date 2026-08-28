@@ -1,4 +1,5 @@
 /target/
+/formal/.lake/
 
 # Local databases and SQLite sidecars
 *.db

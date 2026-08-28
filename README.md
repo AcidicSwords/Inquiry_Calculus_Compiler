@@ -1,5 +1,11 @@
 # Inquiry Calculus
 
+> **Branch mode — formal successor:** `codex/formal-successor` is an isolated construction branch.
+> Its active objective is the Lean-checked successor under
+> `formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md`, not continued semantic expansion of the
+> v2.0 Rust implementation. The Rust workspace remains the predecessor reference and regression
+> boundary until Formal Gate F.
+
 Rust reference implementation of Inquiry Calculus v2.0: a typed relational language for answer-dependent inquiry, preserved actuality, regenerative compression, and cold replay.
 
 Version 2.0 consolidates the accepted v1.1 substrate, positive-negation successor, paired actuality, and corrected interrogative succession into one forward authority. The version change does not restart the implementation or create executable conformance by itself.
@@ -9,9 +15,12 @@ Version 2.0 consolidates the accepted v1.1 substrate, positive-negation successo
 | Question | Active source |
 |---|---|
 | What the calculus means | `Inquiry_Calculus_v2_0.tex` |
+| How the successor is constructed and accepted on this branch | `formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md` |
+| Machine-checked candidate successor meaning | `formal/` (only to the coverage actually proved) |
 | Final architecture, phase dependencies, and completion contract | `Inquiry_Calculus_v2_0_Comprehensive_Implementation_Plan.md` |
 | How consequential engineering work proceeds | `AGENTS.md` and the `.claude` inquiry harness |
 | The single strongest live executable residual | `IMPLEMENTATION_FRONTIER.md` |
+| Successor evidence, decisions, and failures | `formal-successor/CONFORMANCE_STATUS.md`, `formal-successor/DECISIONS.jsonl`, `formal-successor/FAILURES.jsonl` |
 | Demonstrated executable evidence | `CONFORMANCE_STATUS.md` |
 | Accepted implementation choices and reopen conditions | `DECISIONS.jsonl` |
 | Observed failures and environmental constraints | `FAILURES.jsonl` |
@@ -26,6 +35,10 @@ Research is consulted only when a live residual needs one of its distinctions. I
 - `ic-runtime` verifies and coordinates runtime control, providers, dispatch, resolution, and cold replay without becoming semantic authority.
 - `ic-store` provides immutable content-addressed artifacts, ordinary event history, and crash-recovery persistence through SQLite.
 - `ic-cli` remains the narrow command-line boundary and contains no independent semantic machinery.
+- `formal` is the pinned Lean/Lake proof project for the successor.
+- `formal-successor` owns successor inputs, inventories, evidence, decisions, failures, and
+  propagation reports. These do not overwrite predecessor ledgers. Its
+  `AUTONOMOUS_ITERATION.md` runbook defines how a fresh run resumes and completes one finite ratchet.
 
 ## Build and verification
 
@@ -43,6 +56,19 @@ tectonic -X compile --keep-logs --outdir target/tex Inquiry_Calculus_v2_0.tex
 ```
 
 See `.github/workflows/ci.yml` for the complete gate set.
+
+The formal branch also runs:
+
+```bash
+node tools/successor_control_check.js
+node tools/harness_control_check.js
+cd formal
+lake build --wfail
+```
+
+New inquiry traces pin the supplied question corpus and its declared engineering programs. A sealed
+cycle cannot close until it records a declared coding sequence composed with a reciprocal-why pair,
+or a checked typed reason that the reverse orientation is inapplicable.
 
 ## Current implementation state
 

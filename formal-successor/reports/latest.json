@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "change": "formal-successor branch setup",
+  "changed": [
+    "branch control and authority routing",
+    "active successor frontier",
+    "pinned formal project",
+    "formal CI",
+    "successor state separation",
+    "coding and reciprocal-why engineering question programs",
+    "per-return question-program trace enforcement",
+    "persistent autonomous iteration runbook"
+  ],
+  "dependency_closure": [
+    "AGENTS.md",
+    "IMPLEMENTATION_FRONTIER.md",
+    "README.md",
+    ".github/workflows/ci.yml",
+    "formal/",
+    "formal-successor/",
+    "tools/successor_control_check.js",
+    "formal-successor/ENGINEERING_QUESTION_PROGRAMS.json",
+    ".claude/hooks/ic-question-program.js",
+    ".claude/hooks/ic-append.js",
+    "tools/harness_control_check.js",
+    "formal-successor/AUTONOMOUS_ITERATION.md",
+    ".gitattributes"
+  ],
+  "preserved": [
+    "Inquiry_Calculus_v2_0.tex",
+    "Rust workspace semantics",
+    "predecessor conformance and decision ledgers"
+  ],
+  "still_open": [
+    "FORMAL-A-INVENTORY-001",
+    "independent promoted-module kernel policy beyond scaffold",
+    "Formal Gates A-N"
+  ],
+  "models_rerun": [
+    "wrong root frontier rejected",
+    "one-sided reciprocal pair rejected",
+    "missing post-return question program rejected",
+    "question detached from pinned trace policy rejected"
+  ],
+  "question_corpus_rerun": true,
+  "regeneration_rerun": false,
+  "axiom_audit": "recursive source audit clean; independent CI audit configured"
+}

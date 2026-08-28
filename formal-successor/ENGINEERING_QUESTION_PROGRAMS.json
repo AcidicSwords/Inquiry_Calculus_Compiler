@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "source": "formal-successor/Questions.txt",
+  "source_sha256": "5a0dbb45bd1e9ff838a0396f6a1f17ba23cfa726889d28ab9b809b0c9b9cd019",
+  "sections": {
+    "coding": {
+      "heading": "Engineering one:",
+      "heading_line": 1031,
+      "first_question_line": 1033,
+      "last_question_line": 2995
+    },
+    "reciprocal_why": {
+      "heading": "Reciprocal why:",
+      "heading_line": 5552,
+      "first_question_line": 5554,
+      "last_question_line": 7052
+    }
+  },
+  "programs": [
+    {
+      "id": "QP-CODING-FRAME",
+      "purpose": "Bind the implementation/formalization frame before selecting a change.",
+      "sequence": [1033, 1035, 1037, 1039, 1045, 1051, 1073, 1075, 1083, 1089, 1097, 1099, 1103, 1105]
+    },
+    {
+      "id": "QP-CODING-TRACE-COMPOSE",
+      "purpose": "Separate direct return, dependency path, composition, order, and sequence effects.",
+      "sequence": [1369, 1387, 1389, 1433, 1441, 1481, 1491, 1495, 1501]
+    },
+    {
+      "id": "QP-CODING-BOUNDARY",
+      "purpose": "Construct necessity/sufficiency breakers and approach a boundary from both sides.",
+      "paired_sequence": [[1907, 1909], [1911, 1913], [1957, 1959], [1987, 2503]]
+    },
+    {
+      "id": "QP-CODING-PROPAGATE-RATCHET",
+      "purpose": "Trace propagation, combination effects, reopening, and the next discriminating test.",
+      "sequence": [2779, 2839, 2841, 2843, 2879, 2885, 2963, 2967, 2969, 2971, 2973, 2975, 2981, 2987, 2991, 2993, 2995]
+    },
+    {
+      "id": "QP-WHY-RETURN-CONTRAST",
+      "purpose": "Rebuild from the return and choose a meaningful alternative field.",
+      "sequence": [5554, 5556, 5558, 5560, 5566, 5568, 5570, 5578, 5580, 5584, 5598, 5600, 5602, 5604, 5606, 5608]
+    },
+    {
+      "id": "QP-WHY-RECIPROCAL-NECESSITY",
+      "purpose": "Pair forward and reverse orientations and independently attack necessity and sufficiency.",
+      "paired_sequence": [[5672, 5676], [5680, 5700], [5702, 5706], [5712, 5716], [5734, 5742], [5942, 5944], [5946, 5988]]
+    },
+    {
+      "id": "QP-WHY-CONTRACT-REOPEN",
+      "purpose": "Cross strongly, contract to the last distinction, and test whether the alternative returns.",
+      "sequence": [5868, 5872, 5878, 5880, 5890, 5892, 5894, 5896, 5898, 5900]
+    },
+    {
+      "id": "QP-WHY-EVIDENCE",
+      "purpose": "Break interpretive loops and require independent support against surviving explanations.",
+      "sequence": [6096, 6112, 6124, 6126, 6128, 6130, 6136, 6192]
+    },
+    {
+      "id": "QP-WHY-FAILURE-REPAIR",
+      "purpose": "Distinguish failure formation from manifestation and minimize a real repair.",
+      "sequence": [6474, 6486, 6488, 6490, 6492, 6494, 6496, 6498, 6500, 6506, 6510, 6512, 6516, 6520]
+    },
+    {
+      "id": "QP-WHY-QUESTION-RATCHET",
+      "purpose": "Select the cheapest consequential separator, retain only supported answers, and construct the next question.",
+      "sequence": [6662, 6664, 6666, 6668, 6686, 6688, 6696, 6708, 6724, 6980, 6982, 6998, 7010, 7012, 7014, 7020, 7022, 7026, 7030, 7044, 7048]
+    }
+  ],
+  "composition": {
+    "id": "QP-CODING-RECIPROCAL-RATCHET",
+    "order": [
+      "QP-CODING-FRAME",
+      "actual_return",
+      "QP-WHY-RETURN-CONTRAST",
+      "QP-WHY-RECIPROCAL-NECESSITY",
+      "QP-CODING-BOUNDARY",
+      "QP-WHY-CONTRACT-REOPEN",
+      "QP-CODING-TRACE-COMPOSE",
+      "QP-CODING-PROPAGATE-RATCHET",
+      "QP-WHY-EVIDENCE",
+      "recheck_reprove_ablate",
+      "QP-WHY-QUESTION-RATCHET",
+      "next_live_residual"
+    ],
+    "continuation_rule": "Only a supported return under the declared mode, occurrence, binding, horizon, and coverage selects the next sequence; inapplicable reciprocal directions remain explicit rather than forced symmetric.",
+    "reopen_rule": "A new alternative, sharper comparison, changed direction, bypass, escape, representation gap, evidence conflict, or lost regeneration reopens the earliest affected pair."
+  }
+}

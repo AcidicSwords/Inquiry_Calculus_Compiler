@@ -741,12 +741,17 @@ def main() -> int:
     check_canonical_source()
     decision_ids = parse_jsonl("DECISIONS.jsonl", "D")
     failure_ids = parse_jsonl("FAILURES.jsonl", "F")
+    if (ROOT / "formal-successor/ACTIVE_INPUTS.json").is_file():
+        decision_ids |= parse_jsonl("formal-successor/DECISIONS.jsonl", "D")
+        failure_ids |= parse_jsonl("formal-successor/FAILURES.jsonl", "F")
     frontier = parse_frontier(decision_ids, failure_ids)
     check_control_migration_closure()
     check_active_references()
     check_state_ownership(frontier)
     check_append_only_ledger("DECISIONS.jsonl")
     check_append_only_ledger("FAILURES.jsonl")
+    check_append_only_ledger("formal-successor/DECISIONS.jsonl")
+    check_append_only_ledger("formal-successor/FAILURES.jsonl")
 
     if ERRORS:
         print("documentation/control check FAILED:")

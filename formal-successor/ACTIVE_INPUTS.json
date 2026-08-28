@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "branch": "codex/formal-successor",
+  "predecessor_commit": "4a18e2e308f359a64f19b7d056652f19fd9aaeae",
+  "inputs": [
+    {
+      "path": "Inquiry_Calculus_v2_0.tex",
+      "role": "predecessor_semantic_authority",
+      "sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89"
+    },
+    {
+      "path": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
+      "role": "successor_construction_and_acceptance_authority",
+      "sha256": "c62ac86b3f551d03ce687e28f0870f53af19a22d70f41fe4a468e707d4da540e"
+    },
+    {
+      "path": "formal-successor/Questions.txt",
+      "role": "external_inquiry_corpus_not_semantic_authority",
+      "sha256": "5a0dbb45bd1e9ff838a0396f6a1f17ba23cfa726889d28ab9b809b0c9b9cd019"
+    }
+  ],
+  "adopted_process_input": {
+    "role": "engineering_control_proposal_not_semantic_authority",
+    "source_sha256": "7f316218d7a9aa9ba17461445b575034d45365020c785e4f5de9f029b94c8f89",
+    "realized_as": "AGENTS.md"
+  }
+}

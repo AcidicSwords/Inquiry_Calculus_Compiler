@@ -7,6 +7,7 @@
 
 const assert = require("node:assert/strict");
 const { execFileSync, spawn, spawnSync } = require("node:child_process");
+const crypto = require("node:crypto");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
@@ -57,7 +58,48 @@ const hooks = path.join(claudeDirectory, "hooks");
 const traceDirectory = path.join(claudeDirectory, "trace");
 const settingsPath = path.join(claudeDirectory, "settings.json");
 const frontierPath = path.join(sandbox, "IMPLEMENTATION_FRONTIER.md");
+const questionDirectory = path.join(sandbox, "formal-successor");
+const questionSourcePath = path.join(questionDirectory, "Questions.txt");
+const questionProgramsPath = path.join(questionDirectory, "ENGINEERING_QUESTION_PROGRAMS.json");
 const environment = { ...process.env, CLAUDE_PROJECT_DIR: sandbox };
+
+function fileDigest(filePath) {
+  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+}
+
+function questionArgs(overrides = {}) {
+  const fields = {
+    q: "which coding distinction and reciprocal pair select the continuation?",
+    mode: "Check",
+    answer: "supported paired inquiry",
+    branch: "continue",
+    occurrence: "ask-program-1",
+    continuation: "k-program-1",
+    bindings: "finite-harness",
+    horizon: "one isolated question program",
+    coverage: "one coding line and one reciprocal pair",
+    authority: "AGENTS question-program contract",
+    evidence: "isolated harness return",
+    program: "QP-CODING-RECIPROCAL-RATCHET",
+    coding_questions: "1033,1083",
+    reciprocal_applicability: "applicable",
+    reciprocal_pairs: "5942:5944",
+    reciprocal_reason: "direction and reverse-direction questions are both applicable",
+    source_digest: fileDigest(questionSourcePath),
+    program_manifest_digest: fileDigest(questionProgramsPath),
+    ...overrides,
+  };
+  return Object.entries(fields).map(([key, value]) => `${key}=${value}`);
+}
+
+function questionRecord(overrides = {}) {
+  return Object.fromEntries(
+    questionArgs(overrides).map((entry) => {
+      const split = entry.indexOf("=");
+      return [entry.slice(0, split), entry.slice(split + 1)];
+    }),
+  );
+}
 
 function execute(file, args = [], input = "") {
   return spawnSync(file, args, {
@@ -195,8 +237,17 @@ function validateMustReject(program, name, bytes, pattern) {
 
 async function main() {
   fs.mkdirSync(hooks, { recursive: true });
+  fs.mkdirSync(questionDirectory, { recursive: true });
   fs.cpSync(path.join(repository, ".claude", "hooks"), hooks, { recursive: true });
   fs.copyFileSync(path.join(repository, ".claude", "settings.json"), settingsPath);
+  fs.copyFileSync(
+    path.join(repository, "formal-successor", "Questions.txt"),
+    questionSourcePath,
+  );
+  fs.copyFileSync(
+    path.join(repository, "formal-successor", "ENGINEERING_QUESTION_PROGRAMS.json"),
+    questionProgramsPath,
+  );
   writeFrontier();
 
   // The committed settings must route every configured hook through the tested
@@ -214,6 +265,28 @@ async function main() {
   }
 
   requireSuccess(trace("init", ["test"]), "trace init through copied hook");
+  const initializedTrace = path.join(
+    traceDirectory,
+    fs.readFileSync(path.join(traceDirectory, ".state"), "utf8"),
+  );
+  const initializedPolicy = JSON.parse(
+    fs.readFileSync(initializedTrace, "utf8").trimEnd().split("\n")[0],
+  );
+  assert.deepEqual(
+    {
+      kind: initializedPolicy.kind,
+      schema: initializedPolicy.question_program_schema,
+      source: initializedPolicy.source_digest,
+      programs: initializedPolicy.program_manifest_digest,
+    },
+    {
+      kind: "policy",
+      schema: "1",
+      source: fileDigest(questionSourcePath),
+      programs: fileDigest(questionProgramsPath),
+    },
+    "trace init must pin the active question corpus and program manifest",
+  );
   requireSuccess(
     trace("ensure", ["task=test", "authority=user", "invariants=none"]),
     "ensure append",
@@ -312,6 +385,10 @@ async function main() {
     trace("stop", ["state=Unknown", "warrant=check:test"]),
     "stop before raw/check/residual",
   );
+  requireSuccess(
+    trace("question", questionArgs({ occurrence: "ask-program-before-return" })),
+    "valid question before the actual return",
+  );
 
   let result = runner("stop", `${JSON.stringify({ stop_hook_active: false })}\n`);
   requireSuccess(result, "stop launcher while cycle open");
@@ -337,6 +414,7 @@ async function main() {
     ["Inquiry_Calculus_v2_0_Comprehensive_Implementation_Plan.md", "plan"],
     ["AGENTS.md", "agents"],
     [".claude/hooks/ic-guard", "harness"],
+    [".claude/hooks/ic-question-program.js", "harness"],
     [".claude/settings.json", "harness"],
     [".claude/skills/inquire/SKILL.md", "harness"],
     [".github/workflows/ci.yml", "ci"],
@@ -405,6 +483,61 @@ async function main() {
     "check append",
   );
   requireFailure(
+    trace("residual", ["class=none"]),
+    "residual without a post-return engineering question program",
+    /question program/i,
+  );
+  requireFailure(
+    trace(
+      "question",
+      questionArgs().filter((entry) => !entry.startsWith("program=")),
+    ),
+    "question missing composed program identity",
+    /program=/i,
+  );
+  requireFailure(
+    trace("question", questionArgs({ coding_questions: "5554" })),
+    "reciprocal question substituted for coding question",
+    /coding question line/i,
+  );
+  requireFailure(
+    trace("question", questionArgs({ reciprocal_pairs: "5942" })),
+    "one-sided reciprocal question",
+    /two-orientation pairs/i,
+  );
+  requireFailure(
+    trace("question", questionArgs({ reciprocal_pairs: "5942:5946" })),
+    "undeclared reciprocal composition",
+    /not a declared two-orientation pair/i,
+  );
+  requireFailure(
+    trace(
+      "question",
+      questionArgs({
+        reciprocal_applicability: "inapplicable",
+        reciprocal_pairs: "5942:5944",
+        reciprocal_reason: "claimed inapplicable",
+      }),
+    ),
+    "inapplicable reciprocal direction with a fabricated pair",
+    /reciprocal_pairs=none/i,
+  );
+  requireSuccess(trace("question", questionArgs()), "validated coding/reciprocal program");
+  requireSuccess(
+    trace(
+      "question",
+      questionArgs({
+        q: "is the reverse direction applicable under this binding?",
+        answer: "typed inapplicability",
+        occurrence: "ask-program-inapplicable",
+        reciprocal_applicability: "inapplicable",
+        reciprocal_pairs: "none",
+        reciprocal_reason: "the binding supplies no comparable reverse orientation",
+      }),
+    ),
+    "validated explicit reciprocal inapplicability",
+  );
+  requireFailure(
     trace("stop", ["state=Satisfied", "warrant=independent-check"]),
     "stop before residual",
   );
@@ -419,12 +552,71 @@ async function main() {
     trace("stop", ["state=Satisfied", "warrant=independent-check:isolated-harness"]),
     "warranted stop append",
   );
+  const detachedRecords = fs
+    .readFileSync(initializedTrace, "utf8")
+    .trimEnd()
+    .split("\n")
+    .map(JSON.parse);
+  detachedRecords[0].source_digest = "f".repeat(64);
+  validateMustReject(
+    path.join(hooks, "ic-append.js"),
+    "detached-question-policy.jsonl",
+    `${detachedRecords.map(JSON.stringify).join("\n")}\n`,
+    /detached from the trace policy/i,
+  );
   result = runner("stop", `${JSON.stringify({ stop_hook_active: false })}\n`);
   requireSuccess(result, "stop launcher after closure");
   assert.equal(result.stdout, "", "closed cycle must not block Stop");
   result = runner("stop", `${JSON.stringify({ stop_hook_active: true })}\n`);
   requireSuccess(result, "recursive stop launcher");
   assert.equal(result.stdout, "", "active Stop hook must yield without recursion");
+
+  // Composition is per actual return, not merely one question somewhere in a
+  // cycle containing arbitrarily many returns.
+  requireSuccess(trace("init", ["multi-return"]), "multi-return trace init");
+  requireSuccess(
+    trace("ensure", ["task=multi-return", "authority=user", "invariants=none"]),
+    "multi-return ensure",
+  );
+  requireSuccess(
+    trace("seal", [
+      "should_change=composition-count",
+      "invariants=trace",
+      "discriminator=per-return-composition",
+      "wrong_impl=one-question-for-many-returns",
+    ]),
+    "multi-return seal",
+  );
+  requireSuccess(
+    trace("raw", ["cmd=fixture-one", "file=raw-return.txt", "sensitive=false"]),
+    "first multi-return raw append",
+  );
+  requireSuccess(
+    trace("raw", ["cmd=fixture-two", "file=raw-return.txt", "sensitive=false"]),
+    "second multi-return raw append",
+  );
+  requireSuccess(
+    trace("question", questionArgs({ occurrence: "ask-multi-return-1" })),
+    "first multi-return question",
+  );
+  requireSuccess(
+    trace("check", ["verdict=one-return-composed", "coverage=two-returns"]),
+    "multi-return check",
+  );
+  requireFailure(
+    trace("residual", ["class=none"]),
+    "one question cannot compose two actual returns",
+    /question program/i,
+  );
+  requireSuccess(
+    trace("question", questionArgs({ occurrence: "ask-multi-return-2" })),
+    "second multi-return question",
+  );
+  requireSuccess(trace("residual", ["class=none"]), "multi-return residual");
+  requireSuccess(
+    trace("stop", ["state=Unknown", "warrant=check:multi-return-harness"]),
+    "multi-return stop",
+  );
 
   // Normalization prevents equivalent map/order spellings from simulating a
   // new recurrence state, while a new occurrence remains distinct.
@@ -433,19 +625,19 @@ async function main() {
     trace("ensure", ["task=normalization", "authority=user", "invariants=none"]),
     "normalization ensure",
   );
-  const firstQuestion = [
-    "q=q-test",
-    "mode=Pure",
-    "answer=same-answer",
-    "branch=continue",
-    "occurrence=ask-1",
-    "continuation=k-1",
-    'bindings={"b":2,"a":1}',
-    "horizon=finite",
-    "coverage=exact",
-    'authority={"version":2,"source":"AGENTS"}',
-    'evidence={"b":2,"a":1}',
-  ];
+  const firstQuestion = questionArgs({
+    q: "q-test",
+    mode: "Pure",
+    answer: "same-answer",
+    branch: "continue",
+    occurrence: "ask-1",
+    continuation: "k-1",
+    bindings: '{"b":2,"a":1}',
+    horizon: "finite",
+    coverage: "exact",
+    authority: '{"version":2,"source":"AGENTS"}',
+    evidence: '{"b":2,"a":1}',
+  });
   requireSuccess(trace("question", firstQuestion), "first normalized question");
   const reorderedQuestion = firstQuestion.map((entry) => {
     if (entry.startsWith("bindings=")) return 'bindings={ "a": 1, "b": 2 }';
@@ -531,7 +723,7 @@ async function main() {
     kind: "question",
     ts: "2026-08-26T00:00:00Z",
     fp: "same-state",
-    answer: "same-answer",
+    ...questionRecord({ answer: "same-answer" }),
   };
   result = execute(
     process.execPath,
