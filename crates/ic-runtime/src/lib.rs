@@ -19,8 +19,10 @@ mod trace;
 use std::collections::BTreeMap;
 
 pub use actuality::{
-    ActualitySeparationCatalog, FiniteProbeDischargeBundle, ProbeDischargeBundleError,
-    ProbePortDischargeEvidence, SharedProbeEventAdmission, SourceEventLink, SourceEventLinkError,
+    ActualitySeparationCatalog, FiniteMixedDischargeBundle, FiniteProbeDischargeBundle,
+    MixedDischargeBundleError, MixedPortDischargeEvidence, NonProbePortDischargeEvidence,
+    ProbeDischargeBundleError, ProbePortDischargeEvidence, SharedProbeEventAdmission,
+    SourceEventLink, SourceEventLinkError, admit_finite_mixed_discharge_bundle,
     admit_finite_probe_discharge_bundle, check_source_event_link,
 };
 pub use dispatch::{

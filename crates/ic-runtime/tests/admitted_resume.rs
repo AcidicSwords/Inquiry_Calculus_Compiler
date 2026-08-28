@@ -47,17 +47,19 @@ use ic_core::{
 };
 use ic_runtime::{
     AdmittedResumeError, BasicBlock, BlockTarget, ContinuationLowering, FiniteProbeReplayError,
-    MachineStep, MethodBridgeReentryError, MethodCuePlanning, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
+    MachineStep, MethodBridgeReentryError, MethodCuePlanning, MixedDischargeBundleError,
+    MixedPortDischargeEvidence, NonProbePortDischargeEvidence, OLLAMA_DECODED_TEXT_ARTIFACT_KIND,
     OllamaDecodedText, OllamaGenerateProvider, OllamaHttpResponse, OllamaProviderError,
     PairedActualityTrace, PairedActualityTraversal, PortLowering, ProbeDischargeBundleError,
     ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
     ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
     SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
-    TraversalCausalOrder, admit_finite_probe_discharge_bundle, check_source_event_link,
-    dispatch_probe, materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
-    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
-    resolve_finite_probe_occurrence, route_separator_through_method_bridge,
+    TraversalCausalOrder, admit_finite_mixed_discharge_bundle, admit_finite_probe_discharge_bundle,
+    check_source_event_link, dispatch_probe, materialize_ollama_decoded_texts,
+    plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
+    replay_completed_finite_separator_inquiry, resolve_finite_probe_occurrence,
+    route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -6085,4 +6087,365 @@ async fn source_linked_events_preserve_equal_projection_occurrences_after_restar
     );
     reopened.close().await;
     std::fs::remove_file(path).expect("temporary occurrence replay database must be removable");
+}
+
+#[tokio::test]
+async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
+    let (path, roots, provider_calls, _, _, _) = persisted_cold_replay_fixture().await;
+    let url = format!("sqlite://{}", path.to_string_lossy().replace('\\', "/"));
+    let store = ArtifactStore::open(&url)
+        .await
+        .expect("mixed-mode store must reopen");
+    store
+        .migrate()
+        .await
+        .expect("mixed-mode migrations must repeat");
+    let mut catalog = load_cold_replay_catalog(&store, roots).await;
+    let predecessor = store
+        .replay_completed_external_effect(roots.token)
+        .await
+        .expect("predecessor effect must replay");
+    let binding = catalog
+        .resolve_type(roots.unit)
+        .expect("unit type must reload")
+        .binding();
+    let probe_port = TypeSymbol::new("actual").expect("probe port must be valid");
+    let generate_port = TypeSymbol::new("proposal").expect("generate port must be valid");
+    let relation_value = RelationSchema::new(
+        binding,
+        vec![
+            RelationPort::new(probe_port.clone(), roots.unit),
+            RelationPort::new(generate_port.clone(), roots.unit),
+        ],
+        RelationBodyIR::BindingNative {
+            contract: stored_ref(&store, b"mixed-mode-relation-contract").await,
+        },
+        Vec::new(),
+        Vec::new(),
+    );
+    let relation = RelationRef::from_artifact_ref(
+        persist(
+            &store,
+            &relation_value
+                .envelope()
+                .expect("mixed-mode relation must encode"),
+            &relation_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_schema(relation_value), relation);
+    let context = *OpenQueryCatalog::resolve_open_query(&catalog, roots.query)
+        .expect("base query must reload")
+        .context();
+    let query_value = OpenQuery::new(
+        relation,
+        Vec::new(),
+        vec![
+            OpenPort::new(probe_port.clone(), DischargeMode::Probe),
+            OpenPort::new(generate_port.clone(), DischargeMode::Generate),
+        ],
+        context,
+    );
+    let query = QueryRef::from_artifact_ref(
+        persist(
+            &store,
+            &query_value
+                .envelope()
+                .expect("mixed-mode query must encode"),
+            &query_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    assert_eq!(catalog.insert_query(query_value), query);
+    let base_chart = catalog
+        .resolve_boundary_chart(roots.boundary)
+        .expect("base boundary must reload");
+    let chart_value = BoundaryChart::new(
+        query,
+        base_chart.x_type(),
+        base_chart.y_type(),
+        base_chart.boundary_type(),
+        base_chart.pi_x(),
+        base_chart.pi_y(),
+        base_chart.x_determination(),
+        base_chart.y_determination(),
+        base_chart.negation_frontier_x().to_vec(),
+        base_chart.negation_frontier_y().to_vec(),
+        base_chart.seed_y(),
+        base_chart.compatibility(),
+        base_chart.traversal(),
+        base_chart.grain(),
+        base_chart.horizon(),
+    );
+    let chart = BoundaryRef::from_artifact_ref(
+        persist(
+            &store,
+            &chart_value
+                .envelope()
+                .expect("mixed-mode chart must encode"),
+            &chart_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog.charts.insert(chart, chart_value);
+    let base_operator = catalog
+        .resolve_probe_operator(roots.operator)
+        .expect("base operator must reload");
+    let operator_value = ProbeOperator::new(
+        query,
+        chart,
+        base_operator.active_view(),
+        base_operator.backend(),
+        base_operator.executable_code(),
+        base_operator.return_type(),
+        base_operator.decoder_contract(),
+        base_operator.probe_contract(),
+        base_operator.compiler_version(),
+    );
+    let operator = ProbeOperatorRef::from_artifact_ref(
+        persist(
+            &store,
+            &operator_value
+                .envelope()
+                .expect("mixed-mode operator must encode"),
+            &operator_value.referenced_artifacts(),
+        )
+        .await,
+    );
+    catalog.operators.insert(operator, operator_value);
+    let operator_value = catalog
+        .resolve_probe_operator(operator)
+        .expect("mixed-mode operator must reload");
+    let plan = SurfacePlan::new(
+        operator,
+        query,
+        chart,
+        operator_value.active_view(),
+        operator_value.executable_code(),
+        operator_value.probe_contract(),
+        stored_ref(&store, b"mixed-mode-renderer").await,
+        stored_ref(&store, b"mixed-mode-rendered").await,
+    );
+    let plan = ic_core::SurfacePlanRef::from_artifact_ref(
+        persist(
+            &store,
+            &plan.envelope().expect("mixed-mode plan must encode"),
+            &plan.referenced_artifacts(),
+        )
+        .await,
+    );
+    let request_body = stored_ref(&store, b"mixed-mode-request-body").await;
+    let request = BackendRequest::new(
+        operator,
+        plan,
+        query,
+        chart,
+        operator_value.backend(),
+        operator_value.executable_code(),
+        operator_value.compiler_version(),
+        predecessor.request().backend_version(),
+        request_body,
+    );
+    let request = ic_core::BackendRequestRef::from_artifact_ref(
+        persist(
+            &store,
+            &request.envelope().expect("mixed-mode request must encode"),
+            &request.referenced_artifacts(),
+        )
+        .await,
+    );
+    let source_program = IProgArtifact::new(
+        roots.unit,
+        IProgIR::Ask {
+            question: query,
+            environment: Vec::new(),
+            answer_slot: TypeSymbol::new("mixed_answer").expect("answer slot must be valid"),
+            continuation: roots.continuation,
+        },
+    );
+    let source_program = IProgRef::from_artifact_ref(
+        persist(
+            &store,
+            &source_program
+                .envelope()
+                .expect("mixed-mode source must encode"),
+            &source_program.referenced_artifacts(),
+        )
+        .await,
+    );
+    let source_program_value = IProgArtifact::from_envelope(
+        &load_envelope(&store, source_program.as_artifact_ref()).await,
+    )
+    .expect("mixed-mode source must decode");
+    assert_eq!(catalog.insert_program(source_program_value), source_program);
+    let provenance =
+        ProvenanceRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-provenance").await);
+    let source = SourceConfig::new(
+        roots.unit,
+        source_program,
+        Vec::new(),
+        binding,
+        roots.compiler_version,
+        provenance,
+    )
+    .expect("mixed-mode source configuration must encode");
+    let source = SourceConfigRef::from_artifact_ref(
+        persist(
+            &store,
+            &source
+                .envelope()
+                .expect("mixed-mode source configuration must encode"),
+            &source.referenced_artifacts(),
+        )
+        .await,
+    );
+    let source_value =
+        SourceConfig::from_envelope(&load_envelope(&store, source.as_artifact_ref()).await)
+            .expect("mixed-mode source configuration must decode");
+    assert_eq!(catalog.insert_source_config(source_value.clone()), source);
+    let occurrence = source_value
+        .ask_occurrences(&catalog)
+        .expect("mixed-mode source must rewalk")
+        .into_iter()
+        .next()
+        .expect("mixed-mode source must contain Ask");
+    let occurrence_ref = occurrence
+        .ask_occurrence_ref()
+        .expect("mixed-mode occurrence must encode");
+    persist(
+        &store,
+        &occurrence
+            .envelope()
+            .expect("mixed-mode occurrence must encode"),
+        &[
+            source.as_artifact_ref(),
+            query.as_artifact_ref(),
+            roots.continuation.as_artifact_ref(),
+            binding.as_artifact_ref(),
+            roots.compiler_version,
+            provenance.as_artifact_ref(),
+        ],
+    )
+    .await;
+    let runtime = ProgramIR::new(
+        roots.unit,
+        BlockTarget::new(0),
+        vec![BasicBlock::new(
+            BlockTarget::new(0),
+            Terminator::Probe {
+                operator,
+                resume: BlockTarget::new(1),
+            },
+        )],
+    );
+    let MachineStep::Suspended(suspension) = runtime
+        .step(runtime.start())
+        .expect("mixed-mode runtime must suspend")
+    else {
+        panic!("mixed-mode runtime must suspend")
+    };
+    let token = DispatchToken::from_bytes([0xe8; 32]);
+    let mut provider = CountingProvider {
+        calls: Arc::clone(&provider_calls),
+        expected_body: request_body,
+        response: predecessor.raw_return().bytes().to_vec(),
+    };
+    let actual = dispatch_probe(
+        &store,
+        suspension,
+        token,
+        request,
+        ProbeDispatchContext::new(
+            Some(predecessor.event_ref()),
+            StateRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-state-before").await),
+            None,
+            StateRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-state-after").await),
+            context.grain(),
+            RouteRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-event-route").await),
+            binding,
+            provenance,
+        )
+        .with_source_ask_occurrence(occurrence_ref),
+        &mut provider,
+    )
+    .await
+    .expect("mixed-mode Probe port must actualize once");
+    let replay = store
+        .replay_completed_external_effect(token)
+        .await
+        .expect("mixed-mode event must replay");
+    let link = check_source_event_link(replay, occurrence.clone(), &catalog)
+        .expect("mixed-mode source event must recheck");
+    let calls_before_check = provider_calls.load(Ordering::SeqCst);
+    let mixed = admit_finite_mixed_discharge_bundle(
+        occurrence.clone(),
+        vec![
+            MixedPortDischargeEvidence::Probe(Box::new(ProbePortDischargeEvidence::new(
+                probe_port.clone(),
+                actual.event().route(),
+                roots.decoded_path,
+                binding,
+                roots.compiler_version,
+                provenance,
+                link.clone(),
+            ))),
+            MixedPortDischargeEvidence::NonProbe(Box::new(NonProbePortDischargeEvidence::new(
+                generate_port.clone(),
+                DischargeMode::Generate,
+                roots.answer_a,
+                RouteRef::from_artifact_ref(stored_ref(&store, b"mixed-mode-generate-route").await),
+                binding,
+                roots.compiler_version,
+                provenance,
+                context.support(),
+                context.warrant(),
+            ))),
+        ],
+        &catalog,
+    )
+    .expect("typed mixed-mode field must recheck");
+    assert_eq!(mixed.components().len(), 2);
+    assert_eq!(provider_calls.load(Ordering::SeqCst), calls_before_check);
+    assert!(matches!(
+        admit_finite_mixed_discharge_bundle(
+            occurrence,
+            vec![
+                MixedPortDischargeEvidence::Probe(Box::new(ProbePortDischargeEvidence::new(
+                    probe_port,
+                    actual.event().route(),
+                    roots.decoded_path,
+                    binding,
+                    roots.compiler_version,
+                    provenance,
+                    link,
+                ))),
+                MixedPortDischargeEvidence::Probe(Box::new(ProbePortDischargeEvidence::new(
+                    generate_port,
+                    actual.event().route(),
+                    roots.decoded_path,
+                    binding,
+                    roots.compiler_version,
+                    provenance,
+                    check_source_event_link(
+                        store
+                            .replay_completed_external_effect(token)
+                            .await
+                            .expect("replay must repeat"),
+                        source_value
+                            .ask_occurrences(&catalog)
+                            .expect("source must rewalk")
+                            .into_iter()
+                            .next()
+                            .expect("Ask"),
+                        &catalog,
+                    )
+                    .expect("repeated link must recheck"),
+                ))),
+            ],
+            &catalog,
+        ),
+        Err(MixedDischargeBundleError::ModeMismatch(_))
+    ));
+    store.close().await;
+    std::fs::remove_file(path).expect("mixed-mode database must be removable");
 }
