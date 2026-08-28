@@ -61,15 +61,76 @@ const frontierPath = path.join(sandbox, "IMPLEMENTATION_FRONTIER.md");
 const questionDirectory = path.join(sandbox, "formal-successor");
 const questionSourcePath = path.join(questionDirectory, "Questions.txt");
 const questionProgramsPath = path.join(questionDirectory, "ENGINEERING_QUESTION_PROGRAMS.json");
+const preformalHarnessPath = path.join(
+  questionDirectory,
+  "PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md",
+);
+const searchAsymmetryPath = path.join(questionDirectory, "PREFORMAL_SEARCH_ASYMMETRY.md");
+const consolidatedHarnessPath = path.join(
+  questionDirectory,
+  "SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md",
+);
+const residualObligationsPath = path.join(questionDirectory, "RESIDUAL_OBLIGATIONS.json");
+const explorationAlgorithmPath = path.join(
+  questionDirectory,
+  "QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md",
+);
 const environment = { ...process.env, CLAUDE_PROJECT_DIR: sandbox };
 
 function fileDigest(filePath) {
   return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
 }
 
+function unique(values) {
+  return [...new Set(values)];
+}
+
+function derivedProgramFields(residualClass = "default") {
+  const manifest = JSON.parse(fs.readFileSync(questionProgramsPath, "utf8"));
+  const harness = manifest.preformal_harness;
+  const rhythmId = harness.residual_schedule[residualClass];
+  const rhythm = harness.principal_rhythms.find((candidate) => candidate.id === rhythmId);
+  const questionMap = new Map(harness.compiled_questions.map((question) => [question.id, question]));
+  const challengeMap = new Map(
+    harness.reciprocal_challenges.map((challenge) => [challenge.id, challenge]),
+  );
+  const questions = rhythm.required_questions.map((id) => questionMap.get(id));
+  const challenges = rhythm.required_reciprocals.map((id) => challengeMap.get(id));
+  const rootSet = new Set([
+    ...questions.flatMap((question) => question.roots),
+    ...challenges.flatMap((challenge) => challenge.roots),
+  ]);
+  const dimensionSet = new Set(questions.flatMap((question) => question.dimensions));
+  const axisSet = new Set(challenges.flatMap((challenge) => challenge.axes));
+  return {
+    program: manifest.composition.id,
+    rhythm: rhythm.id,
+    residual_class: residualClass,
+    compiled_questions: rhythm.required_questions.join(","),
+    question_families: unique(questions.map((question) => question.family)).join(","),
+    coding_questions: unique(questions.flatMap((question) => question.source_lines)).join(","),
+    coverage_dimensions: harness.coverage_dimensions
+      .filter((dimension) => dimensionSet.has(dimension))
+      .join(","),
+    root_spans: harness.root_hypothesis.filter((root) => rootSet.has(root)).join(","),
+    rhythm_positions: unique(questions.map((question) => question.position)).join(","),
+    reciprocal_status: "represented",
+    reciprocal_challenges: rhythm.required_reciprocals.join(","),
+    blocked_reciprocals: "none",
+    reciprocal_pairs: challenges
+      .map((challenge) => `${challenge.pair[0]}:${challenge.pair[1]}`)
+      .join(";"),
+    reciprocal_axes: harness.central_reciprocal_axes
+      .map((axis) => axis.id)
+      .filter((axis) => axisSet.has(axis))
+      .join(","),
+  };
+}
+
 function questionArgs(overrides = {}) {
+  const derived = derivedProgramFields(overrides.residual_class ?? "default");
   const fields = {
-    q: "which coding distinction and reciprocal pair select the continuation?",
+    q: "which residual-selected relational moves and reciprocal challenges select the continuation?",
     mode: "Check",
     answer: "supported paired inquiry",
     branch: "continue",
@@ -77,14 +138,20 @@ function questionArgs(overrides = {}) {
     continuation: "k-program-1",
     bindings: "finite-harness",
     horizon: "one isolated question program",
-    coverage: "one coding line and one reciprocal pair",
+    coverage: "residual-selected preformal rhythm and declared relational spans",
     authority: "AGENTS question-program contract",
     evidence: "isolated harness return",
-    program: "QP-CODING-RECIPROCAL-RATCHET",
-    coding_questions: "1033,1083",
-    reciprocal_applicability: "applicable",
-    reciprocal_pairs: "5942:5944",
-    reciprocal_reason: "direction and reverse-direction questions are both applicable",
+    ...derived,
+    reciprocal_reason:
+      "each residual-required reciprocal motion is represented by an opposed corpus challenge",
+    parent_residual: "FORMAL-A-INVENTORY-001",
+    condition_ids: "C-PINNED-INPUTS,C-PREDECESSOR-FREEZE",
+    breaker_ids: "BRK-HARNESS-STRUCTURAL",
+    reciprocal_obligation: "represented",
+    question_disposition: "Productive",
+    residual_shape: "Generic",
+    method_frontier: "NondominatedApplicableMethods",
+    condition_keys: "harness.relation@fixture@isolated@applicable@record@forward",
     source_digest: fileDigest(questionSourcePath),
     program_manifest_digest: fileDigest(questionProgramsPath),
     ...overrides,
@@ -201,7 +268,38 @@ function writeFrontier(fields = frontierFields(), extraLines = []) {
 }
 
 function trace(kind, fields = []) {
-  return hook("ic-trace", [kind, ...fields]);
+  const keys = new Set(fields.map((entry) => entry.slice(0, entry.indexOf("="))));
+  const completed = [...fields];
+  if (kind === "seal" && !keys.has("coverage")) {
+    completed.push("coverage=isolated finite harness fixture");
+  }
+  if (kind === "residual") {
+    const defaults = {
+      next: "continue isolated harness fixture",
+      parent_residual: "FORMAL-A-INVENTORY-001",
+      open_relation: "isolated harness control relation",
+      condition_ids: "C-PINNED-INPUTS,C-PREDECESSOR-FREEZE",
+      condition_keys: "harness.relation@fixture@isolated@applicable@record@forward",
+      blocker_ids: "none",
+      breaker_ids: "BRK-HARNESS-STRUCTURAL",
+      separator_ids: "SEP-HARNESS-CONTROL",
+      survived_contrast_ids: "CTR-HARNESS-AUTHORIZED",
+      conflict_ids: "none",
+      gap_ids: "none",
+      failed_fold_ids: "none",
+      reopen_condition_ids: "REOPEN-HARNESS-POLICY-CHANGE",
+      overlap_ids: "none",
+      coverage: "isolated finite harness fixture",
+      resolution_class: "Supported",
+      residual_shape: "Generic",
+      method_frontier: "NondominatedApplicableMethods",
+      next_question_family: "Q14_QUESTION_PRUNE_INVENT",
+    };
+    for (const [key, value] of Object.entries(defaults)) {
+      if (!keys.has(key)) completed.push(`${key}=${value}`);
+    }
+  }
+  return hook("ic-trace", [kind, ...completed]);
 }
 
 function appendConcurrently(program, tracePath, records) {
@@ -248,6 +346,26 @@ async function main() {
     path.join(repository, "formal-successor", "ENGINEERING_QUESTION_PROGRAMS.json"),
     questionProgramsPath,
   );
+  fs.copyFileSync(
+    path.join(repository, "formal-successor", "PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md"),
+    preformalHarnessPath,
+  );
+  fs.copyFileSync(
+    path.join(repository, "formal-successor", "PREFORMAL_SEARCH_ASYMMETRY.md"),
+    searchAsymmetryPath,
+  );
+  fs.copyFileSync(
+    path.join(repository, "formal-successor", "SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md"),
+    consolidatedHarnessPath,
+  );
+  fs.copyFileSync(
+    path.join(repository, "formal-successor", "RESIDUAL_OBLIGATIONS.json"),
+    residualObligationsPath,
+  );
+  fs.copyFileSync(
+    path.join(repository, "formal-successor", "QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md"),
+    explorationAlgorithmPath,
+  );
   writeFrontier();
 
   // The committed settings must route every configured hook through the tested
@@ -281,7 +399,7 @@ async function main() {
     },
     {
       kind: "policy",
-      schema: "1",
+      schema: "3",
       source: fileDigest(questionSourcePath),
       programs: fileDigest(questionProgramsPath),
     },
@@ -291,6 +409,19 @@ async function main() {
     trace("ensure", ["task=test", "authority=user", "invariants=none"]),
     "ensure append",
   );
+  const questionProgramValidator = path.join(hooks, "ic-question-program.js");
+  const scheduledResiduals = Object.keys(
+    JSON.parse(fs.readFileSync(questionProgramsPath, "utf8")).preformal_harness.residual_schedule,
+  );
+  for (const residualClass of scheduledResiduals) {
+    const result = execute(process.execPath, [
+      questionProgramValidator,
+      "validate",
+      sandbox,
+      JSON.stringify(questionRecord({ residual_class: residualClass })),
+    ]);
+    requireSuccess(result, `residual-selected rhythm ${residualClass}`);
+  }
 
   // A small exact safe set remains probeable before a seal. Commands with
   // mutating options must not inherit safety merely from their executable name.
@@ -328,6 +459,16 @@ async function main() {
   assertGuardAllowed(
     { tool_name: "Bash", tool_input: { command: ".claude/hooks/ic-trace status" } },
     "exact repository trace command",
+  );
+  assertGuardAllowed(
+    {
+      tool_name: "Bash",
+      tool_input: {
+        command:
+          ".claude/hooks/ic-trace policy-transition authority=user reason=controlled",
+      },
+    },
+    "exact repository policy-transition trace command",
   );
   assertGuardDenied(
     {
@@ -498,7 +639,17 @@ async function main() {
   requireFailure(
     trace("question", questionArgs({ coding_questions: "5554" })),
     "reciprocal question substituted for coding question",
-    /coding question line/i,
+    /coding_questions/i,
+  );
+  requireFailure(
+    trace(
+      "question",
+      questionArgs({
+        coding_questions: derivedProgramFields().coding_questions.replace("1251", "1035"),
+      }),
+    ),
+    "surface rewording substituted for the compiled role/port relation",
+    /coding_questions/i,
   );
   requireFailure(
     trace("question", questionArgs({ reciprocal_pairs: "5942" })),
@@ -506,36 +657,120 @@ async function main() {
     /two-orientation pairs/i,
   );
   requireFailure(
+    trace(
+      "question",
+      questionArgs({
+        reciprocal_challenges: "RCP-ORIENT-REVERSE",
+        blocked_reciprocals: "none",
+        reciprocal_pairs: "5942:5944",
+        reciprocal_axes: "none",
+      }),
+    ),
+    "one reciprocal movement substituted for the residual-required closure",
+    /reciprocal closure/i,
+  );
+  requireFailure(
     trace("question", questionArgs({ reciprocal_pairs: "5942:5946" })),
     "undeclared reciprocal composition",
-    /not a declared two-orientation pair/i,
+    /reciprocal_pairs/i,
   );
   requireFailure(
     trace(
       "question",
       questionArgs({
-        reciprocal_applicability: "inapplicable",
+        residual_class: "relational_roles_unclear",
+        rhythm: "RHYTHM-DEFAULT-SUCCESSOR-CONSTRUCTION",
+      }),
+    ),
+    "predecessor-independent residual schedule bypass",
+    /requires rhythm RHYTHM-FRAME/i,
+  );
+  requireFailure(
+    trace(
+      "question",
+      questionArgs({
+        rhythm: "RHYTHM-BIND-OPEN-VARY-RETURN-DETERMINE-REFACTOR",
+      }),
+    ),
+    "predecessor recurrence substituted for the preformal successor rhythm",
+    /requires rhythm RHYTHM-DEFAULT-SUCCESSOR-CONSTRUCTION/i,
+  );
+  requireFailure(
+    trace(
+      "question",
+      questionArgs({
+        coverage_dimensions: "ADMISSIBILITY,DISCRIMINATION",
+      }),
+    ),
+    "prompt count substituted for relational-span coverage",
+    /coverage_dimensions/i,
+  );
+  const defaultProgram = derivedProgramFields();
+  const representedChallenges = defaultProgram.reciprocal_challenges.split(",");
+  const representedPairs = defaultProgram.reciprocal_pairs.split(";");
+  const blockedIndex = representedChallenges.indexOf("RCP-ORIENT-REVERSE");
+  requireSuccess(
+    trace(
+      "question",
+      questionArgs({
+        q: "is one named reciprocal challenge executable under this binding?",
+        answer: "one typed challenge is blocked while the rest are represented",
+        occurrence: "ask-program-partially-blocked-reciprocal",
+        reciprocal_status: "partially_blocked",
+        reciprocal_challenges: representedChallenges
+          .filter((_, index) => index !== blockedIndex)
+          .join(","),
+        blocked_reciprocals: "RCP-ORIENT-REVERSE",
+        reciprocal_pairs: representedPairs.filter((_, index) => index !== blockedIndex).join(";"),
+        reciprocal_reason: "the binding admits no reverse-direction probe but all other challenges execute",
+      }),
+    ),
+    "validated individually blocked reciprocal challenge",
+  );
+  requireFailure(
+    trace(
+      "question",
+      questionArgs({
+        reciprocal_status: "blocked",
+        reciprocal_challenges: "none",
+        blocked_reciprocals: defaultProgram.reciprocal_challenges,
         reciprocal_pairs: "5942:5944",
+        reciprocal_axes: "none",
         reciprocal_reason: "claimed inapplicable",
       }),
     ),
-    "inapplicable reciprocal direction with a fabricated pair",
-    /reciprocal_pairs=none/i,
+    "blocked reciprocal set with a fabricated pair",
+    /reciprocal_pairs/i,
   );
   requireSuccess(trace("question", questionArgs()), "validated coding/reciprocal program");
   requireSuccess(
     trace(
       "question",
       questionArgs({
-        q: "is the reverse direction applicable under this binding?",
-        answer: "typed inapplicability",
-        occurrence: "ask-program-inapplicable",
-        reciprocal_applicability: "inapplicable",
+        q: "are the required reciprocal challenge relations executable under this binding?",
+        answer: "typed blocked challenge set",
+        occurrence: "ask-program-blocked-reciprocals",
+        reciprocal_status: "blocked",
+        reciprocal_challenges: "none",
+        blocked_reciprocals: defaultProgram.reciprocal_challenges,
         reciprocal_pairs: "none",
-        reciprocal_reason: "the binding supplies no comparable reverse orientation",
+        reciprocal_axes: "none",
+        root_spans: unique(
+          derivedProgramFields().root_spans
+            .split(",")
+            .filter((root) =>
+              new Set(
+                JSON.parse(fs.readFileSync(questionProgramsPath, "utf8"))
+                  .preformal_harness.compiled_questions
+                  .filter((question) => defaultProgram.compiled_questions.split(",").includes(question.id))
+                  .flatMap((question) => question.roots),
+              ).has(root),
+            ),
+        ).join(","),
+        reciprocal_reason: "every named challenge is typed but unavailable to this isolated binding",
       }),
     ),
-    "validated explicit reciprocal inapplicability",
+    "validated explicit per-challenge reciprocal blocking",
   );
   requireFailure(
     trace("stop", ["state=Satisfied", "warrant=independent-check"]),
@@ -562,7 +797,7 @@ async function main() {
     path.join(hooks, "ic-append.js"),
     "detached-question-policy.jsonl",
     `${detachedRecords.map(JSON.stringify).join("\n")}\n`,
-    /detached from the trace policy/i,
+    /detached from the active trace policy/i,
   );
   result = runner("stop", `${JSON.stringify({ stop_hook_active: false })}\n`);
   requireSuccess(result, "stop launcher after closure");
@@ -570,6 +805,60 @@ async function main() {
   result = runner("stop", `${JSON.stringify({ stop_hook_active: true })}\n`);
   requireSuccess(result, "recursive stop launcher");
   assert.equal(result.stdout, "", "active Stop hook must yield without recursion");
+
+  // A user-authorized, pre-return policy transition permits the question
+  // program to evolve without detaching earlier question occurrences from the
+  // policy that checked them.
+  requireSuccess(trace("init", ["policy-transition"]), "policy-transition trace init");
+  requireSuccess(
+    trace("ensure", ["task=policy-transition", "authority=user", "invariants=ancestry"]),
+    "policy-transition ensure",
+  );
+  requireSuccess(
+    trace("control", [
+      "authority=user-explicit-test",
+      "residual=question-program-evolution",
+      "predecessor=current-policy",
+      "scope=harness",
+    ]),
+    "policy-transition control",
+  );
+  requireSuccess(
+    trace("seal", [
+      "should_change=program-digest",
+      "invariants=prior-question-policy",
+      "discriminator=transition-ancestry",
+      "wrong_impl=silent-policy-replacement",
+    ]),
+    "policy-transition seal",
+  );
+  const transitionedManifest = JSON.parse(fs.readFileSync(questionProgramsPath, "utf8"));
+  transitionedManifest.harness_transition_probe = "retained";
+  fs.writeFileSync(questionProgramsPath, `${JSON.stringify(transitionedManifest, null, 2)}\n`);
+  requireSuccess(
+    trace("policy-transition", [
+      "authority=user-explicit-test",
+      "reason=exercise exact question-program policy ancestry",
+    ]),
+    "authorized policy transition",
+  );
+  requireSuccess(
+    trace("raw", ["cmd=transition-fixture", "file=raw-return.txt", "sensitive=false"]),
+    "policy-transition raw",
+  );
+  requireSuccess(
+    trace("question", questionArgs({ occurrence: "ask-after-policy-transition" })),
+    "question under transitioned policy",
+  );
+  requireSuccess(
+    trace("check", ["verdict=transition-preserved-ancestry", "coverage=one-policy-change"]),
+    "policy-transition check",
+  );
+  requireSuccess(trace("residual", ["class=none"]), "policy-transition residual");
+  requireSuccess(
+    trace("stop", ["state=Unknown", "warrant=check:policy-transition-harness"]),
+    "policy-transition stop",
+  );
 
   // Composition is per actual return, not merely one question somewhere in a
   // cycle containing arbitrarily many returns.
@@ -664,6 +953,18 @@ async function main() {
   const injected = JSON.parse(result.stdout).hookSpecificOutput.additionalContext;
   for (const [key, value] of Object.entries(frontierFields())) {
     assert.ok(injected.includes(`${key}: ${value}`), `injection omitted ${key}`);
+  }
+  for (const fragment of [
+    "QUESTION PROGRAM RHYTHM-DEFAULT-SUCCESSOR-CONSTRUCTION",
+    "families: Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14",
+    "CONSTRAIN<->RELEASE",
+    "DISTINGUISH<->COARSEN",
+    "selection: residual-selected",
+    "RESIDUAL INDEX",
+    "active: HARNESS-001",
+    "closure: local obligation/binding/horizon/coverage only",
+  ]) {
+    assert.ok(injected.includes(fragment), `injection omitted question rhythm ${fragment}`);
   }
 
   const missing = frontierFields();

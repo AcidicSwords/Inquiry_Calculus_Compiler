@@ -14,17 +14,34 @@ if BLOCK="$(node "$HERE/ic-frontier.js" "$FRONTIER" block 2>&1)"; then
 else
     BLOCK="INVALID: ${BLOCK#ic-frontier: }"
 fi
+if QUESTION_RHYTHM="$(node "$HERE/ic-question-program.js" summary "$ROOT" 2>&1)"; then
+    :
+else
+    QUESTION_RHYTHM="INVALID: ${QUESTION_RHYTHM#ic-question-program: }"
+fi
+if RESIDUAL_TOPOLOGY="$(node "$HERE/ic-residual-topology.js" projection "$ROOT" 2>&1)"; then
+    :
+else
+    RESIDUAL_TOPOLOGY="INVALID: ${RESIDUAL_TOPOLOGY#ic-residual-topology: }"
+fi
 
 CONTEXT="INQUIRY HARNESS ACTIVE -- consequential work runs the engineering clock.
 
-  SPECIFY -> INSPECT -> CONTRAST -> TRACE -> EXPERIMENT -> UPDATE
-  -> CHANGE -> VERIFY -> CHALLENGE -> MINIMIZE -> RATCHET
+  SPECIFY -> INSPECT -> CONTRAST -> CROSS -> LOCALIZE -> TRACE -> EXPERIMENT
+  -> UPDATE -> CHANGE -> VERIFY -> CHALLENGE -> MINIMIZE -> RATCHET
 
   Explicit user tasks may temporarily supersede the persistent Frontier.
-  Before mutation: probe actuality, name the protected difference and smallest
-  wrong implementation, then seal the prediction.
-  Each cycle must record a manifest-declared coding sequence composed with a
-  two-orientation reciprocal-why pair, or a typed reciprocal inapplicability.
+  The thirteen positions are the outer repository lifecycle. Select the inner
+  Coding + Reciprocal-Why rhythm from the live residual; do not run either as a
+  checklist or replace the lifecycle with temporary rhythm vocabulary.
+  Before mutation: probe actuality, name the protected difference, construct a
+  decisive admissible contrast large enough to cross it, then seal the prediction.
+  After each actual return, audit exactly what it established, represent every
+  residual-required reciprocal challenge or individually record why it is blocked,
+  then subtract from the known crossing toward the protected boundary.
+  SEARCH WIDELY; COMMIT NARROWLY. Ratchet only the smallest checked relation,
+  retain unresolved active/blocked/latent/reopened fields with ancestry, propagate
+  through shared conditions and roles, and treat local closure as scope-relative.
   After mutation: preserve the raw return, check it against the seal, classify
   the residual, subtract excess, update the owning state record, and stop lawfully.
 
@@ -34,6 +51,12 @@ CONTEXT="INQUIRY HARNESS ACTIVE -- consequential work runs the engineering clock
 
 Exact live frontier block:
 ${BLOCK}
+
+Compact calculus-aligned question-program policy:
+${QUESTION_RHYTHM}
+
+Rebuildable residual-index summary (the Frontier selects one active node):
+${RESIDUAL_TOPOLOGY}
 
 Ledger:
 ${STATUS}"

@@ -59,6 +59,12 @@ const required = [
   "formal-successor/ACTIVE_INPUTS.json",
   "formal-successor/AUTONOMOUS_ITERATION.md",
   "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
+  "formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md",
+  "formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md",
+  "formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md",
+  "formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md",
+  "formal-successor/QUESTION_RHYTHM.md",
+  "formal-successor/RESIDUAL_OBLIGATIONS.json",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -67,6 +73,10 @@ const required = [
   "formal-successor/FAILURES.jsonl",
   "formal-successor/reports/latest.json",
   ".claude/hooks/ic-question-program.js",
+  ".claude/hooks/ic-residual-topology.js",
+  ".claude/hooks/ic-construction-policy.js",
+  "tools/harness_acceptance_check.js",
+  "tools/exploration_algorithm_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -77,17 +87,45 @@ requireContains("AGENTS.md", [
   "formal-successor/CONFORMANCE_STATUS.md",
   "Until Formal Gate F",
   "Operational question programs from `Questions.txt`",
+  "outer repository work lifecycle",
+  "admissibility; discrimination; path/direction/order; actuality/support; and",
   "RECIPROCAL WHY PAIR",
   "first policy record",
-  "declared `QP-CODING-*` source lines",
-  "two-orientation `QP-WHY-*` pairs",
+  "residual-selected compiled-question sequence",
+  "represented with its declared opposed corpus pair or individually recorded as typed but blocked",
+  "QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md",
 ]);
 
 requireContains(".claude/hooks/ic-question-program.js", [
-  "QP-CODING-",
-  "QP-WHY-",
-  "question-program record is detached from the trace policy",
-  "reciprocal_pairs=none",
+  "PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md",
+  "required reciprocal closure is incomplete",
+  "question-program record is detached from the active trace policy",
+  "residual_class",
+]);
+
+requireContains(".claude/hooks/ic-inject", [
+  "outer repository lifecycle",
+  "residual-required reciprocal challenge",
+  "decisive admissible contrast",
+]);
+
+requireContains(".claude/skills/inquire/references/software-engineering-binding.md", [
+  "outer repository work lifecycle",
+  "Coding + Reciprocal-Why programs",
+  "MAXIMAL BREAK / SUBTRACT",
+  "strong admissible contrast",
+]);
+
+requireContains("formal-successor/QUESTION_RHYTHM.md", [
+  "## Two control levels",
+  "## The actual default questions",
+  "## The actual reciprocal challenges",
+  "CONSTRAIN <-> RELEASE",
+  "DISTINGUISH <-> COARSEN",
+  "## Residual-selected rhythms",
+  "## Rebuildable residual index",
+  "## Demand-driven boundary incidence",
+  "## Residual-shape method dispatch",
 ]);
 
 requireContains(".gitattributes", ["formal-successor/Questions.txt -text -whitespace"]);
@@ -128,6 +166,10 @@ const expectedInputs = new Map([
   ["Inquiry_Calculus_v2_0.tex", "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89"],
   ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md", "c62ac86b3f551d03ce687e28f0870f53af19a22d70f41fe4a468e707d4da540e"],
   ["formal-successor/Questions.txt", "5a0dbb45bd1e9ff838a0396f6a1f17ba23cfa726889d28ab9b809b0c9b9cd019"],
+  ["formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md", "fc80d0e84a3fa5a2a16a15354e4ae5d6b7f342f9cfe8bdaf3d2b83c2fe8e357e"],
+  ["formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md", "74f6abf1fb944e76d65071c83ff0fe319ed008d4d6e086de20afe22ca323c765"],
+  ["formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md", "4695daa72e33d2e3d82300047124030de5d13fe82c28cee086ef27da111fefc2"],
+  ["formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md", "82cfaaae3e25b4703f2d73554676047844afa0f7b9807bfadaf6b2716fefefec"],
 ]);
 if (inputs) {
   if (inputs.branch !== "codex/formal-successor" || inputs.predecessor_commit !== baseline) {
@@ -155,8 +197,83 @@ try {
 if (questionPrograms) {
   const questions = read("formal-successor/Questions.txt").split(/\r?\n/u);
   const line = (number) => questions[number - 1] ?? "";
+  if (questionPrograms.schema !== 3) {
+    errors.push("active engineering question-program manifest must use schema 3");
+  }
   if (questionPrograms.source_sha256 !== expectedInputs.get("formal-successor/Questions.txt")) {
     errors.push("engineering question programs are not bound to the accepted corpus digest");
+  }
+  const harness = questionPrograms.preformal_harness;
+  if (
+    harness?.source !== "formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md" ||
+    harness?.source_sha256 !==
+      expectedInputs.get("formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md") ||
+    digest("formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md") !==
+      harness?.source_sha256
+  ) {
+    errors.push("engineering question programs are detached from the pinned preformal harness");
+  }
+  if (
+    harness?.search_asymmetry_source !== "formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md" ||
+    harness?.search_asymmetry_sha256 !==
+      expectedInputs.get("formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md") ||
+    digest("formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md") !==
+      harness?.search_asymmetry_sha256
+  ) {
+    errors.push("engineering question programs are detached from the pinned search asymmetry");
+  }
+  if (
+    harness?.consolidated_spec_source !== "formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md" ||
+    harness?.consolidated_spec_sha256 !==
+      expectedInputs.get("formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md") ||
+    digest("formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md") !==
+      harness?.consolidated_spec_sha256
+  ) {
+    errors.push("engineering question programs are detached from the consolidated harness specification");
+  }
+  if (
+    harness?.exploration_algorithm_source !== "formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md" ||
+    harness?.exploration_algorithm_sha256 !==
+      expectedInputs.get("formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md") ||
+    digest("formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md") !==
+      harness?.exploration_algorithm_sha256
+  ) {
+    errors.push("engineering question programs are detached from the question-bank-derived exploration algorithm");
+  }
+  if (
+    harness?.two_scale_law?.search !== "wide_contrasting_deliberately_expansive" ||
+    harness?.two_scale_law?.commit !== "small_warranted_exactly_supported" ||
+    !/preserves_the_unresolved_wide_field/u.test(
+      harness?.two_scale_law?.anti_premature_closure ?? "",
+    )
+  ) {
+    errors.push("search-wide/commit-narrow and anti-premature-closure law is incomplete");
+  }
+  if (!/not_successor_semantics/u.test(harness?.status ?? "")) {
+    errors.push("preformal harness must remain classified outside successor semantics");
+  }
+  const algorithm = harness?.exploration_algorithm;
+  const expectedDispositions = [
+    "Answered", "Productive", "Required", "Redundant", "Inapplicable", "Blocked", "Unknown",
+  ];
+  const expectedResolutions = [
+    "Supported", "Plural", "ExactEmpty", "Unsupported", "Unknown", "Blocked", "ResourceBounded",
+  ];
+  if (JSON.stringify(algorithm?.question_dispositions) !== JSON.stringify(expectedDispositions)) {
+    errors.push("exploration algorithm does not preserve all seven question dispositions");
+  }
+  if (JSON.stringify(algorithm?.resolution_classes) !== JSON.stringify(expectedResolutions)) {
+    errors.push("exploration algorithm does not preserve partial and non-success resolution classes");
+  }
+  if ((algorithm?.condition_identity ?? []).join(",") !==
+      "schema,bound_roles,scope,applicability,grain,orientation") {
+    errors.push("typed condition identity is incomplete");
+  }
+  if (!/demand_driven/u.test(algorithm?.materialization_law ?? "")) {
+    errors.push("exploration algorithm lacks demand-driven materialization");
+  }
+  if (!/remains_predecessor_behavior/u.test(harness?.predecessor_recurrence ?? "")) {
+    errors.push("the v2.0 BIND/OPEN/VARY/RETURN/DETERMINE/REFACTOR recurrence was repurposed");
   }
   for (const section of [questionPrograms.sections?.coding, questionPrograms.sections?.reciprocal_why]) {
     if (!section || line(section.heading_line) !== section.heading) {
@@ -173,6 +290,8 @@ if (questionPrograms) {
   }
   const requiredPrograms = new Set([
     "QP-CODING-FRAME",
+    "QP-CODING-ROLE-INCIDENCE",
+    "QP-CODING-FOLD-REGENERATE",
     "QP-CODING-TRACE-COMPOSE",
     "QP-CODING-BOUNDARY",
     "QP-CODING-PROPAGATE-RATCHET",
@@ -205,19 +324,174 @@ if (questionPrograms) {
   if (requiredPrograms.size > 0) {
     errors.push(`missing required engineering question programs: ${[...requiredPrograms].join(", ")}`);
   }
+  const expectedPositions = [
+    "FRAME", "OPEN", "EXPAND", "DISTINGUISH", "CONSTRAIN", "DISCHARGE", "RESOLVE",
+    "RECIPROCATE", "RELEASE_SUBTRACT", "FOLD_REOPEN",
+  ];
+  const expectedDimensions = [
+    "ADMISSIBILITY", "DISCRIMINATION", "PATH_DIRECTION_ORDER", "ACTUALITY_SUPPORT",
+    "REPRESENTATION_REGENERATION",
+    "FRONTIER_ANCESTRY_REUSE",
+  ];
+  const expectedRoots = ["Expose", "Orient", "Factor", "Polarize", "Vary", "Ground"];
+  const expectedAxes = [
+    ["ADMISSIBILITY", "CONSTRAIN", "RELEASE", "solution_field"],
+    ["DISCRIMINATION", "DISTINGUISH", "COARSEN", "question_kernel"],
+  ];
+  if (JSON.stringify(harness?.provisional_positions) !== JSON.stringify(expectedPositions)) {
+    errors.push("preformal harness positions do not match the accepted provisional rhythm");
+  }
+  if (JSON.stringify(harness?.coverage_dimensions) !== JSON.stringify(expectedDimensions)) {
+    errors.push("preformal harness does not preserve the five relational coverage dimensions");
+  }
+  if (JSON.stringify(harness?.root_hypothesis) !== JSON.stringify(expectedRoots)) {
+    errors.push("v2.0 root lowering is not explicitly retained as a six-root hypothesis");
+  }
+  if (JSON.stringify((harness?.central_reciprocal_axes ?? []).map(
+    (axis) => [axis.id, axis.forward, axis.reverse, axis.acts_on],
+  )) !== JSON.stringify(expectedAxes)) {
+    errors.push("constrain/release and distinguish/coarsen are not preserved as distinct axes");
+  }
+
+  const compiledIds = new Set();
+  for (const question of harness?.compiled_questions ?? []) {
+    if (compiledIds.has(question.id)) errors.push(`duplicate compiled question ${question.id}`);
+    compiledIds.add(question.id);
+    if (typeof question.prompt !== "string" || !question.prompt.endsWith("?")) {
+      errors.push(`${question.id}: compiled prompt is not an actual question`);
+    }
+    if (!expectedPositions.includes(question.position)) {
+      errors.push(`${question.id}: unknown preformal position ${question.position}`);
+    }
+    for (const dimension of question.dimensions ?? []) {
+      if (!expectedDimensions.includes(dimension)) {
+        errors.push(`${question.id}: unknown relational dimension ${dimension}`);
+      }
+    }
+    for (const rootName of question.roots ?? []) {
+      if (!expectedRoots.includes(rootName)) errors.push(`${question.id}: unknown root ${rootName}`);
+    }
+    for (const sourceLine of question.source_lines ?? []) {
+      if (
+        sourceLine < questionPrograms.sections.coding.first_question_line ||
+        sourceLine > questionPrograms.sections.coding.last_question_line ||
+        !line(sourceLine).endsWith("?")
+      ) {
+        errors.push(`${question.id}: invalid Coding source line ${sourceLine}`);
+      }
+    }
+  }
+
+  const challengeIds = new Set();
+  for (const challenge of harness?.reciprocal_challenges ?? []) {
+    if (challengeIds.has(challenge.id)) errors.push(`duplicate reciprocal challenge ${challenge.id}`);
+    challengeIds.add(challenge.id);
+    if (!Array.isArray(challenge.pair) || challenge.pair.length !== 2) {
+      errors.push(`${challenge.id}: reciprocal challenge must have exactly two orientations`);
+      continue;
+    }
+    for (const sourceLine of challenge.pair) {
+      if (
+        sourceLine < questionPrograms.sections.reciprocal_why.first_question_line ||
+        sourceLine > questionPrograms.sections.reciprocal_why.last_question_line ||
+        !line(sourceLine).endsWith("?")
+      ) {
+        errors.push(`${challenge.id}: invalid Reciprocal why source line ${sourceLine}`);
+      }
+    }
+    for (const axis of challenge.axes ?? []) {
+      if (!expectedAxes.some(([id]) => id === axis)) errors.push(`${challenge.id}: unknown axis ${axis}`);
+    }
+  }
+
+  const expectedFamilyCodes = Array.from({ length: 14 }, (_, index) => `Q${index + 1}`).sort();
+  const familyCodes = new Set();
+  const familyIds = new Set();
+  for (const family of harness?.program_families ?? []) {
+    familyCodes.add(family.code);
+    familyIds.add(family.id);
+    for (const id of family.compiled_questions ?? []) {
+      if (!compiledIds.has(id)) errors.push(`${family.id}: unknown compiled question ${id}`);
+    }
+    for (const id of family.reciprocal_challenges ?? []) {
+      if (!challengeIds.has(id)) errors.push(`${family.id}: unknown reciprocal challenge ${id}`);
+    }
+  }
+  if (JSON.stringify([...familyCodes].sort()) !== JSON.stringify(expectedFamilyCodes)) {
+    errors.push("compiled question-program families must cover Q1 through Q14 exactly");
+  }
+  for (const question of harness?.compiled_questions ?? []) {
+    if (!familyIds.has(question.family)) errors.push(`${question.id}: unknown family ${question.family}`);
+  }
+
+  const rhythmIds = new Set();
+  for (const rhythm of harness?.principal_rhythms ?? []) {
+    if (rhythmIds.has(rhythm.id)) errors.push(`duplicate principal rhythm ${rhythm.id}`);
+    rhythmIds.add(rhythm.id);
+    for (const id of rhythm.required_questions ?? []) {
+      if (!compiledIds.has(id)) errors.push(`${rhythm.id}: unknown required question ${id}`);
+    }
+    for (const id of rhythm.required_reciprocals ?? []) {
+      if (!challengeIds.has(id)) errors.push(`${rhythm.id}: unknown required reciprocal ${id}`);
+    }
+    const covered = new Set(
+      (rhythm.required_questions ?? []).flatMap((id) =>
+        (harness.compiled_questions ?? []).find((question) => question.id === id)?.dimensions ?? [],
+      ),
+    );
+    for (const dimension of rhythm.required_dimensions ?? []) {
+      if (!covered.has(dimension)) {
+        errors.push(`${rhythm.id}: required dimension ${dimension} has no compiled question`);
+      }
+    }
+  }
+  for (const [residual, rhythm] of Object.entries(harness?.residual_schedule ?? {})) {
+    if (!rhythmIds.has(rhythm)) errors.push(`residual ${residual} selects unknown rhythm ${rhythm}`);
+  }
+  if (harness?.residual_schedule?.default !== "RHYTHM-DEFAULT-SUCCESSOR-CONSTRUCTION") {
+    errors.push("default successor-construction rhythm is not the residual-schedule fallback");
+  }
+  if (questionPrograms.composition?.id !== "QP-PREFORMAL-RESIDUAL-RATCHET") {
+    errors.push("active composition is not the preformal residual ratchet");
+  }
   const order = questionPrograms.composition?.order ?? [];
   for (const stage of [
-    "QP-CODING-FRAME", "actual_return", "QP-WHY-RETURN-CONTRAST",
-    "QP-WHY-RECIPROCAL-NECESSITY", "QP-CODING-PROPAGATE-RATCHET",
-    "recheck_reprove_ablate", "QP-WHY-QUESTION-RATCHET", "next_live_residual",
+    "residual_selected_principal_rhythm", "compiled_coding_questions",
+    "actual_discharge_and_return", "required_reciprocal_challenges",
+    "release_subtract", "fold_reopen_regenerate", "answer_dependent_next_residual",
   ]) {
     if (!order.includes(stage)) errors.push(`composed ratchet is missing stage ${stage}`);
   }
-  if (!/inapplicable reciprocal directions remain explicit/u.test(
+  if (!/represented or individually blocked/u.test(
     questionPrograms.composition?.continuation_rule ?? "",
   )) {
-    errors.push("composed ratchet must preserve typed reciprocal inapplicability");
+    errors.push("composed ratchet must preserve per-challenge represented/blocked closure");
   }
+}
+
+const residualIndexCheck = spawnSync(
+  process.execPath,
+  [rel(".claude/hooks/ic-residual-topology.js"), "validate", root],
+  { cwd: root, encoding: "utf8", windowsHide: true },
+);
+if (residualIndexCheck.status !== 0) {
+  errors.push(`rebuildable residual index failed: ${residualIndexCheck.stderr.trim()}`);
+}
+const harnessAcceptanceCheck = spawnSync(
+  process.execPath,
+  [rel("tools/harness_acceptance_check.js")],
+  { cwd: root, encoding: "utf8", windowsHide: true },
+);
+if (harnessAcceptanceCheck.status !== 0) {
+  errors.push(`successor harness acceptance checks failed: ${harnessAcceptanceCheck.stderr.trim()}`);
+}
+const explorationAlgorithmCheck = spawnSync(
+  process.execPath,
+  [rel("tools/exploration_algorithm_check.js")],
+  { cwd: root, encoding: "utf8", windowsHide: true },
+);
+if (explorationAlgorithmCheck.status !== 0) {
+  errors.push(`question-bank exploration checks failed: ${explorationAlgorithmCheck.stderr.trim()}`);
 }
 
 const toolchain = read("formal/lean-toolchain").trim();

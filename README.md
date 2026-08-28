@@ -67,8 +67,17 @@ lake build --wfail
 ```
 
 New inquiry traces pin the supplied question corpus and its declared engineering programs. A sealed
-cycle cannot close until it records a declared coding sequence composed with a reciprocal-why pair,
-or a checked typed reason that the reverse orientation is inapplicable.
+cycle cannot close until it records the residual-selected compiled Coding sequence with derived
+relational coverage and accounts for every required Reciprocal Why challenge as represented or
+individually blocked. The exact default sequence and residual schedule are projected in
+`formal-successor/QUESTION_RHYTHM.md`.
+The consolidated provisional method is pinned in
+`formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md`. Its broad residual index is a deletable
+projection rebuilt from append-only trace evidence and
+`formal-successor/RESIDUAL_OBLIGATIONS.json`.
+The pinned question-bank-derived computational extension is
+`formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md`; it remains preformal and does
+not authorize pre-Gate-F Rust semantic work.
 
 ## Current implementation state
 

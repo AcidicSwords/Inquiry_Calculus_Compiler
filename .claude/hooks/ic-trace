@@ -17,6 +17,7 @@ DEFAULT_FUEL=24
 RESIDUAL_CLASSES="none persists regression wrong_locus missing_dep weak_discriminator env_failure unknown resource"
 STOP_STATES="Satisfied Equivalent Impossible Blocked Unknown ResourceBounded"
 MODES="Pure Generate Probe Check Warrant"
+RESOLUTIONS="Supported Plural ExactEmpty Unsupported Unknown Blocked ResourceBounded"
 
 die() { printf 'ic-trace: %s\n' "$*" >&2; exit 1; }
 
@@ -118,10 +119,12 @@ init)
     printf '%s' "$DEFAULT_FUEL" >"$FUEL"
     source_digest="$(sha256sum "$ROOT/formal-successor/Questions.txt" 2>/dev/null | cut -d' ' -f1)"
     manifest_digest="$(sha256sum "$ROOT/formal-successor/ENGINEERING_QUESTION_PROGRAMS.json" 2>/dev/null | cut -d' ' -f1)"
+    policy_schema="$(node -e 'const fs=require("fs"); const m=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write(String(m.schema));' "$ROOT/formal-successor/ENGINEERING_QUESTION_PROGRAMS.json" 2>/dev/null)"
     [ "${#source_digest}" -eq 64 ] || die "cannot pin Questions.txt for the new trace"
     [ "${#manifest_digest}" -eq 64 ] || die "cannot pin engineering question programs for the new trace"
-    policy_record="$(printf '{\"ts\":\"%s\",\"kind\":\"policy\",\"question_program_schema\":\"1\",\"source_digest\":\"%s\",\"program_manifest_digest\":\"%s\"}\n' \
-        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$source_digest" "$manifest_digest")"
+    [ -n "$policy_schema" ] || die "cannot read engineering question-program schema"
+    policy_record="$(printf '{\"ts\":\"%s\",\"kind\":\"policy\",\"question_program_schema\":\"%s\",\"source_digest\":\"%s\",\"program_manifest_digest\":\"%s\"}\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$policy_schema" "$source_digest" "$manifest_digest")"
     printf '%s\n' "$policy_record" |
         node "$ROOT/.claude/hooks/ic-append.js" append "$created" >/dev/null ||
         die "cannot initialize question-program policy"
@@ -203,6 +206,7 @@ control-open)
     fi
     exit 0
     ;;
+policy-transition) cmd="policy_transition" ;;
 ensure|question|seal|raw|check|residual|stop|note|control|route) ;;
 *) die "unknown kind '$cmd'" ;;
 esac
@@ -217,6 +221,34 @@ for arg in "$@"; do
     esac
 done
 
+if [ "$cmd" = "residual" ]; then
+    topology_context="$(node "$ROOT/.claude/hooks/ic-residual-topology.js" context "$ROOT")" ||
+        die "cannot validate broad residual topology"
+    IFS=$'\t' read -r topology_digest topology_active topology_counts <<<"$topology_context"
+    kv[residual_topology_digest]="$topology_digest"
+    kv[active_residual]="$topology_active"
+    kv[unresolved_field]="$topology_counts"
+    kv[closure_scope]="local_obligation_binding_horizon_coverage_not_global_exhaustion"
+fi
+
+if [ "$cmd" = "policy_transition" ]; then
+    "$0" control-open harness >/dev/null 2>&1 ||
+        die "question-program policy transition requires current user-authorized harness control"
+    prior_policy="$(node -e '
+const fs=require("fs");
+const records=fs.readFileSync(process.argv[1],"utf8").trimEnd().split(/\r?\n/).filter(Boolean).map(JSON.parse);
+const policy=records.filter((record)=>record.kind==="policy"||record.kind==="policy_transition").at(-1);
+if (!policy) process.exit(1);
+process.stdout.write([policy.source_digest,policy.program_manifest_digest].join("\t"));
+' "$f")" || die "cannot read predecessor question-program policy"
+    IFS=$'\t' read -r prior_source_digest prior_manifest_digest <<<"$prior_policy"
+    kv[predecessor_source_digest]="$prior_source_digest"
+    kv[predecessor_program_manifest_digest]="$prior_manifest_digest"
+    kv[source_digest]="$(sha256sum "$ROOT/formal-successor/Questions.txt" | cut -d' ' -f1)"
+    kv[program_manifest_digest]="$(sha256sum "$ROOT/formal-successor/ENGINEERING_QUESTION_PROGRAMS.json" | cut -d' ' -f1)"
+    kv[question_program_schema]="$(node -e 'const fs=require("fs"); const m=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write(String(m.schema));' "$ROOT/formal-successor/ENGINEERING_QUESTION_PROGRAMS.json")"
+fi
+
 need() {
     local k
     for k in "$@"; do
@@ -228,17 +260,27 @@ case "$cmd" in
 ensure) need task authority invariants ;;
 question)
     need q mode answer branch occurrence continuation bindings horizon coverage authority evidence \
-        program coding_questions reciprocal_applicability reciprocal_pairs reciprocal_reason \
+        program rhythm residual_class compiled_questions question_families coding_questions \
+        coverage_dimensions root_spans rhythm_positions reciprocal_status \
+        reciprocal_challenges blocked_reciprocals reciprocal_pairs reciprocal_axes reciprocal_reason \
+        parent_residual condition_ids breaker_ids reciprocal_obligation \
+        question_disposition residual_shape method_frontier condition_keys \
         source_digest program_manifest_digest
     in_list "${kv[mode]}" "$MODES" || die "mode must be one of: $MODES"
     ;;
-seal) need should_change invariants discriminator wrong_impl ;;
+seal) need should_change invariants discriminator wrong_impl coverage ;;
 raw) need cmd ;;
 check) need verdict coverage ;;
 residual)
-    need class
+    need class next parent_residual open_relation condition_ids blocker_ids breaker_ids \
+        condition_keys separator_ids survived_contrast_ids conflict_ids gap_ids failed_fold_ids \
+        reopen_condition_ids overlap_ids coverage resolution_class residual_shape method_frontier \
+        next_question_family residual_topology_digest \
+        active_residual unresolved_field closure_scope
     in_list "${kv[class]}" "$RESIDUAL_CLASSES" ||
         die "class must be one of: $RESIDUAL_CLASSES"
+    in_list "${kv[resolution_class]}" "$RESOLUTIONS" ||
+        die "resolution_class must be one of: $RESOLUTIONS"
     ;;
 stop)
     need state warrant
@@ -253,8 +295,26 @@ stop)
     ;;
 note) need text ;;
 control) need authority residual predecessor scope ;;
+policy_transition) need authority reason predecessor_source_digest \
+    predecessor_program_manifest_digest source_digest program_manifest_digest \
+    question_program_schema ;;
 route) need source_occurrence answer successor_occurrence provenance ;;
 esac
+
+if [ "$cmd" = "residual" ]; then
+    node -e '
+const policy = require(process.argv[1]);
+const expected = policy.chooseMethodFrontier(process.argv[2]).join(",");
+if (process.argv[3] !== expected) {
+  throw new Error(`method_frontier must exactly report ${expected}`);
+}
+const keys = process.argv[4];
+const pattern = /^[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@(forward|reverse|neutral)(?:;[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@[A-Za-z0-9._-]+@(forward|reverse|neutral))*$/u;
+if (keys !== "none" && !pattern.test(keys)) throw new Error("condition_keys has invalid normalized identity");
+' "$ROOT/.claude/hooks/ic-construction-policy.js" "${kv[residual_shape]}" \
+        "${kv[method_frontier]}" "${kv[condition_keys]}" ||
+        die "residual shape, method frontier, or condition identity is invalid"
+fi
 
 if [ "$cmd" = "raw" ]; then
     sensitive="${kv[sensitive]:-false}"
@@ -299,7 +359,7 @@ if [ "$cmd" = "question" ]; then
     kv[coverage_normalized]="$(normalize_coordinate "${kv[coverage]}")"
     kv[authority_normalized]="$(normalize_coordinate "${kv[authority]}")"
     kv[evidence_normalized]="$(normalize_coordinate "${kv[evidence]}")"
-    q_program_context="${kv[q]}|${kv[program]}|${kv[coding_questions]}|${kv[reciprocal_applicability]}|${kv[reciprocal_pairs]}|${kv[source_digest]}|${kv[program_manifest_digest]}"
+    q_program_context="${kv[q]}|${kv[program]}|${kv[rhythm]}|${kv[residual_class]}|${kv[compiled_questions]}|${kv[question_families]}|${kv[coding_questions]}|${kv[coverage_dimensions]}|${kv[root_spans]}|${kv[rhythm_positions]}|${kv[reciprocal_status]}|${kv[reciprocal_challenges]}|${kv[blocked_reciprocals]}|${kv[reciprocal_pairs]}|${kv[reciprocal_axes]}|${kv[parent_residual]}|${kv[condition_ids]}|${kv[breaker_ids]}|${kv[reciprocal_obligation]}|${kv[question_disposition]}|${kv[residual_shape]}|${kv[method_frontier]}|${kv[condition_keys]}|${kv[source_digest]}|${kv[program_manifest_digest]}"
     fp="$(fingerprint "$q_program_context" "${kv[occurrence]}" "${kv[continuation]}" "${kv[bindings_normalized]}" "${kv[horizon_normalized]}" "${kv[coverage_normalized]}" "${kv[authority_normalized]}" "${kv[evidence_normalized]}")"
 fi
 

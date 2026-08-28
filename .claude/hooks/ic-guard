@@ -86,7 +86,7 @@ is_direct_trace_command() {
         .claude/hooks/ic-trace|./.claude/hooks/ic-trace|"$ROOT_NORM/.claude/hooks/ic-trace") ;;
         *) return 1 ;;
     esac
-    [[ "$remainder" =~ ^[[:space:]]+(init|status|open|stop-pending|control-open|ensure|question|seal|raw|check|residual|stop|note|control|route)([[:space:]].*)?[[:space:]]*$ ]]
+    [[ "$remainder" =~ ^[[:space:]]+(init|status|open|stop-pending|control-open|ensure|question|seal|raw|check|residual|stop|note|control|policy-transition|route)([[:space:]].*)?[[:space:]]*$ ]]
 }
 
 is_trace_execution_attempt() {
@@ -139,7 +139,7 @@ SEAL_MSG='No open inquiry cycle. This call would change actuality without a seal
 Seal the expected protected change first:
 
   .claude/hooks/ic-trace seal \
-    should_change=... invariants=... discriminator=... wrong_impl=...
+    should_change=... invariants=... discriminator=... wrong_impl=... coverage=...
 
 After the return, append raw/check/residual records. Do not route around the gate.'
 

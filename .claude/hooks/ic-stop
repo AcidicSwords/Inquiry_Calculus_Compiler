@@ -57,7 +57,12 @@ Close it against what actually returned, not against what you meant:
   .claude/hooks/ic-trace check    verdict=... coverage=...
   .claude/hooks/ic-trace residual class=<none|persists|regression|wrong_locus|
                                         missing_dep|weak_discriminator|
-                                        env_failure|unknown|resource>
+                                        env_failure|unknown|resource> \
+    next=... parent_residual=... open_relation=... condition_ids=... condition_keys=... \
+    blocker_ids=... breaker_ids=... separator_ids=... survived_contrast_ids=... \
+    conflict_ids=... gap_ids=... failed_fold_ids=... reopen_condition_ids=... \
+    overlap_ids=... coverage=... resolution_class=... residual_shape=... \
+    method_frontier=... next_question_family=...
 
 Then name the stop state -- Satisfied requires a warrant, and Unknown is a
 lawful result:

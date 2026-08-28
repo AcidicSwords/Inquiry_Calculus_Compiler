@@ -3,4 +3,8 @@
 *.sql text eol=lf
 *.tex text eol=lf
 formal-successor/Questions.txt -text -whitespace
+formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md -text -whitespace
+formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md -text -whitespace
+formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md -text -whitespace
+formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md -text -whitespace
 research/final-2026-08-25/** -whitespace

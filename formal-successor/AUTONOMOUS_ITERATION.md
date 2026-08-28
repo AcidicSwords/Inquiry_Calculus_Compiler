@@ -58,6 +58,13 @@ RECONSTRUCT CURRENT STATE
 -> STOP LAWFULLY
 ```
 
+The exploration and commitment scales are different. Cast a wide admissible net of contrasts,
+alien cases, reversals, removals, paths, joint variations, contradictions, and blockers; commit
+only the smallest relation forced by checked returns. A local ratchet removes only resolved regions
+from the broad residual topology. Preserve remaining active, blocked, latent, and reopened
+obligations with ancestry, propagate through every obligation sharing the changed conditions or
+roles, factor genuine recurrences, and then expand again.
+
 ### 1. Reconstruct and select
 
 Establish the current formal candidate, the active phase and gate, demonstrated evidence, open
@@ -74,12 +81,18 @@ continuation, environment, scope, horizon, coverage, authority, and evidence rou
 current observable
 decisive contrasting observable
 protected difference
-smallest clearly wrong candidate
+decisively wrong admissible foil or overstrong candidate
 independent discriminator
 invariants
 ```
 
-The question program constrains process; it does not supply an answer or warrant.
+The question program constrains process; it does not supply an answer or warrant. Select the
+principal rhythm from the declared residual schedule in `QUESTION_RHYTHM.md`. For a substantial
+pass, cover the applicable admissibility, discrimination, path/direction/order, actuality/support,
+representation/regeneration, and frontier/ancestry/reuse relations. Select among the Q1--Q14
+derived families by the live residual; do not rotate through them. Rephrasing one relation does not increase coverage. The
+roots classify derived ordinary question programs and must remain erasable; they are not a fixed
+semantic wheel.
 
 ### 3. Cross and localize
 
@@ -94,18 +107,22 @@ exploratory change.
 
 ### 4. Apply the reciprocal question program
 
-After each actual return, record a validated `QP-CODING-RECIPROCAL-RATCHET` question occurrence.
-It must cite at least one declared coding line and either:
+After each actual return, record a validated `QP-PREFORMAL-RESIDUAL-RATCHET` question occurrence.
+It must cite the exact compiled sequence selected by the residual and account for every required
+reciprocal challenge as either:
 
-- one or more declared two-orientation `QP-WHY-*` pairs; or
-- `reciprocal_applicability=inapplicable`, `reciprocal_pairs=none`, and the typed reason no reverse
-  orientation is meaningful under the binding.
+- represented by its declared opposed corpus pair; or
+- individually typed but blocked, with the unavailable capability or inapplicability recorded.
 
-Ask why the observed side holds rather than its admitted foil and why the foil would hold rather
-than the observed side under reversed orientation. Then separately attack necessity and
-sufficiency. A pre-return question, one-way paraphrase, convenient singleton, or green build does
-not close this obligation. The harness rejects a residual while any raw return lacks a subsequent
+The two central axes—constrain/release and distinguish/coarsen—remain distinct. Then apply the
+required path, direction, support, fold/reopen, and answer/next-question challenges selected by the
+rhythm. A pre-return question, one-way paraphrase, convenient singleton, or green build does not
+close this obligation. The harness rejects a residual while any raw return lacks a subsequent
 validated composition.
+
+The append-only trace is the ancestry source. `RESIDUAL_OBLIGATIONS.json` supplies stable project
+obligation seeds, while the broad residual index is rebuilt from those seeds, trace coordinates,
+and the one live Frontier selection. Never hand-maintain a second moving topology.
 
 ### 5. Construct only the typed survivor
 
@@ -138,6 +155,12 @@ On an accepted local change, update only the owning records:
 - actual durable failure or constraint -> append `FAILURES.jsonl`;
 - propagation closure -> a machine-readable report under `reports/`;
 - strongest remaining obligation -> replace the one live Frontier block.
+
+The one live Frontier is an operational selection from the broader residual topology, not the
+whole unresolved universe. A local `Satisfied` result remains indexed by obligation, binding,
+horizon, and coverage. Preserve unsearched breaker families, blocked capabilities, latent phase
+obligations, reopening conditions, and newly reachable residuals rather than collapsing the state
+to the local theorem.
 
 The report is evidence, never theorem authority. Git owns chronology. README files remain static
 orientation.

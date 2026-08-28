@@ -17,6 +17,26 @@
       "path": "formal-successor/Questions.txt",
       "role": "external_inquiry_corpus_not_semantic_authority",
       "sha256": "5a0dbb45bd1e9ff838a0396f6a1f17ba23cfa726889d28ab9b809b0c9b9cd019"
+    },
+    {
+      "path": "formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md",
+      "role": "user_supplied_preformal_construction_method_not_successor_semantics",
+      "sha256": "fc80d0e84a3fa5a2a16a15354e4ae5d6b7f342f9cfe8bdaf3d2b83c2fe8e357e"
+    },
+    {
+      "path": "formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md",
+      "role": "user_supplied_preformal_search_and_commitment_policy_not_successor_semantics",
+      "sha256": "74f6abf1fb944e76d65071c83ff0fe319ed008d4d6e086de20afe22ca323c765"
+    },
+    {
+      "path": "formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md",
+      "role": "user_supplied_consolidated_provisional_construction_harness_spec_not_successor_semantics",
+      "sha256": "4695daa72e33d2e3d82300047124030de5d13fe82c28cee086ef27da111fefc2"
+    },
+    {
+      "path": "formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md",
+      "role": "user_supplied_question_bank_derived_provisional_exploration_algorithm_not_successor_semantics",
+      "sha256": "82cfaaae3e25b4703f2d73554676047844afa0f7b9807bfadaf6b2716fefefec"
     }
   ],
   "adopted_process_input": {

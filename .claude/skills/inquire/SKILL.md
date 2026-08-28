@@ -40,18 +40,23 @@ the trace lawfully first.
 2. **INSPECT** fresh repository and external actuality. An explicit task may temporarily supersede
    the persistent Frontier; otherwise use the one delimited live block.
 3. **CONTRAST** current and required observables.
-4. **TRACE** the smallest responsible relational path. Several live loci require a separator.
-5. **EXPERIMENT** by naming the smallest wrong implementation and sealing a prediction:
+4. **CROSS** the protected boundary with a decisive admissible contrast.
+5. **LOCALIZE** inside the demonstrated crossing by partition, subtraction, or backoff.
+6. **TRACE** a sufficient responsible relational path through roles, direction, composition, and
+   order. Several live loci require a separator; localize only after a decisive path contrast.
+7. **EXPERIMENT** by naming a decisively wrong admissible implementation or foil that can reject a
+   large alternative region, then seal the prediction:
 
        .claude/hooks/ic-trace seal \
-         should_change=... invariants=... discriminator=... wrong_impl=...
+         should_change=... invariants=... discriminator=... wrong_impl=... coverage=...
 
-6. **UPDATE** from the preserved return, not the pre-return story.
-7. **CHANGE** only the smallest authorized reversible region.
-8. **VERIFY** with targeted checks, then required broad gates.
-9. **CHALLENGE** sufficiency and necessity.
-10. **MINIMIZE** by safe ablation.
-11. **RATCHET** only durable evidence and replace the live Frontier residual when it changes.
+8. **UPDATE** from the preserved return, not the pre-return story.
+9. **CHANGE** with an authorized reversible candidate sufficiently strong to cross the localized
+   boundary. After success, subtract excess before retaining the production change.
+10. **VERIFY** with targeted checks, then required broad gates.
+11. **CHALLENGE** sufficiency and necessity.
+12. **MINIMIZE** by safe ablation.
+13. **RATCHET** only durable evidence and replace the live Frontier residual when it changes.
 
 Record a consequential answer with all recurrence coordinates:
 
@@ -63,20 +68,40 @@ Record a consequential answer with all recurrence coordinates:
       occurrence=... continuation=... \
       bindings=... horizon=... coverage=... \
       authority=... evidence=... \
-      program=QP-CODING-RECIPROCAL-RATCHET \
-      coding_questions=<comma-separated-QP-CODING-source-lines> \
-      reciprocal_applicability=applicable \
-      reciprocal_pairs=<left:right-pairs-separated-by-semicolons> \
+      program=QP-PREFORMAL-RESIDUAL-RATCHET \
+      rhythm=<manifest-scheduled-principal-rhythm> \
+      residual_class=<declared-residual-class> \
+      compiled_questions=<exact-required-CQ-ids> \
+      question_families=<derived-family-ids> \
+      coding_questions=<derived-comma-separated-source-lines> \
+      coverage_dimensions=<derived-relational-dimensions> \
+      root_spans=<derived-erasable-root-lowerings> \
+      rhythm_positions=<derived-preformal-positions> \
+      reciprocal_status=represented \
+      reciprocal_challenges=<required-RCP-ids> \
+      blocked_reciprocals=none \
+      reciprocal_pairs=<derived-left:right-pairs-separated-by-semicolons> \
+      reciprocal_axes=<derived-central-axes-or-none> \
       reciprocal_reason=... \
+      parent_residual=<stable-residual-id-or-none> \
+      condition_ids=<relevant-condition-ids-or-none> \
+      breaker_ids=<relevant-breaker-ids-or-none> \
+      reciprocal_obligation=<represented|blocked|not_applicable> \
+      question_disposition=<Answered|Productive|Required|Redundant|Inapplicable|Blocked|Unknown> \
+      residual_shape=<manifest-residual-shape> \
+      method_frontier=<exact-manifest-method-frontier> \
+      condition_keys=<schema@roles@scope@applicability@grain@orientation-or-none> \
       source_digest="$source_digest" \
       program_manifest_digest="$program_manifest_digest"
 
 The occurrence identifies the checked Ask/engineering question use; continuation identifies the
-answer-dependent branch program. Use explicit values such as none only when that coordinate truly
-does not apply. For a typed reverse-direction inapplicability, record
-`reciprocal_applicability=inapplicable` and `reciprocal_pairs=none` with the reason. New traces pin
-both input digests in their first record, and the harness refuses a residual until the active cycle
-contains a policy-accepted question after every raw return.
+answer-dependent branch program. Derive the fields from the residual-selected rhythm in
+`formal-successor/ENGINEERING_QUESTION_PROGRAMS.json`; never invent coverage. Every required
+reciprocal challenge must appear in `reciprocal_challenges` or `blocked_reciprocals`, never both. If
+all are blocked, use `reciprocal_status=blocked`, `reciprocal_challenges=none`,
+`reciprocal_pairs=none`, and `reciprocal_axes=none`, with a typed reason naming the unavailable
+capability. New traces pin both input digests in their first record, and the harness refuses a
+residual until the active cycle contains a policy-accepted question after every raw return.
 
 An optional derived route occurrence may be recorded:
 
@@ -103,7 +128,12 @@ For credentials, personal data, or another sensitive return, never copy the byte
 Then record the independent interpretation:
 
     .claude/hooks/ic-trace check verdict=... coverage=...
-    .claude/hooks/ic-trace residual class=... next=...
+    .claude/hooks/ic-trace residual \
+      class=... next=... parent_residual=... open_relation=... \
+      condition_ids=... condition_keys=... blocker_ids=... breaker_ids=... \
+      separator_ids=... survived_contrast_ids=... conflict_ids=... gap_ids=... \
+      failed_fold_ids=... reopen_condition_ids=... overlap_ids=... coverage=... \
+      resolution_class=... residual_shape=... method_frontier=... next_question_family=...
 
 The enforced order is `seal -> one or more raw returns -> one or more checks -> residual`.
 No residual can close a prediction before an actual return and check, and a second seal cannot

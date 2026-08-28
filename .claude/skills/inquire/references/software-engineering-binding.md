@@ -9,8 +9,8 @@ engineering control surface.
 
 ## Engineering frame
 
-Before selecting a change, reconstruct the smallest frame that can preserve the protected
-difference:
+Before selecting a change, reconstruct a sufficient typed frame that contains the protected
+difference and the strongest cheap admissible contrast likely to expose its boundary:
 
     frame
         the boundary inside which the requirement and actual behavior are compared
@@ -38,22 +38,38 @@ observable, or when an actual separator discriminates it from rivals.
 
 The engineering clock is a domain renderer of the canonical derived roots:
 
-| Clock position | Principal root composition | Engineering return |
-|---|---|---|
-| SPECIFY | Expose + Ground | typed contract, authority, horizon, discriminator |
-| INSPECT | Expose + Orient + Ground | actual repository/tool/runtime return with provenance |
-| CONTRAST | Polarize + Vary | protected foil or positive departure candidate |
-| TRACE | Orient + Factor + Ground | responsible dependency/path and its support |
-| EXPERIMENT | expose a discriminator and lawfully discharge it | preserved raw return |
-| UPDATE | reify return/residual, then expose/factor/orient | successor sufficient present |
-| CHANGE | construct through Orient + Factor + Vary | smallest reversible candidate |
-| VERIFY | Ground through Probe / Check / Warrant | checked coverage, not self-warrant |
-| CHALLENGE | Polarize + Vary plus breaker pairs | surviving counterfield or necessity witness |
-| MINIMIZE | Vary(remove) plus protected comparison | subtraction or necessity certificate |
-| RATCHET | fold, reify residual, construct successor question | durable evidence and next frontier |
+| Clock position | Open relational obligation | Coding-family pressure | Reciprocal closure pressure | Candidate methods |
+|---|---|---|---|---|
+| SPECIFY | typed contract, authority, horizon, field | FRAME / REFRAME | what can be unbound or made inapplicable? | source inspection, schema extraction |
+| INSPECT | actual carriers, roles, incidence, evidence | FRAME + OPEN / AUDIT RETURN | what is absent, inferred, or representation-bound? | repository probe, static analysis |
+| CONTRAST | protectedly different admissible sides | MAXIMAL BREAK / SUBTRACT + SEPARATE / MERGE | which dimensions can be released or coarsened? | countermodel, extreme fixture, group contrast |
+| TRACE | sufficient path, direction, role filling, order | FACTOR / BYPASS + ORIENT + SUCCESSION | bypass, replace, reverse, reorder, compare history | data flow, slicing, provenance, tracing |
+| EXPERIMENT | answer-changing discriminator and discharge | SEPARATE + GROUND | what return would fail to separate or support? | proof, differential test, runtime probe |
+| UPDATE | exact supported field and residual | OPEN / AUDIT RETURN | what remains possible, unexcluded, unsupported, or Unknown? | decoding, independent result check |
+| CHANGE | authorized boundary-crossing candidate | FORCE / RELEASE or REPAIR / REBREAK | which removal, replacement, or hostile continuation rebreaks it? | reversible over-repair, isolated candidate |
+| VERIFY | checked protected consequence and coverage | GROUND / WITHHOLD / DEFEAT | what defeats the support or survives withholding it? | proof checker, independent regression |
+| CHALLENGE | live counterfield against apparent closure | reciprocal family selected by claim type | necessity, sufficiency, direction, path, evidence, fold | fuzzing, countermodel, mutation, stress |
+| MINIMIZE | minimal or nondominated protected survivor | RELEASE / SUBTRACT + FOLD / REOPEN | what next removal reopens the alternative? | delta debugging, ablation, equivalence check |
+| RATCHET | regenerative fold and answer-dependent residual | QUESTION / RECIPROCAL QUESTION | what new question is forced and what would reopen the fold? | trace check, regeneration, frontier update |
 
-No clock name becomes a semantic question species. Each use lowers to an ordinary typed relation,
-question, and first-order IProg.
+No clock name or preformal question-family name becomes a semantic question species. The clock is
+the outer repository work lifecycle. Residual-selected Coding + Reciprocal-Why programs are the
+inner reasoning dynamics. Each use lowers to an ordinary typed relation, question, and first-order
+IProg.
+
+## Two search scales and residual topology
+
+Search widely; commit narrowly. Exploration constructs a broad admissible field of strong
+contrasts, alien cases, reversals, paths, joint variations, contradictions, and blockers.
+Commitment ratchets only the smallest relation forced by checked returns. A local ratchet subtracts
+only the residual region it resolves and preserves all other active, blocked, latent, and reopened
+obligations with ancestry.
+
+Propagate a local relation through every residual that references the same conditions or roles.
+Recurring wording is not enough for reuse: establish the same typed relation, scope, applicability,
+support, breakers, provenance, and reopening. Contradictions generate separator questions. Blockers
+generate typed capability-chain residuals. The one live Frontier is an operational selection from
+the broader topology, not a claim of global exhaustion.
 
 ## Availability and succession
 
@@ -156,6 +172,8 @@ folded pair returns a positive reopening witness.
 Structure earns retention only through protected behavior, authority, provenance, recovery, or
 bounded reacquisition:
 
+    cross a consequential boundary with a strong admissible contrast
+    localize by partition and subtraction
     refine where consequences split
     fold where they do not
     retain the smallest cue that still regenerates the protected distinction

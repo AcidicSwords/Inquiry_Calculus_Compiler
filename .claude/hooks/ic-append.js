@@ -8,6 +8,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const {
   validatePolicy,
+  validatePolicyTransition,
   validateQuestionProgram,
   validateStoredQuestion,
 } = require("./ic-question-program.js");
@@ -154,13 +155,22 @@ function validatedRecords() {
     return record;
   });
   const policies = records.filter((record) => record.kind === "policy");
+  const transitions = records.filter((record) => record.kind === "policy_transition");
   if (policies.length > 1 || (policies.length === 1 && policies[0].seq !== 1)) {
     fail("question-program policy must occur exactly once at the first record");
   }
+  if (transitions.length > 0 && policies.length !== 1) {
+    fail("question-program policy transition requires a first-record policy");
+  }
   if (policies.length === 1) {
-    validatePolicy(policies[0]);
+    let activePolicy = policies[0];
+    validatePolicy(activePolicy);
     for (const record of records) {
-      if (record.kind === "question") validateStoredQuestion(record, policies[0]);
+      if (record.kind === "policy_transition") {
+        validatePolicyTransition(record, activePolicy);
+        activePolicy = record;
+      }
+      if (record.kind === "question") validateStoredQuestion(record, activePolicy);
     }
   }
   validateStateMachine(records);
@@ -176,10 +186,29 @@ function validateStateMachine(records) {
   let lastResidual = 0;
   let lastStop = 0;
   let questionProgramPolicy = false;
+  let pendingControl = false;
 
   for (const record of records) {
     switch (record.kind) {
       case "policy":
+        questionProgramPolicy = true;
+        break;
+      case "control":
+        if (cycle === null) pendingControl = true;
+        else cycle.control = true;
+        break;
+      case "policy_transition":
+        if (
+          cycle === null ||
+          !cycle.control ||
+          cycle.raw !== 0 ||
+          cycle.check !== 0 ||
+          cycle.questions !== 0
+        ) {
+          fail(
+            `line ${record.seq} changes question-program policy outside a controlled pre-return cycle`,
+          );
+        }
         questionProgramPolicy = true;
         break;
       case "question":
@@ -196,7 +225,14 @@ function validateStateMachine(records) {
         if (cycle !== null) {
           fail(`line ${record.seq} opens a seal before the prior cycle closes`);
         }
-        cycle = { raw: 0, check: 0, questions: 0, uncomposedReturns: 0 };
+        cycle = {
+          raw: 0,
+          check: 0,
+          questions: 0,
+          uncomposedReturns: 0,
+          control: pendingControl,
+        };
+        pendingControl = false;
         break;
       case "raw":
         if (cycle === null) {
@@ -317,7 +353,9 @@ try {
         record,
         path.resolve(__dirname, "../.."),
       );
-      const policy = records.find((prior) => prior.kind === "policy");
+      const policy = [...records]
+        .reverse()
+        .find((prior) => new Set(["policy", "policy_transition"]).has(prior.kind));
       if (policy) validateStoredQuestion(record, policy);
       if (
         records.some(
@@ -333,6 +371,13 @@ try {
     if (record.kind === "policy") {
       if (records.length !== 0) fail("question-program policy must be the first record");
       validatePolicy(record);
+    }
+    if (record.kind === "policy_transition") {
+      const predecessor = [...records]
+        .reverse()
+        .find((prior) => new Set(["policy", "policy_transition"]).has(prior.kind));
+      if (!predecessor) fail("question-program policy transition has no predecessor");
+      validatePolicyTransition(record, predecessor);
     }
     const expectedSeq = records.length + 1;
     const stored = {

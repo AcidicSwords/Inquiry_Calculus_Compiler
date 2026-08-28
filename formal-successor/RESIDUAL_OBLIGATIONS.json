@@ -1,0 +1,251 @@
+{
+  "schema": 1,
+  "status": "explicit_project_obligation_seed_not_successor_semantics_or_moving_history",
+  "selection_source": "IMPLEMENTATION_FRONTIER.md",
+  "initial_selection": "FORMAL-A-INVENTORY-001",
+  "states": ["active", "blocked", "latent", "reopened"],
+  "closure_law": "A local result closes only its named obligation at declared binding, horizon, and coverage; it removes no other residual without an explicit checked propagation result.",
+  "nodes": [
+    {
+      "id": "FORMAL-A-INVENTORY-001",
+      "state": "active",
+      "phase": "A",
+      "obligation": "Generate and independently check an exhaustive stable inventory of consequential v2.0 claims and predecessor implementation surfaces.",
+      "depends_on": [],
+      "conditions": ["C-PINNED-INPUTS", "C-PREDECESSOR-FREEZE", "C-EXTRACTION-GRAMMAR"],
+      "coverage": "canonical TeX, semantic Rust modules, public schemas, and registered conformance fixtures at the pinned predecessor commit",
+      "evidence": ["IMPLEMENTATION_FRONTIER.md", "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md#phase-a"],
+      "reopen_when": ["input digest changes", "extraction grammar changes", "an unmatched consequential source item is found"]
+    },
+    {
+      "id": "FORMAL-A-EXTRACTION-GRAMMAR",
+      "state": "latent",
+      "phase": "A",
+      "obligation": "Define the exact source classification and stable-identity grammar used by the inventory generator.",
+      "depends_on": ["FORMAL-A-INVENTORY-001"],
+      "conditions": ["C-EXTRACTION-GRAMMAR"],
+      "coverage": "Phase A source classes only",
+      "evidence": ["IMPLEMENTATION_FRONTIER.md"],
+      "reopen_when": ["a source form is unmatched or ambiguously classified"]
+    },
+    {
+      "id": "FORMAL-A-TEX-INVENTORY",
+      "state": "latent",
+      "phase": "A",
+      "obligation": "Inventory every consequential declaration and normative claim in Inquiry_Calculus_v2_0.tex.",
+      "depends_on": ["FORMAL-A-EXTRACTION-GRAMMAR"],
+      "conditions": ["C-PINNED-INPUTS", "C-EXTRACTION-GRAMMAR"],
+      "coverage": "pinned canonical TeX bytes",
+      "evidence": ["Inquiry_Calculus_v2_0.tex"],
+      "reopen_when": ["canonical TeX digest changes", "coverage checker finds an unmatched claim"]
+    },
+    {
+      "id": "FORMAL-A-RUST-SURFACE-INVENTORY",
+      "state": "latent",
+      "phase": "A",
+      "obligation": "Inventory predecessor Rust semantic modules and public schema surfaces without treating them as semantic authority.",
+      "depends_on": ["FORMAL-A-EXTRACTION-GRAMMAR"],
+      "conditions": ["C-PREDECESSOR-FREEZE", "C-EXTRACTION-GRAMMAR"],
+      "coverage": "semantic Rust modules and public schemas at the pinned predecessor commit",
+      "evidence": ["formal-successor/PREDECESSOR_BASELINE.md"],
+      "reopen_when": ["predecessor coordinate changes", "semantic surface classification changes"]
+    },
+    {
+      "id": "FORMAL-A-FIXTURE-INVENTORY",
+      "state": "latent",
+      "phase": "A",
+      "obligation": "Inventory registered predecessor conformance fixtures and connect them to the claims they exercise.",
+      "depends_on": ["FORMAL-A-EXTRACTION-GRAMMAR"],
+      "conditions": ["C-PREDECESSOR-FREEZE", "C-EXTRACTION-GRAMMAR"],
+      "coverage": "registered conformance fixtures at the pinned predecessor commit",
+      "evidence": ["formal-successor/PREDECESSOR_BASELINE.md"],
+      "reopen_when": ["fixture registry changes", "an exercised claim lacks an inventory edge"]
+    },
+    {
+      "id": "FORMAL-A-COVERAGE-CHECKER",
+      "state": "latent",
+      "phase": "A",
+      "obligation": "Independently reject deleted, altered, duplicated, or silently unclassified inventory source identities.",
+      "depends_on": ["FORMAL-A-TEX-INVENTORY", "FORMAL-A-RUST-SURFACE-INVENTORY", "FORMAL-A-FIXTURE-INVENTORY"],
+      "conditions": ["C-EXTRACTION-GRAMMAR"],
+      "coverage": "generated Phase A inventory and declared source universe",
+      "evidence": ["IMPLEMENTATION_FRONTIER.md"],
+      "reopen_when": ["a mutation breaker escapes detection", "inventory schema or source universe changes"]
+    },
+    {
+      "id": "FORMAL-B-PREDECESSOR-SURFACE",
+      "state": "latent",
+      "phase": "B",
+      "obligation": "Formalize the exact predecessor surface selected after Gate A.",
+      "depends_on": ["FORMAL-A-COVERAGE-CHECKER"],
+      "conditions": ["C-GATE-A"],
+      "coverage": "construction-specification Phase B",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate A reopens", "formal predecessor correspondence fails"]
+    },
+    {
+      "id": "FORMAL-C-CORE",
+      "state": "latent",
+      "phase": "C",
+      "obligation": "Construct the exact profile, protection, and question core.",
+      "depends_on": ["FORMAL-B-PREDECESSOR-SURFACE"],
+      "conditions": ["C-GATE-B"],
+      "coverage": "construction-specification Phase C",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate B reopens", "a core breaker survives"]
+    },
+    {
+      "id": "FORMAL-D-BREAKERS",
+      "state": "latent",
+      "phase": "D",
+      "obligation": "Make the required semantic non-collapse breakers permanent.",
+      "depends_on": ["FORMAL-C-CORE"],
+      "conditions": ["C-GATE-C"],
+      "coverage": "construction-specification Phase D",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate C reopens", "a permanent breaker ceases to discriminate"]
+    },
+    {
+      "id": "FORMAL-E-PROGRAM-EFFECTS",
+      "state": "latent",
+      "phase": "E",
+      "obligation": "Construct exact program and effect semantics.",
+      "depends_on": ["FORMAL-D-BREAKERS"],
+      "conditions": ["C-GATE-D"],
+      "coverage": "construction-specification Phase E",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate D reopens", "program/effect correspondence fails"]
+    },
+    {
+      "id": "FORMAL-F-CORRESPONDENCE",
+      "state": "latent",
+      "phase": "F",
+      "obligation": "Establish preservation/correction correspondence and full propagation.",
+      "depends_on": ["FORMAL-E-PROGRAM-EFFECTS"],
+      "conditions": ["C-GATE-E", "C-PREDECESSOR-FREEZE"],
+      "coverage": "construction-specification Phase F",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate E reopens", "correspondence or propagation closure fails"]
+    },
+    {
+      "id": "FORMAL-G-COMPILER",
+      "state": "latent",
+      "phase": "G",
+      "obligation": "Construct a law-aware successor compiler.",
+      "depends_on": ["FORMAL-F-CORRESPONDENCE"],
+      "conditions": ["C-GATE-F"],
+      "coverage": "construction-specification Phase G",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate F reopens", "compiler violates a checked law"]
+    },
+    {
+      "id": "FORMAL-H-REGENERATION",
+      "state": "latent",
+      "phase": "H",
+      "obligation": "Construct and challenge compression and regeneration.",
+      "depends_on": ["FORMAL-G-COMPILER"],
+      "conditions": ["C-GATE-G"],
+      "coverage": "construction-specification Phase H",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate G reopens", "a protected distinction cannot regenerate"]
+    },
+    {
+      "id": "FORMAL-I-CORPUS",
+      "state": "latent",
+      "phase": "I",
+      "obligation": "Account for the complete question corpus under the formal successor.",
+      "depends_on": ["FORMAL-H-REGENERATION"],
+      "conditions": ["C-GATE-H"],
+      "coverage": "construction-specification Phase I",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md", "formal-successor/Questions.txt"],
+      "reopen_when": ["Gate H reopens", "a corpus question remains unclassified"]
+    },
+    {
+      "id": "FORMAL-J-NOTATION-PROSE",
+      "state": "latent",
+      "phase": "J",
+      "obligation": "Construct reciprocal canonical notation and prose round trips.",
+      "depends_on": ["FORMAL-I-CORPUS"],
+      "conditions": ["C-GATE-I"],
+      "coverage": "construction-specification Phase J",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate I reopens", "notation/prose regeneration is ambiguous"]
+    },
+    {
+      "id": "FORMAL-K-DOMAIN-BINDING",
+      "state": "latent",
+      "phase": "K",
+      "obligation": "Pressure the successor with independent domain bindings.",
+      "depends_on": ["FORMAL-J-NOTATION-PROSE"],
+      "conditions": ["C-GATE-J"],
+      "coverage": "construction-specification Phase K",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate J reopens", "a domain binding exposes an unrepresented distinction"]
+    },
+    {
+      "id": "FORMAL-L-SELF-APPLICATION",
+      "state": "latent",
+      "phase": "L",
+      "obligation": "Establish regenerative self-application without self-warrant.",
+      "depends_on": ["FORMAL-K-DOMAIN-BINDING"],
+      "conditions": ["C-GATE-K"],
+      "coverage": "construction-specification Phase L",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate K reopens", "self-application loses provenance or independent checking"]
+    },
+    {
+      "id": "FORMAL-M-GENERATED-SPEC",
+      "state": "latent",
+      "phase": "M",
+      "obligation": "Generate the canonical specification from checked successor structure.",
+      "depends_on": ["FORMAL-L-SELF-APPLICATION"],
+      "conditions": ["C-GATE-L"],
+      "coverage": "construction-specification Phase M",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md"],
+      "reopen_when": ["Gate L reopens", "generated specification fails round-trip checks"]
+    },
+    {
+      "id": "FORMAL-N-RUST-MIGRATION",
+      "state": "latent",
+      "phase": "N",
+      "obligation": "Migrate Rust only through the checked successor-to-Rust correspondence delta.",
+      "depends_on": ["FORMAL-M-GENERATED-SPEC", "FORMAL-F-CORRESPONDENCE"],
+      "conditions": ["C-GATE-M", "C-GATE-F"],
+      "coverage": "construction-specification Phase N",
+      "evidence": ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md", "formal-successor/PREDECESSOR_BASELINE.md"],
+      "reopen_when": ["Gate M or F reopens", "successor/predecessor conformance diverges"]
+    }
+  ],
+  "conditions": [
+    {"id": "C-PINNED-INPUTS", "meaning": "canonical construction inputs have accepted byte digests"},
+    {"id": "C-PREDECESSOR-FREEZE", "meaning": "pre-Gate-F Rust semantics remain unchanged from the pinned predecessor coordinate"},
+    {"id": "C-EXTRACTION-GRAMMAR", "meaning": "the Phase A extraction grammar is explicit and independently checkable"},
+    {"id": "C-GATE-A", "meaning": "Formal Gate A is passed at declared coverage"},
+    {"id": "C-GATE-B", "meaning": "Formal Gate B is passed at declared coverage"},
+    {"id": "C-GATE-C", "meaning": "Formal Gate C is passed at declared coverage"},
+    {"id": "C-GATE-D", "meaning": "Formal Gate D is passed at declared coverage"},
+    {"id": "C-GATE-E", "meaning": "Formal Gate E is passed at declared coverage"},
+    {"id": "C-GATE-F", "meaning": "Formal Gate F is passed at declared coverage"},
+    {"id": "C-GATE-G", "meaning": "Formal Gate G is passed at declared coverage"},
+    {"id": "C-GATE-H", "meaning": "Formal Gate H is passed at declared coverage"},
+    {"id": "C-GATE-I", "meaning": "Formal Gate I is passed at declared coverage"},
+    {"id": "C-GATE-J", "meaning": "Formal Gate J is passed at declared coverage"},
+    {"id": "C-GATE-K", "meaning": "Formal Gate K is passed at declared coverage"},
+    {"id": "C-GATE-L", "meaning": "Formal Gate L is passed at declared coverage"},
+    {"id": "C-GATE-M", "meaning": "Formal Gate M is passed at declared coverage"}
+  ],
+  "basins": [
+    {
+      "id": "BASIN-PREDECESSOR-SURFACE",
+      "condition_ids": ["C-PINNED-INPUTS", "C-PREDECESSOR-FREEZE", "C-EXTRACTION-GRAMMAR"],
+      "residual_ids": ["FORMAL-A-INVENTORY-001", "FORMAL-A-TEX-INVENTORY", "FORMAL-A-RUST-SURFACE-INVENTORY", "FORMAL-A-FIXTURE-INVENTORY", "FORMAL-B-PREDECESSOR-SURFACE"],
+      "factor_status": "candidate_overlap_not_yet_warranted"
+    },
+    {
+      "id": "BASIN-REGENERATION",
+      "condition_ids": ["C-GATE-G", "C-GATE-H", "C-GATE-I", "C-GATE-J", "C-GATE-L"],
+      "residual_ids": ["FORMAL-H-REGENERATION", "FORMAL-I-CORPUS", "FORMAL-J-NOTATION-PROSE", "FORMAL-L-SELF-APPLICATION", "FORMAL-M-GENERATED-SPEC"],
+      "factor_status": "candidate_overlap_not_yet_warranted"
+    }
+  ]
+}

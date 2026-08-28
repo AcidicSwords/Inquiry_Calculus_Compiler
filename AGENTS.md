@@ -18,6 +18,18 @@ The supplied construction specification is acceptance authority, not a theorem. 
 `Questions.txt` is inquiry/corpus pressure, not a source of primitives. Lean proofs and checked
 models establish successor mathematics. The v2.0 TeX and current Rust behavior establish the
 predecessor being preserved, corrected, or mapped; neither may silently redefine the other.
+The supplied `formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md` is a preformal
+construction method, not successor semantics unless the checked successor independently
+regenerates it.
+The supplied `formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md` consolidates and sharpens
+that provisional method. It governs Q1--Q14 construction programs, shaped-hole inquiry,
+search-wide/commit-narrow behavior, residual ancestry, and harness acceptance tests; it likewise
+does not define successor semantics or warrant itself.
+The supplied `formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md` is a further
+provisional computational derivation from the full corpus. Its typed condition identity, boundary
+incidence, question dispositions, method dispatch, complexity conditions, and demand-driven
+projection rules control exploration only; its formulas are candidate obligations, not accepted
+successor definitions or theorems.
 
 Until Formal Gate F is recorded as passed in `formal-successor/CONFORMANCE_STATUS.md`, successor
 work must not change Rust semantics. Preservation fixes, regression fixtures, inspection, schema
@@ -41,6 +53,38 @@ machine-readable programs and source anchors live in
 Do not ask the whole corpus mechanically. Select a productive or explicitly required sequence whose
 supported answer classes can change the continuation. Record each selected question by section,
 stable source line, exact occurrence, continuation, binding, horizon, coverage, and evidence.
+
+The engineering clock below remains the outer repository work lifecycle. Coding and Reciprocal Why
+questions are residual-selected inner reasoning programs; temporary words such as `FRAME`,
+`EXPAND`, `DISTINGUISH`, `CONSTRAIN`, `RECIPROCATE`, and `FOLD/REOPEN` do not replace that lifecycle
+or create another semantic control ontology.
+
+Selection is by distinct relational span, not wording count. For a substantial construction pass,
+cover where relevant: admissibility; discrimination; path/direction/order; actuality/support; and
+representation/regeneration. Several paraphrases of one relation do not cover another. `Expose`,
+`Orient`, `Factor`, `Polarize`, `Vary`, and `Ground` classify derived ordinary relation programs;
+they remain hypotheses under the construction specification, not semantic primitives or a fixed
+root wheel. The exact compiled questions, reciprocal motions, principal rhythms, and residual
+scheduler are documented in `formal-successor/QUESTION_RHYTHM.md`.
+
+The broad residual index is a rebuildable projection over the append-only trace, the stable
+project-obligation seed in `formal-successor/RESIDUAL_OBLIGATIONS.json`, and the single active
+selection in `IMPLEMENTATION_FRONTIER.md`. It is never a second authoritative history. Deleting a
+generated index must lose no evidence or ancestry.
+
+Keep two scales distinct:
+
+```text
+exploration: wide, contrasting, deliberately expansive
+commitment: small, warranted, exactly supported
+```
+
+Search widely; commit narrowly. A local proof or repair subtracts only the region it actually
+resolves. It must preserve the wider active, blocked, latent, and reopened residual field with
+ancestry, then propagate the local relation through every residual that shares its conditions or
+roles. Local satisfaction under a binding, horizon, and coverage is not global exhaustion. Repeated
+conditions and paths are candidates for factoring only after same-relation typing, breakers,
+applicability, provenance, and reopening survive.
 
 The default composed ratchet is:
 
@@ -70,19 +114,20 @@ different-path alternatives, necessity and sufficiency breakers, evidence indepe
 returns when the final distinction is removed. If the reverse question is inapplicable, record the
 typed applicability failure; do not manufacture symmetry.
 
-The engineering trace must cite at least one coding-section question for the active clock position
-and, after a consequential return, at least one paired reciprocal-why composition unless the binding
-shows that no meaningful contrast exists. A green checker without this answer-dependent composition
-is an occurrence, not a completed inquiry ratchet.
+The engineering trace must cite the compiled questions required by the residual-selected principal
+rhythm. After a consequential return, every reciprocal challenge required by that rhythm must be
+represented with its declared opposed corpus pair or individually recorded as typed but blocked.
+A green checker without this answer-dependent composition is an occurrence, not a completed inquiry
+ratchet.
 
 Every new trace pins the byte digests of `formal-successor/Questions.txt` and
 `formal-successor/ENGINEERING_QUESTION_PROGRAMS.json` in its first policy record. The harness refuses
 to close a sealed cycle until every raw return is followed by a question record that cites the
-declared composed program, one or more
-declared `QP-CODING-*` source lines, and either one or more declared two-orientation `QP-WHY-*` pairs
-or an explicit typed inapplicability with no fabricated pair. Stored question records must remain
-bound to the trace policy. This is a process check: it neither warrants the answer nor introduces a
-calculus primitive.
+declared composed program, its residual-selected compiled-question sequence, independently derived
+family/dimension/root/position/source coverage, and exact represented/blocked reciprocal closure.
+Stored question records must remain bound to the policy
+active at their occurrence; controlled policy transitions preserve exact ancestry. This is a
+process check: it neither warrants the answer nor introduces a calculus primitive.
 
 An accepted instruction is a cached answer. Apply it directly while its scope, evidence, and
 reopen condition remain unchanged. Questioning reopens an answer only when a live protected

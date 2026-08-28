@@ -22,7 +22,7 @@ goal: Give every consequential v2.0 declaration and normative claim, current Rus
 protected_difference: An exhaustive traceable predecessor surface can reveal omissions and correction obligations, while a hand-selected list can make Gate A appear complete by silently dropping inconvenient claims or implementation surfaces.
 discriminator: Generate inventories from the canonical TeX and repository, independently check source coverage and stable identities, then require every item to name its source locus, category, destination or disposition, and evidence status with no unmatched consequential source item under the declared extraction grammar.
 horizon: Phase A inventory only across Inquiry_Calculus_v2_0.tex, current Rust semantic modules, public schemas, and registered conformance fixtures at branch point 4a18e2e; no semantic repair, primitive selection, Gate A promotion, or successor-driven Rust change
-relevant_decisions: D-9001, D-9002, D-9003, D-9004, D-9005
+relevant_decisions: D-9001, D-9002, D-9003, D-9004, D-9005, D-9006
 relevant_failures: F-9001, F-9002
 if_pass: open the smallest unresolved Phase B ambient-boundary or predecessor-surface formalization residual while retaining inventory coverage checks
 if_fail: reopen the earliest extraction grammar, source classification, stable identity, destination, or coverage relation; do not hand-fill the missing item without updating the generator/checker
