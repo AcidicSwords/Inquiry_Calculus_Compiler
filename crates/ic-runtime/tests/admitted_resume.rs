@@ -54,12 +54,12 @@ use ic_runtime::{
     ProbeDispatchContext, ProbePortDischargeEvidence, ProbeProvider, ProgramIR, ProviderReturn,
     ReplayObservation, ResolvedFiniteProbeOccurrenceError, RuntimeCatalog, RuntimeProgramArtifact,
     SharedProbeEventAdmission, SourceAskLowering, SourceAskLoweringCheckError,
-    SourceAskProbeDischarge, SourceAskProbeDischargeError, SourceEventLinkError, Terminator,
-    TraversalCausalOrder, admit_finite_mixed_discharge_bundle, admit_finite_probe_discharge_bundle,
-    check_source_event_link, dispatch_probe, materialize_ollama_decoded_texts,
-    plan_method_reentry_with_admitted_cues, replay_completed_finite_probe,
-    replay_completed_finite_separator_inquiry, resolve_finite_probe_occurrence,
-    route_separator_through_method_bridge,
+    SourceAskMixedDischarge, SourceAskProbeDischarge, SourceAskProbeDischargeError,
+    SourceEventLinkError, Terminator, TraversalCausalOrder, admit_finite_mixed_discharge_bundle,
+    admit_finite_probe_discharge_bundle, check_source_event_link, dispatch_probe,
+    materialize_ollama_decoded_texts, plan_method_reentry_with_admitted_cues,
+    replay_completed_finite_probe, replay_completed_finite_separator_inquiry,
+    resolve_finite_probe_occurrence, route_separator_through_method_bridge,
 };
 use ic_store::{ArtifactStore, DispatchToken};
 
@@ -6330,13 +6330,21 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
     let runtime = ProgramIR::new(
         roots.unit,
         BlockTarget::new(0),
-        vec![BasicBlock::new(
-            BlockTarget::new(0),
-            Terminator::Probe {
-                operator,
-                resume: BlockTarget::new(1),
-            },
-        )],
+        vec![
+            BasicBlock::new(
+                BlockTarget::new(0),
+                Terminator::Probe {
+                    operator,
+                    resume: BlockTarget::new(1),
+                },
+            ),
+            BasicBlock::new(
+                BlockTarget::new(1),
+                Terminator::Return {
+                    value: roots.answer_a,
+                },
+            ),
+        ],
     );
     let MachineStep::Suspended(suspension) = runtime
         .step(runtime.start())
@@ -6404,6 +6412,20 @@ async fn mixed_mode_discharge_keeps_non_probe_result_distinct_from_actuality() {
         &catalog,
     )
     .expect("typed mixed-mode field must recheck");
+    let lowering = SourceAskLowering::new(
+        occurrence.clone(),
+        OpenQueryCatalog::resolve_open_query(&catalog, query)
+            .expect("mixed-mode query must resolve")
+            .open_ports()
+            .iter()
+            .map(|open| PortLowering::new(open.port().clone(), open.mode()))
+            .collect(),
+        RuntimeProgramArtifact::new(binding, roots.compiler_version, runtime.clone()),
+    )
+    .expect("mixed-mode source lowering must form");
+    SourceAskMixedDischarge::new(lowering, mixed.clone())
+        .check(&catalog)
+        .expect("mixed field must pair only with its exact checked lowering");
     assert_eq!(mixed.components().len(), 2);
     assert_eq!(provider_calls.load(Ordering::SeqCst), calls_before_check);
     assert!(matches!(

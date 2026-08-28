@@ -1,6 +1,6 @@
 //! Derived, nonexecuting source-`Ask` to runtime-program lowering checks.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use ic_core::{
     ArtifactRef, AskOccurrence, AskOccurrenceCheckError, DischargeMode, OpenQueryCheckError,
@@ -9,8 +9,9 @@ use ic_core::{
 use thiserror::Error;
 
 use crate::{
-    ActualitySeparationCatalog, FiniteProbeDischargeBundle, ProbeDischargeBundleError,
-    RuntimeCatalog, RuntimeProgramArtifact, RuntimeProgramCheckError,
+    ActualitySeparationCatalog, FiniteMixedDischargeBundle, FiniteProbeDischargeBundle,
+    MixedDischargeBundleError, ProbeDischargeBundleError, RuntimeCatalog, RuntimeProgramArtifact,
+    RuntimeProgramCheckError, admit_finite_mixed_discharge_bundle,
     admit_finite_probe_discharge_bundle,
 };
 
@@ -198,6 +199,50 @@ pub struct SourceAskProbeDischarge {
     bundle: FiniteProbeDischargeBundle,
 }
 
+/// A derived pairing between one source lowering and a finite mixed-mode discharge field.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct SourceAskMixedDischarge {
+    lowering: SourceAskLowering,
+    bundle: FiniteMixedDischargeBundle,
+}
+
+impl SourceAskMixedDischarge {
+    #[must_use]
+    pub const fn new(lowering: SourceAskLowering, bundle: FiniteMixedDischargeBundle) -> Self {
+        Self { lowering, bundle }
+    }
+
+    pub fn check<C: SourceAskProbeDischargeCatalog>(
+        &self,
+        catalog: &C,
+    ) -> Result<(), SourceAskMixedDischargeError> {
+        self.lowering.check(catalog)?;
+        let rechecked_bundle = admit_finite_mixed_discharge_bundle(
+            self.bundle.occurrence().clone(),
+            self.bundle.components().to_vec(),
+            catalog,
+        )?;
+        if rechecked_bundle.occurrence() != self.lowering.occurrence() {
+            return Err(SourceAskMixedDischargeError::OccurrenceMismatch);
+        }
+        let lowering_ports = self
+            .lowering
+            .port_lowerings()
+            .iter()
+            .map(|lowering| (lowering.port().as_str(), lowering.mode()))
+            .collect::<BTreeMap<_, _>>();
+        let bundle_ports = rechecked_bundle
+            .components()
+            .iter()
+            .map(|component| (component.port().as_str(), component.mode()))
+            .collect::<BTreeMap<_, _>>();
+        if lowering_ports != bundle_ports {
+            return Err(SourceAskMixedDischargeError::PortModeMismatch);
+        }
+        Ok(())
+    }
+}
+
 impl SourceAskProbeDischarge {
     #[must_use]
     pub const fn new(lowering: SourceAskLowering, bundle: FiniteProbeDischargeBundle) -> Self {
@@ -331,4 +376,16 @@ pub enum SourceAskProbeDischargeError {
     NonProbeLoweringPort(String),
     #[error("source lowering ports do not exactly match finite Probe bundle component ports")]
     PortCoverageMismatch,
+}
+
+#[derive(Debug, Error)]
+pub enum SourceAskMixedDischargeError {
+    #[error(transparent)]
+    Lowering(#[from] SourceAskLoweringCheckError),
+    #[error(transparent)]
+    Bundle(#[from] MixedDischargeBundleError),
+    #[error("mixed discharge field belongs to a different source Ask occurrence")]
+    OccurrenceMismatch,
+    #[error("mixed discharge field ports or modes differ from source lowering")]
+    PortModeMismatch,
 }
