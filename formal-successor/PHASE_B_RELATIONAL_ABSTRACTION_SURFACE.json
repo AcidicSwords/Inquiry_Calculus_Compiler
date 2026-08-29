@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_relational_abstraction_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "73f9e0eb47a9cb585746851492c08d3117671aa631d6f7f49613ca49011b24f4",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "abstraction_module_sha256": "3a578da343d423104aa0cf0ec3d53a76ed9bed01dd1bda31036b8a9a8dd2c629"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-2CDD08D5FDF7C1B4",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/partial-application-as-a-relational-section/PRED-TEX-DECL-2CDD08D5FDF7C1B4",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1392,
+        "end_line": 1400,
+        "sha256": "b1685eba2a086fcb71b1095db8c92874453546fc9db9cfef30a4f372d4a591df"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 1,
+    "obligations": 0
+  },
+  "next_residual": "FORMAL-B-ABSTRACTION-BY-REMOVAL",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

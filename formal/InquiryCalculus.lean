@@ -24,6 +24,7 @@ import InquiryCalculus.Legacy.V20.PrecisionNotImprovement
 import InquiryCalculus.Legacy.V20.RelationalSections
 import InquiryCalculus.Legacy.V20.SolutionFibers
 import InquiryCalculus.Legacy.V20.QuestionStructuredHole
+import InquiryCalculus.Legacy.V20.RelationalAbstraction
 
 /-!
 # Inquiry Calculus formal successor
