@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "status": "phase_b_question_refinement_preorder_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "refinement_module": "formal/InquiryCalculus/Legacy/V20/QuestionRefinementPreorder.lean"
+  },
+  "sources": [
+    "PRED-TEX-DECL-EA149CC5805D177D",
+    "PRED-TEX-DECL-9AF26C3D0D75A77B",
+    "PRED-TEX-DECL-71E0784A60361200"
+  ],
+  "required_declarations": [
+    "PrecisionPreorderSyntax",
+    "JointRefinementSyntax",
+    "ActiveRepresentationRefinementSyntax",
+    "QuestionRefinementObligation"
+  ],
+  "obligations": [
+    "profileDetermination",
+    "functionalFactorization",
+    "kernelInclusion",
+    "jointKernelIntersection",
+    "nonredundantCoordinate",
+    "activeRepresentationExtension"
+  ],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-QUESTION-REFINEMENT-SEMANTICS"
+}
