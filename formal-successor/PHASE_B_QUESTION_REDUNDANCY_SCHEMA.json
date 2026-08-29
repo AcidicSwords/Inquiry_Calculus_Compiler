@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "status": "phase_b_question_redundancy_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "redundancy_module": "formal/InquiryCalculus/Legacy/V20/QuestionRedundancy.lean"
+  },
+  "sources": [
+    "PRED-TEX-PROSE-003932A90C866B84",
+    "PRED-TEX-DECL-4C6B7895BAFEE924"
+  ],
+  "required_declarations": [
+    "QuestionRedundancySyntax",
+    "QuestionRedundancyObligation"
+  ],
+  "obligations": [
+    "reverseNeedsCurrentRepresentationCoverage",
+    "exactNoActiveDiscriminatoryCoordinate",
+    "representationImprovementOrder",
+    "protectedBehaviorAndCost",
+    "noProgramOrRustAuthority"
+  ],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-PRECISION-NOT-IMPROVEMENT"
+}

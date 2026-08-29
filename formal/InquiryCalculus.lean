@@ -19,6 +19,7 @@ import InquiryCalculus.Legacy.V20.QuestionConditionedDiscrimination
 import InquiryCalculus.Legacy.V20.QuestionRefinementPreorder
 import InquiryCalculus.Legacy.V20.QuestionRefinementSemantics
 import InquiryCalculus.Legacy.V20.QuestionJointActiveRefinement
+import InquiryCalculus.Legacy.V20.QuestionRedundancy
 
 /-!
 # Inquiry Calculus formal successor

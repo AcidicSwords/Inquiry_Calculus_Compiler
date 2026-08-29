@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_question_redundancy_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "5cd240a766361bd9dc7a886992eb0a4c243f543ae97b1e18d48d866b230e2128",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "redundancy_module_sha256": "acabaea74104b4e48b893631d3f19c2e1a8e3d7ee10bcc239ba4e6a65f419474"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-003932A90C866B84",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/question-refinement-algebra/PRED-TEX-PROSE-003932A90C866B84",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1297,
+        "end_line": 1297,
+        "sha256": "b3434ef57af83c89ccfa1358ca359c3b54ab27d6f50135ffa68f078f6a3c0d7f"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-4C6B7895BAFEE924",
+      "disposition": "FormalTheorem",
+      "destination": "phase:B/Legacy/V20/Claims/question-refinement-algebra/PRED-TEX-DECL-4C6B7895BAFEE924",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1299,
+        "end_line": 1314,
+        "sha256": "f0b5a316d55fb26ca039694c8ee92952e4c375737c642481cf22d1f4118acb36"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "formal_theorems": 1,
+    "obligations": 1,
+    "obligation_statuses": [
+      "Ambiguous",
+      null
+    ]
+  },
+  "next_residual": "FORMAL-B-PRECISION-NOT-IMPROVEMENT",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
