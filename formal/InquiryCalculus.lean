@@ -32,6 +32,7 @@ import InquiryCalculus.Legacy.V20.PropertyImageHole
 import InquiryCalculus.Legacy.V20.ProtectedDetermination
 import InquiryCalculus.Legacy.V20.ExactDeterminationSignature
 import InquiryCalculus.Legacy.V20.ResidualAmbiguity
+import InquiryCalculus.Legacy.V20.RepresentationDefect
 
 /-!
 # Inquiry Calculus formal successor
