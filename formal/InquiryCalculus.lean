@@ -69,6 +69,7 @@ import InquiryCalculus.Legacy.V20.HoleSolving
 import InquiryCalculus.Legacy.V20.RepresentationSearch
 import InquiryCalculus.Legacy.V20.ProgramCoreGrammar
 import InquiryCalculus.Legacy.V20.SourceSafeAskLowering
+import InquiryCalculus.Legacy.V20.SourceAskCompilationSafetyClaim
 
 /-!
 # Inquiry Calculus formal successor

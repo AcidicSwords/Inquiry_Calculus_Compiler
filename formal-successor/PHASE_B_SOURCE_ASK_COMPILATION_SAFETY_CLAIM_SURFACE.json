@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_source_ask_compilation_safety_claim_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "dde8ae341e0e2b3f90dc0b094e25b43afb8abc6ae313bcb78cdf3ac1d50afa05"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-LAW-SOURCE-ASK-SAFE",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/typing-rules/PRED-TEX-DECL-LAW-SOURCE-ASK-SAFE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3101,
+        "end_line": 3106,
+        "sha256": "a519d7d519114c7e6dd38b6310317aa8e1f8e4c4584eac4538da96e1a2e7cce1"
+      },
+      "legacy_status": "Unproved",
+      "dependencies": [
+        "def:source-safe-ask-lowering"
+      ]
+    }
+  ],
+  "next_residual": "FORMAL-B-SEQUENCING-COMPOSITION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
