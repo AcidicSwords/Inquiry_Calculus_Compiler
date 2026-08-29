@@ -571,7 +571,9 @@ requireContains(".github/workflows/ci.yml", [
   "tools/successor_control_check.js",
   "node --check .claude/hooks/ic-question-program.js",
   "lake-package-directory: formal",
+  'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",
+  "leanchecker-args: InquiryCalculus Spec",
   "axiom-audit: true",
 ]);
 
