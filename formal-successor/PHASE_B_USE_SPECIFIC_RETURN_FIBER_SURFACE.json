@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_use_specific_return_fiber_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "4b6f65a2fbe47f412190289356d226c08277d8c2acc5a60eec389ccba1986157"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-RETURN-FIBER",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/reverse-section-return-and-protected-recovery/PRED-TEX-DECL-DEF-RETURN-FIBER",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1822,
+        "end_line": 1838,
+        "sha256": "a75c5e585881b0088dc3935d5c9798baa1ebd246637631e82bef34529af844eb"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-PROTECTED-RECOVERY",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

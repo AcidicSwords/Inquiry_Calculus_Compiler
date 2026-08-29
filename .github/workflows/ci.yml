@@ -92,6 +92,7 @@ jobs:
           node tools/phase_b_positive_negation_filling_check.js --compile
           node tools/phase_b_semantic_and_execution_coverage_check.js --compile
           node tools/phase_b_tagged_negation_frontier_check.js --compile
+          node tools/phase_b_use_specific_return_fiber_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -280,6 +281,8 @@ jobs:
           node --check tools/phase_b_semantic_and_execution_coverage_check.js
           node --check tools/phase_b_tagged_negation_frontier.js
           node --check tools/phase_b_tagged_negation_frontier_check.js
+          node --check tools/phase_b_use_specific_return_fiber.js
+          node --check tools/phase_b_use_specific_return_fiber_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -399,6 +402,8 @@ jobs:
           node tools/phase_b_semantic_and_execution_coverage_check.js
           node tools/phase_b_tagged_negation_frontier.js check
           node tools/phase_b_tagged_negation_frontier_check.js
+          node tools/phase_b_use_specific_return_fiber.js check
+          node tools/phase_b_use_specific_return_fiber_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

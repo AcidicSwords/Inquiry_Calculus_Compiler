@@ -6,16 +6,16 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-TAGGED-NEGATION-FRONTIER-001` machine-checks an admitted-use dependent sum, retaining use
-provenance and heterogeneous target carriers. It keeps collective coverage, authority, answer selection,
+`FORMAL-B-USE-SPECIFIC-RETURN-FIBER-001` machine-checks a use-specific reverse section, source
+membership, selected role, and declared coverage. It keeps unique recovery, closure, answer selection,
 solver, execution, and successor meanings out of the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate use-specific return fiber without confusing the full reverse section with a selected return role or unique recovery.
+Elaborate protected recovery as signature agreement across the full return fiber, not as an assertion about one selected return.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-USE-SPECIFIC-RETURN-FIBER
+id: FORMAL-B-PROTECTED-RECOVERY
 plan_phase: B
 goal: Determine the smallest source-regenerative boundary for v2.0 departure-relative positivity, preserving positive witness dependence, Unknown incompleteness, and non-equivalence between departure and horizon difference while keeping exteriority and near-departure status open unless independently established.
 protected_difference: Departure is positive and determination-relative; incomplete observation remains Unknown, and neither departure nor protected non-equivalence implies the other.
