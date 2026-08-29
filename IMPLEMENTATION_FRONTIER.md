@@ -18,22 +18,22 @@ global equivalence, answer, solver, program behavior, or successor semantics.
 <!-- LIVE_FRONTIER_BEGIN -->
 id: FORMAL-B-PROTECTED-DETERMINATION
 plan_phase: B
-goal: Determine the smallest source-regenerative boundary for the v2.0 property image of a hole, preserving a property map, solution field, image value, forcedness, answer semantics, successor primitives, and Rust meaning as open unless independently established.
-protected_difference: A property image maps the solution field into values; singleton forcing is distinct from a selected answer, total solver, program, or successor semantics.
-discriminator: Contrast a source-bound property-image candidate with selected-answer, singleton-witness, solver, program, semantic-evaluation, and omission claims; retain only the exact source-supported image boundary after regeneration and independent checking.
-horizon: Property-image boundary only; indexed-meet refinement is fixed input, forcedness, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Determine the smallest source-regenerative boundary for v2.0 protected determination, preserving a solution field, horizon-relative equivalence, one-class condition, literal uniqueness, answer semantics, successor primitives, and Rust meaning as open unless independently established.
+protected_difference: Protected determination constrains every surviving filler to one horizon-relative equivalence class; it is distinct from literal uniqueness, a selected answer, total solver, program, or successor semantics.
+discriminator: Contrast a source-bound one-equivalence-class candidate with literal uniqueness, global equivalence, selected-answer, solver, program, semantic-evaluation, and omission claims; retain only the exact source-supported determination boundary after regeneration and independent checking.
+horizon: Protected-determination boundary only; property-image syntax is fixed input, horizon equivalence meaning, literal uniqueness, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the smallest checked property-image boundary and then elaborate the next residual selected by its unresolved relation
-if_fail: reopen the earliest property map, field, image, forcedness, answer, program, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
+if_pass: retain the smallest checked protected-determination boundary and then elaborate the next residual selected by its unresolved relation
+if_fail: reopen the earliest field, horizon equivalence, class, literal-uniqueness, answer, program, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
 
-Construct a decisive source-bound property-image foil, then contrast it with selected-answer,
-literal-filler uniqueness, protected-class uniqueness, solver, program, semantic-evaluation, and
-omission claims. Contract only after exact source regeneration and retained obligations distinguish
-the smallest image boundary.
+Construct a decisive source-bound one-equivalence-class foil, then contrast it with literal
+uniqueness, global equivalence, selected-answer, solver, program, semantic-evaluation, and omission
+claims. Contract only after exact source regeneration and retained obligations distinguish the
+smallest determination boundary.
 
 ## Prohibitions at this boundary
 
