@@ -6,17 +6,17 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-CANONICAL-QUESTION-SYNTAX-001` regenerates the exact v2.0 canonical-question definition
-into a typed partial-binding occurrence. The independent checker rejects nine source, promotion,
-carrier, typing, obligation, answer, probe/program, and axiom mutations; Gate B remains pending.
+`FORMAL-B-ANSWER-CARRIER-VALIDITY-001` regenerates the answer/validity clauses into typed
+candidate occurrences. The independent checker rejects nine source, promotion, carrier, obligation,
+actual-return, warrant, probe, and axiom mutations; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate v2.0 answer-carrier and valid-completion boundary without treating a carrier as an
-actual return, validity as warrant, or completion as a probe/program result.
+Elaborate the v2.0 proposition-not-warrant boundary without treating a fully bound relation
+instance as a warranted fact or importing probe/program authority.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-ANSWER-CARRIER-VALIDITY-BOUNDARY
+id: FORMAL-B-PROPOSITION-NOT-WARRANT-BOUNDARY
 plan_phase: B
 goal: Classify and reconstruct answer-carrier and valid-completion syntax against canonical question occurrences, postponing actual returns, warrant, probes, programs, successor-primitive, and Rust meaning.
 protected_difference: An answer carrier and validity relation are typed semantic candidates, not actual returns, standing warrant, probes, or programs.

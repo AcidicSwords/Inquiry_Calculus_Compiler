@@ -127,6 +127,9 @@ const required = [
   "formal-successor/PHASE_B_CANONICAL_QUESTION_SYNTAX_SCHEMA.json",
   "formal-successor/PHASE_B_CANONICAL_QUESTION_SYNTAX_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/CanonicalQuestionSyntax.lean",
+  "formal-successor/PHASE_B_ANSWER_CARRIER_VALIDITY_SCHEMA.json",
+  "formal-successor/PHASE_B_ANSWER_CARRIER_VALIDITY_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/AnswerCarrierValidity.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -171,6 +174,8 @@ const required = [
   "tools/phase_b_partial_binding_fiber_check.js",
   "tools/phase_b_canonical_question_syntax.js",
   "tools/phase_b_canonical_question_syntax_check.js",
+  "tools/phase_b_answer_carrier_validity.js",
+  "tools/phase_b_answer_carrier_validity_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -1122,6 +1127,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_partial_binding_fiber_check.js",
   "node tools/phase_b_canonical_question_syntax.js check",
   "node tools/phase_b_canonical_question_syntax_check.js",
+  "node tools/phase_b_answer_carrier_validity.js check",
+  "node tools/phase_b_answer_carrier_validity_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",
