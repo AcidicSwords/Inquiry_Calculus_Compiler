@@ -30,22 +30,22 @@ if_fail: reopen the earliest property map, field, image, forcedness, answer, pro
 
 ## Smallest decisive breaker
 
-Construct a decisive source-bound web-inclusion foil, then contrast it with reverse inclusion,
-equality, total-answer, solver, program, semantic-evaluation, and omission claims. Contract only
-after exact source regeneration, formal proof, and retained obligations distinguish the smallest
-refinement boundary.
+Construct a decisive source-bound property-image foil, then contrast it with selected-answer,
+literal-filler uniqueness, protected-class uniqueness, solver, program, semantic-evaluation, and
+omission claims. Contract only after exact source regeneration and retained obligations distinguish
+the smallest image boundary.
 
 ## Prohibitions at this boundary
 
-- Do not treat a solution field or its refinement as a total answer, total solver, program, or successor semantics.
-- Do not use a source theorem alone as equality, reverse inclusion, answer-validity, or solver evidence.
+- Do not treat a property image or forcedness as a selected answer, filler uniqueness, total solver, program, or successor semantics.
+- Do not use a source definition alone as a singleton witness, answer-validity, or solver evidence.
 - Do not use axioms, proof gaps, or Rust behavior to bypass schema typing.
 - Do not select successor primitives or mark Gate B passed from this local elaboration.
 - Do not rewrite v2.0, advance the deferred Rust frontier, or mix successor state into predecessor ledgers.
 
 ## Exit
 
-On pass, retain the smallest source-regenerative indexed-meet refinement boundary, explicit source
+On pass, retain the smallest source-regenerative property-image boundary, explicit source
 obligations, and independent breakers, then select the next residual. On failure, preserve the
-return and reopen the earliest web-inclusion, fiber, refinement-direction, answer, program, or
-source boundary relation.
+return and reopen the earliest property-map, field, image, forcedness, answer, program, or source
+boundary relation.
