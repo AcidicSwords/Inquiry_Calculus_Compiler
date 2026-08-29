@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_source_web_recovery_profile_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "65e4b5c9d522fa011546193f477ffd4941be378a22a2318934cf5f9732b224f6"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-WEB-RECOVERY",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/reverse-section-return-and-protected-recovery/PRED-TEX-DECL-DEF-WEB-RECOVERY",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1859,
+        "end_line": 1869,
+        "sha256": "889a1216cc8220d49139595100e2dee5bc5a7704d692dc4993ba3050305562c3"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-THREE-VALUED-RECOVERY-LOSS-PROFILE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
