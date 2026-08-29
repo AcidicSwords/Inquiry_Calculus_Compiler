@@ -43,6 +43,7 @@ import InquiryCalculus.Legacy.V20.CandidateBoundaryIncidence
 import InquiryCalculus.Legacy.V20.BoundaryPointProfile
 import InquiryCalculus.Legacy.V20.BoundaryPointRegeneration
 import InquiryCalculus.Legacy.V20.DeterminationPresentation
+import InquiryCalculus.Legacy.V20.PositiveDepartureWitness
 
 /-!
 # Inquiry Calculus formal successor
