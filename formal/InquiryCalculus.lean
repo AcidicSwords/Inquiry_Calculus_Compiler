@@ -58,6 +58,7 @@ import InquiryCalculus.Legacy.V20.RegenerativeEconomyFrontier
 import InquiryCalculus.Legacy.V20.RequiredDischarge
 import InquiryCalculus.Legacy.V20.ResolutionCarriers
 import InquiryCalculus.Legacy.V20.ResolutionOutcome
+import InquiryCalculus.Legacy.V20.InquirySourceGrammar
 
 /-!
 # Inquiry Calculus formal successor

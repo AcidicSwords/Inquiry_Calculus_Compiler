@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_inquiry_source_grammar_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "64b3f8fd66ca55cedea05aab3c37016c4895a06a09187f5ced25a303f1b8cf08"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-54C908302D01A896",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/source-inquiry-programs/PRED-TEX-DECL-54C908302D01A896",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2556,
+        "end_line": 2579,
+        "sha256": "91f267a3b000cf6099fe3ac5ba9ca95481b87467f225287d575049eb2a80b2fd"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-RESIDUAL-QUESTION-GENERATOR",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

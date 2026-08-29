@@ -100,6 +100,7 @@ jobs:
           node tools/phase_b_required_discharge_check.js --compile
           node tools/phase_b_resolution_carriers_check.js --compile
           node tools/phase_b_resolution_outcome_check.js --compile
+          node tools/phase_b_inquiry_source_grammar_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -304,6 +305,8 @@ jobs:
           node --check tools/phase_b_resolution_carriers_check.js
           node --check tools/phase_b_resolution_outcome.js
           node --check tools/phase_b_resolution_outcome_check.js
+          node --check tools/phase_b_inquiry_source_grammar.js
+          node --check tools/phase_b_inquiry_source_grammar_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -439,6 +442,8 @@ jobs:
           node tools/phase_b_resolution_carriers_check.js
           node tools/phase_b_resolution_outcome.js check
           node tools/phase_b_resolution_outcome_check.js
+          node tools/phase_b_inquiry_source_grammar.js check
+          node tools/phase_b_inquiry_source_grammar_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
