@@ -59,6 +59,7 @@ jobs:
           node tools/phase_b_question_composition_syntax_check.js --compile
           node tools/phase_b_question_conditioned_discrimination_check.js --compile
           node tools/phase_b_question_refinement_preorder_check.js --compile
+          node tools/phase_b_question_refinement_semantics_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -181,6 +182,8 @@ jobs:
           node --check tools/phase_b_question_conditioned_discrimination_check.js
           node --check tools/phase_b_question_refinement_preorder.js
           node --check tools/phase_b_question_refinement_preorder_check.js
+          node --check tools/phase_b_question_refinement_semantics.js
+          node --check tools/phase_b_question_refinement_semantics_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -234,6 +237,8 @@ jobs:
           node tools/phase_b_question_conditioned_discrimination_check.js
           node tools/phase_b_question_refinement_preorder.js check
           node tools/phase_b_question_refinement_preorder_check.js
+          node tools/phase_b_question_refinement_semantics.js check
+          node tools/phase_b_question_refinement_semantics_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

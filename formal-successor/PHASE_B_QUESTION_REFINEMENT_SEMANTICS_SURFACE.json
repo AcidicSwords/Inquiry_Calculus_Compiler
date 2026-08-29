@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_question_refinement_semantics_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "56e9874184a3e626ae44bcd99e14e6521d74d9fdd003b44500ac9771db08c9dd",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "semantics_module_sha256": "4c8a573e779c0cf9de79f6fa9c4a93bac899916df2852f3e22ba4ff769f07f09"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-EA149CC5805D177D",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/question-refinement-algebra/PRED-TEX-DECL-EA149CC5805D177D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1235,
+        "end_line": 1255,
+        "sha256": "32898cd7dc462028965a9087e5930669421fb2718c0f870dd54a0bc3242cb2ed"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-9AF26C3D0D75A77B",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/question-refinement-algebra/PRED-TEX-DECL-9AF26C3D0D75A77B",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1257,
+        "end_line": 1272,
+        "sha256": "6a7838cd0a69617c5a867dc7ee0b81905e78ba53b00e43cd68967d5fa6292a93"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-71E0784A60361200",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/question-refinement-algebra/PRED-TEX-DECL-71E0784A60361200",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1274,
+        "end_line": 1295,
+        "sha256": "5e184f31a4b321622e2548c75bc223c5ab08843ef427776c192fa9d8ff5cefe0"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 3,
+    "obligations": 0,
+    "obligation_statuses": [
+      null,
+      null,
+      null
+    ]
+  },
+  "next_residual": "FORMAL-B-QUESTION-REFINEMENT-JOINT-AND-ACTIVE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

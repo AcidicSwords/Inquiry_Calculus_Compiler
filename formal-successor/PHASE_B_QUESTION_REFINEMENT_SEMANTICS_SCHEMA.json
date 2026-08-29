@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "status": "phase_b_question_refinement_semantics_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "semantics_module": "formal/InquiryCalculus/Legacy/V20/QuestionRefinementSemantics.lean"
+  },
+  "sources": [
+    "PRED-TEX-DECL-EA149CC5805D177D",
+    "PRED-TEX-DECL-9AF26C3D0D75A77B",
+    "PRED-TEX-DECL-71E0784A60361200"
+  ],
+  "required_declarations": [
+    "FunctionalQuestionProfileSyntax",
+    "ProfileKernelIncluded",
+    "ProfileFactorizationSyntax",
+    "ProfileCoverage",
+    "QuestionRefinementSemanticObligation"
+  ],
+  "obligations": [
+    "reverseNeedsProfileCoverage",
+    "jointKernelIntersection",
+    "nonredundantCoordinate",
+    "activeRepresentationKernel",
+    "noGlobalSemanticPreorder"
+  ],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-QUESTION-REFINEMENT-JOINT-AND-ACTIVE"
+}
