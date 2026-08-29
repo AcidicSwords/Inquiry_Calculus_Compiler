@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "status": "phase_b_binding_type_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "spine_path": "formal-successor/PHASE_B_PREDECESSOR_SPINE.json",
+    "binding_module": "formal/InquiryCalculus/Legacy/V20/Binding.lean",
+    "types_module": "formal/InquiryCalculus/Legacy/V20/Types.lean"
+  },
+  "binding_sources": [
+    "PRED-TEX-DECL-BF2748F7C36474D3",
+    "PRED-TEX-DECL-575A4099C8FC5882",
+    "PRED-TEX-DECL-9279E9073B465983"
+  ],
+  "type_sources": [
+    "PRED-TEX-PROSE-7DF1D338C073783E",
+    "PRED-TEX-DISPLAY-3B6A6E6DDEC8FA50",
+    "PRED-TEX-PROSE-17D329869A01B032",
+    "PRED-TEX-DECL-DEF-PROGRAM-CODE-FAMILIES"
+  ],
+  "binding_slots": ["types", "interfaces", "generators", "relations", "composition", "probeSemantics", "checks", "warrants", "horizon", "resources"],
+  "type_constructors": ["variable", "unit", "bool", "nat", "product", "sum", "sigma", "pi", "fin", "list", "raw", "result", "inquiryProgram", "runtimeProgram", "code"],
+  "obligations": ["admissionProse", "displayedGrammarInterpretation", "nativeBindingQualification"],
+  "noncollapse_law": "TypeCode is a binding-indexed predecessor syntax, not an alias of Lean Type or a String tag; TypeInterpretation is partial by explicit admissibility; ambiguous source boundaries remain obligations.",
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-REPRESENTED-FORMS"
+}

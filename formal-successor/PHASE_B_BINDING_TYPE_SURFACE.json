@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_binding_type_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "8b5340ef9e56dd9519652fe4907a26ed9c856ee4b9cda3f682aa8c9a185a887d",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "spine_sha256": "96092a4784a6a89870c5121bca138e8d7f53cab5dec012bc5fd6bf096a88fbd2",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "binding_module_sha256": "b26abfe15e66c7eb13580396bb26d1cc1784ccd1d9067138072784aaf64f2078",
+    "types_module_sha256": "de63a5c90fee77640983c6ca31306e67dcad175cf574a73be814665b6a77cc77"
+  },
+  "source_layers": {
+    "binding": [
+      {
+        "source_id": "PRED-TEX-DECL-BF2748F7C36474D3",
+        "disposition": "FormalDefinition",
+        "destination": "phase:B/Legacy/V20/Definitions/bindings/PRED-TEX-DECL-BF2748F7C36474D3",
+        "source": {
+          "path": "Inquiry_Calculus_v2_0.tex",
+          "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+          "start_line": 539,
+          "end_line": 562,
+          "sha256": "183fd6db2d79127f47d34e6c1e5112b34e4e94cc4cce2e9dde4b476c03c03f97"
+        },
+        "obligation_status": null
+      },
+      {
+        "source_id": "PRED-TEX-DECL-575A4099C8FC5882",
+        "disposition": "FormalDefinition",
+        "destination": "phase:B/Legacy/V20/Definitions/bindings/PRED-TEX-DECL-575A4099C8FC5882",
+        "source": {
+          "path": "Inquiry_Calculus_v2_0.tex",
+          "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+          "start_line": 566,
+          "end_line": 572,
+          "sha256": "eaa71efb8a11148024142d1e25722226e1472b35c6cb28a0e1b99a05787e59db"
+        },
+        "obligation_status": null
+      },
+      {
+        "source_id": "PRED-TEX-DECL-9279E9073B465983",
+        "disposition": "FormalDefinition",
+        "destination": "phase:B/Legacy/V20/Definitions/bindings/PRED-TEX-DECL-9279E9073B465983",
+        "source": {
+          "path": "Inquiry_Calculus_v2_0.tex",
+          "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+          "start_line": 574,
+          "end_line": 588,
+          "sha256": "933dc1c1bb6e8a1cba811237371764619f7dbfcf503377755ad9849c98b600a5"
+        },
+        "obligation_status": null
+      }
+    ],
+    "type_grammar": [
+      {
+        "source_id": "PRED-TEX-PROSE-7DF1D338C073783E",
+        "disposition": "LegacyObligation",
+        "destination": "phase:B/Legacy/V20/Obligations/reference-type-grammar/PRED-TEX-PROSE-7DF1D338C073783E",
+        "source": {
+          "path": "Inquiry_Calculus_v2_0.tex",
+          "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+          "start_line": 594,
+          "end_line": 594,
+          "sha256": "9b13dfaa76fc8b5767f59e789a793e6a8f042f093c2a9062319cb741fedf36c0"
+        },
+        "obligation_status": "Ambiguous"
+      },
+      {
+        "source_id": "PRED-TEX-DISPLAY-3B6A6E6DDEC8FA50",
+        "disposition": "LegacyObligation",
+        "destination": "phase:B/Legacy/V20/Obligations/reference-type-grammar/PRED-TEX-DISPLAY-3B6A6E6DDEC8FA50",
+        "source": {
+          "path": "Inquiry_Calculus_v2_0.tex",
+          "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+          "start_line": 595,
+          "end_line": 614,
+          "sha256": "a39a7d70d46ea30146c5684ef5ea12c7f71454380968cadb3532ad346696a82d"
+        },
+        "obligation_status": "Ambiguous"
+      },
+      {
+        "source_id": "PRED-TEX-PROSE-17D329869A01B032",
+        "disposition": "LegacyObligation",
+        "destination": "phase:B/Legacy/V20/Obligations/reference-type-grammar/PRED-TEX-PROSE-17D329869A01B032",
+        "source": {
+          "path": "Inquiry_Calculus_v2_0.tex",
+          "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+          "start_line": 615,
+          "end_line": 615,
+          "sha256": "e925412739eb4547efdc9e88508ceeb13dfa873f08a411fd47d57572a128b327"
+        },
+        "obligation_status": "Ambiguous"
+      },
+      {
+        "source_id": "PRED-TEX-DECL-DEF-PROGRAM-CODE-FAMILIES",
+        "disposition": "FormalDefinition",
+        "destination": "phase:B/Legacy/V20/Definitions/reference-type-grammar/PRED-TEX-DECL-DEF-PROGRAM-CODE-FAMILIES",
+        "source": {
+          "path": "Inquiry_Calculus_v2_0.tex",
+          "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+          "start_line": 617,
+          "end_line": 645,
+          "sha256": "0cc99b5074054caf7aa5eea3be44b31147d58f55565c7dd8527d151d32b3f328"
+        },
+        "obligation_status": null
+      }
+    ]
+  },
+  "retained_surface": {
+    "binding_slot_count": 10,
+    "type_constructor_count": 15,
+    "explicit_definition_count": 4,
+    "explicit_obligation_count": 3,
+    "obligation_statuses": [
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous"
+    ]
+  },
+  "law": "TypeCode is a binding-indexed predecessor syntax, not an alias of Lean Type or a String tag; TypeInterpretation is partial by explicit admissibility; ambiguous source boundaries remain obligations.",
+  "next_residual": "FORMAL-B-REPRESENTED-FORMS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

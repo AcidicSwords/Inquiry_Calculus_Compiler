@@ -53,6 +53,10 @@ spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, w
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does
 not prove those predecessor claims or promote Formal Gate B.
 
+`PHASE_B_BINDING_TYPE_SURFACE.md` follows it with the source-regenerative v2.0 binding tuple and
+reference type syntax. Its partial interpretation boundary keeps the grammar distinct from Lean
+types and preserves the ambiguous grammar context as obligations.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change
