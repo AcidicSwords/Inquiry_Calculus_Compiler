@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_determination_presentation_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "c0164717126b385ff8f043e59808477e7c970b22611cbfa21954f7dd409428ae"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-DETERMINATION-PRESENTATION",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/live-determination-and-positive-departure/PRED-TEX-DECL-DEF-DETERMINATION-PRESENTATION",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1722,
+        "end_line": 1728,
+        "sha256": "5b24be57313fd6044a7cd1cb6d753a874c8bb3f8e6eaed638298ce8190f9628d"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-POSITIVE-DEPARTURE-WITNESS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
