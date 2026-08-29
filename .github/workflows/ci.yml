@@ -102,6 +102,7 @@ jobs:
           node tools/phase_b_resolution_outcome_check.js --compile
           node tools/phase_b_inquiry_source_grammar_check.js --compile
           node tools/phase_b_residual_question_generator_check.js --compile
+          node tools/phase_b_checked_ask_occurrence_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -310,6 +311,8 @@ jobs:
           node --check tools/phase_b_inquiry_source_grammar_check.js
           node --check tools/phase_b_residual_question_generator.js
           node --check tools/phase_b_residual_question_generator_check.js
+          node --check tools/phase_b_checked_ask_occurrence.js
+          node --check tools/phase_b_checked_ask_occurrence_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -449,6 +452,8 @@ jobs:
           node tools/phase_b_inquiry_source_grammar_check.js
           node tools/phase_b_residual_question_generator.js check
           node tools/phase_b_residual_question_generator_check.js
+          node tools/phase_b_checked_ask_occurrence.js check
+          node tools/phase_b_checked_ask_occurrence_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
