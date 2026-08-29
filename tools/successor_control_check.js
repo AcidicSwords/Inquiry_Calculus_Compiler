@@ -93,6 +93,10 @@ const required = [
   "formal-successor/PHASE_B_BINDING_TYPE_SURFACE.md",
   "formal-successor/PHASE_B_BINDING_TYPE_SCHEMA.json",
   "formal-successor/PHASE_B_BINDING_TYPE_SURFACE.json",
+  "formal-successor/PHASE_B_FORMS.md",
+  "formal-successor/PHASE_B_FORMS_SCHEMA.json",
+  "formal-successor/PHASE_B_FORMS_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/Forms.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -119,6 +123,8 @@ const required = [
   "tools/phase_b_predecessor_spine_check.js",
   "tools/phase_b_binding_type.js",
   "tools/phase_b_binding_type_check.js",
+  "tools/phase_b_forms.js",
+  "tools/phase_b_forms_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -226,6 +232,14 @@ requireContains("formal-successor/PHASE_B_BINDING_TYPE_SURFACE.md", [
   "fifteen explicit reference-type alternatives",
   "ReferenceTypeGrammarObligation",
   "14 mutations",
+  "Gate B",
+]);
+
+requireContains("formal-successor/PHASE_B_FORMS.md", [
+  "typed represented-form carrier",
+  "partial operational interpretation",
+  "RepresentedFormObligation",
+  "nine mutations",
   "Gate B",
 ]);
 
@@ -417,6 +431,29 @@ if (
   phaseBBindingTypeSurface?.next_residual !== "FORMAL-B-REPRESENTED-FORMS" ||
   phaseBBindingTypeSurface?.formal_gate_b?.status !== "PENDING"
 ) errors.push("Phase B binding/type surface must preserve source obligations and pending Gate B");
+
+let phaseBFormsSchema;
+let phaseBFormsSurface;
+try {
+  phaseBFormsSchema = JSON.parse(read("formal-successor/PHASE_B_FORMS_SCHEMA.json"));
+  phaseBFormsSurface = JSON.parse(read("formal-successor/PHASE_B_FORMS_SURFACE.json"));
+} catch (error) {
+  errors.push(`Phase B forms control JSON: ${error.message}`);
+}
+if (
+  phaseBFormsSchema?.status !== "phase_b_forms_contract_not_successor_semantics" ||
+  phaseBFormsSchema?.sources?.length !== 7 ||
+  phaseBFormsSchema?.required_declarations?.length !== 7 ||
+  phaseBFormsSchema?.obligations?.length !== 3 ||
+  phaseBFormsSchema?.gate_b?.status !== "PENDING"
+) errors.push("Phase B forms schema is detached from the explicit predecessor boundary");
+if (
+  phaseBFormsSurface?.status !== "generated_phase_b_forms_surface_not_successor_semantics" ||
+  phaseBFormsSurface?.coverage?.explicit_definitions !== 4 ||
+  phaseBFormsSurface?.coverage?.obligations !== 3 ||
+  phaseBFormsSurface?.next_residual !== "FORMAL-B-TYPED-RELATIONS" ||
+  phaseBFormsSurface?.formal_gate_b?.status !== "PENDING"
+) errors.push("Phase B forms surface must preserve source obligations and pending Gate B");
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
 if ((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/gu) ?? []).length !== 1 ||
@@ -863,6 +900,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_predecessor_spine_check.js --compile",
   "node tools/phase_b_binding_type.js check",
   "node tools/phase_b_binding_type_check.js",
+  "node tools/phase_b_forms.js check",
+  "node tools/phase_b_forms_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

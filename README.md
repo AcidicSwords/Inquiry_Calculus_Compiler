@@ -76,6 +76,8 @@ node tools/phase_b_predecessor_spine.js check
 node tools/phase_b_predecessor_spine_check.js --compile
 node tools/phase_b_binding_type.js check
 node tools/phase_b_binding_type_check.js --compile
+node tools/phase_b_forms.js check
+node tools/phase_b_forms_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -103,6 +105,9 @@ The first Phase B ambient-metalanguage boundary and source-regenerative predeces
 spine are documented in `formal-successor/PHASE_B_AMBIENT_BOUNDARY.md`; Gate B remains pending.
 The following binding-indexed predecessor type syntax and its retained grammar obligations are
 documented in `formal-successor/PHASE_B_BINDING_TYPE_SURFACE.md`.
+The subsequent binding-typed represented-form carrier, reification boundary, and partial
+operational interpretation are documented in `formal-successor/PHASE_B_FORMS.md`; relations,
+questions, programs, and Gate B remain open.
 
 ## Current implementation state
 

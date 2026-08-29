@@ -57,6 +57,10 @@ not prove those predecessor claims or promote Formal Gate B.
 reference type syntax. Its partial interpretation boundary keeps the grammar distinct from Lean
 types and preserves the ambiguous grammar context as obligations.
 
+`PHASE_B_FORMS.md` then reconstructs binding-typed represented forms, reification, and partial
+operational interpretation without consuming the later relation layer. Its adjacent form claims
+remain explicit obligations and Formal Gate B remains pending.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_forms_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "55ab57529c4fe51d2c915ff6473c6ebcd9e9089b87347bec144d52e357700c53",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "forms_module_sha256": "f582752b44ffd57fe02bd26be66099e1722c969afa765579e8f4604da38c3541"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-4D609DF7B1B2239E",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/recursive-represented-forms/PRED-TEX-DECL-4D609DF7B1B2239E",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 683,
+        "end_line": 693,
+        "sha256": "bb15690ea13f1b385c69db4848b1ee7f18e6391ba01f4744e266ed2444b6baca"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-419C4E046A257830",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/recursive-represented-forms/PRED-TEX-DECL-419C4E046A257830",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 695,
+        "end_line": 706,
+        "sha256": "2305af8b409532c1eb777714a2e01f6a907ffdeceb7b3ef1d4ef8d865d7c43df"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-711F0AAA2722B10B",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/recursive-represented-forms/PRED-TEX-DECL-711F0AAA2722B10B",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 708,
+        "end_line": 719,
+        "sha256": "b39f407464e705f73db48cbb89a366ee33f882d36ab6e2ac4c26eb4a378cc459"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-D691F234C9152236",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/recursive-represented-forms/PRED-TEX-DECL-D691F234C9152236",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 725,
+        "end_line": 727,
+        "sha256": "96939f6c2a7facb0a44d4bff5cd63f8ec08ad7a3b24c4f54879dd1dc4c4633cf"
+      },
+      "obligation_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-8DF16ABC5ED66DFA",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/recursive-represented-forms/PRED-TEX-DECL-8DF16ABC5ED66DFA",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 721,
+        "end_line": 723,
+        "sha256": "e2335537e8f3905e4a72faddd81071f4470662e7835e44388a094363850229b5"
+      },
+      "obligation_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-AD1DB34EF34108C5",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/recursive-represented-forms/PRED-TEX-DECL-AD1DB34EF34108C5",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 729,
+        "end_line": 740,
+        "sha256": "4057685f753e9f39adc971e1a4d65342321bf815b86990727c1b58e5f76b736f"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-6061713DCDC96001",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/recursive-represented-forms/PRED-TEX-DECL-6061713DCDC96001",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 742,
+        "end_line": 747,
+        "sha256": "b47bb4fd7c9976e5776692e2e86a8c974ed5ae4500257399b8c4bcf4ac6f17f3"
+      },
+      "obligation_status": "Unproved"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 4,
+    "obligations": 3
+  },
+  "next_residual": "FORMAL-B-TYPED-RELATIONS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
