@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_dependent_reciprocal_program_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "1f22db77cf83744b3feb01afacf197b3ae559a8a29a8869cd528550f2b3a91e2"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-RECIP-PROGRAM",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/canonical-derived-combinators/PRED-TEX-DECL-DEF-RECIP-PROGRAM",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2838,
+        "end_line": 2915,
+        "sha256": "d89274b63dad923cc8f333ea1a4c5f9444e9103a2f79bc490d6594b05da0ee8a"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-HOLE-SOLVING",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
