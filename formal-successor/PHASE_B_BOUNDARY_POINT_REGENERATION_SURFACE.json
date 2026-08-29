@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_boundary_point_regeneration_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "f72b3d414772b7448dd0b90e1851f95a0bc0e3c1322954eeb7ce6fbe70b57318"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-LAW-BOUNDARY-POINT-REGENERATION",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/candidate-boundary-schemas/PRED-TEX-DECL-LAW-BOUNDARY-POINT-REGENERATION",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1712,
+        "end_line": 1718,
+        "sha256": "c389a8a511b9cb8aea2786c940b7f6331e6da028bbb663c0a9088762df2ab31b"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-DETERMINATION-PRESENTATION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

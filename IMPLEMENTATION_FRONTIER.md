@@ -6,26 +6,26 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-BOUNDARY-POINT-PROFILE-001` machine-checks projection-indexed profiles and their
-extensional equality. It keeps exteriority, departure, negation, crossing, occurrence, answer
-selection, solver, execution, and successor meanings out of the boundary; Gate B remains pending.
+`FORMAL-B-BOUNDARY-POINT-REGENERATION-001` machine-checks a reified point, its declared grain,
+candidate-chart ancestry, projected candidates, and projection equalities. It keeps occurrence,
+exteriority, answer selection, solver, execution, and successor meanings out of the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate boundary-point regeneration as a declared-grain candidate-form obligation without treating
-reification as occurrence completion, contextual exteriority, answer, solver, program, or successor semantics.
+Elaborate determination presentation as a versioned relational web without treating it as every
+retained fact, every relation mentioning a source, a protected continuation, or a globally unique essence.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-BOUNDARY-POINT-REGENERATION
+id: FORMAL-B-DETERMINATION-PRESENTATION
 plan_phase: B
-goal: Determine the smallest source-regenerative boundary for v2.0 boundary-point regeneration, preserving a reified point's declared-grain regeneration of its schema and projected candidates while keeping occurrence, exteriority, answer, solver, program, and successor meanings open unless independently established.
-protected_difference: Boundary-point regeneration is a declared-grain candidate-form relation from a reified point to its schema and projected candidates; it is distinct from a completed occurrence, contextual exteriority, answer, solver, program, or successor semantics.
-discriminator: Contrast source-bound declared-grain regeneration with occurrence completion, contextual exteriority, selected-answer, solver, program, semantic-evaluation, and omission claims; retain only the exact source-supported regeneration boundary after regeneration and independent checking.
-horizon: Boundary-point-regeneration boundary only; boundary-point profile is fixed input, occurrence structure, contextual exteriority, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Determine the smallest source-regenerative boundary for v2.0 determination presentation, preserving a versioned relational web indexed by scope, applicability, grain, horizon, binding, and provenance while keeping minimization, completeness, uniqueness, and successor semantics open unless independently established.
+protected_difference: A determination presentation is the support/dependency web of a specific standing claim occupying a source role; it is distinct from every retained fact, every source-mentioning relation, every protected continuation, or a globally unique essence.
+discriminator: Contrast a source-bound indexed support/dependency web with total-retention, all-relations, continuation, unique-essence, selected-answer, solver, program, and semantic-evaluation claims; retain only the exact source-supported presentation boundary after regeneration and independent checking.
+horizon: Determination-presentation boundary only; boundary-point regeneration is fixed input, minimization, completeness, uniqueness, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the smallest checked boundary-point-regeneration boundary and then elaborate the next residual selected by its unresolved relation
-if_fail: reopen the earliest reification, grain, projected candidate, occurrence, exteriority, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
+if_pass: retain the smallest checked determination-presentation boundary and then elaborate the next residual selected by its unresolved relation
+if_fail: reopen the earliest source role, version, scope, applicability, grain, horizon, provenance, web, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker

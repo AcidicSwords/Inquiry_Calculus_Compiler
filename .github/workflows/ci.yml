@@ -83,6 +83,7 @@ jobs:
           node tools/phase_b_typed_distinction_schema_check.js --compile
           node tools/phase_b_candidate_boundary_incidence_check.js --compile
           node tools/phase_b_boundary_point_profile_check.js --compile
+          node tools/phase_b_boundary_point_regeneration_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -253,6 +254,8 @@ jobs:
           node --check tools/phase_b_candidate_boundary_incidence_check.js
           node --check tools/phase_b_boundary_point_profile.js
           node --check tools/phase_b_boundary_point_profile_check.js
+          node --check tools/phase_b_boundary_point_regeneration.js
+          node --check tools/phase_b_boundary_point_regeneration_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -354,6 +357,8 @@ jobs:
           node tools/phase_b_candidate_boundary_incidence_check.js
           node tools/phase_b_boundary_point_profile.js check
           node tools/phase_b_boundary_point_profile_check.js
+          node tools/phase_b_boundary_point_regeneration.js check
+          node tools/phase_b_boundary_point_regeneration_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

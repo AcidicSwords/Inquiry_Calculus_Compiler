@@ -41,6 +41,7 @@ import InquiryCalculus.Legacy.V20.RepresentationGapLocalization
 import InquiryCalculus.Legacy.V20.TypedDistinctionSchema
 import InquiryCalculus.Legacy.V20.CandidateBoundaryIncidence
 import InquiryCalculus.Legacy.V20.BoundaryPointProfile
+import InquiryCalculus.Legacy.V20.BoundaryPointRegeneration
 
 /-!
 # Inquiry Calculus formal successor
