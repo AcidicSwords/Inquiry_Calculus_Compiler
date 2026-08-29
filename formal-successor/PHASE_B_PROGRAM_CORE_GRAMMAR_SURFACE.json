@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_program_core_grammar_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "1d0b3d426f075181f77b431d07e1c453bbcee1ce790a777d101f5f626f07ece7"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DISPLAY-1F3731D2E017145F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/core-grammar/PRED-TEX-DISPLAY-1F3731D2E017145F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2934,
+        "end_line": 2943,
+        "sha256": "79ce2e1c8da70674f93ed56789ba1445f88f2073022a31e3232a71bc9ef2ee91"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-16E8D67737C669B5",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/core-grammar/PRED-TEX-ITEM-16E8D67737C669B5",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2947,
+        "end_line": 2947,
+        "sha256": "2513c25e33f679d898569f88d05822b83398479b56e8541c5fb1a9be0545e087"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-0D9FD5C6522EDB9F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/core-grammar/PRED-TEX-ITEM-0D9FD5C6522EDB9F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2948,
+        "end_line": 2948,
+        "sha256": "d7e3acfc65620b235c5ddbd0d1a81d66c799d8654dc2bdcef0a768a4a623ef8a"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-A592C5B4A979D489",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/core-grammar/PRED-TEX-ITEM-A592C5B4A979D489",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2949,
+        "end_line": 2951,
+        "sha256": "fc943ef5a88267aaf434a84e70150fb797eba813c353d33ae1928fc59f027866"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "next_residual": "FORMAL-B-SOURCE-SAFE-ASK-LOWERING",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
