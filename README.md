@@ -84,6 +84,8 @@ node tools/phase_b_refinement.js check
 node tools/phase_b_refinement_check.js --compile
 node tools/phase_b_formula_grammar.js check
 node tools/phase_b_formula_grammar_check.js --compile
+node tools/phase_b_minimal_logical_basis.js check
+node tools/phase_b_minimal_logical_basis_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -122,6 +124,9 @@ The coarsest relation/refinement boundary is documented in
 reverse inclusion, and the retained no-vacuity obligation remain distinct.
 The formula display is documented in `formal-successor/PHASE_B_FORMULA_GRAMMAR.md` as a typed
 candidate syntax with all six source records still obligation-bound rather than accepted logic.
+The classical reference-dialect basis and its conditional derivation shapes are documented in
+`formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS.md`; their binding-native-complement limitation
+remains explicit.
 
 ## Current implementation state
 

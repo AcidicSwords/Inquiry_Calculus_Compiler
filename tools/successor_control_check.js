@@ -109,6 +109,10 @@ const required = [
   "formal-successor/PHASE_B_FORMULA_GRAMMAR_SCHEMA.json",
   "formal-successor/PHASE_B_FORMULA_GRAMMAR_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/FormulaGrammar.lean",
+  "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS.md",
+  "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SCHEMA.json",
+  "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/MinimalLogicalBasis.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -143,6 +147,8 @@ const required = [
   "tools/phase_b_refinement_check.js",
   "tools/phase_b_formula_grammar.js",
   "tools/phase_b_formula_grammar_check.js",
+  "tools/phase_b_minimal_logical_basis.js",
+  "tools/phase_b_minimal_logical_basis_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -282,6 +288,14 @@ requireContains("formal-successor/PHASE_B_FORMULA_GRAMMAR.md", [
   "CandidateFormulaSyntax",
   "does not create an oriented negation use",
   "thirteen mutations",
+  "Gate B",
+]);
+
+requireContains("formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS.md", [
+  "seven selected records",
+  "NativeComplementBoundary",
+  "not a semantic equivalence theorem",
+  "fourteen mutations",
   "Gate B",
 ]);
 
@@ -566,6 +580,30 @@ if (
   phaseBFormulaGrammarSurface?.next_residual !== "FORMAL-B-MINIMAL-LOGICAL-BASIS" ||
   phaseBFormulaGrammarSurface?.formal_gate_b?.status !== "PENDING"
 ) errors.push("Phase B formula grammar surface must preserve all source ambiguity and pending Gate B");
+
+let phaseBMinimalLogicalBasisSchema;
+let phaseBMinimalLogicalBasisSurface;
+try {
+  phaseBMinimalLogicalBasisSchema = JSON.parse(read("formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SCHEMA.json"));
+  phaseBMinimalLogicalBasisSurface = JSON.parse(read("formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SURFACE.json"));
+} catch (error) {
+  errors.push(`Phase B minimal logical basis control JSON: ${error.message}`);
+}
+if (
+  phaseBMinimalLogicalBasisSchema?.status !== "phase_b_minimal_logical_basis_contract_not_successor_semantics" ||
+  phaseBMinimalLogicalBasisSchema?.sources?.length !== 7 ||
+  phaseBMinimalLogicalBasisSchema?.required_declarations?.length !== 7 ||
+  phaseBMinimalLogicalBasisSchema?.obligations?.length !== 7 ||
+  phaseBMinimalLogicalBasisSchema?.gate_b?.status !== "PENDING"
+) errors.push("Phase B minimal logical basis schema is detached from its ambiguous predecessor boundary");
+if (
+  phaseBMinimalLogicalBasisSurface?.status !== "generated_phase_b_minimal_logical_basis_surface_not_successor_semantics" ||
+  phaseBMinimalLogicalBasisSurface?.coverage?.explicit_definitions !== 0 ||
+  phaseBMinimalLogicalBasisSurface?.coverage?.obligations !== 7 ||
+  phaseBMinimalLogicalBasisSurface?.coverage?.obligation_statuses?.every((status) => status === "Ambiguous") !== true ||
+  phaseBMinimalLogicalBasisSurface?.next_residual !== "FORMAL-B-RELATION-EXPRESSION-IR" ||
+  phaseBMinimalLogicalBasisSurface?.formal_gate_b?.status !== "PENDING"
+) errors.push("Phase B minimal logical basis surface must preserve all ambiguity and pending Gate B");
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
 if ((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/gu) ?? []).length !== 1 ||
@@ -1020,6 +1058,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_refinement_check.js",
   "node tools/phase_b_formula_grammar.js check",
   "node tools/phase_b_formula_grammar_check.js",
+  "node tools/phase_b_minimal_logical_basis.js check",
+  "node tools/phase_b_minimal_logical_basis_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

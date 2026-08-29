@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_minimal_logical_basis_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "b702e6296941c8fc9f235e0e26a5de39f5bc2e9867df3a56970ad3b6422ed7f0",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "basis_module_sha256": "2512ef98d0b4b4e0f5a2693c60f3709fa113987c332fe3b91c81ed0db7033c99"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-21CAA73CE59DF7BF",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/minimal-generating-basis/PRED-TEX-PROSE-21CAA73CE59DF7BF",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 967,
+        "end_line": 967,
+        "sha256": "a78fed99920bd948f5d64e1d0dcb3494116b2d2a67f247e27d868601da78f906"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-DBFEBF370C7F29E8",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/minimal-generating-basis/PRED-TEX-DISPLAY-DBFEBF370C7F29E8",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 968,
+        "end_line": 970,
+        "sha256": "f4a8ab4b2a4285e6dc14adbe9a93f272e378a0879434030f4b736437bd757550"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-94E6381070E1D28D",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/minimal-generating-basis/PRED-TEX-PROSE-94E6381070E1D28D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 971,
+        "end_line": 971,
+        "sha256": "c33f7747c548e92bc4adafddb215b4319e7c2ed204d622925c247bb7ba671293"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-22810950FC89D1EE",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/minimal-generating-basis/PRED-TEX-DISPLAY-22810950FC89D1EE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 972,
+        "end_line": 976,
+        "sha256": "60c756171733791fab0b972262a2036e3c27f2084c7c3cf255c7fae9f7298cf8"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-4932841BBEAD0158",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/minimal-generating-basis/PRED-TEX-DISPLAY-4932841BBEAD0158",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 977,
+        "end_line": 981,
+        "sha256": "9ed7c8d3eedf2d2961880e15231ab24dd3354f2185bf0f23c05949545e258541"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-5CA3330D1E75CA7C",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/minimal-generating-basis/PRED-TEX-DISPLAY-5CA3330D1E75CA7C",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 982,
+        "end_line": 986,
+        "sha256": "a7c0df40132e61e13cf7041f95993efea6f965d4e2c5eb17c95b9f49ebe77b9d"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-3B076C0050261AF5",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/minimal-generating-basis/PRED-TEX-PROSE-3B076C0050261AF5",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 988,
+        "end_line": 988,
+        "sha256": "e71049c6a4e8db5d2d1ccd4c836ea054165c012cd2dfcb802d61957b8de71ce9"
+      },
+      "obligation_status": "Ambiguous"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 0,
+    "obligations": 7,
+    "obligation_statuses": [
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous"
+    ]
+  },
+  "next_residual": "FORMAL-B-RELATION-EXPRESSION-IR",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
