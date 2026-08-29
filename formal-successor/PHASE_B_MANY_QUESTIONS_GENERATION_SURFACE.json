@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_many_questions_generation_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "b7da42768579474f9996c4ac39084bf8bc2445df8068c8f830ab4885a71d452e",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "generation_module_sha256": "9532deeb3dd11aed2a4f349c525f9092721339b959f84dc077e5261852ddbf6c"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-204A850DB7B4C889",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/one-relation-generates-many-questions/PRED-TEX-PROSE-204A850DB7B4C889",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1081,
+        "end_line": 1081,
+        "sha256": "ca15ebc05a3c5c1348753b209c4452c54022dbe565d9943b11c795e3af9eb0b0"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-E373F638FF5BD3F2",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/one-relation-generates-many-questions/PRED-TEX-DISPLAY-E373F638FF5BD3F2",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1082,
+        "end_line": 1084,
+        "sha256": "730697be8a2929eceaa27996d26af32d07b2fd6993effb0aa36162630cf9af0c"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-CD87BF868AE6DF7D",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/one-relation-generates-many-questions/PRED-TEX-PROSE-CD87BF868AE6DF7D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1085,
+        "end_line": 1085,
+        "sha256": "f051f7602e41c91117ca7845390c6b4ce98d74bfedb80f1b278f27338347efdb"
+      },
+      "obligation_status": "Ambiguous"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 0,
+    "obligations": 3,
+    "obligation_statuses": [
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous"
+    ]
+  },
+  "next_residual": "FORMAL-B-DISCHARGE-MODE-SYNTAX",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

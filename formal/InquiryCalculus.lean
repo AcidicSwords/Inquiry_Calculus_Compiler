@@ -12,6 +12,7 @@ import InquiryCalculus.Legacy.V20.PartialBindingFiber
 import InquiryCalculus.Legacy.V20.CanonicalQuestionSyntax
 import InquiryCalculus.Legacy.V20.AnswerCarrierValidity
 import InquiryCalculus.Legacy.V20.PropositionNotWarrant
+import InquiryCalculus.Legacy.V20.ManyQuestionsGeneration
 
 /-!
 # Inquiry Calculus formal successor

@@ -16,7 +16,7 @@ Elaborate the v2.0 one-relation-many-questions generation boundary without treat
 openings as semantic generation laws, concrete answers, or programs.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-MANY-QUESTIONS-GENERATION
+id: FORMAL-B-DISCHARGE-MODE-SYNTAX
 plan_phase: B
 goal: Classify and reconstruct the one-relation-many-questions opening grammar against checked schemas and canonical question syntax, postponing answer semantics, concrete composition examples, probes, programs, successor-primitive, and Rust meaning.
 protected_difference: Distinct openings are typed candidate variations of one relation schema, not semantic generation laws, answer sets, or programs.
