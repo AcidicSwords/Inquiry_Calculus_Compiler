@@ -142,6 +142,9 @@ const required = [
   "formal-successor/PHASE_B_QUESTION_COMPOSITION_SYNTAX_SCHEMA.json",
   "formal-successor/PHASE_B_QUESTION_COMPOSITION_SYNTAX_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/QuestionCompositionSyntax.lean",
+  "formal-successor/PHASE_B_QUESTION_CONDITIONED_DISCRIMINATION_SCHEMA.json",
+  "formal-successor/PHASE_B_QUESTION_CONDITIONED_DISCRIMINATION_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/QuestionConditionedDiscrimination.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -196,6 +199,8 @@ const required = [
   "tools/phase_b_discharge_mode_syntax_check.js",
   "tools/phase_b_question_composition_syntax.js",
   "tools/phase_b_question_composition_syntax_check.js",
+  "tools/phase_b_question_conditioned_discrimination.js",
+  "tools/phase_b_question_conditioned_discrimination_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -1157,6 +1162,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_discharge_mode_syntax_check.js",
   "node tools/phase_b_question_composition_syntax.js check",
   "node tools/phase_b_question_composition_syntax_check.js",
+  "node tools/phase_b_question_conditioned_discrimination.js check",
+  "node tools/phase_b_question_conditioned_discrimination_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

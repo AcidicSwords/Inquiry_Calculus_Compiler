@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_question_conditioned_discrimination_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "8200ddcc265af3a321f49f7c6613fabc3448926b5119285839552b1ac182a7e0",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "discrimination_module_sha256": "552f0611ccd498e5e9b796f9246e38d852af9c8f45d51606dbf1b06f44377072"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-26C9751AF83E15E7",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/question-conditioned-discrimination/PRED-TEX-PROSE-26C9751AF83E15E7",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1196,
+        "end_line": 1196,
+        "sha256": "c97a9cd6a8c854f72d114c815f711c4a6db479abe2eb4300f578f998f2c5579f"
+      },
+      "obligation_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-639B379210407EFD",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/question-conditioned-discrimination/PRED-TEX-DECL-639B379210407EFD",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1198,
+        "end_line": 1211,
+        "sha256": "741883c29ec7fe2a290722c2bbcbc2ae01c1d4c000192598afaf6d71cd107c3d"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-B47BCF02D06CF48A",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/question-conditioned-discrimination/PRED-TEX-DECL-B47BCF02D06CF48A",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1213,
+        "end_line": 1222,
+        "sha256": "9a20e6a80a76d29c2ac259eb14d051fa14f5c0bc03d119a51600b256fbd1f4e5"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-6B8B48F469E626F3",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/question-conditioned-discrimination/PRED-TEX-PROSE-6B8B48F469E626F3",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1224,
+        "end_line": 1224,
+        "sha256": "74e43a8e4b576e7eab851e81907e9592bcf27a3ab95e87be88ad97f1647eb0f5"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-5065373096B9ED0A",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/question-conditioned-discrimination/PRED-TEX-PROSE-5065373096B9ED0A",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1228,
+        "end_line": 1228,
+        "sha256": "4353fb5e5c575665e7f8e05fdf5ef88fef2063b5a4e26e793dfd7490db929f46"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-C66B6DA9651E08FC",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/question-conditioned-discrimination/PRED-TEX-DISPLAY-C66B6DA9651E08FC",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1225,
+        "end_line": 1227,
+        "sha256": "12f4ff9372652bc9e55af7ebcbe868db17167b792f6a85eb7b6060f793790757"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-5FDEFEC9BA566C34",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/question-conditioned-discrimination/PRED-TEX-DISPLAY-5FDEFEC9BA566C34",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1229,
+        "end_line": 1231,
+        "sha256": "7beaaff708de2f49a1ff398879cb3e713c1ab16c3847c5d8d93cc0ed53aa6f8f"
+      },
+      "obligation_status": "Ambiguous"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 2,
+    "obligations": 5,
+    "obligation_statuses": [
+      "Unproved",
+      null,
+      null,
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous"
+    ]
+  },
+  "next_residual": "FORMAL-B-QUESTION-REFINEMENT-PREORDER",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
