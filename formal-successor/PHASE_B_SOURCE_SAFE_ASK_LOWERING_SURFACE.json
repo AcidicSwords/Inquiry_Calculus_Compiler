@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_source_safe_ask_lowering_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "1b805a8d303500040dbac0cbeccfef720fd95d045d682e44c188a7624fb03ae3"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-SOURCE-SAFE-ASK-LOWERING",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/typing-rules/PRED-TEX-DECL-DEF-SOURCE-SAFE-ASK-LOWERING",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2995,
+        "end_line": 3099,
+        "sha256": "d6ec8e3f872edd47f06940465223617b1eef3350e4edcffc3a7c8f5813efa1c0"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-SOURCE-ASK-COMPILATION-SAFETY-CLAIM",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
