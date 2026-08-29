@@ -368,6 +368,17 @@ async function main() {
   );
   writeFrontier();
 
+  const traceSource = fs.readFileSync(path.join(hooks, "ic-trace"), "utf8");
+  assert.ok(
+    traceSource.includes('bash "$0" control-open'),
+    "ic-trace recursive control checks must select Bash explicitly for mode-100644 Linux checkouts",
+  );
+  assert.doesNotMatch(
+    traceSource,
+    /(?:^|\n)\s*"\$0" control-open/gmu,
+    "ic-trace must not directly execute its non-executable checkout path",
+  );
+
   // The committed settings must route every configured hook through the tested
   // cross-platform launcher, not around it to an untested shell path.
   const settings = JSON.parse(fs.readFileSync(settingsPath, "utf8"));

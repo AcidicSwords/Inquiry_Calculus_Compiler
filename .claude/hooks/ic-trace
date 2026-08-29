@@ -148,7 +148,7 @@ status)
     else
         printf 'cycle   : closed\n'
     fi
-    if "$0" control-open >/dev/null 2>&1; then
+    if bash "$0" control-open >/dev/null 2>&1; then
         printf 'control : authorized for current cycle\n'
     else
         printf 'control : closed\n'
@@ -232,7 +232,7 @@ if [ "$cmd" = "residual" ]; then
 fi
 
 if [ "$cmd" = "policy_transition" ]; then
-    "$0" control-open harness >/dev/null 2>&1 ||
+    bash "$0" control-open harness >/dev/null 2>&1 ||
         die "question-program policy transition requires current user-authorized harness control"
     prior_policy="$(node -e '
 const fs=require("fs");
