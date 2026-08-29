@@ -39,6 +39,7 @@ import InquiryCalculus.Legacy.V20.GrainQuestion
 import InquiryCalculus.Legacy.V20.ProbeToolInventionQuestion
 import InquiryCalculus.Legacy.V20.RepresentationGapLocalization
 import InquiryCalculus.Legacy.V20.TypedDistinctionSchema
+import InquiryCalculus.Legacy.V20.CandidateBoundaryIncidence
 
 /-!
 # Inquiry Calculus formal successor

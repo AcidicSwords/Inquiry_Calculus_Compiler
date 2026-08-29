@@ -6,28 +6,26 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-TYPED-DISTINCTION-SCHEMA-001` machine-checks candidate-side carriers, boundary-point
-projections, and binding-supplied compatibility. It keeps occurrence-owned determination, negation,
-seeds, fibers, truth orientation, answer selection, solver, execution, and successor meanings out of
-the boundary; Gate B remains pending.
+`FORMAL-B-CANDIDATE-BOUNDARY-INCIDENCE-001` machine-checks that a single boundary point projects to
+both candidates. It keeps departure, negation, crossing, occurrence, answer selection, solver,
+execution, and successor meanings out of the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate candidate-boundary incidence without treating a jointly charted candidate pair as a
-departure witness, negation relation, crossing, completed occurrence, answer, solver, program, or
-successor semantics.
+Elaborate boundary-point profiles without treating incidence observations as contextual exteriority,
+departure, negation, crossing, completed occurrence, answer, solver, program, or successor semantics.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-CANDIDATE-BOUNDARY-INCIDENCE
+id: FORMAL-B-BOUNDARY-POINT-PROFILE
 plan_phase: B
-goal: Determine the smallest source-regenerative boundary for v2.0 candidate-boundary incidence, preserving the existence of one boundary point projecting to a candidate pair while keeping departure, negation, crossing, occurrence, answer, solver, program, and successor meanings open unless independently established.
-protected_difference: Candidate boundary incidence makes a pair jointly available in a candidate chart through one boundary point and two projections; it is distinct from a departure witness, negation relation, crossing, completed sixfold occurrence, answer, solver, program, or successor semantics.
-discriminator: Contrast source-bound projected joint availability with a departure, negation, crossing, completed-occurrence, selected-answer, solver, program, semantic-evaluation, and omission claim; retain only the exact source-supported incidence boundary after regeneration and independent checking.
-horizon: Candidate-boundary-incidence boundary only; typed distinction schema is fixed input, departure, negation, crossing, occurrence structure, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Determine the smallest source-regenerative boundary for v2.0 boundary-point profiles, preserving projection-indexed profile observation and profile equality while keeping contextual exteriority, departure, negation, occurrence, answer, solver, program, and successor meanings open unless independently established.
+protected_difference: A boundary-point profile is a candidate-incidence observation; it is distinct from contextual exteriority, departure, negation, crossing, completed occurrence, answer, solver, program, or successor semantics.
+discriminator: Contrast source-bound profile observation and equality with contextual exteriority, departure, negation, crossing, completed-occurrence, selected-answer, solver, program, semantic-evaluation, and omission claims; retain only the exact source-supported profile boundary after regeneration and independent checking.
+horizon: Boundary-point-profile boundary only; candidate-boundary incidence is fixed input, contextual exteriority, departure, negation, crossing, occurrence structure, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the smallest checked candidate-boundary-incidence boundary and then elaborate the next residual selected by its unresolved relation
-if_fail: reopen the earliest candidate pair, boundary point, projection, departure, negation, crossing, occurrence, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
+if_pass: retain the smallest checked boundary-point-profile boundary and then elaborate the next residual selected by its unresolved relation
+if_fail: reopen the earliest profile, projection, equality, exteriority, departure, negation, occurrence, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker

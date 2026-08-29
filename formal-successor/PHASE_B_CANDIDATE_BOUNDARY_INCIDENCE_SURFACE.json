@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_candidate_boundary_incidence_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "605350f6c6e437594e67cfbb16a11f5d99ea4ed248668d4dfb51738f0783fc86"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-BOUNDARY-INCIDENCE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/candidate-boundary-schemas/PRED-TEX-DECL-DEF-BOUNDARY-INCIDENCE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1690,
+        "end_line": 1699,
+        "sha256": "fe73ca0d53dcefcfea343092036e507eed2ace5d028e7f76464ac1c8d44c19e6"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-BOUNDARY-POINT-PROFILE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
