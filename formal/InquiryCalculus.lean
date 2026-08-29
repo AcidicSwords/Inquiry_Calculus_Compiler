@@ -29,6 +29,7 @@ import InquiryCalculus.Legacy.V20.AbstractionByRemoval
 import InquiryCalculus.Legacy.V20.SolutionFieldWeb
 import InquiryCalculus.Legacy.V20.IndexedMeetRefinement
 import InquiryCalculus.Legacy.V20.PropertyImageHole
+import InquiryCalculus.Legacy.V20.ProtectedDetermination
 
 /-!
 # Inquiry Calculus formal successor
