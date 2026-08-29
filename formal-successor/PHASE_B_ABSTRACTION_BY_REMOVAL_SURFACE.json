@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_abstraction_by_removal_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "afe7f9affcc799e9a6a2dc06e2377188870706e4dc016665244e70f64369310d",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "removal_module_sha256": "6dd20976e70e50d081c8d8dc6ee601d2ee77f43f12c8c82620ced05995e97f44"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-3122FB167AA28D1A",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/partial-application-as-a-relational-section/PRED-TEX-DECL-3122FB167AA28D1A",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1402,
+        "end_line": 1409,
+        "sha256": "47bbc51cb3de3001c804b80671651e80b2de6b8761969f4b93ae23cb88fac52d"
+      },
+      "obligation_status": "Unproved"
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 0,
+    "obligations": 1
+  },
+  "next_residual": "FORMAL-B-SOLUTION-FIELD-WEB",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

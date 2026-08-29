@@ -6,33 +6,33 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-RELATIONAL-ABSTRACTION-001` machine-checks licensed exposure of a filling while
-retaining its typed constraint web. It keeps regeneration and lawful refill out of the boundary;
-Gate B remains pending.
+`FORMAL-B-ABSTRACTION-BY-REMOVAL-001` machine-checks a retained-constraint removal carrier.
+It keeps actual removal, regeneration, lawful refill, and destructive-deletion equivalence out of
+the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate the abstraction-by-removal law without treating preserved constraints as regeneration,
-lawful refill, or successor semantics.
+Elaborate the solution-field-of-a-web definition without treating an indexed intersection of
+residual solution fibers as a total answer, solver, program, or successor semantics.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-ABSTRACTION-BY-REMOVAL
+id: FORMAL-B-SOLUTION-FIELD-WEB
 plan_phase: B
-goal: Determine the smallest source-regenerative boundary for the v2.0 abstraction-by-removal law, preserving constraints, regeneration, lawful refill, successor-primitive, and Rust meaning as open unless independently established.
-protected_difference: Removing a filling while retaining constraints is distinct from destructive deletion; it does not alone prove regenerative availability or lawful refill.
-discriminator: Contrast a source-bound removal-with-constraints candidate with destructive deletion, automatic regeneration, program, semantic evaluation, and omission; retain only the exact source-supported boundary after regeneration and independent checking.
-horizon: Abstraction-by-removal boundary only; relational abstraction is fixed input, constraint preservation, regeneration, lawful refill, relation satisfaction, actual execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Determine the smallest source-regenerative boundary for the v2.0 solution field of a web, preserving indexed residual fibers, their intersection, answer semantics, successor primitives, and Rust meaning as open unless independently established.
+protected_difference: A solution field is an indexed intersection of residual solution fibers after other ports bind; it is distinct from a total answer, total solver, program, or semantic evaluation.
+discriminator: Contrast a source-bound indexed-fiber-intersection candidate with total-answer, unique-witness, solver, program, semantic-evaluation, and omission claims; retain only the exact source-supported field boundary after regeneration and independent checking.
+horizon: Solution-field boundary only; abstraction-by-removal is fixed input, fiber membership, target semantics, inverse-image law, answer validity, actual execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the smallest checked abstraction-by-removal boundary and then elaborate the next residual selected by its unresolved relation
-if_fail: reopen the earliest removal, constraint, regeneration, refill, or semantics/program contamination relation; do not substitute proofs, axioms, or Rust behavior
+if_pass: retain the smallest checked solution-field boundary and then elaborate the next residual selected by its unresolved relation
+if_fail: reopen the earliest fiber, target, witness, inverse-image, program, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
 
-Construct a decisive source-bound solution-fiber foil, then contrast it with total-answer,
-unique-witness, program, semantic-evaluation, and omission claims. Contract only after exact source
-regeneration and retained obligations distinguish the smallest fiber boundary.
+Construct a decisive source-bound indexed-fiber-intersection foil, then contrast it with total-answer,
+unique-witness, solver, program, semantic-evaluation, and omission claims. Contract only after exact
+source regeneration and retained obligations distinguish the smallest solution-field boundary.
 
 ## Prohibitions at this boundary
 
