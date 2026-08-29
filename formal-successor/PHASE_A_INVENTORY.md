@@ -45,3 +45,7 @@ self-promotion.
 Generation and green checks establish the extraction/source-coverage boundary only. Gate A stays
 `PENDING` while any consequential candidate remains pending review, any executable fixture lacks
 its required claim edge, or an admitted source form is unmatched.
+
+The TeX-local contraction of this overinclusive field is governed by
+`PHASE_A_TEX_CLASSIFICATION.md`. Its overlay preserves these generated identities while separating
+explicit declarations, binding results, unresolved claim boundaries, and canonical context.

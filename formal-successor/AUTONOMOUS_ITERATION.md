@@ -212,6 +212,8 @@ node tools/successor_control_check.js
 node tools/harness_control_check.js
 node tools/predecessor_inventory.js check
 node tools/predecessor_inventory_check.js
+node tools/predecessor_tex_classification.js check
+node tools/predecessor_tex_classification_check.js
 formal: lake build --wfail
 documentation topology and canonical-TeX checks when those surfaces change
 Rust format/check/clippy/test as predecessor regression evidence

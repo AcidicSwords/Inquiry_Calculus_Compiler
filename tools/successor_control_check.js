@@ -75,6 +75,9 @@ const required = [
   "formal-successor/PHASE_A_INVENTORY.md",
   "formal-successor/PREDECESSOR_INVENTORY_GRAMMAR.json",
   "formal-successor/PREDECESSOR_INVENTORY.json",
+  "formal-successor/PHASE_A_TEX_CLASSIFICATION.md",
+  "formal-successor/PREDECESSOR_TEX_CLASSIFICATION_SCHEMA.json",
+  "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -89,6 +92,8 @@ const required = [
   "tools/exploration_algorithm_check.js",
   "tools/predecessor_inventory.js",
   "tools/predecessor_inventory_check.js",
+  "tools/predecessor_tex_classification.js",
+  "tools/predecessor_tex_classification_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -158,6 +163,12 @@ requireContains("formal-successor/PHASE_A_INVENTORY.md", [
   "Gate A stays",
 ]);
 
+requireContains("formal-successor/PHASE_A_TEX_CLASSIFICATION.md", [
+  "six dispositions required by",
+  "keyword absence cannot discharge it",
+  "Formal Gate A remains pending",
+]);
+
 let predecessorInventoryGrammar;
 let predecessorInventory;
 try {
@@ -179,6 +190,31 @@ if (
   !(predecessorInventory?.coverage?.pending_review_items > 0)
 ) {
   errors.push("generated predecessor inventory must preserve an explicit pending Gate A review residual");
+}
+
+let predecessorTexClassificationSchema;
+let predecessorTexClassification;
+try {
+  predecessorTexClassificationSchema = JSON.parse(read("formal-successor/PREDECESSOR_TEX_CLASSIFICATION_SCHEMA.json"));
+  predecessorTexClassification = JSON.parse(read("formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json"));
+} catch (error) {
+  errors.push(`predecessor TeX classification control JSON: ${error.message}`);
+}
+if (
+  predecessorTexClassificationSchema?.status !== "phase_a_tex_classification_contract_not_successor_semantics" ||
+  predecessorTexClassificationSchema?.inventory?.canonical_tex_sha256 !==
+    "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89" ||
+  predecessorTexClassificationSchema?.construction_specification_dispositions?.length !== 6
+) {
+  errors.push("Phase A TeX classification schema is detached from its authority or six-way contract");
+}
+if (
+  predecessorTexClassification?.status !== "reviewed_phase_a_tex_classification_not_successor_semantics" ||
+  predecessorTexClassification?.coverage?.classified_source_items !== 1370 ||
+  predecessorTexClassification?.coverage?.unclassified_source_items !== 0 ||
+  predecessorTexClassification?.formal_gate_a?.status !== "PENDING"
+) {
+  errors.push("Phase A TeX classification must be total at TeX coverage while preserving pending Formal Gate A");
 }
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
@@ -613,6 +649,8 @@ requireContains(".github/workflows/ci.yml", [
   "node --check .claude/hooks/ic-question-program.js",
   "node tools/predecessor_inventory.js check",
   "node tools/predecessor_inventory_check.js",
+  "node tools/predecessor_tex_classification.js check",
+  "node tools/predecessor_tex_classification_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

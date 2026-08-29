@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "status": "phase_a_tex_classification_contract_not_successor_semantics",
+  "inventory": {
+    "path": "formal-successor/PREDECESSOR_INVENTORY.json",
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "admitted_source_classes": [
+      "tex.declaration",
+      "tex.narrative",
+      "tex.list_item",
+      "tex.display"
+    ]
+  },
+  "construction_specification_dispositions": [
+    "FormalDefinition",
+    "FormalTheorem",
+    "LegacyObligation",
+    "BindingTheorem",
+    "ImplementationOnly",
+    "CanonicalProseOnly"
+  ],
+  "legacy_statuses": [
+    "Unproved",
+    "Ambiguous",
+    "IllTyped",
+    "Broken",
+    "BindingDependent",
+    "ImplementationOnly"
+  ],
+  "source_roles": [
+    "standalone_declaration",
+    "binding_declaration",
+    "compound_claim_boundary",
+    "list_component",
+    "display_component",
+    "canonical_context"
+  ],
+  "required_record_fields": [
+    "source_id",
+    "source_class",
+    "source",
+    "source_role",
+    "disposition",
+    "destination",
+    "review_status",
+    "review_basis",
+    "rationale",
+    "source_excerpt_sha256"
+  ],
+  "rules": {
+    "order": [
+      "exact_canonical_context",
+      "binding_declaration",
+      "ordinary_declaration",
+      "conservative_claim_boundary"
+    ],
+    "exact_canonical_context": [
+      "\\maketitle"
+    ],
+    "binding_headings": [
+      "Linear dot-product consequence binding"
+    ],
+    "declaration_dispositions": {
+      "definition": "FormalDefinition",
+      "theorem": "FormalTheorem",
+      "proposition": "FormalTheorem",
+      "corollary": "FormalTheorem",
+      "law": "LegacyObligation",
+      "obligation": "LegacyObligation",
+      "lemma": "LegacyObligation",
+      "remark": "LegacyObligation",
+      "example": "LegacyObligation"
+    },
+    "legacy_declaration_status": {
+      "law": "Unproved",
+      "obligation": "Unproved",
+      "lemma": "Unproved",
+      "remark": "Ambiguous",
+      "example": "Ambiguous"
+    },
+    "nondeclaration_disposition": "LegacyObligation",
+    "nondeclaration_status_by_signal": {
+      "normative_signal_present": "Unproved",
+      "no_normative_signal": "Ambiguous"
+    },
+    "keyword_law": "Normative keywords are review evidence only. Their presence or absence never selects a disposition.",
+    "fallback_law": "An unresolved source boundary remains a LegacyObligation with an unelaborated source-bound candidate proposition. It may not be omitted or promoted to a theorem."
+  },
+  "destination_roots": {
+    "FormalDefinition": "phase:B/Legacy/V20/Definitions",
+    "FormalTheorem": "phase:B/Legacy/V20/Claims",
+    "LegacyObligation": "phase:B/Legacy/V20/Obligations",
+    "BindingTheorem": "phase:B/Legacy/V20/Bindings",
+    "ImplementationOnly": "phase:F/Legacy/V20/Implementation",
+    "CanonicalProseOnly": null
+  },
+  "review_law": "Reviewed means that the exact source identity was subjected to this total conservative source-role policy. It does not mean that an ambiguous obligation has been elaborated, proved, corrected, or accepted as successor semantics.",
+  "gate_law": "Complete TeX classification closes only FORMAL-A-TEX-INVENTORY. Gate A remains pending until the Rust/schema/fixture surfaces and required claim edges are also classified and independently checked."
+}
