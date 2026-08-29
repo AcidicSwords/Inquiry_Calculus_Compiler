@@ -35,6 +35,7 @@ import InquiryCalculus.Legacy.V20.ResidualAmbiguity
 import InquiryCalculus.Legacy.V20.RepresentationDefect
 import InquiryCalculus.Legacy.V20.SeparatingContextQuestion
 import InquiryCalculus.Legacy.V20.RepresentationQuestion
+import InquiryCalculus.Legacy.V20.GrainQuestion
 
 /-!
 # Inquiry Calculus formal successor

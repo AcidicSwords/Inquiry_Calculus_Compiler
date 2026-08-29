@@ -77,6 +77,7 @@ jobs:
           node tools/phase_b_representation_defect_check.js --compile
           node tools/phase_b_separating_context_question_check.js --compile
           node tools/phase_b_representation_question_check.js --compile
+          node tools/phase_b_grain_question_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -235,6 +236,8 @@ jobs:
           node --check tools/phase_b_separating_context_question_check.js
           node --check tools/phase_b_representation_question.js
           node --check tools/phase_b_representation_question_check.js
+          node --check tools/phase_b_grain_question.js
+          node --check tools/phase_b_grain_question_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -324,6 +327,8 @@ jobs:
           node tools/phase_b_separating_context_question_check.js
           node tools/phase_b_representation_question.js check
           node tools/phase_b_representation_question_check.js
+          node tools/phase_b_grain_question.js check
+          node tools/phase_b_grain_question_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
