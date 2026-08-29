@@ -49,6 +49,7 @@ import InquiryCalculus.Legacy.V20.DerivedBoundaryCrossing
 import InquiryCalculus.Legacy.V20.RelationAndNegationUse
 import InquiryCalculus.Legacy.V20.PositiveNegationFilling
 import InquiryCalculus.Legacy.V20.SemanticAndExecutionCoverage
+import InquiryCalculus.Legacy.V20.TaggedNegationFrontier
 
 /-!
 # Inquiry Calculus formal successor
