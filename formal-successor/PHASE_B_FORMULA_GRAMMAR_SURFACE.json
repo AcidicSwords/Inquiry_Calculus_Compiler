@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_formula_grammar_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "997b32ad60584790fc34dc69c785d418fc1407968b07560051dc5a2acef97d2b",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "formula_module_sha256": "e82ee13ab607c0c9e7af96041a1545bac758b22f39b77e8a7f360947680add79"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-A08A2468E65A2DAB",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-PROSE-A08A2468E65A2DAB",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 934,
+        "end_line": 934,
+        "sha256": "68fa1527c09eee1990ad78745f5ec3c0ebe0818515a39bae7676cbcd6c160b78"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-75C44CA222A4214E",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-DISPLAY-75C44CA222A4214E",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 935,
+        "end_line": 949,
+        "sha256": "3bb91d3a8831d3e7d281090d8bc8a0c1148dc2c2abb1a8026d6f993b4dbccc0c"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-983F2B30F7C1C1D2",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-PROSE-983F2B30F7C1C1D2",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 951,
+        "end_line": 951,
+        "sha256": "0c24d542621c7e97fc2b8e8d8123c3539bb1ff4ad627029a635125f134a0a10b"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-DA438851DA28D75D",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-PROSE-DA438851DA28D75D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 953,
+        "end_line": 953,
+        "sha256": "012bffb2e62ea3bec4f2da929de6797f9c65690010faf54e1cfbedeecb8ca625"
+      },
+      "obligation_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-212A4128A7A58270",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-DISPLAY-212A4128A7A58270",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 954,
+        "end_line": 962,
+        "sha256": "b60c2e637862f470767d0b63b6453199918411a072ed9cd7373a0222380daee8"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-35B2FF04F304464B",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-PROSE-35B2FF04F304464B",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 963,
+        "end_line": 963,
+        "sha256": "831eabfacbfe77e95ca07d29744283f7747d8bf0e838bb92832470fd7dc64b8d"
+      },
+      "obligation_status": "Ambiguous"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 0,
+    "obligations": 6,
+    "obligation_statuses": [
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous",
+      "Unproved",
+      "Ambiguous",
+      "Ambiguous"
+    ]
+  },
+  "next_residual": "FORMAL-B-MINIMAL-LOGICAL-BASIS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

@@ -70,6 +70,10 @@ or contextual-equivalence semantics, and Formal Gate B remains pending.
 coexistence, records reverse-inclusion refinement and proper-refinement shape, and keeps the
 no-vacuity law plus later question/usefulness content explicit. Formal Gate B remains pending.
 
+`PHASE_B_FORMULA_GRAMMAR.md` preserves the six formula display/prose records as a typed candidate
+syntax only. It does not choose host logic, logical basis, negation-use semantics, coverage, or a
+successor grammar; all six records remain explicit obligations and Formal Gate B remains pending.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

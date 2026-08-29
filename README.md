@@ -82,6 +82,8 @@ node tools/phase_b_relations.js check
 node tools/phase_b_relations_check.js --compile
 node tools/phase_b_refinement.js check
 node tools/phase_b_refinement_check.js --compile
+node tools/phase_b_formula_grammar.js check
+node tools/phase_b_formula_grammar_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -118,6 +120,8 @@ expressions and later semantics open.
 The coarsest relation/refinement boundary is documented in
 `formal-successor/PHASE_B_REFINEMENT.md`; universal relatedness, binding-supplied coexistence,
 reverse inclusion, and the retained no-vacuity obligation remain distinct.
+The formula display is documented in `formal-successor/PHASE_B_FORMULA_GRAMMAR.md` as a typed
+candidate syntax with all six source records still obligation-bound rather than accepted logic.
 
 ## Current implementation state
 

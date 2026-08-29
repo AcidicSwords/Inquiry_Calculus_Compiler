@@ -105,6 +105,10 @@ const required = [
   "formal-successor/PHASE_B_REFINEMENT_SCHEMA.json",
   "formal-successor/PHASE_B_REFINEMENT_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/Refinement.lean",
+  "formal-successor/PHASE_B_FORMULA_GRAMMAR.md",
+  "formal-successor/PHASE_B_FORMULA_GRAMMAR_SCHEMA.json",
+  "formal-successor/PHASE_B_FORMULA_GRAMMAR_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/FormulaGrammar.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -137,6 +141,8 @@ const required = [
   "tools/phase_b_relations_check.js",
   "tools/phase_b_refinement.js",
   "tools/phase_b_refinement_check.js",
+  "tools/phase_b_formula_grammar.js",
+  "tools/phase_b_formula_grammar_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -268,6 +274,14 @@ requireContains("formal-successor/PHASE_B_REFINEMENT.md", [
   "ExistenceBoundary",
   "reverses inclusion",
   "twelve mutations",
+  "Gate B",
+]);
+
+requireContains("formal-successor/PHASE_B_FORMULA_GRAMMAR.md", [
+  "six selected source records",
+  "CandidateFormulaSyntax",
+  "does not create an oriented negation use",
+  "thirteen mutations",
   "Gate B",
 ]);
 
@@ -527,6 +541,31 @@ if (
   phaseBRefinementSurface?.next_residual !== "FORMAL-B-FORMULA-GRAMMAR" ||
   phaseBRefinementSurface?.formal_gate_b?.status !== "PENDING"
 ) errors.push("Phase B refinement surface must preserve the explicit obligation and pending Gate B");
+
+let phaseBFormulaGrammarSchema;
+let phaseBFormulaGrammarSurface;
+try {
+  phaseBFormulaGrammarSchema = JSON.parse(read("formal-successor/PHASE_B_FORMULA_GRAMMAR_SCHEMA.json"));
+  phaseBFormulaGrammarSurface = JSON.parse(read("formal-successor/PHASE_B_FORMULA_GRAMMAR_SURFACE.json"));
+} catch (error) {
+  errors.push(`Phase B formula grammar control JSON: ${error.message}`);
+}
+if (
+  phaseBFormulaGrammarSchema?.status !== "phase_b_formula_grammar_contract_not_successor_semantics" ||
+  phaseBFormulaGrammarSchema?.sources?.length !== 6 ||
+  phaseBFormulaGrammarSchema?.required_declarations?.length !== 5 ||
+  phaseBFormulaGrammarSchema?.obligations?.length !== 6 ||
+  phaseBFormulaGrammarSchema?.gate_b?.status !== "PENDING"
+) errors.push("Phase B formula grammar schema is detached from its ambiguous predecessor boundary");
+if (
+  phaseBFormulaGrammarSurface?.status !== "generated_phase_b_formula_grammar_surface_not_successor_semantics" ||
+  phaseBFormulaGrammarSurface?.coverage?.explicit_definitions !== 0 ||
+  phaseBFormulaGrammarSurface?.coverage?.obligations !== 6 ||
+  phaseBFormulaGrammarSurface?.coverage?.obligation_statuses?.filter((status) => status === "Ambiguous")?.length !== 5 ||
+  phaseBFormulaGrammarSurface?.coverage?.obligation_statuses?.filter((status) => status === "Unproved")?.length !== 1 ||
+  phaseBFormulaGrammarSurface?.next_residual !== "FORMAL-B-MINIMAL-LOGICAL-BASIS" ||
+  phaseBFormulaGrammarSurface?.formal_gate_b?.status !== "PENDING"
+) errors.push("Phase B formula grammar surface must preserve all source ambiguity and pending Gate B");
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
 if ((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/gu) ?? []).length !== 1 ||
@@ -979,6 +1018,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_relations_check.js",
   "node tools/phase_b_refinement.js check",
   "node tools/phase_b_refinement_check.js",
+  "node tools/phase_b_formula_grammar.js check",
+  "node tools/phase_b_formula_grammar_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

@@ -230,6 +230,8 @@ node tools/phase_b_relations.js check
 node tools/phase_b_relations_check.js --compile
 node tools/phase_b_refinement.js check
 node tools/phase_b_refinement_check.js --compile
+node tools/phase_b_formula_grammar.js check
+node tools/phase_b_formula_grammar_check.js --compile
 formal: lake build --wfail
 documentation topology and canonical-TeX checks when those surfaces change
 Rust format/check/clippy/test as predecessor regression evidence

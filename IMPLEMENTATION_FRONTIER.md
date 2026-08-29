@@ -6,47 +6,47 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-REFINEMENT-001` regenerates five exact v2.0 source identities into universal
-represented-field relatedness, binding-supplied coexistence, reverse-inclusion refinement, and a
-proper-refinement boundary while retaining four obligations. The independent checker rejects twelve
-source, collapse, order, obligation, leakage, and promotion mutations; Gate B remains pending.
+`FORMAL-B-FORMULA-GRAMMAR-001` regenerates six exact v2.0 source identities into a typed candidate
+formula syntax while preserving five Ambiguous and one Unproved source status. The independent
+checker rejects thirteen source, status, syntax, host-logic, semantics-leakage, and promotion
+mutations; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate the v2.0 formula grammar boundary without promoting its ambiguous display or silently
-choosing formulas, connectives, quantifiers, equality, relation atoms, or binding-specific syntax
-as successor primitives.
+Elaborate the v2.0 minimal logical-basis boundary without treating a classical reference dialect as
+native binding structure, accepting its derivations as universal, or consuming later negation and
+program semantics.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-FORMULA-GRAMMAR
+id: FORMAL-B-MINIMAL-LOGICAL-BASIS
 plan_phase: B
-goal: Classify and reconstruct the v2.0 formula grammar boundary against checked types, forms, relations, and refinement while preserving its ambiguous source status and postponing question, fiber, program, successor-primitive, and Rust meaning.
-protected_difference: A displayed predecessor grammar is neither an accepted successor syntax nor an implicit host-logic basis. Treating its formula, connective, quantifier, equality, relation-atom, or binding-specific forms as settled primitives hides ambiguity; ignoring the display loses the source pressure that must be resolved later.
-discriminator: Construct an overcomplete typed candidate grammar boundary from every exact formula display/prose source, contrast it with host Prop collapse, permissive string syntax, blanket primitive promotion, and omission, then contract only after source regeneration and retained ambiguity identify which forms may be represented without semantic acceptance.
-horizon: Formula grammar boundary only; relation/refinement artifacts are fixed inputs, questions, fibers, programs, standing, classicality, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
-relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016
+goal: Classify and reconstruct the v2.0 classical reference-dialect minimal logical basis and its displayed derivations against the candidate formula grammar, retaining every binding-native-complement limitation and postponing oriented negation, question, fiber, program, successor-primitive, and Rust meaning.
+protected_difference: A sufficient basis in the classical reference dialect is not an accepted successor primitive basis or a claim that every binding supplies Boolean complement. Derived disjunction, universal quantification, and implication are conveniences conditional on that dialect; treating them as global native operations erases the binding boundary.
+discriminator: Construct an overcomplete reference-dialect basis and derivation boundary from every exact source display/prose record, contrast it with global native Boolean operations, blanket primitive promotion, derivation omission, and identification with later oriented negation, then contract only after exact regeneration and retained ambiguity distinguish the smallest representable boundary.
+horizon: Minimal logical basis only; candidate formula grammar is fixed input, oriented negation, questions, fibers, programs, standing, classicality beyond the source boundary, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017
 relevant_failures: F-9006, F-9007
-if_pass: retain the source-bound formula grammar representation and ambiguity obligations, then elaborate the next formula/relation-expression boundary selected by the residual
-if_fail: reopen the earliest formula source, grammar-form, source-boundary, or host-logic-collapse relation; do not substitute host Prop, strings, axioms, or Rust behavior
+if_pass: retain the reference-dialect basis and binding-limit obligations, then elaborate the next relation-expression boundary selected by the residual
+if_fail: reopen the earliest logical-basis source, derivation, binding-limit, or negation-boundary relation; do not substitute global Boolean operations, host logic, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
 
-Construct every exact formula grammar alternative as an overcomplete typed candidate boundary, then
-contrast it with host Prop, permissive string syntax, blanket primitive promotion, and omission.
-Contract only after exact source regeneration and retained ambiguity distinguish the smallest
-representable surface from accepted successor syntax.
+Construct every exact classical-basis alternative and derivation as an overcomplete reference-dialect
+boundary, then contrast it with global native Boolean operations, blanket primitive promotion,
+derivation omission, and later oriented-negation identification. Contract only after exact source
+regeneration and retained binding limitation distinguish the smallest representable surface.
 
 ## Prohibitions at this boundary
 
-- Do not treat host Prop, strings, or parser convenience as calculus formula primitives.
-- Do not promote an ambiguous display to accepted syntax or theorem authority.
-- Do not use unchecked casts, axioms, proof gaps, or Rust behavior to bypass grammar typing.
+- Do not treat the reference logical basis as universal binding-native structure.
+- Do not promote ambiguous derivations to accepted successor syntax or theorem authority.
+- Do not identify logical negation with oriented negation or use axioms, proof gaps, or Rust behavior.
 - Do not select successor primitives or mark Gate B passed from this local elaboration.
 - Do not rewrite v2.0, advance the deferred Rust frontier, or mix successor state into predecessor ledgers.
 
 ## Exit
 
-On pass, retain the smallest source-regenerative formula boundary, explicit ambiguity obligations,
-and independent breakers, then select the next formula/relation-expression residual. On failure,
-preserve the return and reopen the earliest grammar, source, host-logic, or acceptance-boundary relation.
+On pass, retain the smallest source-regenerative reference-dialect basis, explicit binding-limit
+obligations, and independent breakers, then select the relation-expression boundary. On failure,
+preserve the return and reopen the earliest basis, derivation, binding-limit, or negation-boundary relation.
