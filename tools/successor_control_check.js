@@ -46,6 +46,13 @@ function requireContains(name, fragments) {
   }
 }
 
+function requireExcludes(name, fragments) {
+  const text = read(name);
+  for (const fragment of fragments) {
+    if (text.includes(fragment)) errors.push(`${name}: must not contain ${JSON.stringify(fragment)}`);
+  }
+}
+
 const required = [
   "AGENTS.md",
   "IMPLEMENTATION_FRONTIER.md",
@@ -575,7 +582,9 @@ requireContains(".github/workflows/ci.yml", [
   "leanchecker: true",
   "leanchecker-args: InquiryCalculus Spec",
   "axiom-audit: true",
+  "axiom-audit-root: Spec",
 ]);
+requireExcludes(".github/workflows/ci.yml", ["nanoda: true"]);
 
 if (errors.length > 0) {
   process.stderr.write(`formal successor control check failed:\n- ${errors.join("\n- ")}\n`);

@@ -12,8 +12,8 @@ lake update
 lake build --wfail
 ```
 
-The lock manifest is committed after dependency resolution. CI also performs an independent
-checker run, no-`sorry` enforcement, and an axiom audit.
+The lock manifest is committed after dependency resolution. CI also runs `leanchecker` over both
+declared libraries, enforces no-`sorry`, and audits axioms from the aggregate `Spec` import root.
 
 ## Layer direction
 
