@@ -72,6 +72,9 @@ const required = [
   "formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md",
   "formal-successor/QUESTION_RHYTHM.md",
   "formal-successor/RESIDUAL_OBLIGATIONS.json",
+  "formal-successor/PHASE_A_INVENTORY.md",
+  "formal-successor/PREDECESSOR_INVENTORY_GRAMMAR.json",
+  "formal-successor/PREDECESSOR_INVENTORY.json",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -84,6 +87,8 @@ const required = [
   ".claude/hooks/ic-construction-policy.js",
   "tools/harness_acceptance_check.js",
   "tools/exploration_algorithm_check.js",
+  "tools/predecessor_inventory.js",
+  "tools/predecessor_inventory_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -146,6 +151,35 @@ requireContains("formal-successor/AUTONOMOUS_ITERATION.md", [
   "## Phase progression",
   "## Autonomous safety boundary",
 ]);
+
+requireContains("formal-successor/PHASE_A_INVENTORY.md", [
+  "overinclusive, generated view",
+  "Line numbers are source loci, never the sole identity",
+  "Gate A stays",
+]);
+
+let predecessorInventoryGrammar;
+let predecessorInventory;
+try {
+  predecessorInventoryGrammar = JSON.parse(read("formal-successor/PREDECESSOR_INVENTORY_GRAMMAR.json"));
+  predecessorInventory = JSON.parse(read("formal-successor/PREDECESSOR_INVENTORY.json"));
+} catch (error) {
+  errors.push(`predecessor inventory control JSON: ${error.message}`);
+}
+if (
+  predecessorInventoryGrammar?.status !== "phase_a_extraction_grammar_not_successor_semantics" ||
+  predecessorInventoryGrammar?.predecessor_commit !== baseline ||
+  predecessorInventoryGrammar?.canonical_tex?.sha256 !== "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89"
+) {
+  errors.push("Phase A predecessor inventory grammar is detached from its authority or pinned inputs");
+}
+if (
+  predecessorInventory?.status !== "generated_phase_a_predecessor_inventory_not_gate_a" ||
+  predecessorInventory?.gate_a?.status !== "PENDING" ||
+  !(predecessorInventory?.coverage?.pending_review_items > 0)
+) {
+  errors.push("generated predecessor inventory must preserve an explicit pending Gate A review residual");
+}
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
 if ((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/gu) ?? []).length !== 1 ||
@@ -577,6 +611,8 @@ requireContains(".github/workflows/ci.yml", [
   "codex/formal-successor",
   "tools/successor_control_check.js",
   "node --check .claude/hooks/ic-question-program.js",
+  "node tools/predecessor_inventory.js check",
+  "node tools/predecessor_inventory_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

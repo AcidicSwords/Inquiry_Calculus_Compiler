@@ -114,6 +114,8 @@ jobs:
           node --check tools/harness_control_check.js
           node --check tools/harness_acceptance_check.js
           node --check tools/exploration_algorithm_check.js
+          node --check tools/predecessor_inventory.js
+          node --check tools/predecessor_inventory_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -121,6 +123,8 @@ jobs:
           node tools/harness_control_check.js
           node tools/harness_acceptance_check.js
           node tools/exploration_algorithm_check.js
+          node tools/predecessor_inventory.js check
+          node tools/predecessor_inventory_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

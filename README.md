@@ -62,6 +62,8 @@ The formal branch also runs:
 ```bash
 node tools/successor_control_check.js
 node tools/harness_control_check.js
+node tools/predecessor_inventory.js check
+node tools/predecessor_inventory_check.js
 cd formal
 lake build --wfail
 ```
@@ -78,6 +80,9 @@ projection rebuilt from append-only trace evidence and
 The pinned question-bank-derived computational extension is
 `formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md`; it remains preformal and does
 not authorize pre-Gate-F Rust semantic work.
+The Phase A source universe and its non-promotion boundary are documented in
+`formal-successor/PHASE_A_INVENTORY.md`; its generated inventory keeps unresolved classification
+visible rather than converting source coverage into Gate A.
 
 ## Current implementation state
 

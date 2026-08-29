@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "status": "phase_a_extraction_grammar_not_successor_semantics",
+  "predecessor_commit": "4a18e2e308f359a64f19b7d056652f19fd9aaeae",
+  "canonical_tex": {
+    "path": "Inquiry_Calculus_v2_0.tex",
+    "sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "document_begin": "\\begin{document}",
+    "document_end": "\\end{document}",
+    "heading_commands": ["part", "chapter", "section", "subsection", "subsubsection"],
+    "declaration_environments": [
+      "definition",
+      "law",
+      "theorem",
+      "proposition",
+      "lemma",
+      "corollary",
+      "obligation",
+      "remark",
+      "example"
+    ],
+    "display_environments": ["equation", "equation*", "align", "align*", "gather", "gather*", "multline", "multline*"],
+    "candidate_classes": [
+      "tex.declaration",
+      "tex.narrative",
+      "tex.list_item",
+      "tex.display"
+    ],
+    "coverage_rule": "Every nonblank noncomment line inside the document body contributes to the ordered coverage digest even when it is structural or intentionally has no semantic-candidate item. Candidate extraction is deliberately overinclusive; contraction requires an explicit reviewed disposition.",
+    "normative_signals": [
+      "must",
+      "shall",
+      "required",
+      "requires",
+      "should",
+      "never",
+      "cannot",
+      "does not",
+      "is not",
+      "only if",
+      "if and only if",
+      "preserve",
+      "forbid",
+      "prohibit",
+      "warrant",
+      "authority"
+    ]
+  },
+  "repository_surface": {
+    "roots": ["crates", "fixtures", "migrations"],
+    "classes": {
+      "crates/*/src/*.rs": "rust.semantic_module_candidate",
+      "crates/*/tests/*.rs": "rust.conformance_module",
+      "crates/*/Cargo.toml": "rust.crate_manifest",
+      "fixtures/**": "schema.fixture",
+      "migrations/**": "schema.migration"
+    },
+    "fallback_class": "repository.support_file",
+    "public_item_kinds": ["struct", "enum", "trait", "type", "fn", "const", "static", "mod", "use", "surface_line"],
+    "coverage_rule": "Every blob below the admitted roots at the pinned predecessor commit has one repository-file item. Every source line beginning with Rust visibility syntax has an additional public-surface item, including re-exports and macro-generated declaration templates even when exact parsing remains pending. Rust and schema items are implementation evidence, never TeX semantic authority."
+  },
+  "conformance_surface": {
+    "status_path": "CONFORMANCE_STATUS.md",
+    "registry_path": "tools/docs_control_check.py",
+    "fixture_id_pattern": "[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+-[0-9]{3}",
+    "coverage_rule": "Every fixture row and every executable PASS-evidence registry entry is inventoried. Shared identities retain both relations; a registry entry without a status row remains an explicit review residual."
+  },
+  "identity": {
+    "algorithm": "sha256",
+    "content_identity": "class plus normalized content digest; exact duplicate content receives a deterministic occurrence suffix within its pinned source",
+    "path_identity": "pinned repository path for whole-file surfaces; public declarations additionally bind kind, name, normalized declaration digest, and occurrence",
+    "line_numbers": "source loci only and never the sole stable identity"
+  },
+  "required_item_fields": [
+    "id",
+    "source_class",
+    "authority",
+    "category",
+    "disposition",
+    "destination",
+    "review_status",
+    "evidence_status",
+    "source"
+  ],
+  "review_statuses": ["pending", "classified"],
+  "evidence_statuses": ["source_actuality", "registered_executable_evidence"],
+  "gate_law": "Generation and source coverage do not pass Gate A. Gate A remains pending while any consequential candidate has review_status pending, while an admitted source unit is unmatched, or while an executable fixture lacks its required claim edge."
+}
