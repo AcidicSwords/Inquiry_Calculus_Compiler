@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "status": "phase_b_question_joint_active_refinement_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "joint_active_module": "formal/InquiryCalculus/Legacy/V20/QuestionJointActiveRefinement.lean"
+  },
+  "sources": [
+    "PRED-TEX-DECL-9AF26C3D0D75A77B",
+    "PRED-TEX-DECL-71E0784A60361200"
+  ],
+  "required_declarations": [
+    "SameProfile",
+    "JointQuestionProfile",
+    "ActiveRepresentationExtension",
+    "JointActiveRefinementObligation"
+  ],
+  "obligations": [
+    "nonredundantCoordinate",
+    "activeRepresentationImprovement",
+    "globalKernelEquality",
+    "profileCoverageForReverseLaws",
+    "noProgramOrRustAuthority"
+  ],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-QUESTION-REDUNDANCY-BOUNDARY"
+}

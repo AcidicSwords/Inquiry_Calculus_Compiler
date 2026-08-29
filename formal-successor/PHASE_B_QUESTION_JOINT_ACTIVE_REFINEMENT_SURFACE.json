@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_question_joint_active_refinement_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "0b90cdc28429de49433c07c302600a504776eb3445b2e7fdf068139387c6309a",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "joint_active_module_sha256": "710d31806fe73cde77ba2a50d607774f05a22dd37ffad44915434306e84dcc9e"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-9AF26C3D0D75A77B",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/question-refinement-algebra/PRED-TEX-DECL-9AF26C3D0D75A77B",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1257,
+        "end_line": 1272,
+        "sha256": "6a7838cd0a69617c5a867dc7ee0b81905e78ba53b00e43cd68967d5fa6292a93"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-71E0784A60361200",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/question-refinement-algebra/PRED-TEX-DECL-71E0784A60361200",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1274,
+        "end_line": 1295,
+        "sha256": "5e184f31a4b321622e2548c75bc223c5ab08843ef427776c192fa9d8ff5cefe0"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 2,
+    "obligations": 0,
+    "obligation_statuses": [
+      null,
+      null
+    ]
+  },
+  "next_residual": "FORMAL-B-QUESTION-REDUNDANCY-BOUNDARY",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
