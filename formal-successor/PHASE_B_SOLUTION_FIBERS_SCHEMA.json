@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "status": "phase_b_solution_fibers_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "fiber_module": "formal/InquiryCalculus/Legacy/V20/SolutionFibers.lean"
+  },
+  "sources": ["PRED-TEX-DECL-A4950F6C802AC47B"],
+  "required_declarations": ["TargetRegion", "SolutionFiberObligation"],
+  "obligations": ["targetRegionSemantics", "inverseImageLaw", "predicateRelationCorrespondence", "completeAnswer", "uniqueWitness", "noProgramOrRustAuthority"],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-QUESTION-AS-STRUCTURED-HOLE"
+}

@@ -64,6 +64,7 @@ jobs:
           node tools/phase_b_question_redundancy_check.js --compile
           node tools/phase_b_precision_not_improvement_check.js --compile
           node tools/phase_b_relational_sections_check.js --compile
+          node tools/phase_b_solution_fibers_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -196,6 +197,8 @@ jobs:
           node --check tools/phase_b_precision_not_improvement_check.js
           node --check tools/phase_b_relational_sections.js
           node --check tools/phase_b_relational_sections_check.js
+          node --check tools/phase_b_solution_fibers.js
+          node --check tools/phase_b_solution_fibers_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -259,6 +262,8 @@ jobs:
           node tools/phase_b_precision_not_improvement_check.js
           node tools/phase_b_relational_sections.js check
           node tools/phase_b_relational_sections_check.js
+          node tools/phase_b_solution_fibers.js check
+          node tools/phase_b_solution_fibers_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
