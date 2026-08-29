@@ -23,6 +23,7 @@ import InquiryCalculus.Legacy.V20.QuestionRedundancy
 import InquiryCalculus.Legacy.V20.PrecisionNotImprovement
 import InquiryCalculus.Legacy.V20.RelationalSections
 import InquiryCalculus.Legacy.V20.SolutionFibers
+import InquiryCalculus.Legacy.V20.QuestionStructuredHole
 
 /-!
 # Inquiry Calculus formal successor
