@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_three_valued_recovery_loss_profile_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "59e4d7607c7c73babd4cb8f9b166048eb905b9992a38e9de34472982c2a52f97"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-RECOVERY-LOSS-PROFILE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/reverse-section-return-and-protected-recovery/PRED-TEX-DECL-DEF-RECOVERY-LOSS-PROFILE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1871,
+        "end_line": 1898,
+        "sha256": "658df9299ab162c81224eec86bc126755eec6c37158559a54ce37d8c5b3c52cc"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-REGENERATIVE-ECONOMY-FRONTIER",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

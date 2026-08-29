@@ -53,6 +53,7 @@ import InquiryCalculus.Legacy.V20.TaggedNegationFrontier
 import InquiryCalculus.Legacy.V20.UseSpecificReturnFiber
 import InquiryCalculus.Legacy.V20.ProtectedRecovery
 import InquiryCalculus.Legacy.V20.SourceWebRecoveryProfile
+import InquiryCalculus.Legacy.V20.ThreeValuedRecoveryLossProfile
 
 /-!
 # Inquiry Calculus formal successor
