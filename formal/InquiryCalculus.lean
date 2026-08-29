@@ -13,6 +13,7 @@ import InquiryCalculus.Legacy.V20.CanonicalQuestionSyntax
 import InquiryCalculus.Legacy.V20.AnswerCarrierValidity
 import InquiryCalculus.Legacy.V20.PropositionNotWarrant
 import InquiryCalculus.Legacy.V20.ManyQuestionsGeneration
+import InquiryCalculus.Legacy.V20.DischargeModeSyntax
 
 /-!
 # Inquiry Calculus formal successor

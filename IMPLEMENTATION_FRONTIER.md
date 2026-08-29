@@ -16,12 +16,12 @@ Elaborate the v2.0 one-relation-many-questions generation boundary without treat
 openings as semantic generation laws, concrete answers, or programs.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-DISCHARGE-MODE-SYNTAX
+id: FORMAL-B-QUESTION-COMPOSITION-SYNTAX
 plan_phase: B
-goal: Classify and reconstruct the one-relation-many-questions opening grammar against checked schemas and canonical question syntax, postponing answer semantics, concrete composition examples, probes, programs, successor-primitive, and Rust meaning.
-protected_difference: Distinct openings are typed candidate variations of one relation schema, not semantic generation laws, answer sets, or programs.
-discriminator: Construct an overcomplete typed opening-variation grammar from the exact source display, contrast it with semantic generation, concrete answers, programs, and omission, then contract after exact regeneration isolates the smallest responsible representation.
-horizon: One-relation-many-questions grammar only; proposition-not-warrant and canonical-question syntax are fixed inputs, answer semantics, concrete examples, probes, programs, standing, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Classify and reconstruct typed discharge-mode syntax and its authority boundary against canonical question openings, postponing actual execution, return, independent-admission, standing policy, compilation, successor-primitive, and Rust meaning.
+protected_difference: A discharge mode classifies a lawful route; it is neither a discharge event nor authority to invent a result. Pure, Generate, Probe, Check, and Warrant remain distinct, especially against generative self-discharge.
+discriminator: Construct the complete typed five-mode carrier from the exact source definition, contrast it with a single generative route, self-warrant, actual return, and omission, then contract after exact regeneration isolates the smallest responsible representation.
+horizon: Discharge-mode syntax and authority boundary only; question openings are fixed inputs, actual execution, returns, independent checking, standing policy, compilation, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
 if_pass: retain the typed opening-variation grammar and then elaborate the next residual selected by that boundary

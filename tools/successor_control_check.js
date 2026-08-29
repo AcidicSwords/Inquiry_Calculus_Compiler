@@ -136,6 +136,9 @@ const required = [
   "formal-successor/PHASE_B_MANY_QUESTIONS_GENERATION_SCHEMA.json",
   "formal-successor/PHASE_B_MANY_QUESTIONS_GENERATION_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/ManyQuestionsGeneration.lean",
+  "formal-successor/PHASE_B_DISCHARGE_MODE_SYNTAX_SCHEMA.json",
+  "formal-successor/PHASE_B_DISCHARGE_MODE_SYNTAX_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/DischargeModeSyntax.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -186,6 +189,8 @@ const required = [
   "tools/phase_b_proposition_not_warrant_check.js",
   "tools/phase_b_many_questions_generation.js",
   "tools/phase_b_many_questions_generation_check.js",
+  "tools/phase_b_discharge_mode_syntax.js",
+  "tools/phase_b_discharge_mode_syntax_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -1143,6 +1148,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_proposition_not_warrant_check.js",
   "node tools/phase_b_many_questions_generation.js check",
   "node tools/phase_b_many_questions_generation_check.js",
+  "node tools/phase_b_discharge_mode_syntax.js check",
+  "node tools/phase_b_discharge_mode_syntax_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

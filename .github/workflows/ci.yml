@@ -55,6 +55,7 @@ jobs:
           node tools/phase_b_answer_carrier_validity_check.js --compile
           node tools/phase_b_proposition_not_warrant_check.js --compile
           node tools/phase_b_many_questions_generation_check.js --compile
+          node tools/phase_b_discharge_mode_syntax_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -169,6 +170,8 @@ jobs:
           node --check tools/phase_b_proposition_not_warrant_check.js
           node --check tools/phase_b_many_questions_generation.js
           node --check tools/phase_b_many_questions_generation_check.js
+          node --check tools/phase_b_discharge_mode_syntax.js
+          node --check tools/phase_b_discharge_mode_syntax_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -214,6 +217,8 @@ jobs:
           node tools/phase_b_proposition_not_warrant_check.js
           node tools/phase_b_many_questions_generation.js check
           node tools/phase_b_many_questions_generation_check.js
+          node tools/phase_b_discharge_mode_syntax.js check
+          node tools/phase_b_discharge_mode_syntax_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
