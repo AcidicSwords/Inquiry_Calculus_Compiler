@@ -71,6 +71,7 @@ import InquiryCalculus.Legacy.V20.ProgramCoreGrammar
 import InquiryCalculus.Legacy.V20.SourceSafeAskLowering
 import InquiryCalculus.Legacy.V20.SourceAskCompilationSafetyClaim
 import InquiryCalculus.Legacy.V20.SequencingComposition
+import InquiryCalculus.Legacy.V20.OperationalSemantics
 
 /-!
 # Inquiry Calculus formal successor

@@ -113,6 +113,7 @@ jobs:
           node tools/phase_b_source_safe_ask_lowering_check.js --compile
           node tools/phase_b_source_ask_compilation_safety_claim_check.js --compile
           node tools/phase_b_sequencing_composition_check.js --compile
+          node tools/phase_b_operational_semantics_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -343,6 +344,8 @@ jobs:
           node --check tools/phase_b_source_ask_compilation_safety_claim_check.js
           node --check tools/phase_b_sequencing_composition.js
           node --check tools/phase_b_sequencing_composition_check.js
+          node --check tools/phase_b_operational_semantics.js
+          node --check tools/phase_b_operational_semantics_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -504,6 +507,8 @@ jobs:
           node tools/phase_b_source_ask_compilation_safety_claim_check.js
           node tools/phase_b_sequencing_composition.js check
           node tools/phase_b_sequencing_composition_check.js
+          node tools/phase_b_operational_semantics.js check
+          node tools/phase_b_operational_semantics_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
