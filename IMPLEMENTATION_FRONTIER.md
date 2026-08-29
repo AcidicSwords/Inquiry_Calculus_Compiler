@@ -16,7 +16,7 @@ Elaborate exact determination through a signature without treating factorization
 as a partial, nondeterministic, uncovered, answer, solver, program, or successor claim.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-EXACT-DETERMINATION-SIGNATURE
+id: FORMAL-B-RESIDUAL-AMBIGUITY
 plan_phase: B
 goal: Determine the smallest source-regenerative boundary for v2.0 protected determination, preserving a solution field, horizon-relative equivalence, one-class condition, literal uniqueness, answer semantics, successor primitives, and Rust meaning as open unless independently established.
 protected_difference: Protected determination constrains every surviving filler to one horizon-relative equivalence class; it is distinct from literal uniqueness, a selected answer, total solver, program, or successor semantics.
