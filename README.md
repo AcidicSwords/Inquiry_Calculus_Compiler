@@ -86,6 +86,8 @@ node tools/phase_b_formula_grammar.js check
 node tools/phase_b_formula_grammar_check.js --compile
 node tools/phase_b_minimal_logical_basis.js check
 node tools/phase_b_minimal_logical_basis_check.js --compile
+node tools/phase_b_relation_expression_ir.js check
+node tools/phase_b_relation_expression_ir_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -127,6 +129,9 @@ candidate syntax with all six source records still obligation-bound rather than 
 The classical reference-dialect basis and its conditional derivation shapes are documented in
 `formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS.md`; their binding-native-complement limitation
 remains explicit.
+The data-only relation-expression display is documented in
+`formal-successor/PHASE_B_RELATION_EXPRESSION_IR.md` as candidate syntax only; denotation and
+semantic-question claims remain obligation-bound.
 
 ## Current implementation state
 

@@ -1,33 +1,32 @@
 {
   "schema": 1,
-  "change": "Phase B minimal logical basis boundary ratchet",
+  "change": "Phase B data-only relation-expression IR boundary ratchet",
   "changed": [
-    "source-regenerative minimal logical basis boundary over the candidate formula grammar",
-    "five classical reference-dialect candidate basis tokens",
-    "candidate derivation shapes for disjunction, universal quantification, and implication",
-    "explicit binding-dependent native-complement boundary",
-    "seven retained Ambiguous source obligations",
-    "independent source, status, promotion, basis, boundary, derivation, obligation, global-complement, oriented-negation, and axiom breakers (14/14)",
+    "source-regenerative data-only relation-expression IR boundary over checked relations and candidate formula syntax",
+    "candidate relation, bind, join, expose, hide, rename, and guard grammar",
+    "syntax-only binding, port-selection, renaming, and guard coordinates",
+    "three retained Ambiguous source obligations",
+    "independent source, status, promotion, grammar, constructor, obligation, denotation, semantic-question, string, and axiom breakers (13/13)",
     "structural CI routing plus Lean compile recheck after the pinned formal toolchain",
-    "local FORMAL-B-MINIMAL-LOGICAL-BASIS-001 evidence with Formal Gate B still pending",
-    "live frontier advanced to FORMAL-B-RELATION-EXPRESSION-IR"
+    "local FORMAL-B-RELATION-EXPRESSION-IR-001 evidence with Formal Gate B still pending",
+    "live frontier advanced to FORMAL-B-RELATION-SCHEMAS-PORTS"
   ],
   "dependency_closure": [
     "README.md",
     ".github/workflows/ci.yml",
     "IMPLEMENTATION_FRONTIER.md",
-    "formal/InquiryCalculus/Legacy/V20/MinimalLogicalBasis.lean",
+    "formal/InquiryCalculus/Legacy/V20/RelationExpressionIR.lean",
     "formal-successor/README.md",
     "formal-successor/AUTONOMOUS_ITERATION.md",
-    "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS.md",
-    "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SCHEMA.json",
-    "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SURFACE.json",
+    "formal-successor/PHASE_B_RELATION_EXPRESSION_IR.md",
+    "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SCHEMA.json",
+    "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SURFACE.json",
     "formal-successor/CONFORMANCE_STATUS.md",
     "formal-successor/DECISIONS.jsonl",
     "formal-successor/FAILURES.jsonl",
     "formal-successor/reports/latest.json",
-    "tools/phase_b_minimal_logical_basis.js",
-    "tools/phase_b_minimal_logical_basis_check.js",
+    "tools/phase_b_relation_expression_ir.js",
+    "tools/phase_b_relation_expression_ir_check.js",
     "tools/successor_control_check.js"
   ],
   "preserved": [
@@ -35,13 +34,13 @@
     "Rust workspace semantics",
     "predecessor conformance, decision, and failure ledgers",
     "Gate A inventory-closure standing and all unresolved Phase A obligations",
-    "the checked ambient, binding/type, represented-form, typed-relation, refinement, and formula-grammar boundaries",
+    "the checked ambient, binding/type, represented-form, typed-relation, refinement, formula-grammar, and logical-basis boundaries",
     "successor primitive choice for Phase C",
     "Formal Gate B as pending"
   ],
   "still_open": [
-    "FORMAL-B-RELATION-EXPRESSION-IR",
-    "data-only relation-expression IR and all later semantic layers",
+    "FORMAL-B-RELATION-SCHEMAS-PORTS",
+    "relation schemas and named ports plus all later semantic layers",
     "exact use and required strength of v2.0 classical metalanguage",
     "thirteen selected and 1223 other TeX LegacyObligations",
     "Phase F implementation correspondence obligations",
@@ -51,8 +50,8 @@
   ],
   "models_rerun": [
     "selected-source loss, status erasure, or promotion",
-    "missing basis token, native-complement boundary, or displayed derivation",
-    "global-complement collapse or logical-negation evidence conflation",
+    "missing IR grammar, constructor, or typed syntax coordinate",
+    "denotation or semantic-question promotion",
     "obligation promotion, later-semantics leakage, or raw-string collapse",
     "custom axiom or proof gap",
     "detached source/schema/module digest",
@@ -61,6 +60,6 @@
   ],
   "question_corpus_rerun": true,
   "regeneration_rerun": true,
-  "axiom_audit": "Minimal logical basis code contains candidate tokens, derivation shapes, and identity witness only; independent syntax breakers and the full Lean build reject custom declarations and proof gaps",
+  "axiom_audit": "Relation-expression IR code contains candidate grammar and identity witness only; independent syntax breakers and the full Lean build reject custom declarations and proof gaps",
   "rust_semantics_changed": false
 }

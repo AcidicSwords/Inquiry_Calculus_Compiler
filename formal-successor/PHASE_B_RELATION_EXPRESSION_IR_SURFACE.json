@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_relation_expression_ir_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "b52fd0af3ca4da4be1c24d7d4f5d8c3eb75387acbee7a0f632a3b82c83ff974d",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "ir_module_sha256": "9afb31adfb5d880bd61d272278a7b241634ece5f152514fc0003f77aa97cfa49"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-B9B6C5BB3A711682",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/data-only-relational-query-ir/PRED-TEX-PROSE-B9B6C5BB3A711682",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 992,
+        "end_line": 992,
+        "sha256": "20689734412622cddc266693f7c7a8945cd78e46463b242af48f786cc7abab9f"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-D6B8D037AB8E7E7F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/data-only-relational-query-ir/PRED-TEX-DISPLAY-D6B8D037AB8E7E7F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 993,
+        "end_line": 1004,
+        "sha256": "2fa693fc221c73e7c7489ab4efbb75b436119c6343a4c94fca516b0b0308347a"
+      },
+      "obligation_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-638BA7EFC5FE6077",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/data-only-relational-query-ir/PRED-TEX-PROSE-638BA7EFC5FE6077",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1006,
+        "end_line": 1006,
+        "sha256": "260564af7922cebd7b2b9f3e13717d6fe8afd15f9c96bff8890f35e2c2fb6313"
+      },
+      "obligation_status": "Ambiguous"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 0,
+    "obligations": 3,
+    "obligation_statuses": [
+      "Ambiguous",
+      "Ambiguous",
+      "Ambiguous"
+    ]
+  },
+  "next_residual": "FORMAL-B-RELATION-SCHEMAS-PORTS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

@@ -79,6 +79,10 @@ three candidate derivations distinct from a universal native binding logic. All 
 records remain ambiguous obligations; oriented-negation semantics remain later and Formal Gate B
 remains pending.
 
+`PHASE_B_RELATION_EXPRESSION_IR.md` preserves the data-only relation-expression display as a
+typed candidate grammar. Denotation, relational operation laws, and the concrete semantic-question
+claim remain explicit obligations; Formal Gate B remains pending.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

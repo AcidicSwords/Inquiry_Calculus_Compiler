@@ -113,6 +113,10 @@ const required = [
   "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SCHEMA.json",
   "formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/MinimalLogicalBasis.lean",
+  "formal-successor/PHASE_B_RELATION_EXPRESSION_IR.md",
+  "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SCHEMA.json",
+  "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/RelationExpressionIR.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -149,6 +153,8 @@ const required = [
   "tools/phase_b_formula_grammar_check.js",
   "tools/phase_b_minimal_logical_basis.js",
   "tools/phase_b_minimal_logical_basis_check.js",
+  "tools/phase_b_relation_expression_ir.js",
+  "tools/phase_b_relation_expression_ir_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -296,6 +302,14 @@ requireContains("formal-successor/PHASE_B_MINIMAL_LOGICAL_BASIS.md", [
   "NativeComplementBoundary",
   "not a semantic equivalence theorem",
   "fourteen mutations",
+  "Gate B",
+]);
+
+requireContains("formal-successor/PHASE_B_RELATION_EXPRESSION_IR.md", [
+  "three selected source records",
+  "RelationExpressionIR",
+  "does not by itself create a semantic question",
+  "thirteen mutations",
   "Gate B",
 ]);
 
@@ -604,6 +618,30 @@ if (
   phaseBMinimalLogicalBasisSurface?.next_residual !== "FORMAL-B-RELATION-EXPRESSION-IR" ||
   phaseBMinimalLogicalBasisSurface?.formal_gate_b?.status !== "PENDING"
 ) errors.push("Phase B minimal logical basis surface must preserve all ambiguity and pending Gate B");
+
+let phaseBRelationExpressionIRSchema;
+let phaseBRelationExpressionIRSurface;
+try {
+  phaseBRelationExpressionIRSchema = JSON.parse(read("formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SCHEMA.json"));
+  phaseBRelationExpressionIRSurface = JSON.parse(read("formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SURFACE.json"));
+} catch (error) {
+  errors.push(`Phase B relation-expression IR control JSON: ${error.message}`);
+}
+if (
+  phaseBRelationExpressionIRSchema?.status !== "phase_b_relation_expression_ir_contract_not_successor_semantics" ||
+  phaseBRelationExpressionIRSchema?.sources?.length !== 3 ||
+  phaseBRelationExpressionIRSchema?.required_declarations?.length !== 6 ||
+  phaseBRelationExpressionIRSchema?.obligations?.length !== 3 ||
+  phaseBRelationExpressionIRSchema?.gate_b?.status !== "PENDING"
+) errors.push("Phase B relation-expression IR schema is detached from its ambiguous predecessor boundary");
+if (
+  phaseBRelationExpressionIRSurface?.status !== "generated_phase_b_relation_expression_ir_surface_not_successor_semantics" ||
+  phaseBRelationExpressionIRSurface?.coverage?.explicit_definitions !== 0 ||
+  phaseBRelationExpressionIRSurface?.coverage?.obligations !== 3 ||
+  phaseBRelationExpressionIRSurface?.coverage?.obligation_statuses?.every((status) => status === "Ambiguous") !== true ||
+  phaseBRelationExpressionIRSurface?.next_residual !== "FORMAL-B-RELATION-SCHEMAS-PORTS" ||
+  phaseBRelationExpressionIRSurface?.formal_gate_b?.status !== "PENDING"
+) errors.push("Phase B relation-expression IR surface must preserve all ambiguity and pending Gate B");
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
 if ((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/gu) ?? []).length !== 1 ||
@@ -1060,6 +1098,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_formula_grammar_check.js",
   "node tools/phase_b_minimal_logical_basis.js check",
   "node tools/phase_b_minimal_logical_basis_check.js",
+  "node tools/phase_b_relation_expression_ir.js check",
+  "node tools/phase_b_relation_expression_ir_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",
