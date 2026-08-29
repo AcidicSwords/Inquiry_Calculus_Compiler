@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "status": "phase_b_relational_sections_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "sections_module": "formal/InquiryCalculus/Legacy/V20/RelationalSections.lean"
+  },
+  "sources": ["PRED-TEX-DECL-C7B1F842070026C4"],
+  "required_declarations": [
+    "TernaryRelationSyntax",
+    "RelationalSectionObligation"
+  ],
+  "obligations": [
+    "notGenerallySymmetric",
+    "totalFunctionality",
+    "relationSatisfaction",
+    "sectionComposition",
+    "noProgramOrRustAuthority"
+  ],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-SOLUTION-FIBERS"
+}

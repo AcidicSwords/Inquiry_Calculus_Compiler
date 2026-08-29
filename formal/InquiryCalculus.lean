@@ -21,6 +21,7 @@ import InquiryCalculus.Legacy.V20.QuestionRefinementSemantics
 import InquiryCalculus.Legacy.V20.QuestionJointActiveRefinement
 import InquiryCalculus.Legacy.V20.QuestionRedundancy
 import InquiryCalculus.Legacy.V20.PrecisionNotImprovement
+import InquiryCalculus.Legacy.V20.RelationalSections
 
 /-!
 # Inquiry Calculus formal successor
