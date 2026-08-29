@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "status": "phase_b_predecessor_elaboration_spine_not_successor_semantics",
+  "inputs": {
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "gate_a_evidence": "FORMAL-A-COVERAGE-001",
+    "lean_ambient_module": "formal/InquiryCalculus/Meta/Ambient.lean"
+  },
+  "ambient_features": [
+    "Type",
+    "Prop",
+    "Equality",
+    "Function",
+    "DependentFunction",
+    "DependentPair",
+    "UniversalQuantification",
+    "ExistentialQuantification"
+  ],
+  "ambient_nonassumptions": [
+    "global classical logic",
+    "a calculus-specific type universe",
+    "represented forms",
+    "typed relations",
+    "question formation",
+    "runtime occurrence",
+    "support or standing"
+  ],
+  "required_layer_order": [
+    "ambient_metalanguage",
+    "binding",
+    "type_grammar",
+    "represented_forms",
+    "relations",
+    "relation_expression",
+    "question_formation",
+    "fibers",
+    "source_programs",
+    "runtime_syntax",
+    "occurrence",
+    "protection",
+    "support_standing"
+  ],
+  "layers": [
+    {
+      "id": "ambient_metalanguage",
+      "depends_on": [],
+      "source_ids": ["PRED-TEX-PROSE-983F2B30F7C1C1D2"],
+      "destination": "InquiryCalculus.Meta.Ambient",
+      "state": "checked_boundary_with_explicit_classicality_obligation"
+    },
+    {
+      "id": "binding",
+      "depends_on": ["ambient_metalanguage"],
+      "source_ids": ["PRED-TEX-DECL-BF2748F7C36474D3", "PRED-TEX-DECL-575A4099C8FC5882", "PRED-TEX-DECL-9279E9073B465983"],
+      "destination": "InquiryCalculus.Legacy.V20.Binding",
+      "state": "open"
+    },
+    {
+      "id": "type_grammar",
+      "depends_on": ["binding"],
+      "source_ids": ["PRED-TEX-PROSE-7DF1D338C073783E", "PRED-TEX-DISPLAY-3B6A6E6DDEC8FA50", "PRED-TEX-PROSE-17D329869A01B032", "PRED-TEX-DECL-DEF-PROGRAM-CODE-FAMILIES"],
+      "destination": "InquiryCalculus.Legacy.V20.Types",
+      "state": "open"
+    },
+    {
+      "id": "represented_forms",
+      "depends_on": ["type_grammar"],
+      "source_ids": ["PRED-TEX-DECL-4D609DF7B1B2239E", "PRED-TEX-DECL-419C4E046A257830", "PRED-TEX-DECL-711F0AAA2722B10B"],
+      "destination": "InquiryCalculus.Legacy.V20.Forms",
+      "state": "open"
+    },
+    {
+      "id": "relations",
+      "depends_on": ["represented_forms"],
+      "source_ids": ["PRED-TEX-DECL-3CA4350181076F20", "PRED-TEX-DECL-D7E40B5FD5FF51AC", "PRED-TEX-DECL-79831E897328F3CD", "PRED-TEX-DECL-D2CA560D7E745992", "PRED-TEX-DECL-9CA6ACF74CF9A5C1"],
+      "destination": "InquiryCalculus.Legacy.V20.Relations",
+      "state": "open"
+    },
+    {
+      "id": "relation_expression",
+      "depends_on": ["relations"],
+      "source_ids": ["PRED-TEX-PROSE-A08A2468E65A2DAB", "PRED-TEX-DISPLAY-75C44CA222A4214E", "PRED-TEX-PROSE-DA438851DA28D75D", "PRED-TEX-DISPLAY-212A4128A7A58270"],
+      "destination": "InquiryCalculus.Legacy.V20.RelationExpression",
+      "state": "open"
+    },
+    {
+      "id": "question_formation",
+      "depends_on": ["relation_expression"],
+      "source_ids": ["PRED-TEX-DECL-C25B97BA06852456", "PRED-TEX-DECL-6F044DC1EE2FFE76", "PRED-TEX-DECL-10515A6565C257C2", "PRED-TEX-DECL-98C324F32F34A596"],
+      "destination": "InquiryCalculus.Legacy.V20.Questions",
+      "state": "open"
+    },
+    {
+      "id": "fibers",
+      "depends_on": ["question_formation"],
+      "source_ids": ["PRED-TEX-DECL-C7B1F842070026C4", "PRED-TEX-DECL-A4950F6C802AC47B", "PRED-TEX-DECL-DEF-RETURN-FIBER"],
+      "destination": "InquiryCalculus.Legacy.V20.Fibers",
+      "state": "open"
+    },
+    {
+      "id": "source_programs",
+      "depends_on": ["question_formation", "fibers"],
+      "source_ids": ["PRED-TEX-DECL-DEF-SUPPORTED-ANSWER-TYPE", "PRED-TEX-DECL-54C908302D01A896"],
+      "destination": "InquiryCalculus.Legacy.V20.SourcePrograms",
+      "state": "open"
+    },
+    {
+      "id": "runtime_syntax",
+      "depends_on": ["source_programs"],
+      "source_ids": ["PRED-TEX-PROSE-D943E95AC13F2801", "PRED-TEX-DISPLAY-1F3731D2E017145F", "PRED-TEX-PROSE-577C176FC9C44DE8"],
+      "destination": "InquiryCalculus.Legacy.V20.RuntimeSyntax",
+      "state": "open"
+    },
+    {
+      "id": "occurrence",
+      "depends_on": ["source_programs", "runtime_syntax"],
+      "source_ids": ["PRED-TEX-DECL-DEF-ASK-OCCURRENCE", "PRED-TEX-DECL-DEF-RESOLVED-INQUIRY-OCCURRENCE"],
+      "destination": "InquiryCalculus.Legacy.V20.Occurrence",
+      "state": "open"
+    },
+    {
+      "id": "protection",
+      "depends_on": ["occurrence", "represented_forms"],
+      "source_ids": ["PRED-TEX-DECL-C715BF9E0E15C7D3", "PRED-TEX-DECL-CA927522E6D4370C"],
+      "destination": "InquiryCalculus.Legacy.V20.Protection",
+      "state": "open"
+    },
+    {
+      "id": "support_standing",
+      "depends_on": ["occurrence", "protection"],
+      "source_ids": ["PRED-TEX-DECL-DEF-DECLARED-ROUTE-SUPPORT", "PRED-TEX-DECL-DEF-SUPPORT-WITNESS", "PRED-TEX-DECL-2AEFA5353255762F", "PRED-TEX-DISPLAY-05EE422A5B2F0E8D", "PRED-TEX-DECL-216360B2EDCA8ADB"],
+      "destination": "InquiryCalculus.Legacy.V20.SupportStanding",
+      "state": "open"
+    }
+  ],
+  "gate_b": {
+    "status": "PENDING",
+    "law": "The ambient boundary closes only the first Phase B relation. Gate B remains pending until the complete predecessor core compiles with no sorry and every unresolved claim is an explicit obligation."
+  }
+}

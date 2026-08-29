@@ -6,48 +6,49 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-A-COVERAGE-001` independently partitions all 3,662 predecessor identities among exact TeX,
-implementation/schema, fixture/test, and manifest owners, validates every cross-overlay target, and
-rejects 19 ownership, edge, standing, digest, and self-promotion mutations. Formal Gate A passes at
-that inventory coverage only; every unresolved obligation survives.
+`FORMAL-B-AMBIENT-BOUNDARY-001` regenerates 41 exact v2.0 source identities into a 13-layer
+elaboration spine and independently rejects 17 attempts to omit, reorder, reclassify, assume, or
+self-promote that boundary. Lean's supplied forms are checked as metalanguage; 12 nonambient layers
+and Formal Gate B remain open.
 
 ## Strongest live obligation
 
-Construct the exact formal predecessor ambient boundary and dependency spine required to elaborate
-the reviewed v2.0 surface without importing Rust meaning, inventing successor primitives, or filling
-unresolved predecessor claims with axioms.
+Elaborate the first nonambient predecessor relation: binding-indexed type codes and the reference
+type grammar, without collapsing those codes into Lean's `Type`, treating unelaborated source text
+as constructors, or deciding the successor primitive basis.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-AMBIENT-BOUNDARY
+id: FORMAL-B-BINDING-TYPE-SURFACE
 plan_phase: B
-goal: Elaborate the reviewed predecessor ambient boundary into a checked Lean module and a source-regenerative obligation spine: distinguish metalanguage supplied by Lean from v2.0-declared types, forms, relations, syntax, occurrence, protection, and evidence structures; give every first dependency layer an explicit typed destination or unresolved obligation; and expose the next smallest formal relation without axioms or sorry.
-protected_difference: The predecessor surface must be formalized in a declared dependency order while ambient Type/Prop/equality/functions remain metalanguage; treating ambient structure as calculus primitives inflates the successor basis, while treating v2.0 structures as ambient erases precisely the relations Phase B must reconstruct and later challenge.
-discriminator: Build a source-bound Phase B elaboration schema and checked ambient-boundary module, independently require every selected TeX identity to regenerate its classified ancestry and exactly one layer/destination, reject moving a v2.0 declaration into ambient metalanguage, importing a Rust symbol as meaning, inventing an axiom or sorry, omitting an unresolved claim, reversing a declared dependency, and promoting Gate B before the full predecessor core compiles.
-horizon: First Phase B ambient/dependency layer and obligation topology only; Gate A remains the entry precondition, all 1,236 LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending until the complete predecessor core compiles with no sorry
-relevant_decisions: D-9001, D-9003, D-9007, D-9008, D-9009, D-9010, D-9011
-relevant_failures: F-9006, F-9007, F-9008
-if_pass: retain the checked ambient boundary and source-regenerative dependency spine, then select the first nonambient predecessor type/form relation required by that spine
-if_fail: reopen the earliest ambient-versus-calculus classification, source destination, dependency edge, unresolved-obligation representation, or Lean typing boundary; never add an axiom or recast Rust behavior as semantic authority
+goal: Reconstruct v2.0 Binding, binding roles and rebinding, then give its reference type grammar an explicit Lean syntax and binding-indexed interpretation boundary. Every admitted constructor or unresolved grammar fragment must regenerate its exact Phase A source ancestry; Lean universes remain metalanguage and successor primitives remain undecided.
+protected_difference: A calculus type code is a represented predecessor object whose availability and interpretation may depend on a binding; Lean Type is the host sort in which that representation is checked. Collapsing the two erases binding and representation, while accepting every TeX token as a constructor invents a grammar the source has not yet warranted.
+discriminator: Construct an intentionally overcomplete source-bound binding/type syntax sufficient to represent every explicit v2.0 grammar alternative, compile it without axioms or proof gaps, then independently remove or perturb constructors, binding indices, source edges, and interpretation boundaries until the smallest source-regenerative typed surface remains. Reject String-tag encodings, ambient-Type collapse, unbound rebinding, missing unresolved fragments, Rust-derived meaning, and Gate B promotion.
+horizon: Phase B binding and reference-type surface only; the 41-source spine is fixed input, represented forms and later layers remain open, classicality remains an explicit predecessor obligation, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+relevant_decisions: D-9001, D-9003, D-9008, D-9011, D-9012
+relevant_failures: F-9006, F-9007
+if_pass: retain the source-regenerative binding-indexed predecessor type surface and its unresolved obligations, then elaborate represented forms against it
+if_fail: reopen the earliest binding identity, role, rebinding, grammar-constructor, source-boundary, or interpretation relation; do not repair uncertainty with host aliases, strings, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
 
-Move all declared v2.0 types and relations into an undifferentiated ambient universe, or conversely
-redeclare Lean equality, functions, and quantification as Inquiry Calculus primitives. Then contract
-the contrast until the exact boundary between supplied metalanguage and predecessor-declared
-structure is source-bound and machine checked.
+Encode every visible v2.0 type expression as an overcomplete binding-indexed syntax, including all
+explicit alternatives and unresolved source fragments, then contrast it with both an undifferentiated
+Lean `Type` alias and a permissive `String` tag. Contract the overcomplete syntax only after exact
+source regeneration and typed interpretation distinguish which structure actually carries the
+predecessor relation.
 
 ## Prohibitions at this boundary
 
-- Do not rewrite v2.0, infer semantic truth or coverage from a test occurrence, or select a primitive basis.
-- Do not reopen or weaken Gate A merely to make Phase B elaboration convenient.
-- Do not mark Gate B passed from an ambient scaffold, a generated destination table, or a green Lean build.
-- Do not advance the deferred v2 Rust frontier.
-- Do not mix successor state into the predecessor ledgers.
+- Do not identify a predecessor type code with the Lean type that interprets it.
+- Do not convert ambiguous prose/display fragments into constructors merely to obtain total syntax.
+- Do not use strings, unchecked casts, axioms, proof gaps, or Rust types to bypass binding dependence.
+- Do not select successor primitives or mark Gate B passed from this local elaboration.
+- Do not rewrite v2.0, advance the deferred Rust frontier, or mix successor state into predecessor ledgers.
 
 ## Exit
 
-On pass, retain the smallest checked ambient boundary, dependency spine, explicit unresolved
-obligations, and source regeneration checks, then select the first predecessor type/form relation.
-On failure, preserve the return and reopen the earliest ambient classification, destination,
-dependency, obligation, or typing relation.
+On pass, retain the smallest source-regenerative binding/type representation, typed interpretation
+boundary, explicit unresolved obligations, and independent breakers, then select represented forms.
+On failure, preserve the return and reopen the earliest binding, grammar, source, or interpretation
+relation.

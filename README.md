@@ -72,6 +72,8 @@ node tools/predecessor_fixture_classification.js check
 node tools/predecessor_fixture_classification_check.js
 node tools/phase_a_coverage.js check
 node tools/phase_a_coverage_check.js
+node tools/phase_b_predecessor_spine.js check
+node tools/phase_b_predecessor_spine_check.js
 cd formal
 lake build --wfail
 ```
@@ -95,6 +97,8 @@ The source-bound six-way TeX review overlay and its non-promotion rules are docu
 `formal-successor/PHASE_A_TEX_CLASSIFICATION.md`.
 The authority-separated Rust/schema overlay and exact-symbol candidate-edge rules are documented
 in `formal-successor/PHASE_A_IMPLEMENTATION_CLASSIFICATION.md`.
+The first Phase B ambient-metalanguage boundary and source-regenerative predecessor dependency
+spine are documented in `formal-successor/PHASE_B_AMBIENT_BOUNDARY.md`; Gate B remains pending.
 
 ## Current implementation state
 

@@ -1,0 +1,732 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_predecessor_spine_not_semantic_completion",
+  "generated_from": {
+    "schema_path": "formal-successor/PHASE_B_PREDECESSOR_SPINE_SCHEMA.json",
+    "schema_sha256": "d2ce2ef2cccaf79c5f811789dd8015bf5b5e7dbc0bd3279d0b5c936caf81e1c9",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "gate_a_evidence": "FORMAL-A-COVERAGE-001",
+    "lean_ambient_module": "formal/InquiryCalculus/Meta/Ambient.lean",
+    "lean_ambient_sha256": "c58e23fab519c806bd89f762b9243570a29eaa008cc7f3f9ad4fbcdc15f0c7d7"
+  },
+  "ambient_boundary": {
+    "supplied_features": [
+      "Type",
+      "Prop",
+      "Equality",
+      "Function",
+      "DependentFunction",
+      "DependentPair",
+      "UniversalQuantification",
+      "ExistentialQuantification"
+    ],
+    "explicit_nonassumptions": [
+      "global classical logic",
+      "a calculus-specific type universe",
+      "represented forms",
+      "typed relations",
+      "question formation",
+      "runtime occurrence",
+      "support or standing"
+    ],
+    "classicality_status": "ExplicitPredecessorObligation",
+    "law": "Lean supplies the listed metalanguage forms directly; no Inquiry Calculus duplicate or global classical axiom is introduced."
+  },
+  "coverage": {
+    "layer_count": 13,
+    "selected_source_count": 41,
+    "selected_legacy_obligations": 13,
+    "checked_boundary_layers": 1,
+    "open_layers": 12
+  },
+  "layers": [
+    {
+      "id": "ambient_metalanguage",
+      "ordinal": 0,
+      "depends_on": [],
+      "destination": "InquiryCalculus.Meta.Ambient",
+      "state": "checked_boundary_with_explicit_classicality_obligation",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-PROSE-983F2B30F7C1C1D2",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-PROSE-983F2B30F7C1C1D2",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 951,
+            "end_line": 951,
+            "sha256": "0c24d542621c7e97fc2b8e8d8123c3539bb1ff4ad627029a635125f134a0a10b"
+          },
+          "obligation_status": "Ambiguous"
+        }
+      ]
+    },
+    {
+      "id": "binding",
+      "ordinal": 1,
+      "depends_on": [
+        "ambient_metalanguage"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Binding",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-BF2748F7C36474D3",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/bindings/PRED-TEX-DECL-BF2748F7C36474D3",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 539,
+            "end_line": 562,
+            "sha256": "183fd6db2d79127f47d34e6c1e5112b34e4e94cc4cce2e9dde4b476c03c03f97"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-575A4099C8FC5882",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/bindings/PRED-TEX-DECL-575A4099C8FC5882",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 566,
+            "end_line": 572,
+            "sha256": "eaa71efb8a11148024142d1e25722226e1472b35c6cb28a0e1b99a05787e59db"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-9279E9073B465983",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/bindings/PRED-TEX-DECL-9279E9073B465983",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 574,
+            "end_line": 588,
+            "sha256": "933dc1c1bb6e8a1cba811237371764619f7dbfcf503377755ad9849c98b600a5"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "type_grammar",
+      "ordinal": 2,
+      "depends_on": [
+        "binding"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Types",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-PROSE-7DF1D338C073783E",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/reference-type-grammar/PRED-TEX-PROSE-7DF1D338C073783E",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 594,
+            "end_line": 594,
+            "sha256": "9b13dfaa76fc8b5767f59e789a793e6a8f042f093c2a9062319cb741fedf36c0"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-DISPLAY-3B6A6E6DDEC8FA50",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/reference-type-grammar/PRED-TEX-DISPLAY-3B6A6E6DDEC8FA50",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 595,
+            "end_line": 614,
+            "sha256": "a39a7d70d46ea30146c5684ef5ea12c7f71454380968cadb3532ad346696a82d"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-PROSE-17D329869A01B032",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/reference-type-grammar/PRED-TEX-PROSE-17D329869A01B032",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 615,
+            "end_line": 615,
+            "sha256": "e925412739eb4547efdc9e88508ceeb13dfa873f08a411fd47d57572a128b327"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-DECL-DEF-PROGRAM-CODE-FAMILIES",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/reference-type-grammar/PRED-TEX-DECL-DEF-PROGRAM-CODE-FAMILIES",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 617,
+            "end_line": 645,
+            "sha256": "0cc99b5074054caf7aa5eea3be44b31147d58f55565c7dd8527d151d32b3f328"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "represented_forms",
+      "ordinal": 3,
+      "depends_on": [
+        "type_grammar"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Forms",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-4D609DF7B1B2239E",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/recursive-represented-forms/PRED-TEX-DECL-4D609DF7B1B2239E",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 683,
+            "end_line": 693,
+            "sha256": "bb15690ea13f1b385c69db4848b1ee7f18e6391ba01f4744e266ed2444b6baca"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-419C4E046A257830",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/recursive-represented-forms/PRED-TEX-DECL-419C4E046A257830",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 695,
+            "end_line": 706,
+            "sha256": "2305af8b409532c1eb777714a2e01f6a907ffdeceb7b3ef1d4ef8d865d7c43df"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-711F0AAA2722B10B",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/recursive-represented-forms/PRED-TEX-DECL-711F0AAA2722B10B",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 708,
+            "end_line": 719,
+            "sha256": "b39f407464e705f73db48cbb89a366ee33f882d36ab6e2ac4c26eb4a378cc459"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "relations",
+      "ordinal": 4,
+      "depends_on": [
+        "represented_forms"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Relations",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-3CA4350181076F20",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-3CA4350181076F20",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 783,
+            "end_line": 794,
+            "sha256": "0836d5019224e59870113070531fe42c05dd523073911529cc388278b035f625"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-D7E40B5FD5FF51AC",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-D7E40B5FD5FF51AC",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 796,
+            "end_line": 805,
+            "sha256": "b8111eed5bcc8169e427b070e9f95a23332fe08bcbf844ec4cce07a1bbfe418b"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-79831E897328F3CD",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-79831E897328F3CD",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 807,
+            "end_line": 814,
+            "sha256": "4eccb116c8aff45e1c33d26eace03b563e6ad0145a0086142306903d8402d77b"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-D2CA560D7E745992",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-D2CA560D7E745992",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 816,
+            "end_line": 829,
+            "sha256": "b598b98af364ae769316529672c12516e3138f28a08dbd1266aba0a4d6f5f663"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-9CA6ACF74CF9A5C1",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-9CA6ACF74CF9A5C1",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 831,
+            "end_line": 839,
+            "sha256": "50d734ff865fc2a7df095ff5423168dcca3449f7b5ae07b76739aa1ddedc3cce"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "relation_expression",
+      "ordinal": 5,
+      "depends_on": [
+        "relations"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.RelationExpression",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-PROSE-A08A2468E65A2DAB",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-PROSE-A08A2468E65A2DAB",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 934,
+            "end_line": 934,
+            "sha256": "68fa1527c09eee1990ad78745f5ec3c0ebe0818515a39bae7676cbcd6c160b78"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-DISPLAY-75C44CA222A4214E",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-DISPLAY-75C44CA222A4214E",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 935,
+            "end_line": 949,
+            "sha256": "3bb91d3a8831d3e7d281090d8bc8a0c1148dc2c2abb1a8026d6f993b4dbccc0c"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-PROSE-DA438851DA28D75D",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-PROSE-DA438851DA28D75D",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 953,
+            "end_line": 953,
+            "sha256": "012bffb2e62ea3bec4f2da929de6797f9c65690010faf54e1cfbedeecb8ca625"
+          },
+          "obligation_status": "Unproved"
+        },
+        {
+          "source_id": "PRED-TEX-DISPLAY-212A4128A7A58270",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/formula-grammar/PRED-TEX-DISPLAY-212A4128A7A58270",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 954,
+            "end_line": 962,
+            "sha256": "b60c2e637862f470767d0b63b6453199918411a072ed9cd7373a0222380daee8"
+          },
+          "obligation_status": "Ambiguous"
+        }
+      ]
+    },
+    {
+      "id": "question_formation",
+      "ordinal": 6,
+      "depends_on": [
+        "relation_expression"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Questions",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-C25B97BA06852456",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-C25B97BA06852456",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 1012,
+            "end_line": 1024,
+            "sha256": "1b988bcac2f736bd05fe46f262afc189e8f595aa18ba5b52fb9e04e3261bcbc1"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-6F044DC1EE2FFE76",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-6F044DC1EE2FFE76",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 1026,
+            "end_line": 1032,
+            "sha256": "590165ceaffab7b1c338142abe3c1a285e1c4af297b1762a2c12d8437db281f2"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-10515A6565C257C2",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-10515A6565C257C2",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 1034,
+            "end_line": 1045,
+            "sha256": "fc893cc25dbc5766ea5e5f651897c60f7f35fbd402a8e7f460c94449a9015491"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-98C324F32F34A596",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-98C324F32F34A596",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 1047,
+            "end_line": 1062,
+            "sha256": "1787c0af572d9453516d6592c20ce7c799bb21072a8aa2c94ea9594d6a08e514"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "fibers",
+      "ordinal": 7,
+      "depends_on": [
+        "question_formation"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Fibers",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-C7B1F842070026C4",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/partial-application-as-a-relational-section/PRED-TEX-DECL-C7B1F842070026C4",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 1325,
+            "end_line": 1355,
+            "sha256": "1fa2bd4b7ba4ce2afc1071f96e068ec60414dea4f26973b8d1423a0d5a5eb651"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-A4950F6C802AC47B",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/partial-application-as-a-relational-section/PRED-TEX-DECL-A4950F6C802AC47B",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 1357,
+            "end_line": 1378,
+            "sha256": "8f060b102d1ed797f115f2ac50f0c258f4c7e7b61d6dcd559ae8898a4af94b27"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-DEF-RETURN-FIBER",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/reverse-section-return-and-protected-recovery/PRED-TEX-DECL-DEF-RETURN-FIBER",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 1822,
+            "end_line": 1838,
+            "sha256": "a75c5e585881b0088dc3935d5c9798baa1ebd246637631e82bef34529af844eb"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "source_programs",
+      "ordinal": 8,
+      "depends_on": [
+        "question_formation",
+        "fibers"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.SourcePrograms",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-DEF-SUPPORTED-ANSWER-TYPE",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/source-inquiry-programs/PRED-TEX-DECL-DEF-SUPPORTED-ANSWER-TYPE",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2486,
+            "end_line": 2514,
+            "sha256": "cadd22cc433aee445dc51743dac16ff468351593d970dbfb0ee9f8bfab641802"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-54C908302D01A896",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/source-inquiry-programs/PRED-TEX-DECL-54C908302D01A896",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2556,
+            "end_line": 2579,
+            "sha256": "91f267a3b000cf6099fe3ac5ba9ca95481b87467f225287d575049eb2a80b2fd"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "runtime_syntax",
+      "ordinal": 9,
+      "depends_on": [
+        "source_programs"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.RuntimeSyntax",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-PROSE-D943E95AC13F2801",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/core-grammar/PRED-TEX-PROSE-D943E95AC13F2801",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2933,
+            "end_line": 2933,
+            "sha256": "b4c58c865cf04c2179b42e520c6c85ac066847a607e2689377b264665c8c2f21"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-DISPLAY-1F3731D2E017145F",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/core-grammar/PRED-TEX-DISPLAY-1F3731D2E017145F",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2934,
+            "end_line": 2943,
+            "sha256": "79ce2e1c8da70674f93ed56789ba1445f88f2073022a31e3232a71bc9ef2ee91"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-PROSE-577C176FC9C44DE8",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/core-grammar/PRED-TEX-PROSE-577C176FC9C44DE8",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2945,
+            "end_line": 2945,
+            "sha256": "73db17bb7ac109d1bc3a778d9baa5c8030070f047bd2813b9591f6a4cf3be505"
+          },
+          "obligation_status": "Ambiguous"
+        }
+      ]
+    },
+    {
+      "id": "occurrence",
+      "ordinal": 10,
+      "depends_on": [
+        "source_programs",
+        "runtime_syntax"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Occurrence",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-DEF-ASK-OCCURRENCE",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/derived-occurrence-indexed-question-succession/PRED-TEX-DECL-DEF-ASK-OCCURRENCE",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2635,
+            "end_line": 2709,
+            "sha256": "3067f2fb3d041ef33823ce8bc6e6048173d4adc3522dd41ce5671436b0831f42"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-DEF-RESOLVED-INQUIRY-OCCURRENCE",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/derived-paired-actuality-and-question-route-projection/PRED-TEX-DECL-DEF-RESOLVED-INQUIRY-OCCURRENCE",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 3669,
+            "end_line": 3719,
+            "sha256": "66cca6eae3b5d3a80ffdf2d174e15ed159d201b349c892179ead40822794dad7"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "protection",
+      "ordinal": 11,
+      "depends_on": [
+        "occurrence",
+        "represented_forms"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.Protection",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-C715BF9E0E15C7D3",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/constitutional-laws/PRED-TEX-DECL-C715BF9E0E15C7D3",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 414,
+            "end_line": 425,
+            "sha256": "d91d2d76bff056ea3a8fff54854121a335a33bdfd3e9d7269e0cfa097f2d9133"
+          },
+          "obligation_status": "Unproved"
+        },
+        {
+          "source_id": "PRED-TEX-DECL-CA927522E6D4370C",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/protected-behavioral-equivalence/PRED-TEX-DECL-CA927522E6D4370C",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 4006,
+            "end_line": 4016,
+            "sha256": "af8f22f869eddb47b0486be0a21c82766376e0e357fae861d2c87672745434b1"
+          },
+          "obligation_status": null
+        }
+      ]
+    },
+    {
+      "id": "support_standing",
+      "ordinal": 12,
+      "depends_on": [
+        "occurrence",
+        "protection"
+      ],
+      "destination": "InquiryCalculus.Legacy.V20.SupportStanding",
+      "state": "open",
+      "sources": [
+        {
+          "source_id": "PRED-TEX-DECL-DEF-DECLARED-ROUTE-SUPPORT",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/source-inquiry-programs/PRED-TEX-DECL-DEF-DECLARED-ROUTE-SUPPORT",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2453,
+            "end_line": 2466,
+            "sha256": "53f8858bfc7cf16e3a48cc39ea7036383d30ea3e207322dd0ed92bc80c2fbcfb"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-DEF-SUPPORT-WITNESS",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/source-inquiry-programs/PRED-TEX-DECL-DEF-SUPPORT-WITNESS",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 2468,
+            "end_line": 2484,
+            "sha256": "f2255ebbc869cf5b9dbd6974901db7fc03ef475035c15f369bf354d763bab204"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DECL-2AEFA5353255762F",
+          "disposition": "FormalDefinition",
+          "destination": "phase:B/Legacy/V20/Definitions/support-environments/PRED-TEX-DECL-2AEFA5353255762F",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 4516,
+            "end_line": 4518,
+            "sha256": "125a123498abb0e997558d416469d09bad645b8669836cf23ad98c86a5d1171b"
+          },
+          "obligation_status": null
+        },
+        {
+          "source_id": "PRED-TEX-DISPLAY-05EE422A5B2F0E8D",
+          "disposition": "LegacyObligation",
+          "destination": "phase:B/Legacy/V20/Obligations/least-fixed-point-standing/PRED-TEX-DISPLAY-05EE422A5B2F0E8D",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 4582,
+            "end_line": 4594,
+            "sha256": "321aa00535493292d7cf3c1e727d3b6cf3b224cdc1db56660862e06c88987993"
+          },
+          "obligation_status": "Ambiguous"
+        },
+        {
+          "source_id": "PRED-TEX-DECL-216360B2EDCA8ADB",
+          "disposition": "FormalTheorem",
+          "destination": "phase:B/Legacy/V20/Claims/least-fixed-point-standing/PRED-TEX-DECL-216360B2EDCA8ADB",
+          "source": {
+            "path": "Inquiry_Calculus_v2_0.tex",
+            "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+            "start_line": 4605,
+            "end_line": 4607,
+            "sha256": "4e6c01e57b70c62fc6cebb5cfb1b25bfa0bca659e0f5b8784c1f0d223147d9e6"
+          },
+          "obligation_status": null
+        }
+      ]
+    }
+  ],
+  "next_residual": {
+    "id": "FORMAL-B-BINDING-TYPE-SURFACE",
+    "relation": "Elaborate the binding-indexed predecessor type universe and reference type grammar without confusing Lean Type with a calculus type code or assuming unsupported native structure."
+  },
+  "formal_gate_b": {
+    "status": "PENDING",
+    "law": "The ambient boundary closes only the first Phase B relation. Gate B remains pending until the complete predecessor core compiles with no sorry and every unresolved claim is an explicit obligation."
+  }
+}

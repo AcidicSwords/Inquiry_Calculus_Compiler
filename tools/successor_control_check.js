@@ -87,6 +87,9 @@ const required = [
   "formal-successor/PHASE_A_COVERAGE.md",
   "formal-successor/PHASE_A_COVERAGE_SCHEMA.json",
   "formal-successor/PHASE_A_COVERAGE_CERTIFICATE.json",
+  "formal-successor/PHASE_B_AMBIENT_BOUNDARY.md",
+  "formal-successor/PHASE_B_PREDECESSOR_SPINE_SCHEMA.json",
+  "formal-successor/PHASE_B_PREDECESSOR_SPINE.json",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -109,6 +112,8 @@ const required = [
   "tools/predecessor_fixture_classification_check.js",
   "tools/phase_a_coverage.js",
   "tools/phase_a_coverage_check.js",
+  "tools/phase_b_predecessor_spine.js",
+  "tools/phase_b_predecessor_spine_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -205,10 +210,19 @@ requireContains("formal-successor/PHASE_A_COVERAGE.md", [
   "Total ownership is not semantic proof",
 ]);
 
+requireContains("formal-successor/PHASE_B_AMBIENT_BOUNDARY.md", [
+  "41 exact reviewed TeX identities",
+  "13 elaboration layers",
+  "FORMAL-B-BINDING-TYPE-SURFACE",
+  "Formal Gate B remains `PENDING`",
+]);
+
 requireContains("formal-successor/CONFORMANCE_STATUS.md", [
   "FORMAL-A-COVERAGE-001 | PASS",
   "FORMAL-GATE-A | PASS",
+  "FORMAL-B-AMBIENT-BOUNDARY-001 | PASS",
   "inventory closure, not a successor definition",
+  "Gate B stays pending",
 ]);
 
 let predecessorInventoryGrammar;
@@ -340,6 +354,34 @@ if (
   phaseACoverageCertificate?.gate_a_candidate?.status !== "READY_FOR_INDEPENDENT_CHECK"
 ) {
   errors.push("Phase A coverage certificate must be exact, closed, and non-self-warranting");
+}
+
+let phaseBSpineSchema;
+let phaseBSpine;
+try {
+  phaseBSpineSchema = JSON.parse(read("formal-successor/PHASE_B_PREDECESSOR_SPINE_SCHEMA.json"));
+  phaseBSpine = JSON.parse(read("formal-successor/PHASE_B_PREDECESSOR_SPINE.json"));
+} catch (error) {
+  errors.push(`Phase B predecessor spine control JSON: ${error.message}`);
+}
+if (
+  phaseBSpineSchema?.status !== "phase_b_predecessor_elaboration_spine_not_successor_semantics" ||
+  phaseBSpineSchema?.required_layer_order?.length !== 13 ||
+  phaseBSpineSchema?.gate_b?.status !== "PENDING"
+) {
+  errors.push("Phase B predecessor spine schema is detached from its local non-promotion boundary");
+}
+if (
+  phaseBSpine?.status !== "generated_phase_b_predecessor_spine_not_semantic_completion" ||
+  phaseBSpine?.coverage?.layer_count !== 13 ||
+  phaseBSpine?.coverage?.selected_source_count !== 41 ||
+  phaseBSpine?.coverage?.checked_boundary_layers !== 1 ||
+  phaseBSpine?.coverage?.open_layers !== 12 ||
+  phaseBSpine?.ambient_boundary?.classicality_status !== "ExplicitPredecessorObligation" ||
+  phaseBSpine?.next_residual?.id !== "FORMAL-B-BINDING-TYPE-SURFACE" ||
+  phaseBSpine?.formal_gate_b?.status !== "PENDING"
+) {
+  errors.push("Phase B predecessor spine must retain its exact ambient-only pass and open Gate B residual");
 }
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
@@ -782,6 +824,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/predecessor_fixture_classification_check.js",
   "node tools/phase_a_coverage.js check",
   "node tools/phase_a_coverage_check.js",
+  "node tools/phase_b_predecessor_spine.js check",
+  "node tools/phase_b_predecessor_spine_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

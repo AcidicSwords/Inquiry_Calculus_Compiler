@@ -124,6 +124,8 @@ jobs:
           node --check tools/predecessor_fixture_classification_check.js
           node --check tools/phase_a_coverage.js
           node --check tools/phase_a_coverage_check.js
+          node --check tools/phase_b_predecessor_spine.js
+          node --check tools/phase_b_predecessor_spine_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -141,6 +143,8 @@ jobs:
           node tools/predecessor_fixture_classification_check.js
           node tools/phase_a_coverage.js check
           node tools/phase_a_coverage_check.js
+          node tools/phase_b_predecessor_spine.js check
+          node tools/phase_b_predecessor_spine_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

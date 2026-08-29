@@ -48,6 +48,11 @@ harness can autonomously recur on this branch without being redirected to the ol
 `AUTONOMOUS_ITERATION.md` is the restart-safe operational runbook for one finite ratchet and for
 Phase A-N progression; it does not own moving state or semantic authority.
 
+`PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
+spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
+module distinguishes supplied metalanguage from calculus-declared structure. This local pass does
+not prove those predecessor claims or promote Formal Gate B.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change
