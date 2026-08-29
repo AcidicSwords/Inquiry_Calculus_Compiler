@@ -101,6 +101,10 @@ const required = [
   "formal-successor/PHASE_B_RELATIONS_SCHEMA.json",
   "formal-successor/PHASE_B_RELATIONS_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/Relations.lean",
+  "formal-successor/PHASE_B_REFINEMENT.md",
+  "formal-successor/PHASE_B_REFINEMENT_SCHEMA.json",
+  "formal-successor/PHASE_B_REFINEMENT_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/Refinement.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -131,6 +135,8 @@ const required = [
   "tools/phase_b_forms_check.js",
   "tools/phase_b_relations.js",
   "tools/phase_b_relations_check.js",
+  "tools/phase_b_refinement.js",
+  "tools/phase_b_refinement_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -254,6 +260,14 @@ requireContains("formal-successor/PHASE_B_RELATIONS.md", [
   "RelationSchema",
   "ConverseBoundary",
   "eleven mutations",
+  "Gate B",
+]);
+
+requireContains("formal-successor/PHASE_B_REFINEMENT.md", [
+  "coarsest represented relation",
+  "ExistenceBoundary",
+  "reverses inclusion",
+  "twelve mutations",
   "Gate B",
 ]);
 
@@ -490,6 +504,29 @@ if (
   phaseBRelationsSurface?.next_residual !== "FORMAL-B-COARSE-RELATION-REFINEMENT" ||
   phaseBRelationsSurface?.formal_gate_b?.status !== "PENDING"
 ) errors.push("Phase B relations surface must preserve its typed boundary and pending Gate B");
+
+let phaseBRefinementSchema;
+let phaseBRefinementSurface;
+try {
+  phaseBRefinementSchema = JSON.parse(read("formal-successor/PHASE_B_REFINEMENT_SCHEMA.json"));
+  phaseBRefinementSurface = JSON.parse(read("formal-successor/PHASE_B_REFINEMENT_SURFACE.json"));
+} catch (error) {
+  errors.push(`Phase B refinement control JSON: ${error.message}`);
+}
+if (
+  phaseBRefinementSchema?.status !== "phase_b_refinement_contract_not_successor_semantics" ||
+  phaseBRefinementSchema?.sources?.length !== 5 ||
+  phaseBRefinementSchema?.required_declarations?.length !== 6 ||
+  phaseBRefinementSchema?.obligations?.length !== 4 ||
+  phaseBRefinementSchema?.gate_b?.status !== "PENDING"
+) errors.push("Phase B refinement schema is detached from the explicit predecessor boundary");
+if (
+  phaseBRefinementSurface?.status !== "generated_phase_b_refinement_surface_not_successor_semantics" ||
+  phaseBRefinementSurface?.coverage?.explicit_definitions !== 4 ||
+  phaseBRefinementSurface?.coverage?.obligations !== 1 ||
+  phaseBRefinementSurface?.next_residual !== "FORMAL-B-FORMULA-GRAMMAR" ||
+  phaseBRefinementSurface?.formal_gate_b?.status !== "PENDING"
+) errors.push("Phase B refinement surface must preserve the explicit obligation and pending Gate B");
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
 if ((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/gu) ?? []).length !== 1 ||
@@ -940,6 +977,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_forms_check.js",
   "node tools/phase_b_relations.js check",
   "node tools/phase_b_relations_check.js",
+  "node tools/phase_b_refinement.js check",
+  "node tools/phase_b_refinement_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

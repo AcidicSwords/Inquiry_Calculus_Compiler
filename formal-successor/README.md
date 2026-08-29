@@ -66,6 +66,10 @@ schemas, functions as explicitly constrained relations, serial composition, part
 image/inverse image, and parallel operators. It does not import formula, question, fiber, program,
 or contextual-equivalence semantics, and Formal Gate B remains pending.
 
+`PHASE_B_REFINEMENT.md` then distinguishes universal co-admission from binding-supplied
+coexistence, records reverse-inclusion refinement and proper-refinement shape, and keeps the
+no-vacuity law plus later question/usefulness content explicit. Formal Gate B remains pending.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

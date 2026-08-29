@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_refinement_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "51d2fda7944945917f78f080cfe878a43904c2d8f50e07aba1309dec9d95c647",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "refinement_module_sha256": "d487b477511cd0dd99861bea3d47bceead5af4b763f7c9584a559b1d8d3c3fb4"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-010C4595F5CC17EE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/coarsest-relation-and-relational-refinement/PRED-TEX-DECL-010C4595F5CC17EE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 872,
+        "end_line": 882,
+        "sha256": "f3bb4425ad177e86ad5853b0c0f34762fa9cf048708c19e68bf9b1ab544b2817"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-4DAB46E45E8C0CF5",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/coarsest-relation-and-relational-refinement/PRED-TEX-DECL-4DAB46E45E8C0CF5",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 884,
+        "end_line": 892,
+        "sha256": "face024c6ec2fb5897c69d0735f5bac38e2d93f2c2df4c9f8edd62601fa0b09c"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-14ACF76C220FCB11",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/coarsest-relation-and-relational-refinement/PRED-TEX-DECL-14ACF76C220FCB11",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 894,
+        "end_line": 908,
+        "sha256": "e74bfd2b2e333c18710445d6450d93378a242345f2e99e369bdc055b85d0f465"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-B8B8BF56A44CE2CC",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/coarsest-relation-and-relational-refinement/PRED-TEX-DECL-B8B8BF56A44CE2CC",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 910,
+        "end_line": 924,
+        "sha256": "ee08656a74ce7437aa4a0c2d2ee40b433b6d3a5aa67ebf1b208fdfbd8fe1c405"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-9D71EB923A8BD574",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/coarsest-relation-and-relational-refinement/PRED-TEX-DECL-9D71EB923A8BD574",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 926,
+        "end_line": 928,
+        "sha256": "9355de3802998ac9ff57baf0edc3b7d2a8c9b057c0a6f900b570603988507574"
+      },
+      "obligation_status": "Unproved"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 4,
+    "obligations": 1
+  },
+  "next_residual": "FORMAL-B-FORMULA-GRAMMAR",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

@@ -80,6 +80,8 @@ node tools/phase_b_forms.js check
 node tools/phase_b_forms_check.js --compile
 node tools/phase_b_relations.js check
 node tools/phase_b_relations_check.js --compile
+node tools/phase_b_refinement.js check
+node tools/phase_b_refinement_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -113,6 +115,9 @@ questions, programs, and Gate B remain open.
 The following typed relation surface is documented in `formal-successor/PHASE_B_RELATIONS.md`;
 it retains typed endpoints, partial converse, and the function condition while leaving relation
 expressions and later semantics open.
+The coarsest relation/refinement boundary is documented in
+`formal-successor/PHASE_B_REFINEMENT.md`; universal relatedness, binding-supplied coexistence,
+reverse inclusion, and the retained no-vacuity obligation remain distinct.
 
 ## Current implementation state
 

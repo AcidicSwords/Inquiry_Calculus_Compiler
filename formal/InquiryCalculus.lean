@@ -3,6 +3,7 @@ import InquiryCalculus.Legacy.V20.Binding
 import InquiryCalculus.Legacy.V20.Types
 import InquiryCalculus.Legacy.V20.Forms
 import InquiryCalculus.Legacy.V20.Relations
+import InquiryCalculus.Legacy.V20.Refinement
 
 /-!
 # Inquiry Calculus formal successor
