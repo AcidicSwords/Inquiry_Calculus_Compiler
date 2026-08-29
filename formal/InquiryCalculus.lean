@@ -30,6 +30,7 @@ import InquiryCalculus.Legacy.V20.SolutionFieldWeb
 import InquiryCalculus.Legacy.V20.IndexedMeetRefinement
 import InquiryCalculus.Legacy.V20.PropertyImageHole
 import InquiryCalculus.Legacy.V20.ProtectedDetermination
+import InquiryCalculus.Legacy.V20.ExactDeterminationSignature
 
 /-!
 # Inquiry Calculus formal successor
