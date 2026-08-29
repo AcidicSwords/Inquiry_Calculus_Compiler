@@ -37,6 +37,7 @@ import InquiryCalculus.Legacy.V20.SeparatingContextQuestion
 import InquiryCalculus.Legacy.V20.RepresentationQuestion
 import InquiryCalculus.Legacy.V20.GrainQuestion
 import InquiryCalculus.Legacy.V20.ProbeToolInventionQuestion
+import InquiryCalculus.Legacy.V20.RepresentationGapLocalization
 
 /-!
 # Inquiry Calculus formal successor

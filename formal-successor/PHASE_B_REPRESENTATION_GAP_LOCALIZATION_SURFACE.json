@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_representation_gap_localization_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "ea214ef0d6ec406aa7da69a8c125d39c48b3f9976453bec995e11eb15336640a"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-3405C7149D34B328",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/representation-invention-and-discriminator-generation/PRED-TEX-DECL-3405C7149D34B328",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1651,
+        "end_line": 1668,
+        "sha256": "b260e1be245c73cbbb92980f61d3bd2e8375e3fe4dab822268357d24bb67226f"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-TYPED-DISTINCTION-SCHEMA",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
