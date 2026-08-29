@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_derived_boundary_crossing_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "e3e49f5255adbc7a103d70e60993a92bb2ab6274fb7f53fee913966f8fde8665"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-BOUNDARY-CROSSING",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/live-determination-and-positive-departure/PRED-TEX-DECL-DEF-BOUNDARY-CROSSING",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1754,
+        "end_line": 1765,
+        "sha256": "62eafa5f12a5ae59931fbd810cda08544cec39a9ded713328d533fdfd13c0beb"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-RELATION-USE-AND-NEGATION-USE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

@@ -6,16 +6,16 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-DEPARTURE-RELATIVE-POSITIVITY-001` machine-checks separate typed carriers for departure,
-horizon difference, Unknown incomplete observation, and near-departure. It preserves positivity and
-non-implications as open legacy obligations; Gate B remains pending.
+`FORMAL-B-DERIVED-BOUNDARY-CROSSING-001` machine-checks that a derived crossing contains separate
+departure-witness and traversal/succession-provenance components. It keeps exteriority, projection,
+answer selection, solver, execution, and successor meanings out of the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate derived boundary crossing without treating positive exteriority or a candidate boundary projection as an observed crossing path.
+Elaborate relation and negation uses as immutable typed represented occurrences without treating negation as Boolean complement or synthesizing a reverse use.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-DERIVED-BOUNDARY-CROSSING
+id: FORMAL-B-RELATION-USE-AND-NEGATION-USE
 plan_phase: B
 goal: Determine the smallest source-regenerative boundary for v2.0 departure-relative positivity, preserving positive witness dependence, Unknown incompleteness, and non-equivalence between departure and horizon difference while keeping exteriority and near-departure status open unless independently established.
 protected_difference: Departure is positive and determination-relative; incomplete observation remains Unknown, and neither departure nor protected non-equivalence implies the other.
