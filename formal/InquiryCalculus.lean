@@ -54,6 +54,7 @@ import InquiryCalculus.Legacy.V20.UseSpecificReturnFiber
 import InquiryCalculus.Legacy.V20.ProtectedRecovery
 import InquiryCalculus.Legacy.V20.SourceWebRecoveryProfile
 import InquiryCalculus.Legacy.V20.ThreeValuedRecoveryLossProfile
+import InquiryCalculus.Legacy.V20.RegenerativeEconomyFrontier
 
 /-!
 # Inquiry Calculus formal successor

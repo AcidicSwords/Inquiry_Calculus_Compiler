@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_regenerative_economy_frontier_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "8b26e8278b4eae209fac08d12584ed190db1f2c1c2aa53920a892d89457b2374"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-REGENERATIVE-ECONOMY",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/regenerative-sufficiency-understanding-and-learning/PRED-TEX-DECL-DEF-REGENERATIVE-ECONOMY",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 4184,
+        "end_line": 4207,
+        "sha256": "88f4b37aa0355b48c47be6aaff6c665584112a711a2d4fff0fddd1d4f6513b06"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-REQUIRED-DISCHARGE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
