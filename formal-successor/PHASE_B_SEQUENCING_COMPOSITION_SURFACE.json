@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_sequencing_composition_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "395e437777cc3175e820ac3c79afbb0c63268a7a237d214e1ff2e2b633d48df9"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-3E7147D6C53D2C5F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/sequencing-and-composition-of-programs/PRED-TEX-PROSE-3E7147D6C53D2C5F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3110,
+        "end_line": 3110,
+        "sha256": "036c781064de7dc7841e7e8a5cffd9cecf677b1dcb6311aa41fb1b4651140e4c"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-B079F712CD8C942D",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/sequencing-and-composition-of-programs/PRED-TEX-DISPLAY-B079F712CD8C942D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3111,
+        "end_line": 3113,
+        "sha256": "fa5b188cef488c1c15430183020d1574d74b3c749d796924b2f0497cd18c24d2"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-B558AB701A56AE29",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/sequencing-and-composition-of-programs/PRED-TEX-PROSE-B558AB701A56AE29",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3114,
+        "end_line": 3114,
+        "sha256": "687a9cd6e25a43dade923a7f45dd8d469bb7643818626f325c29644b12d6da81"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-9A146599F4DA5A74",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/equations/PRED-TEX-DISPLAY-9A146599F4DA5A74",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3118,
+        "end_line": 3124,
+        "sha256": "0ffc53c0aa9a0adcda7548dd4a305e50998edf148af9082fb41c54757692494d"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-5DC012B2860E5180",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/equations/PRED-TEX-DISPLAY-5DC012B2860E5180",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3126,
+        "end_line": 3132,
+        "sha256": "572861e1cd16411bfbe83674dbf8f8ff79c2680f6d102f440b7ca970a8338341"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-175936AC689ADCD5",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/equations/PRED-TEX-DISPLAY-175936AC689ADCD5",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3134,
+        "end_line": 3145,
+        "sha256": "da444886a650827d85fc939c600ba6bb878754710bb05c70738002109e2f6a2e"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-7C69C97A873B0908",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/equations/PRED-TEX-PROSE-7C69C97A873B0908",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3147,
+        "end_line": 3147,
+        "sha256": "73cf85321c51dc26fd54dc075bb61edc94f04c8c91f77fd0d341e25b189fb319"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-EC974F440236C6E4",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/equations/PRED-TEX-DISPLAY-EC974F440236C6E4",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3148,
+        "end_line": 3150,
+        "sha256": "7a759e8ac7513038f540d3555cfe22a5e1d5914c3e900fe686a586006af16d5e"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-F4EEF8FECC1B0AB6",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/equations/PRED-TEX-DISPLAY-F4EEF8FECC1B0AB6",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3151,
+        "end_line": 3153,
+        "sha256": "ac61f0e0631590c9048f5392c97cea534b1ac2216bf8bac9f0b42fb12b9691a4"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-0A16C706F82F43E3",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/equations/PRED-TEX-DISPLAY-0A16C706F82F43E3",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3154,
+        "end_line": 3158,
+        "sha256": "1c13dbe1aad3426b954b1b44d7fe7a4cd9317daa5642cf25e00951ba7a921d1b"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-A7B4D08458AC6362",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/operational-semantics/PRED-TEX-PROSE-A7B4D08458AC6362",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3162,
+        "end_line": 3162,
+        "sha256": "4043205d6f92bca6d4891c41b799255d70ffe651629fcc0acc30550f1837073c"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-BBAA4ED432098749",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/operational-semantics/PRED-TEX-PROSE-BBAA4ED432098749",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3168,
+        "end_line": 3168,
+        "sha256": "b631906920ca5a4ec2343819140df457ad34cea98010d73dacfd2eac6dfbb81f"
+      },
+      "legacy_status": "Ambiguous"
+    }
+  ],
+  "next_residual": "FORMAL-B-OPERATIONAL-SEMANTICS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
