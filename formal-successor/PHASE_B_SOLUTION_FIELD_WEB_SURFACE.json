@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_solution_field_web_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "45aaf9c19962689e20cf05d2bd66045d3180be0c6c676a095f90fe1f27aa23e8",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "solution_field_module_sha256": "8cf95dc1b6818fdb18bd478a06e627f5817d3986a74ce8a9b4d5c3eb5a37fb8f"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-D0A0B90DE26046F0",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relational-webs-and-indexed-meets/PRED-TEX-DECL-D0A0B90DE26046F0",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1413,
+        "end_line": 1422,
+        "sha256": "3fef7fd023da496f1dc024730588a83f2f42e9f6f50a37864dd002eb4109cd13"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 1,
+    "obligations": 0
+  },
+  "next_residual": "FORMAL-B-INDEXED-MEET-REFINEMENT",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
