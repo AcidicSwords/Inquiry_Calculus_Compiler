@@ -33,6 +33,7 @@ import InquiryCalculus.Legacy.V20.ProtectedDetermination
 import InquiryCalculus.Legacy.V20.ExactDeterminationSignature
 import InquiryCalculus.Legacy.V20.ResidualAmbiguity
 import InquiryCalculus.Legacy.V20.RepresentationDefect
+import InquiryCalculus.Legacy.V20.SeparatingContextQuestion
 
 /-!
 # Inquiry Calculus formal successor
