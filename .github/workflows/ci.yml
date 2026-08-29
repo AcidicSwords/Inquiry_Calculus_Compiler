@@ -108,6 +108,7 @@ jobs:
           node tools/phase_b_qsucc_occurrence_typing_check.js --compile
           node tools/phase_b_reciprocal_program_check.js --compile
           node tools/phase_b_hole_solving_check.js --compile
+          node tools/phase_b_representation_search_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -328,6 +329,8 @@ jobs:
           node --check tools/phase_b_reciprocal_program_check.js
           node --check tools/phase_b_hole_solving.js
           node --check tools/phase_b_hole_solving_check.js
+          node --check tools/phase_b_representation_search.js
+          node --check tools/phase_b_representation_search_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -479,6 +482,8 @@ jobs:
           node tools/phase_b_reciprocal_program_check.js
           node tools/phase_b_hole_solving.js check
           node tools/phase_b_hole_solving_check.js
+          node tools/phase_b_representation_search.js check
+          node tools/phase_b_representation_search_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
