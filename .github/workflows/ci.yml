@@ -86,6 +86,7 @@ jobs:
           node tools/phase_b_boundary_point_regeneration_check.js --compile
           node tools/phase_b_determination_presentation_check.js --compile
           node tools/phase_b_positive_departure_witness_check.js --compile
+          node tools/phase_b_departure_relative_positivity_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -262,6 +263,8 @@ jobs:
           node --check tools/phase_b_determination_presentation_check.js
           node --check tools/phase_b_positive_departure_witness.js
           node --check tools/phase_b_positive_departure_witness_check.js
+          node --check tools/phase_b_departure_relative_positivity.js
+          node --check tools/phase_b_departure_relative_positivity_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -369,6 +372,8 @@ jobs:
           node tools/phase_b_determination_presentation_check.js
           node tools/phase_b_positive_departure_witness.js check
           node tools/phase_b_positive_departure_witness_check.js
+          node tools/phase_b_departure_relative_positivity.js check
+          node tools/phase_b_departure_relative_positivity_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

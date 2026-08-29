@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_departure_relative_positivity_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "dbcf7e5832f3be4a33792cbe260367de6fb85f2ee999328b2d48b14c3d622474"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-LAW-DEPARTURE-RELATIVE",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/live-determination-and-positive-departure/PRED-TEX-DECL-LAW-DEPARTURE-RELATIVE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1744,
+        "end_line": 1752,
+        "sha256": "2484ff978d42504e9b26629e51ff00bfeb1f542c0ead4742561cab42f06dc54b"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-DERIVED-BOUNDARY-CROSSING",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
