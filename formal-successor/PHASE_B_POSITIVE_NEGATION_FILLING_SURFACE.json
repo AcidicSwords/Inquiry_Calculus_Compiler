@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_positive_negation_filling_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "c825eacdc302a8768e706134cd06ccff7f0647bad066e52fa5bdfdca439c40dd"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-POSITIVE-NEGATION",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/typed-negation-uses-and-tagged-frontiers/PRED-TEX-DECL-DEF-POSITIVE-NEGATION",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1781,
+        "end_line": 1795,
+        "sha256": "a1b5d7805a34981ca48d86cfaad1e049cf0cb4b371cea3796afc7397add011b6"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-SEMANTIC-AND-EXECUTION-COVERAGE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
