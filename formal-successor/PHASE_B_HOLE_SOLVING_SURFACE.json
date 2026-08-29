@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_hole_solving_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "70693f40702cc0568fc056000d8971a5ac347987fb785447d52f6fae081edfcd"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-E2760B872DF1DA9E",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/canonical-derived-combinators/PRED-TEX-DECL-E2760B872DF1DA9E",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2917,
+        "end_line": 2923,
+        "sha256": "80e16d7251e63a39543f376fe0dac5652d781dcbdbe70a808f747061a609c50b"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-REPRESENTATION-SEARCH",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

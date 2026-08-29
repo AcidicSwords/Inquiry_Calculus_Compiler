@@ -6,26 +6,25 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-RECIPROCAL-PROGRAM-001` machine-checks tagged reciprocal stages, modes, dependent
-gate, recovery, reorientation, and transparent-macro boundaries. It keeps relation fulfillment,
-coverage validity, graph execution, Gamma semantics, solver, and successor meanings open; Gate B
-remains pending.
+`FORMAL-B-HOLE-SOLVING-001` machine-checks residual-relative solution state and singleton-filler
+versus separating-relation recurrence. It keeps solution computation, equivalence, relation execution,
+coverage validity, solver, and successor meanings open; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate hole solving while preserving open-carrier-relative solution sets, semantic/execution distinction, and explicit unknown/residual outcomes.
+Elaborate representation search while preserving witnessed protected difference, binding-appropriate candidate order, consequence relevance, and excess-detail ablation.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-HOLE-SOLVING
+id: FORMAL-B-REPRESENTATION-SEARCH
 plan_phase: B
-goal: Determine the smallest source-regenerative boundary for v2.0 hole solving, preserving residual web, open carrier, solution set, semantic/execution distinction, and supported unknown/residual outcomes.
-protected_difference: Hole solving returns a solution relation relative to the residual web and open carrier; it cannot equate semantic closure with execution coverage or promote unresolved residuals into solved answers.
-discriminator: Contrast source-bound hole solving with total solution, semantic/execution collapse, residual erasure, answer selection, solver, program, and semantic-evaluation claims; retain only the exact source-supported hole-solving boundary after regeneration and independent checking.
-horizon: Hole-solving boundary only; reciprocal program is fixed input, solution meaning, semantic/execution coverage, residual topology, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless independently formalized and checked, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Determine the smallest source-regenerative boundary for v2.0 representation search, preserving witnessed protected difference, candidate search forms, relevance test, and excess-detail ablation.
+protected_difference: Representation search is derived inquiry from a witnessed protected difference; a successful candidate requires protected consequence relevance and unnecessary-detail testing, not mere representational novelty.
+discriminator: Contrast source-bound representation search with ungrounded invention, novelty-only success, no ablation, answer selection, solver, program, and semantic-evaluation claims; retain only the exact source-supported representation-search boundary after regeneration and independent checking.
+horizon: Representation-search boundary only; hole solving is fixed input, protected equivalence, relevance test, ablation, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless independently formalized and checked, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the smallest checked hole-solving boundary and then elaborate the next residual selected by its unresolved relation
-if_fail: reopen the earliest residual, carrier, solution, coverage, unknown, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
+if_pass: retain the smallest checked representation-search boundary and then elaborate the next residual selected by its unresolved relation
+if_fail: reopen the earliest witness, candidate, relevance, ablation, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
