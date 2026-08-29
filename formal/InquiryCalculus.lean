@@ -63,6 +63,7 @@ import InquiryCalculus.Legacy.V20.ResidualQuestionGenerator
 import InquiryCalculus.Legacy.V20.CheckedAskOccurrence
 import InquiryCalculus.Legacy.V20.HeadQuestion
 import InquiryCalculus.Legacy.V20.OccurrenceIndexedQuestionSuccession
+import InquiryCalculus.Legacy.V20.QuestionSuccessionTypingClaim
 
 /-!
 # Inquiry Calculus formal successor

@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_question_succession_typing_claim_unproved_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "0a511ba09bc2bfafba166276dae3e5888363e019b54cae27eeeed30a58b3ba69"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-THM-QSUCC-OCCURRENCE-TYPING",
+      "disposition": "FormalTheorem",
+      "destination": "phase:B/Legacy/V20/Claims/derived-occurrence-indexed-question-succession/PRED-TEX-DECL-THM-QSUCC-OCCURRENCE-TYPING",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2742,
+        "end_line": 2747,
+        "sha256": "be5e66715582abe0f80c9d271989863b9f4138c8a5ac1f6c3ce85327787354a5"
+      }
+    }
+  ],
+  "claim_status": "Unproved",
+  "next_residual": "FORMAL-B-RECIPROCAL-PROGRAM",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
