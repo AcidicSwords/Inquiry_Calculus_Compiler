@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_residual_question_generator_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "45320d7991f29baf956e5b9c23a80a0b8bd535466bdbb7265173bb10dc1ec504"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-FB2A8C7EF709B3EE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/source-typing/PRED-TEX-DECL-FB2A8C7EF709B3EE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2600,
+        "end_line": 2617,
+        "sha256": "b79c7fbc86b7b565e4f2f37262688844d1c232232d920a9b40e4b547eb5a61de"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-CHECKED-ASK-OCCURRENCE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
