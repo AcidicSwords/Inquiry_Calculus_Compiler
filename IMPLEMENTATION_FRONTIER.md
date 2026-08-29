@@ -16,7 +16,7 @@ Elaborate the v2.0 one-relation-many-questions generation boundary without treat
 openings as semantic generation laws, concrete answers, or programs.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-QUESTION-COMPOSITION-SYNTAX
+id: FORMAL-B-QUESTION-CONDITIONED-DISCRIMINATION
 plan_phase: B
 goal: Classify and reconstruct typed discharge-mode syntax and its authority boundary against canonical question openings, postponing actual execution, return, independent-admission, standing policy, compilation, successor-primitive, and Rust meaning.
 protected_difference: A discharge mode classifies a lawful route; it is neither a discharge event nor authority to invent a result. Pure, Generate, Probe, Check, and Warrant remain distinct, especially against generative self-discharge.

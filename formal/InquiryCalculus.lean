@@ -14,6 +14,7 @@ import InquiryCalculus.Legacy.V20.AnswerCarrierValidity
 import InquiryCalculus.Legacy.V20.PropositionNotWarrant
 import InquiryCalculus.Legacy.V20.ManyQuestionsGeneration
 import InquiryCalculus.Legacy.V20.DischargeModeSyntax
+import InquiryCalculus.Legacy.V20.QuestionCompositionSyntax
 
 /-!
 # Inquiry Calculus formal successor
