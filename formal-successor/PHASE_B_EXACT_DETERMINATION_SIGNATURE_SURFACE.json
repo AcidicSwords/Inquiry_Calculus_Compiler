@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_exact_determination_signature_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "6883a1561c3d8792d59a433f2f13d1c2320b2e05df5e3fcf6e6ef4807e9b5160"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-THM-DETERMINE-THROUGH",
+      "disposition": "FormalTheorem",
+      "destination": "phase:B/Legacy/V20/Claims/forced-properties-and-near-miss-fields/PRED-TEX-DECL-THM-DETERMINE-THROUGH",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1492,
+        "end_line": 1508,
+        "sha256": "3fa7df4cea34f0760889cbffd27ec77e3114ee11bcdd117e8ee719c0ca7cb5cc"
+      }
+    }
+  ],
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
