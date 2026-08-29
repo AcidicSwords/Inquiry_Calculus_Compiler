@@ -56,6 +56,7 @@ import InquiryCalculus.Legacy.V20.SourceWebRecoveryProfile
 import InquiryCalculus.Legacy.V20.ThreeValuedRecoveryLossProfile
 import InquiryCalculus.Legacy.V20.RegenerativeEconomyFrontier
 import InquiryCalculus.Legacy.V20.RequiredDischarge
+import InquiryCalculus.Legacy.V20.ResolutionCarriers
 
 /-!
 # Inquiry Calculus formal successor
