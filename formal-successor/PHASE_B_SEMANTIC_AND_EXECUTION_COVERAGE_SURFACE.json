@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_semantic_and_execution_coverage_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "69702d3441f2212d49b08c71c2c549b075f0c879b25a5839decce169b1688285"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-NEGATION-COVERAGE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/typed-negation-uses-and-tagged-frontiers/PRED-TEX-DECL-DEF-NEGATION-COVERAGE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1797,
+        "end_line": 1803,
+        "sha256": "d5681d01ed979eec828816358873c761d7a2e55db4074bb5d974c861dc57cef0"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-TAGGED-NEGATION-FRONTIER",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
