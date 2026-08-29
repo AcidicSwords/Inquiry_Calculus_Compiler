@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_required_discharge_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "c231c0a6fd51ed057a7c40a299def3437c4c37d5416219c5c4ab8ebb34940cad"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-REQUIRED-DISCHARGE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/derived-question-availability-and-required-discharge/PRED-TEX-DECL-DEF-REQUIRED-DISCHARGE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 4928,
+        "end_line": 4934,
+        "sha256": "90539d6716ed887a696fd06eb79cdf75167bde87b7b0d151836a48ce43475c9a"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-RESOLUTION-CARRIERS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
