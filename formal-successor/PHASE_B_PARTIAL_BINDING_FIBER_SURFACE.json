@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_partial_binding_fiber_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "0db3bc7487f47cf7152f1bef7a765a4b5bc2fe7e9918ff977135f53ba157ce0e",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "fiber_module_sha256": "8ab27adc1d5c651ed79f079214f3c7c7963c7781fa050a959e55256a057cd06c"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-6F044DC1EE2FFE76",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-6F044DC1EE2FFE76",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1026,
+        "end_line": 1032,
+        "sha256": "590165ceaffab7b1c338142abe3c1a285e1c4af297b1762a2c12d8437db281f2"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-10515A6565C257C2",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-10515A6565C257C2",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1034,
+        "end_line": 1045,
+        "sha256": "fc893cc25dbc5766ea5e5f651897c60f7f35fbd402a8e7f460c94449a9015491"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 2,
+    "obligations": 0
+  },
+  "next_residual": "FORMAL-B-CANONICAL-QUESTION-SYNTAX",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

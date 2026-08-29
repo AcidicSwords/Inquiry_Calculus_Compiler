@@ -135,6 +135,9 @@ semantic-question claims remain obligation-bound.
 The typed schema/signature boundary is documented in
 `formal-successor/PHASE_B_RELATION_SCHEMA_PORTS.md`; named ports remain non-string typed
 coordinates and schemas remain distinct from relation instances and questions.
+The partial-binding and completion-fiber boundary is documented in
+`formal-successor/PHASE_B_PARTIAL_BINDING_FIBER.md`; it preserves typed candidate carriers while
+leaving satisfaction, valid completion, and question semantics open.
 
 ## Current implementation state
 

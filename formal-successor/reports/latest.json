@@ -1,31 +1,31 @@
 {
   "schema": 1,
-  "change": "Phase B relation-schema and named-port boundary ratchet",
+  "change": "Phase B partial-binding and completion-fiber boundary ratchet",
   "changed": [
-    "source-regenerative typed relation-token/signature carrier with non-string named ports",
-    "binding-indexed named-port types while preserving schema data apart from instances",
-    "three retained partial-binding/completion-fiber obligations",
-    "independent source, promotion, declaration, obligation, string, instance, semantic-question, and axiom breakers (10/10)",
+    "source-regenerative typed open-port, assignment, partial-binding, and fiber carriers",
+    "binding-indexed assignments separated from nonempty open ports",
+    "four retained satisfaction, membership, and question obligations",
+    "independent source, promotion, carrier, obligation, string, satisfaction, semantic-question, and axiom breakers (10/10)",
     "structural CI routing plus Lean compile recheck after the pinned formal toolchain",
-    "local FORMAL-B-RELATION-SCHEMA-PORTS-001 evidence with Formal Gate B still pending",
-    "live frontier advanced to FORMAL-B-PARTIAL-BINDING-FIBER"
+    "local FORMAL-B-PARTIAL-BINDING-FIBER-001 evidence with Formal Gate B still pending",
+    "live frontier advanced to FORMAL-B-CANONICAL-QUESTION-SYNTAX"
   ],
   "dependency_closure": [
     "README.md",
     ".github/workflows/ci.yml",
     "IMPLEMENTATION_FRONTIER.md",
-    "formal/InquiryCalculus/Legacy/V20/RelationSchemaPorts.lean",
+    "formal/InquiryCalculus/Legacy/V20/PartialBindingFiber.lean",
     "formal-successor/README.md",
     "formal-successor/AUTONOMOUS_ITERATION.md",
-    "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS.md",
-    "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS_SCHEMA.json",
-    "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS_SURFACE.json",
+    "formal-successor/PHASE_B_PARTIAL_BINDING_FIBER.md",
+    "formal-successor/PHASE_B_PARTIAL_BINDING_FIBER_SCHEMA.json",
+    "formal-successor/PHASE_B_PARTIAL_BINDING_FIBER_SURFACE.json",
     "formal-successor/CONFORMANCE_STATUS.md",
     "formal-successor/DECISIONS.jsonl",
     "formal-successor/FAILURES.jsonl",
     "formal-successor/reports/latest.json",
-    "tools/phase_b_relation_schema_ports.js",
-    "tools/phase_b_relation_schema_ports_check.js",
+    "tools/phase_b_partial_binding_fiber.js",
+    "tools/phase_b_partial_binding_fiber_check.js",
     "tools/successor_control_check.js"
   ],
   "preserved": [
@@ -38,8 +38,8 @@
     "Formal Gate B as pending"
   ],
   "still_open": [
-    "FORMAL-B-PARTIAL-BINDING-FIBER",
-    "partial binding and completion fiber plus all later semantic layers",
+    "FORMAL-B-CANONICAL-QUESTION-SYNTAX",
+    "canonical question syntax plus all later semantic layers",
     "exact use and required strength of v2.0 classical metalanguage",
     "thirteen selected and 1223 other TeX LegacyObligations",
     "Phase F implementation correspondence obligations",

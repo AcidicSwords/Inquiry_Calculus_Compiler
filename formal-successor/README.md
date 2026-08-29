@@ -87,6 +87,10 @@ claim remain explicit obligations; Formal Gate B remains pending.
 non-string coordinates paired with binding-indexed types; partial binding and completion fiber
 remain explicit later obligations, and Formal Gate B remains pending.
 
+`PHASE_B_PARTIAL_BINDING_FIBER.md` then preserves nonempty open-port selection, typed partial
+assignment, and completion-fiber carrier syntax while leaving satisfaction and question formation
+open. Formal Gate B remains pending.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change
