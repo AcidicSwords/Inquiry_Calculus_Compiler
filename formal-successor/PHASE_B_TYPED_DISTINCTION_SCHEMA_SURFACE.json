@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_typed_distinction_schema_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "bd76516084d369ae4f3a1208743bc051eb90914bcf67976c371b9b650038cabe"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-DISTINCTION-SCHEMA",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/candidate-boundary-schemas/PRED-TEX-DECL-DEF-DISTINCTION-SCHEMA",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1674,
+        "end_line": 1686,
+        "sha256": "cc6090aec21a47533e40345a1db56e643755ac9f1276d64c741d8a48841319f7"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-CANDIDATE-BOUNDARY-INCIDENCE",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
