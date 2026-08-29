@@ -582,7 +582,8 @@ requireContains(".github/workflows/ci.yml", [
   "leanchecker: true",
   "leanchecker-args: InquiryCalculus Spec",
   "axiom-audit: true",
-  "axiom-audit-root: Spec",
+  "axiom-audit root is a declaration namespace, not a Lake module root",
+  "axiom-audit-root: InquiryCalculus",
 ]);
 requireExcludes(".github/workflows/ci.yml", ["nanoda: true"]);
 

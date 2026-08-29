@@ -13,7 +13,8 @@ lake build --wfail
 ```
 
 The lock manifest is committed after dependency resolution. CI also runs `leanchecker` over both
-declared libraries, enforces no-`sorry`, and audits axioms from the aggregate `Spec` import root.
+declared libraries, enforces no-`sorry`, and audits the `InquiryCalculus` declaration namespace.
+The audit root is a namespace prefix, while `Spec` is the aggregate Lake module checked separately.
 
 ## Layer direction
 
