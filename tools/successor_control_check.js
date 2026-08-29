@@ -124,6 +124,9 @@ const required = [
   "formal-successor/PHASE_B_PARTIAL_BINDING_FIBER_SCHEMA.json",
   "formal-successor/PHASE_B_PARTIAL_BINDING_FIBER_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/PartialBindingFiber.lean",
+  "formal-successor/PHASE_B_CANONICAL_QUESTION_SYNTAX_SCHEMA.json",
+  "formal-successor/PHASE_B_CANONICAL_QUESTION_SYNTAX_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/CanonicalQuestionSyntax.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -166,6 +169,8 @@ const required = [
   "tools/phase_b_relation_schema_ports_check.js",
   "tools/phase_b_partial_binding_fiber.js",
   "tools/phase_b_partial_binding_fiber_check.js",
+  "tools/phase_b_canonical_question_syntax.js",
+  "tools/phase_b_canonical_question_syntax_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -1115,6 +1120,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_relation_schema_ports_check.js",
   "node tools/phase_b_partial_binding_fiber.js check",
   "node tools/phase_b_partial_binding_fiber_check.js",
+  "node tools/phase_b_canonical_question_syntax.js check",
+  "node tools/phase_b_canonical_question_syntax_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

@@ -138,6 +138,9 @@ coordinates and schemas remain distinct from relation instances and questions.
 The partial-binding and completion-fiber boundary is documented in
 `formal-successor/PHASE_B_PARTIAL_BINDING_FIBER.md`; it preserves typed candidate carriers while
 leaving satisfaction, valid completion, and question semantics open.
+The canonical-question syntax boundary is documented in
+`formal-successor/PHASE_B_CANONICAL_QUESTION_SYNTAX.md`; answers, validity, probes, and programs
+remain separate later layers.
 
 ## Current implementation state
 

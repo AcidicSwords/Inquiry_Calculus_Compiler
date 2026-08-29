@@ -51,6 +51,7 @@ jobs:
           node tools/phase_b_relation_expression_ir_check.js --compile
           node tools/phase_b_relation_schema_ports_check.js --compile
           node tools/phase_b_partial_binding_fiber_check.js --compile
+          node tools/phase_b_canonical_question_syntax_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -157,6 +158,8 @@ jobs:
           node --check tools/phase_b_relation_schema_ports_check.js
           node --check tools/phase_b_partial_binding_fiber.js
           node --check tools/phase_b_partial_binding_fiber_check.js
+          node --check tools/phase_b_canonical_question_syntax.js
+          node --check tools/phase_b_canonical_question_syntax_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -194,6 +197,8 @@ jobs:
           node tools/phase_b_relation_schema_ports_check.js
           node tools/phase_b_partial_binding_fiber.js check
           node tools/phase_b_partial_binding_fiber_check.js
+          node tools/phase_b_canonical_question_syntax.js check
+          node tools/phase_b_canonical_question_syntax_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

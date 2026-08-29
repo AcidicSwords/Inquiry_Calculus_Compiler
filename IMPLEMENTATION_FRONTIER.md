@@ -6,27 +6,26 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-PARTIAL-BINDING-FIBER-001` regenerates two exact v2.0 source identities into typed
-open-port, assignment, partial-binding, and fiber carriers. The independent checker rejects ten
-source, promotion, carrier, obligation, string, satisfaction, semantic-question, and axiom
-mutations; Gate B remains pending.
+`FORMAL-B-CANONICAL-QUESTION-SYNTAX-001` regenerates the exact v2.0 canonical-question definition
+into a typed partial-binding occurrence. The independent checker rejects nine source, promotion,
+carrier, typing, obligation, answer, probe/program, and axiom mutations; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate v2.0 canonical question syntax without treating a question as a complete answer carrier,
-valid-completion relation, probe, or program.
+Elaborate v2.0 answer-carrier and valid-completion boundary without treating a carrier as an
+actual return, validity as warrant, or completion as a probe/program result.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-CANONICAL-QUESTION-SYNTAX
+id: FORMAL-B-ANSWER-CARRIER-VALIDITY-BOUNDARY
 plan_phase: B
-goal: Classify and reconstruct canonical question syntax against typed partial binding and fiber carriers, postponing answer carrier, valid-completion, probe, program, successor-primitive, and Rust meaning.
-protected_difference: A canonical question is typed syntax generated from an open-port relation occurrence, not an answer set, validity predicate, probe, or program.
-discriminator: Construct an overcomplete typed question carrier from the exact source definition, contrast it with answer-carrier, validity, probe, program, and omission, then contract after exact regeneration isolates the smallest responsible representation.
-horizon: Canonical question syntax only; partial binding and fiber carriers are fixed inputs, answers, validity, probes, programs, standing, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Classify and reconstruct answer-carrier and valid-completion syntax against canonical question occurrences, postponing actual returns, warrant, probes, programs, successor-primitive, and Rust meaning.
+protected_difference: An answer carrier and validity relation are typed semantic candidates, not actual returns, standing warrant, probes, or programs.
+discriminator: Construct typed carrier and validity syntax from exact source displays, contrast it with actual return, warrant, probe, program, and omission, then contract after exact regeneration isolates the smallest responsible representation.
+horizon: Answer carrier and valid-completion boundary only; canonical question syntax is fixed input, actual returns, warrant, probes, programs, standing, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the typed canonical-question syntax and source obligations, then elaborate the next residual selected by the question boundary
-if_fail: reopen the earliest question source, typed occurrence, source-boundary, or answer/probe/program contamination relation; do not substitute answer sets, axioms, or Rust behavior
+if_pass: retain typed answer-carrier/validity syntax and then elaborate the next residual selected by that boundary
+if_fail: reopen the earliest answer/validity source or actuality/warrant contamination relation; do not substitute probes, programs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
