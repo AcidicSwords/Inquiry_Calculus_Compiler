@@ -78,6 +78,8 @@ node tools/phase_b_binding_type.js check
 node tools/phase_b_binding_type_check.js --compile
 node tools/phase_b_forms.js check
 node tools/phase_b_forms_check.js --compile
+node tools/phase_b_relations.js check
+node tools/phase_b_relations_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -108,6 +110,9 @@ documented in `formal-successor/PHASE_B_BINDING_TYPE_SURFACE.md`.
 The subsequent binding-typed represented-form carrier, reification boundary, and partial
 operational interpretation are documented in `formal-successor/PHASE_B_FORMS.md`; relations,
 questions, programs, and Gate B remain open.
+The following typed relation surface is documented in `formal-successor/PHASE_B_RELATIONS.md`;
+it retains typed endpoints, partial converse, and the function condition while leaving relation
+expressions and later semantics open.
 
 ## Current implementation state
 

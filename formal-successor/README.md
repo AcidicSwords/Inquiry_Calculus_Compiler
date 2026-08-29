@@ -61,6 +61,11 @@ types and preserves the ambiguous grammar context as obligations.
 operational interpretation without consuming the later relation layer. Its adjacent form claims
 remain explicit obligations and Formal Gate B remains pending.
 
+`PHASE_B_RELATIONS.md` follows with the source-regenerative typed-relation carrier, n-ary port
+schemas, functions as explicitly constrained relations, serial composition, partial converse,
+image/inverse image, and parallel operators. It does not import formula, question, fiber, program,
+or contextual-equivalence semantics, and Formal Gate B remains pending.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

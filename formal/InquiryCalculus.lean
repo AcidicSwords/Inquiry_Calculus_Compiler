@@ -2,6 +2,7 @@ import InquiryCalculus.Meta.Ambient
 import InquiryCalculus.Legacy.V20.Binding
 import InquiryCalculus.Legacy.V20.Types
 import InquiryCalculus.Legacy.V20.Forms
+import InquiryCalculus.Legacy.V20.Relations
 
 /-!
 # Inquiry Calculus formal successor

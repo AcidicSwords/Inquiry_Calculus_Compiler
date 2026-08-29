@@ -97,6 +97,10 @@ const required = [
   "formal-successor/PHASE_B_FORMS_SCHEMA.json",
   "formal-successor/PHASE_B_FORMS_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/Forms.lean",
+  "formal-successor/PHASE_B_RELATIONS.md",
+  "formal-successor/PHASE_B_RELATIONS_SCHEMA.json",
+  "formal-successor/PHASE_B_RELATIONS_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/Relations.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -125,6 +129,8 @@ const required = [
   "tools/phase_b_binding_type_check.js",
   "tools/phase_b_forms.js",
   "tools/phase_b_forms_check.js",
+  "tools/phase_b_relations.js",
+  "tools/phase_b_relations_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -240,6 +246,14 @@ requireContains("formal-successor/PHASE_B_FORMS.md", [
   "partial operational interpretation",
   "RepresentedFormObligation",
   "nine mutations",
+  "Gate B",
+]);
+
+requireContains("formal-successor/PHASE_B_RELATIONS.md", [
+  "seven consecutive explicit v2.0 relation definitions",
+  "RelationSchema",
+  "ConverseBoundary",
+  "eleven mutations",
   "Gate B",
 ]);
 
@@ -454,6 +468,28 @@ if (
   phaseBFormsSurface?.next_residual !== "FORMAL-B-TYPED-RELATIONS" ||
   phaseBFormsSurface?.formal_gate_b?.status !== "PENDING"
 ) errors.push("Phase B forms surface must preserve source obligations and pending Gate B");
+
+let phaseBRelationsSchema;
+let phaseBRelationsSurface;
+try {
+  phaseBRelationsSchema = JSON.parse(read("formal-successor/PHASE_B_RELATIONS_SCHEMA.json"));
+  phaseBRelationsSurface = JSON.parse(read("formal-successor/PHASE_B_RELATIONS_SURFACE.json"));
+} catch (error) {
+  errors.push(`Phase B relations control JSON: ${error.message}`);
+}
+if (
+  phaseBRelationsSchema?.status !== "phase_b_relations_contract_not_successor_semantics" ||
+  phaseBRelationsSchema?.sources?.length !== 7 ||
+  phaseBRelationsSchema?.required_declarations?.length !== 11 ||
+  phaseBRelationsSchema?.gate_b?.status !== "PENDING"
+) errors.push("Phase B relations schema is detached from the explicit predecessor boundary");
+if (
+  phaseBRelationsSurface?.status !== "generated_phase_b_relations_surface_not_successor_semantics" ||
+  phaseBRelationsSurface?.coverage?.explicit_definitions !== 7 ||
+  phaseBRelationsSurface?.coverage?.obligations !== 0 ||
+  phaseBRelationsSurface?.next_residual !== "FORMAL-B-COARSE-RELATION-REFINEMENT" ||
+  phaseBRelationsSurface?.formal_gate_b?.status !== "PENDING"
+) errors.push("Phase B relations surface must preserve its typed boundary and pending Gate B");
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
 if ((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/gu) ?? []).length !== 1 ||
@@ -902,6 +938,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_binding_type_check.js",
   "node tools/phase_b_forms.js check",
   "node tools/phase_b_forms_check.js",
+  "node tools/phase_b_relations.js check",
+  "node tools/phase_b_relations_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

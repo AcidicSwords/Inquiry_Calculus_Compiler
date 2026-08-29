@@ -44,6 +44,7 @@ jobs:
           node tools/phase_b_predecessor_spine_check.js --compile
           node tools/phase_b_binding_type_check.js --compile
           node tools/phase_b_forms_check.js --compile
+          node tools/phase_b_relations_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -136,6 +137,8 @@ jobs:
           node --check tools/phase_b_binding_type_check.js
           node --check tools/phase_b_forms.js
           node --check tools/phase_b_forms_check.js
+          node --check tools/phase_b_relations.js
+          node --check tools/phase_b_relations_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -159,6 +162,8 @@ jobs:
           node tools/phase_b_binding_type_check.js
           node tools/phase_b_forms.js check
           node tools/phase_b_forms_check.js
+          node tools/phase_b_relations.js check
+          node tools/phase_b_relations_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

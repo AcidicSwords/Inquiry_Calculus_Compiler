@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_relations_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "51f9fc8996e0934992af6d7159a3c6555342493bc5d7f14b28376cd408c2b82f",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "relations_module_sha256": "4805636c28ddb66f1d62e53dedb4f18f77c9f0d83ee5b9cf1cb77c4a88ea3861"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-3CA4350181076F20",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-3CA4350181076F20",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 783,
+        "end_line": 794,
+        "sha256": "0836d5019224e59870113070531fe42c05dd523073911529cc388278b035f625"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-D7E40B5FD5FF51AC",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-D7E40B5FD5FF51AC",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 796,
+        "end_line": 805,
+        "sha256": "b8111eed5bcc8169e427b070e9f95a23332fe08bcbf844ec4cce07a1bbfe418b"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-79831E897328F3CD",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-79831E897328F3CD",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 807,
+        "end_line": 814,
+        "sha256": "4eccb116c8aff45e1c33d26eace03b563e6ad0145a0086142306903d8402d77b"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-D2CA560D7E745992",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-D2CA560D7E745992",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 816,
+        "end_line": 829,
+        "sha256": "b598b98af364ae769316529672c12516e3138f28a08dbd1266aba0a4d6f5f663"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-9CA6ACF74CF9A5C1",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-9CA6ACF74CF9A5C1",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 831,
+        "end_line": 839,
+        "sha256": "50d734ff865fc2a7df095ff5423168dcca3449f7b5ae07b76739aa1ddedc3cce"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-502D7BD7B16BC721",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-502D7BD7B16BC721",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 841,
+        "end_line": 849,
+        "sha256": "011a010d579ec67c9147be9a347a059f1711aa2c6384684b40d7528c4800c73b"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-1CC3B1DE1920C0E3",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relations/PRED-TEX-DECL-1CC3B1DE1920C0E3",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 851,
+        "end_line": 853,
+        "sha256": "fcafd7e4b6e5403f42b6f79d25c58d559e66c382dc6469b23b0b419262c95e7b"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 7,
+    "obligations": 0
+  },
+  "next_residual": "FORMAL-B-COARSE-RELATION-REFINEMENT",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
