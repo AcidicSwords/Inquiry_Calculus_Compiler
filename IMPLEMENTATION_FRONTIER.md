@@ -6,43 +6,43 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-GUARDED-RECURRENCE-001` machine-checks the three guarded progress-boundary forms and
-pure-invisible-recurrence foil as mixed source obligations. It keeps productivity validity, recurrence
-execution, enforcement, solver, and successor meanings open; Gate B remains pending.
+`FORMAL-B-COMPILER-ARCHITECTURE-001` machine-checks all nine declared compiler stages and the
+unproved semantic-authority non-strengthening condition as source obligations. It keeps stage
+implementation, preservation, execution, solver, and successor meanings open; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate compiler architecture while preserving its staged source pipeline and non-strengthening authority boundary without compiler execution or stage-correctness claims.
+Elaborate Stage 1 normalization while preserving its OpenIR endomorphism shape and exact completion-relation preservation claim without a normalizer, isomorphism proof, or semantic authority promotion.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-COMPILER-ARCHITECTURE
+id: FORMAL-B-NORMALIZE-OPEN-RELATION
 plan_phase: B
-goal: Determine the smallest source-regenerative boundary for v2.0 compiler architecture, preserving the declared staged pipeline from typed forms/relation schema to runtime syntax and the semantic-authority non-strengthening condition.
-protected_difference: Compiler architecture displays and prose are predecessor obligations; they are not yet a compiler implementation, stage-correctness proof, or semantic-authority decision procedure.
-discriminator: Contrast source-bound stage carriers with executable compilation, omitted stages, silent semantic strengthening, or automatic stage-correctness proof; retain only the exact source-supported compiler-architecture boundary after regeneration and independent checking.
-horizon: Compiler-architecture boundary only; guarded recurrence is fixed input, stage implementation, semantic preservation, code generation, execution, answer semantics, and all unrelated LegacyObligations remain explicit unless independently formalized and checked, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Determine the smallest source-regenerative boundary for v2.0 Stage 1 normalization, preserving the OpenIR endomorphism shape and completion-relation preservation claim.
+protected_difference: Normalization syntax and completion-relation claim are predecessor obligations; they are not yet a normalizer implementation, relation isomorphism proof, or semantic authority decision procedure.
+discriminator: Contrast source-bound normalization carrier with an executable normalizer, automatic completion-isomorphism proof, or authority-strengthening transformation; retain only the exact source-supported Stage 1 boundary after regeneration and independent checking.
+horizon: Normalize-open-relation boundary only; compiler architecture is fixed input, normalizer implementation, alpha-renaming, join/hiding processing, logical expansion, type-reference canonicalization, completion relation proof, execution, answer semantics, and all unrelated LegacyObligations remain explicit unless independently formalized and checked, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the smallest checked guarded-recurrence boundary and then elaborate compiler architecture
-if_fail: reopen the earliest recurrence, progress boundary, invisible foil, productivity, obligation, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
+if_pass: retain the smallest checked compiler-architecture boundary and then elaborate Stage 1 normalization
+if_fail: reopen the earliest compiler stage, stage order, authority non-strengthening, obligation, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
 
-Construct an executable or stage-skipping compiler foil, then contrast it with the declared pipeline and no-silent-
-semantic-strengthening condition. Contract only after exact source regeneration and retained obligations distinguish the
-smallest compiler-architecture boundary.
+Construct an executable normalizer or automatic completion-isomorphism foil, then contrast it with the OpenIR
+endomorphism shape and completion-relation preservation claim. Contract only after exact source regeneration and
+retained obligations distinguish the smallest Stage 1 normalization boundary.
 
 ## Prohibitions at this boundary
 
-- Do not turn the staged pipeline into compiler execution or stage-correctness proof.
-- Do not omit stages or silently strengthen semantic authority.
+- Do not turn normalization syntax into an executable normalizer or isomorphism proof.
+- Do not silently strengthen semantic authority through a normalization transformation.
 - Do not use axioms, proof gaps, or Rust behavior to bypass schema typing.
 - Do not select successor primitives or mark Gate B passed from this local elaboration.
 - Do not rewrite v2.0, advance the deferred Rust frontier, or mix successor state into predecessor ledgers.
 
 ## Exit
 
-On pass, retain the smallest compiler-architecture boundary, explicit source obligations, and independent breakers,
-then select the next residual. On failure, preserve the return and reopen the earliest stage, authority, pipeline,
-execution, or source boundary relation.
+On pass, retain the smallest Stage 1 normalization boundary, explicit source obligations, and independent breakers,
+then select the next residual. On failure, preserve the return and reopen the earliest normalizer, completion relation,
+authority, execution, or source boundary relation.

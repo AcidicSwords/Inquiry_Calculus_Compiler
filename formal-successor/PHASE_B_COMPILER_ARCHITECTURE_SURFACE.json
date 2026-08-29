@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_compiler_architecture_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "ad0ac381e08370f7b959a7c972940dde41e606306f9f488b0e443e2562f37159"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-970DC0200C79A844",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/compiler-architecture/PRED-TEX-PROSE-970DC0200C79A844",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3240,
+        "end_line": 3240,
+        "sha256": "ba35b3cc3078d49be83c2d03c60cf5f2e16b55068ca9e286bf67502d148f746e"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-7C2D7F036C641A33",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/compiler-architecture/PRED-TEX-DISPLAY-7C2D7F036C641A33",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3241,
+        "end_line": 3249,
+        "sha256": "0577905987ad4b099fe332bc3c4aa3c3294bfea3acbcb431dc7a5698a5131ab1"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-85065559BD3308B7",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/compiler-architecture/PRED-TEX-PROSE-85065559BD3308B7",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3251,
+        "end_line": 3251,
+        "sha256": "bb5e356bf21b54780010bbec396807f00614fde6c5ff28179ada99923e455d9e"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "next_residual": "FORMAL-B-NORMALIZE-OPEN-RELATION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
