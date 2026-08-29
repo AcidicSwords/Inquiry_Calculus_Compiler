@@ -78,6 +78,9 @@ const required = [
   "formal-successor/PHASE_A_TEX_CLASSIFICATION.md",
   "formal-successor/PREDECESSOR_TEX_CLASSIFICATION_SCHEMA.json",
   "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+  "formal-successor/PHASE_A_IMPLEMENTATION_CLASSIFICATION.md",
+  "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION_SCHEMA.json",
+  "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION.json",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -94,6 +97,8 @@ const required = [
   "tools/predecessor_inventory_check.js",
   "tools/predecessor_tex_classification.js",
   "tools/predecessor_tex_classification_check.js",
+  "tools/predecessor_implementation_classification.js",
+  "tools/predecessor_implementation_classification_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -169,6 +174,13 @@ requireContains("formal-successor/PHASE_A_TEX_CLASSIFICATION.md", [
   "Formal Gate A remains pending",
 ]);
 
+requireContains("formal-successor/PHASE_A_IMPLEMENTATION_CLASSIFICATION.md", [
+  "10,300 edges",
+  "future correspondence therefore remains `Unknown`",
+  "not accepted correspondence",
+  "Formal Gate A remains pending",
+]);
+
 let predecessorInventoryGrammar;
 let predecessorInventory;
 try {
@@ -215,6 +227,34 @@ if (
   predecessorTexClassification?.formal_gate_a?.status !== "PENDING"
 ) {
   errors.push("Phase A TeX classification must be total at TeX coverage while preserving pending Formal Gate A");
+}
+
+let predecessorImplementationClassificationSchema;
+let predecessorImplementationClassification;
+try {
+  predecessorImplementationClassificationSchema = JSON.parse(read("formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION_SCHEMA.json"));
+  predecessorImplementationClassification = JSON.parse(read("formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION.json"));
+} catch (error) {
+  errors.push(`predecessor implementation classification control JSON: ${error.message}`);
+}
+if (
+  predecessorImplementationClassificationSchema?.status !==
+    "phase_a_implementation_classification_contract_not_semantic_authority" ||
+  predecessorImplementationClassificationSchema?.inputs?.predecessor_commit !== baseline ||
+  predecessorImplementationClassificationSchema?.edge_grammar?.authority !==
+    "source_incidence_candidate_not_semantic_correspondence"
+) {
+  errors.push("Phase A implementation classification schema is detached from its authority boundary");
+}
+if (
+  predecessorImplementationClassification?.status !==
+    "reviewed_phase_a_implementation_classification_not_semantic_authority" ||
+  predecessorImplementationClassification?.coverage?.classified_source_items !== 2062 ||
+  predecessorImplementationClassification?.coverage?.direct_exact_symbol_edges !== 15 ||
+  predecessorImplementationClassification?.coverage?.unclassified_source_items !== 0 ||
+  predecessorImplementationClassification?.formal_gate_a?.status !== "PENDING"
+) {
+  errors.push("Phase A implementation classification must be exact, total, candidate-only, and non-promoting");
 }
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
@@ -651,6 +691,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/predecessor_inventory_check.js",
   "node tools/predecessor_tex_classification.js check",
   "node tools/predecessor_tex_classification_check.js",
+  "node tools/predecessor_implementation_classification.js check",
+  "node tools/predecessor_implementation_classification_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

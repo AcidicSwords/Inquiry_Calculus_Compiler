@@ -66,6 +66,8 @@ node tools/predecessor_inventory.js check
 node tools/predecessor_inventory_check.js
 node tools/predecessor_tex_classification.js check
 node tools/predecessor_tex_classification_check.js
+node tools/predecessor_implementation_classification.js check
+node tools/predecessor_implementation_classification_check.js
 cd formal
 lake build --wfail
 ```
@@ -87,6 +89,8 @@ The Phase A source universe and its non-promotion boundary are documented in
 visible rather than converting source coverage into Gate A.
 The source-bound six-way TeX review overlay and its non-promotion rules are documented in
 `formal-successor/PHASE_A_TEX_CLASSIFICATION.md`.
+The authority-separated Rust/schema overlay and exact-symbol candidate-edge rules are documented
+in `formal-successor/PHASE_A_IMPLEMENTATION_CLASSIFICATION.md`.
 
 ## Current implementation state
 

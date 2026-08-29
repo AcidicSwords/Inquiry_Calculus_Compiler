@@ -1,27 +1,27 @@
 {
   "schema": 1,
-  "change": "Phase A complete TeX source-role classification ratchet",
+  "change": "Phase A authority-separated implementation classification ratchet",
   "changed": [
-    "six-way construction-specification TeX classification schema",
-    "complete source-bound overlay for all 1370 generated TeX candidates",
-    "explicit unelaborated LegacyObligation payloads and dependency references",
-    "independent source rejoin and eleven anti-collapse mutation breakers",
-    "TeX-local conformance standing and Rust-surface successor residual",
-    "CI and autonomous-runbook classification gates"
+    "exact implementation-role and candidate-edge schema",
+    "complete overlay for all 2062 Rust semantic/public/schema identities",
+    "fifteen direct exact-symbol edges and fourteen provenance-preserving module aggregates",
+    "explicit unproved correspondence obligations and ImplementationOnly authority records",
+    "independent pinned-blob/source rejoin and thirteen authority breakers",
+    "implementation-local conformance standing and fixture successor residual"
   ],
   "dependency_closure": [
     "README.md",
     ".github/workflows/ci.yml",
     "IMPLEMENTATION_FRONTIER.md",
     "formal-successor/PHASE_A_INVENTORY.md",
-    "formal-successor/PHASE_A_TEX_CLASSIFICATION.md",
-    "formal-successor/PREDECESSOR_TEX_CLASSIFICATION_SCHEMA.json",
-    "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "formal-successor/PHASE_A_IMPLEMENTATION_CLASSIFICATION.md",
+    "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION_SCHEMA.json",
+    "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION.json",
     "formal-successor/CONFORMANCE_STATUS.md",
     "formal-successor/DECISIONS.jsonl",
     "formal-successor/FAILURES.jsonl",
-    "tools/predecessor_tex_classification.js",
-    "tools/predecessor_tex_classification_check.js",
+    "tools/predecessor_implementation_classification.js",
+    "tools/predecessor_implementation_classification_check.js",
     "tools/successor_control_check.js"
   ],
   "preserved": [
@@ -34,8 +34,9 @@
     "Gate A as pending"
   ],
   "still_open": [
-    "FORMAL-A-RUST-SURFACE-INVENTORY",
-    "2248 generated non-TeX candidate reviews",
+    "FORMAL-A-FIXTURE-INVENTORY",
+    "36 Rust conformance-module and 150 pending fixture reviews",
+    "Phase F decision of 13 implementation correspondence obligations",
     "Phase B elaboration of 1236 TeX LegacyObligation records",
     "fixture-to-claim edges and three registry-only fixture standing relations",
     "formal validation or refutation of every derived computational formula",
@@ -43,19 +44,19 @@
     "Formal Gates A-N"
   ],
   "models_rerun": [
-    "whole-section and single-identity omission",
-    "duplicate and foreign source identity",
-    "keyword-only prose classification",
-    "blanket theorem promotion",
-    "invalid legacy status",
-    "lost display claim boundary",
-    "detached source digest",
-    "binding theorem collapse",
+    "semantic module, public item, and schema omission",
+    "generic and fuzzy TeX edge",
+    "foreign TeX target",
+    "blanket ImplementationOnly and blanket correspondence",
+    "accepted edge authority",
+    "erased module provenance",
+    "detached Git source digest",
+    "wire-fixture versus storage-schema role collapse",
     "Formal Gate A self-promotion",
     "exact classification regeneration"
   ],
   "question_corpus_rerun": true,
   "regeneration_rerun": true,
-  "axiom_audit": "Lean build --wfail passed; Phase A classification adds no successor semantic declaration",
+  "axiom_audit": "Lean build --wfail passed; Phase A implementation classification adds no successor semantic declaration",
   "rust_semantics_changed": false
 }

@@ -49,3 +49,7 @@ its required claim edge, or an admitted source form is unmatched.
 The TeX-local contraction of this overinclusive field is governed by
 `PHASE_A_TEX_CLASSIFICATION.md`. Its overlay preserves these generated identities while separating
 explicit declarations, binding results, unresolved claim boundaries, and canonical context.
+
+The Rust semantic/public and schema contraction is governed by
+`PHASE_A_IMPLEMENTATION_CLASSIFICATION.md`. Its exact-symbol edges are correspondence candidates,
+never semantic authority or Phase F preservation results.

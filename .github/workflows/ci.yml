@@ -118,6 +118,8 @@ jobs:
           node --check tools/predecessor_inventory_check.js
           node --check tools/predecessor_tex_classification.js
           node --check tools/predecessor_tex_classification_check.js
+          node --check tools/predecessor_implementation_classification.js
+          node --check tools/predecessor_implementation_classification_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -129,6 +131,8 @@ jobs:
           node tools/predecessor_inventory_check.js
           node tools/predecessor_tex_classification.js check
           node tools/predecessor_tex_classification_check.js
+          node tools/predecessor_implementation_classification.js check
+          node tools/predecessor_implementation_classification_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

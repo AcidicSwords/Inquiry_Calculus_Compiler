@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "status": "phase_a_implementation_classification_contract_not_semantic_authority",
+  "inputs": {
+    "inventory_path": "formal-successor/PREDECESSOR_INVENTORY.json",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "predecessor_commit": "4a18e2e308f359a64f19b7d056652f19fd9aaeae",
+    "admitted_source_classes": [
+      "rust.semantic_module_candidate",
+      "rust.public_item",
+      "schema.fixture",
+      "schema.migration"
+    ]
+  },
+  "construction_specification_dispositions": [
+    "FormalDefinition",
+    "FormalTheorem",
+    "LegacyObligation",
+    "BindingTheorem",
+    "ImplementationOnly",
+    "CanonicalProseOnly"
+  ],
+  "used_dispositions": [
+    "LegacyObligation",
+    "ImplementationOnly"
+  ],
+  "implementation_roles": [
+    "semantic_module_correspondence_candidate",
+    "semantic_module_implementation_only",
+    "public_symbol_correspondence_candidate",
+    "public_implementation_surface",
+    "wire_fixture",
+    "storage_schema"
+  ],
+  "required_record_fields": [
+    "source_id",
+    "source_class",
+    "source",
+    "implementation_role",
+    "disposition",
+    "destination",
+    "claim_edges",
+    "edge_status",
+    "review_status",
+    "review_basis",
+    "rationale"
+  ],
+  "edge_grammar": {
+    "eligible_public_symbol": "PascalCase Rust public name beginning uppercase, containing only ASCII alphanumerics, and at least six characters long",
+    "admitted_tex_forms": [
+      "\\mathsf{NAME}",
+      "\\texttt{NAME}",
+      "\\operatorname{NAME}"
+    ],
+    "direct_edge_kind": "ExactTeXSemanticSymbolOccurrence",
+    "module_edge_kind": "AggregatedExactPublicSymbolOccurrence",
+    "authority": "source_incidence_candidate_not_semantic_correspondence",
+    "generic_word_law": "Plain words, case-folded names, stems, synonyms, headings, comments, and fuzzy similarity create no edge.",
+    "module_law": "A module inherits only the exact target union of its direct public-symbol edges, with every contributing public source identity retained."
+  },
+  "legacy_obligation": {
+    "candidate_language": "implementation-correspondence-candidate/v1",
+    "status": "Unproved",
+    "breaker_status": "not_yet_established",
+    "law": "An exact TeX symbol occurrence preserves a correspondence candidate only. It does not establish representation equality, preservation, correctness, completeness, or successor standing."
+  },
+  "expected_boundary_at_pinned_inputs": {
+    "classified_source_items": 2062,
+    "direct_public_symbols": 7,
+    "direct_exact_symbol_edges": 15,
+    "modules_with_aggregated_edges": 6,
+    "aggregated_module_edges": 14,
+    "legacy_obligations": 13,
+    "implementation_only": 2049
+  },
+  "destination_roots": {
+    "LegacyObligation": "phase:F/Legacy/V20/Correspondence",
+    "ImplementationOnly": "phase:F/Legacy/V20/Implementation"
+  },
+  "review_law": "Every admitted implementation identity is reviewed under exact source incidence. Absence of an admitted exact symbol edge yields ImplementationOnly at Phase A; it does not prove that no future checked correspondence exists.",
+  "gate_law": "Complete implementation classification closes only FORMAL-A-RUST-SURFACE-INVENTORY. Formal Gate A remains pending until fixture/test classification and all required claim edges are independently checked."
+}
