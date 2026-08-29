@@ -6,17 +6,17 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-INDEXED-MEET-REFINEMENT-001` proves one-way solution-field inclusion from a typed web
-embedding. It keeps reverse inclusion, equality, answer, solver, execution, and successor meanings
-out of the boundary; Gate B remains pending.
+`FORMAL-B-PROPERTY-IMAGE-HOLE-001` machine-checks witnessed property-image membership and
+forcedness syntax. It keeps answer selection, filler uniqueness, solver, execution, and successor
+meanings out of the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate property image of a hole without treating image values or singleton forcing as an answer,
-solver, program behavior, or successor semantics.
+Elaborate protected determination without treating horizon-sensitive observational agreement as a
+global equivalence, answer, solver, program behavior, or successor semantics.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-PROPERTY-IMAGE-HOLE
+id: FORMAL-B-PROTECTED-DETERMINATION
 plan_phase: B
 goal: Determine the smallest source-regenerative boundary for the v2.0 property image of a hole, preserving a property map, solution field, image value, forcedness, answer semantics, successor primitives, and Rust meaning as open unless independently established.
 protected_difference: A property image maps the solution field into values; singleton forcing is distinct from a selected answer, total solver, program, or successor semantics.
