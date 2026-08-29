@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_probe_tool_invention_question_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "6d1ba47e9a696feaf3852a892d0583fc5a5bbaa0253dcacb02516df609ed58e1"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DCA227FE9AE1FCF1",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/representation-invention-and-discriminator-generation/PRED-TEX-DECL-DCA227FE9AE1FCF1",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1626,
+        "end_line": 1640,
+        "sha256": "516d477b0a66d5b73bcb8636706cb6ddccc4ad3cfe33bb383fce47a18b198943"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-REPRESENTATION-GAP-LOCALIZATION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
