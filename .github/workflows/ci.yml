@@ -73,6 +73,7 @@ jobs:
           node tools/phase_b_property_image_hole_check.js --compile
           node tools/phase_b_protected_determination_check.js --compile
           node tools/phase_b_exact_determination_signature_check.js --compile
+          node tools/phase_b_residual_ambiguity_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -223,6 +224,8 @@ jobs:
           node --check tools/phase_b_protected_determination_check.js
           node --check tools/phase_b_exact_determination_signature.js
           node --check tools/phase_b_exact_determination_signature_check.js
+          node --check tools/phase_b_residual_ambiguity.js
+          node --check tools/phase_b_residual_ambiguity_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -304,6 +307,8 @@ jobs:
           node tools/phase_b_protected_determination_check.js
           node tools/phase_b_exact_determination_signature.js check
           node tools/phase_b_exact_determination_signature_check.js
+          node tools/phase_b_residual_ambiguity.js check
+          node tools/phase_b_residual_ambiguity_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
