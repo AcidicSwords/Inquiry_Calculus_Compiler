@@ -132,6 +132,9 @@ remains explicit.
 The data-only relation-expression display is documented in
 `formal-successor/PHASE_B_RELATION_EXPRESSION_IR.md` as candidate syntax only; denotation and
 semantic-question claims remain obligation-bound.
+The typed schema/signature boundary is documented in
+`formal-successor/PHASE_B_RELATION_SCHEMA_PORTS.md`; named ports remain non-string typed
+coordinates and schemas remain distinct from relation instances and questions.
 
 ## Current implementation state
 

@@ -236,6 +236,8 @@ node tools/phase_b_minimal_logical_basis.js check
 node tools/phase_b_minimal_logical_basis_check.js --compile
 node tools/phase_b_relation_expression_ir.js check
 node tools/phase_b_relation_expression_ir_check.js --compile
+node tools/phase_b_relation_schema_ports.js check
+node tools/phase_b_relation_schema_ports_check.js --compile
 formal: lake build --wfail
 documentation topology and canonical-TeX checks when those surfaces change
 Rust format/check/clippy/test as predecessor regression evidence

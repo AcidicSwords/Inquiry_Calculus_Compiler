@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "status": "phase_b_relation_schema_ports_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "schema_module": "formal/InquiryCalculus/Legacy/V20/RelationSchemaPorts.lean"
+  },
+  "sources": [
+    "PRED-TEX-DECL-C25B97BA06852456",
+    "PRED-TEX-DECL-6F044DC1EE2FFE76",
+    "PRED-TEX-DECL-10515A6565C257C2"
+  ],
+  "required_declarations": [
+    "PortName",
+    "NamedPort",
+    "RelationSchemaSignature",
+    "RelationSchemaPortObligation"
+  ],
+  "obligations": ["typedRelationSchema", "partialBinding", "completionFiber"],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-PARTIAL-BINDING-FIBER"
+}

@@ -7,6 +7,7 @@ import InquiryCalculus.Legacy.V20.Refinement
 import InquiryCalculus.Legacy.V20.FormulaGrammar
 import InquiryCalculus.Legacy.V20.MinimalLogicalBasis
 import InquiryCalculus.Legacy.V20.RelationExpressionIR
+import InquiryCalculus.Legacy.V20.RelationSchemaPorts
 
 /-!
 # Inquiry Calculus formal successor

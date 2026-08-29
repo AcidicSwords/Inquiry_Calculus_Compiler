@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_relation_schema_ports_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "47baa2f4ef6504a72fb54463c6d855ffa7004c559199b854841d52936b703708",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "schema_module_sha256": "8ec6527491b64b8f5768fb04e17db2f27b22f73f1763c4b20ec578c6d2aaaeeb"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-C25B97BA06852456",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-C25B97BA06852456",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1012,
+        "end_line": 1024,
+        "sha256": "1b988bcac2f736bd05fe46f262afc189e8f595aa18ba5b52fb9e04e3261bcbc1"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-6F044DC1EE2FFE76",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-6F044DC1EE2FFE76",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1026,
+        "end_line": 1032,
+        "sha256": "590165ceaffab7b1c338142abe3c1a285e1c4af297b1762a2c12d8437db281f2"
+      },
+      "obligation_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-10515A6565C257C2",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/relation-schemas-and-named-ports/PRED-TEX-DECL-10515A6565C257C2",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1034,
+        "end_line": 1045,
+        "sha256": "fc893cc25dbc5766ea5e5f651897c60f7f35fbd402a8e7f460c94449a9015491"
+      },
+      "obligation_status": null
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 3,
+    "obligations": 0,
+    "obligation_statuses": [
+      null,
+      null,
+      null
+    ]
+  },
+  "next_residual": "FORMAL-B-PARTIAL-BINDING-FIBER",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

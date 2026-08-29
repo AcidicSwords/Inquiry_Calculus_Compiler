@@ -83,6 +83,10 @@ remains pending.
 typed candidate grammar. Denotation, relational operation laws, and the concrete semantic-question
 claim remain explicit obligations; Formal Gate B remains pending.
 
+`PHASE_B_RELATION_SCHEMA_PORTS.md` follows with a typed schema/signature carrier. Named ports are
+non-string coordinates paired with binding-indexed types; partial binding and completion fiber
+remain explicit later obligations, and Formal Gate B remains pending.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

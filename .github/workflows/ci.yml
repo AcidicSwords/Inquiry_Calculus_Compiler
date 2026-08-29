@@ -49,6 +49,7 @@ jobs:
           node tools/phase_b_formula_grammar_check.js --compile
           node tools/phase_b_minimal_logical_basis_check.js --compile
           node tools/phase_b_relation_expression_ir_check.js --compile
+          node tools/phase_b_relation_schema_ports_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -151,6 +152,8 @@ jobs:
           node --check tools/phase_b_minimal_logical_basis_check.js
           node --check tools/phase_b_relation_expression_ir.js
           node --check tools/phase_b_relation_expression_ir_check.js
+          node --check tools/phase_b_relation_schema_ports.js
+          node --check tools/phase_b_relation_schema_ports_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -184,6 +187,8 @@ jobs:
           node tools/phase_b_minimal_logical_basis_check.js
           node tools/phase_b_relation_expression_ir.js check
           node tools/phase_b_relation_expression_ir_check.js
+          node tools/phase_b_relation_schema_ports.js check
+          node tools/phase_b_relation_schema_ports_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

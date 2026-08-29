@@ -117,6 +117,10 @@ const required = [
   "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SCHEMA.json",
   "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/RelationExpressionIR.lean",
+  "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS.md",
+  "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS_SCHEMA.json",
+  "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/RelationSchemaPorts.lean",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -155,6 +159,8 @@ const required = [
   "tools/phase_b_minimal_logical_basis_check.js",
   "tools/phase_b_relation_expression_ir.js",
   "tools/phase_b_relation_expression_ir_check.js",
+  "tools/phase_b_relation_schema_ports.js",
+  "tools/phase_b_relation_schema_ports_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -1100,6 +1106,8 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_minimal_logical_basis_check.js",
   "node tools/phase_b_relation_expression_ir.js check",
   "node tools/phase_b_relation_expression_ir_check.js",
+  "node tools/phase_b_relation_schema_ports.js check",
+  "node tools/phase_b_relation_schema_ports_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

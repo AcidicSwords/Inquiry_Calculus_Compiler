@@ -1,32 +1,31 @@
 {
   "schema": 1,
-  "change": "Phase B data-only relation-expression IR boundary ratchet",
+  "change": "Phase B relation-schema and named-port boundary ratchet",
   "changed": [
-    "source-regenerative data-only relation-expression IR boundary over checked relations and candidate formula syntax",
-    "candidate relation, bind, join, expose, hide, rename, and guard grammar",
-    "syntax-only binding, port-selection, renaming, and guard coordinates",
-    "three retained Ambiguous source obligations",
-    "independent source, status, promotion, grammar, constructor, obligation, denotation, semantic-question, string, and axiom breakers (13/13)",
+    "source-regenerative typed relation-token/signature carrier with non-string named ports",
+    "binding-indexed named-port types while preserving schema data apart from instances",
+    "three retained partial-binding/completion-fiber obligations",
+    "independent source, promotion, declaration, obligation, string, instance, semantic-question, and axiom breakers (10/10)",
     "structural CI routing plus Lean compile recheck after the pinned formal toolchain",
-    "local FORMAL-B-RELATION-EXPRESSION-IR-001 evidence with Formal Gate B still pending",
-    "live frontier advanced to FORMAL-B-RELATION-SCHEMAS-PORTS"
+    "local FORMAL-B-RELATION-SCHEMA-PORTS-001 evidence with Formal Gate B still pending",
+    "live frontier advanced to FORMAL-B-PARTIAL-BINDING-FIBER"
   ],
   "dependency_closure": [
     "README.md",
     ".github/workflows/ci.yml",
     "IMPLEMENTATION_FRONTIER.md",
-    "formal/InquiryCalculus/Legacy/V20/RelationExpressionIR.lean",
+    "formal/InquiryCalculus/Legacy/V20/RelationSchemaPorts.lean",
     "formal-successor/README.md",
     "formal-successor/AUTONOMOUS_ITERATION.md",
-    "formal-successor/PHASE_B_RELATION_EXPRESSION_IR.md",
-    "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SCHEMA.json",
-    "formal-successor/PHASE_B_RELATION_EXPRESSION_IR_SURFACE.json",
+    "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS.md",
+    "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS_SCHEMA.json",
+    "formal-successor/PHASE_B_RELATION_SCHEMA_PORTS_SURFACE.json",
     "formal-successor/CONFORMANCE_STATUS.md",
     "formal-successor/DECISIONS.jsonl",
     "formal-successor/FAILURES.jsonl",
     "formal-successor/reports/latest.json",
-    "tools/phase_b_relation_expression_ir.js",
-    "tools/phase_b_relation_expression_ir_check.js",
+    "tools/phase_b_relation_schema_ports.js",
+    "tools/phase_b_relation_schema_ports_check.js",
     "tools/successor_control_check.js"
   ],
   "preserved": [
@@ -39,8 +38,8 @@
     "Formal Gate B as pending"
   ],
   "still_open": [
-    "FORMAL-B-RELATION-SCHEMAS-PORTS",
-    "relation schemas and named ports plus all later semantic layers",
+    "FORMAL-B-PARTIAL-BINDING-FIBER",
+    "partial binding and completion fiber plus all later semantic layers",
     "exact use and required strength of v2.0 classical metalanguage",
     "thirteen selected and 1223 other TeX LegacyObligations",
     "Phase F implementation correspondence obligations",
