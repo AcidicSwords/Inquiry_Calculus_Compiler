@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "status": "phase_a_fixture_classification_contract_not_semantic_authority",
+  "inputs": {
+    "inventory_path": "formal-successor/PREDECESSOR_INVENTORY.json",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "implementation_classification_path": "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION.json",
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "predecessor_commit": "4a18e2e308f359a64f19b7d056652f19fd9aaeae",
+    "admitted_source_classes": ["rust.conformance_module", "conformance.fixture"]
+  },
+  "construction_specification_dispositions": [
+    "FormalDefinition",
+    "FormalTheorem",
+    "LegacyObligation",
+    "BindingTheorem",
+    "ImplementationOnly",
+    "CanonicalProseOnly"
+  ],
+  "used_dispositions": ["LegacyObligation", "ImplementationOnly"],
+  "fixture_roles": [
+    "statused_executable_fixture",
+    "statused_nonfunction_witness_fixture",
+    "statused_unresolved_fixture",
+    "registry_without_status_fixture"
+  ],
+  "module_roles": ["exercised_conformance_module", "unrouted_conformance_module"],
+  "status_labels": ["PASS", "PENDING", "Unknown", "Blocked", "ResourceBounded"],
+  "edge_grammar": {
+    "test_declaration": "A test declaration is a function immediately governed by #[test] or #[tokio::test] in a pinned Rust blob.",
+    "status_test_edge": "An exact complete test-function identifier occurs in the status-row source text and resolves uniquely across pinned Rust test declarations.",
+    "registry_test_edge": "The pinned executable registry supplies an exact path and test-function pair which resolves to one pinned Rust test declaration.",
+    "fixture_file_edge": "An exact fixtures/ path in a status row resolves to one pinned schema.fixture inventory identity.",
+    "tex_claim_edge": "The complete displayed fixture label occurs as an exact token in one reviewed TeX source range.",
+    "implementation_edge": "A PascalCase public implementation symbol of at least six ASCII alphanumerics occurs as an exact Rust identifier in the executable test body after comments and literals are masked.",
+    "authority": "source_incidence_and_execution_route_candidate_not_semantic_correspondence_or_warrant",
+    "noncollapse_law": "Status assertion, registry membership, test declaration, test execution, claim incidence, implementation incidence, coverage, and semantic warrant remain distinct."
+  },
+  "standing_law": {
+    "predecessor_status": "The exact source status label is retained as predecessor ledger evidence only.",
+    "successor_standing": "Unknown",
+    "law": "Neither PASS text, an executable route, nor an implementation/TeX incidence establishes successor standing or semantic correctness."
+  },
+  "destination_roots": {
+    "LegacyObligation": "phase:A/Legacy/V20/Fixture",
+    "ImplementationOnly": "phase:A/Legacy/V20/ConformanceImplementation"
+  },
+  "expected_boundary_at_pinned_inputs": {
+    "classified_source_items": 226,
+    "conformance_modules": 36,
+    "fixture_row_occurrences": 190,
+    "distinct_fixture_labels": 185,
+    "repeated_label_extra_occurrences": 5,
+    "predecessor_pass_rows": 189,
+    "predecessor_pending_rows": 1,
+    "test_declarations_in_conformance_modules": 165,
+    "statused_executable_fixtures": 174,
+    "statused_nonfunction_witness_fixtures": 6,
+    "statused_unresolved_fixtures": 10,
+    "exact_execution_routes": 200,
+    "registered_execution_routes": 19,
+    "exact_fixture_file_edges": 6,
+    "exact_tex_claim_edges": 19,
+    "exact_implementation_target_edges": 1928,
+    "registry_without_status_rows": 0,
+    "unknown_successor_standing_records": 226
+  },
+  "gate_law": "Complete fixture classification closes only FORMAL-A-FIXTURE-INVENTORY. Formal Gate A remains pending until the independent joined coverage checker accepts the TeX, implementation, and fixture overlays together."
+}

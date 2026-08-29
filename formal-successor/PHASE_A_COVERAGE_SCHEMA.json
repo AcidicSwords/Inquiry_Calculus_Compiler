@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "status": "phase_a_joined_coverage_contract_not_successor_semantics",
+  "inputs": {
+    "inventory_path": "formal-successor/PREDECESSOR_INVENTORY.json",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "implementation_classification_path": "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION.json",
+    "fixture_classification_path": "formal-successor/PREDECESSOR_FIXTURE_CLASSIFICATION.json",
+    "predecessor_commit": "4a18e2e308f359a64f19b7d056652f19fd9aaeae"
+  },
+  "owners": {
+    "tex_overlay": ["tex.declaration", "tex.narrative", "tex.list_item", "tex.display"],
+    "implementation_overlay": ["rust.semantic_module_candidate", "rust.public_item", "schema.fixture", "schema.migration"],
+    "fixture_overlay": ["rust.conformance_module", "conformance.fixture"],
+    "inventory_build_classification": ["rust.crate_manifest"]
+  },
+  "edge_target_laws": {
+    "implementation_claim_edges": "tex_overlay",
+    "fixture_claim_edges": "tex_overlay",
+    "fixture_implementation_targets": "implementation_overlay",
+    "fixture_witness_file_edges": "implementation_overlay schema.fixture only",
+    "fixture_module_routes": "fixture_overlay rust.conformance_module or implementation_overlay semantic module for internal tests",
+    "module_fixture_edges": "fixture_overlay conformance.fixture only"
+  },
+  "expected_boundary_at_pinned_inputs": {
+    "inventory_items": 3662,
+    "tex_owned": 1370,
+    "implementation_owned": 2062,
+    "fixture_owned": 226,
+    "manifest_owned": 4,
+    "owner_intersections": 0,
+    "unowned_items": 0,
+    "foreign_owner_records": 0,
+    "implementation_claim_edges": 29,
+    "fixture_claim_edges": 40,
+    "fixture_implementation_targets": 1928,
+    "fixture_witness_file_edges": 6,
+    "fixture_execution_routes": 200,
+    "module_fixture_edges": 187,
+    "invalid_edge_targets": 0,
+    "fixture_unknown_standings": 226,
+    "manifest_classified_items": 4
+  },
+  "gate_a_law": "Gate A is eligible only when every pinned predecessor item has exactly one formalization destination or explicit classification, every overlay and cross-edge regenerates from its accepted source, no unresolved standing is promoted, and an independent checker rejects the declared mutation field.",
+  "noncollapse_law": "Total source ownership is inventory closure only. It proves no LegacyObligation, fixture status, implementation correspondence, successor primitive, or later formal gate."
+}

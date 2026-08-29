@@ -426,37 +426,71 @@ function extractRepository(grammar) {
   const registryBytes = gitBlob(revision, grammar.conformance_surface.registry_path);
   const registry = parseFixtureRegistry(registryBytes.toString("utf8"));
   const conformanceLines = normalizeNewlines(conformanceBytes.toString("utf8")).split("\n");
-  const fixturePattern = new RegExp(`^\\|\\s*\u0060?(${grammar.conformance_surface.fixture_id_pattern})\u0060?(?:\\s+[^|]*)?\\|\\s*([^|]+)`, "u");
-  const fixtureRows = new Map();
+  const fixturePattern = new RegExp(`^\\|\\s*\u0060?(${grammar.conformance_surface.fixture_id_pattern})\u0060?(?:\\s+[^|]*)?\\|`, "u");
+  const fixtureRows = [];
   for (let index = 0; index < conformanceLines.length; index += 1) {
     const match = conformanceLines[index].match(fixturePattern);
     if (!match) continue;
-    fixtureRows.set(match[1], { line: index + 1, text: conformanceLines[index], adjacent_field: match[2].trim().toLowerCase() });
+    const cells = conformanceLines[index].split("|").slice(1, -1).map((cell) => cell.trim());
+    const statusIndex = cells.findIndex((cell, cellIndex) => cellIndex > 0 && /^(?:PASS|PENDING|Unknown|Blocked|ResourceBounded)$/u.test(cell));
+    fixtureRows.push({
+      fixture_id: match[1],
+      line: index + 1,
+      text: conformanceLines[index],
+      status_column: statusIndex >= 0 ? statusIndex + 1 : null,
+      status_label: statusIndex >= 0 ? cells[statusIndex] : null,
+    });
   }
-  const fixtureIds = [...new Set([...fixtureRows.keys(), ...registry.keys()])].sort();
+  const rowsByFixtureId = new Map();
+  for (const row of fixtureRows) {
+    const rows = rowsByFixtureId.get(row.fixture_id) || [];
+    rows.push(row);
+    rowsByFixtureId.set(row.fixture_id, rows);
+  }
+  const fixtureIds = [...new Set([...rowsByFixtureId.keys(), ...registry.keys()])].sort();
   for (const fixtureId of fixtureIds) {
-    const row = fixtureRows.get(fixtureId);
-    const registered = registry.get(fixtureId);
+    const rows = rowsByFixtureId.get(fixtureId) || [];
+    const registered = registry.get(fixtureId) || null;
+    const occurrences = rows.length > 0 ? rows : [null];
+    for (const [occurrenceIndex, row] of occurrences.entries()) {
+      const unambiguousRegistry = registered !== null && rows.length <= 1 ? registered : null;
+      const rowDigest = row ? sha256(Buffer.from(normalizeUnit(row.text), "utf8")) : null;
+      const occurrenceSuffix = rows.length > 1
+        ? `-ROW-${rowDigest.slice(0, 16).toUpperCase()}-OCC-${String(occurrenceIndex + 1).padStart(3, "0")}`
+        : "";
     const itemSource = row
       ? source(grammar.conformance_surface.status_path, revision, row.line, row.line, row.text)
       : source(grammar.conformance_surface.registry_path, revision, registered.source_line, registered.source_line, registered.source_text);
     items.push({
-      id: `PRED-CONFORMANCE-${fixtureId}`,
+      id: `PRED-CONFORMANCE-${fixtureId}${occurrenceSuffix}`,
       source_class: "conformance.fixture",
       authority: "predecessor_conformance_evidence",
-      category: row ? row.adjacent_field : "registry_without_status_row",
-      disposition: registered && row ? "registered_fixture_evidence" : registered ? "requires_status_row_review" : "requires_fixture_evidence_review",
-      destination: `phase:A/fixture-review/${fixtureId}`,
-      review_status: registered && row ? "classified" : "pending",
-      evidence_status: registered ? "registered_executable_evidence" : "source_actuality",
+      category: row ? "status_row_occurrence" : "registry_without_status_row",
+      disposition: row ? "requires_fixture_relation_review" : "requires_status_row_review",
+      destination: `phase:A/fixture-review/${fixtureId}${occurrenceSuffix}`,
+      review_status: "pending",
+      evidence_status: unambiguousRegistry ? "registered_executable_evidence" : "source_actuality",
       source: itemSource,
       context: {
-        status_row: row ? { path: grammar.conformance_surface.status_path, line: row.line } : null,
-        registry_entry: registered
-          ? { path: grammar.conformance_surface.registry_path, line: registered.source_line, test_path: registered.test_path, test_function: registered.test_function }
+        fixture_id: fixtureId,
+        fixture_label_occurrences: rows.length,
+        occurrence_index: row ? occurrenceIndex + 1 : null,
+        status_row: row
+          ? { path: grammar.conformance_surface.status_path, line: row.line, status_column: row.status_column, status_label: row.status_label }
           : null,
+        registry_entry: unambiguousRegistry
+          ? { path: grammar.conformance_surface.registry_path, line: unambiguousRegistry.source_line, test_path: unambiguousRegistry.test_path, test_function: unambiguousRegistry.test_function }
+          : null,
+        registry_relation: registered === null
+          ? "none"
+          : rows.length > 1
+            ? "ambiguous_repeated_label_not_joined"
+            : row
+              ? "exact_unique_label_join"
+              : "registry_without_status_row",
       },
     });
+    }
   }
 
   return {
@@ -467,9 +501,15 @@ function extractRepository(grammar) {
       semantic_module_candidates: items.filter((item) => item.source_class === "rust.semantic_module_candidate").length,
       public_rust_items: items.filter((item) => item.source_class === "rust.public_item").length,
       schema_files: items.filter((item) => item.source_class.startsWith("schema.")).length,
-      conformance_fixtures: fixtureIds.length,
+      conformance_fixtures: fixtureRows.length + fixtureIds.filter((id) => registry.has(id) && !rowsByFixtureId.has(id)).length,
+      conformance_fixture_labels: fixtureIds.length,
+      conformance_status_row_occurrences: fixtureRows.length,
+      repeated_fixture_labels: Object.fromEntries([...rowsByFixtureId.entries()]
+        .filter(([, rows]) => rows.length > 1)
+        .map(([id, rows]) => [id, rows.length])
+        .sort(([left], [right]) => left.localeCompare(right))),
       registered_executable_fixtures: fixtureIds.filter((id) => registry.has(id)).length,
-      registry_without_status_row: fixtureIds.filter((id) => registry.has(id) && !fixtureRows.has(id)).length,
+      registry_without_status_row: fixtureIds.filter((id) => registry.has(id) && !rowsByFixtureId.has(id)).length,
       fixture_ids: fixtureIds,
     },
   };

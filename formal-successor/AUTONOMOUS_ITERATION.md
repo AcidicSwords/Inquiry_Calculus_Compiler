@@ -216,6 +216,10 @@ node tools/predecessor_tex_classification.js check
 node tools/predecessor_tex_classification_check.js
 node tools/predecessor_implementation_classification.js check
 node tools/predecessor_implementation_classification_check.js
+node tools/predecessor_fixture_classification.js check
+node tools/predecessor_fixture_classification_check.js
+node tools/phase_a_coverage.js check
+node tools/phase_a_coverage_check.js
 formal: lake build --wfail
 documentation topology and canonical-TeX checks when those surfaces change
 Rust format/check/clippy/test as predecessor regression evidence

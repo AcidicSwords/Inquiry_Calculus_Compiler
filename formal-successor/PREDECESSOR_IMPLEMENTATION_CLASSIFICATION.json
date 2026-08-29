@@ -5,9 +5,9 @@
     "schema_path": "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION_SCHEMA.json",
     "schema_sha256": "0f9978072d90b95364c35cfbc9bb4508e3aac4bb4bb0e73205f89d9d2272b6af",
     "inventory_path": "formal-successor/PREDECESSOR_INVENTORY.json",
-    "inventory_sha256": "42062b70dc153947b0dfbf303f2e6b8842ef526aef7240652d7c6c43a26f1c92",
+    "inventory_sha256": "f8f3dbc9b061315a1825cc0108c06aade12a8a46e8c21b929b86acb86c77df7b",
     "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
-    "tex_classification_sha256": "acc707f69389a027d52979da030715502f597724eda25d19f5e22c70b24e1419",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
     "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
     "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
     "predecessor_commit": "4a18e2e308f359a64f19b7d056652f19fd9aaeae"

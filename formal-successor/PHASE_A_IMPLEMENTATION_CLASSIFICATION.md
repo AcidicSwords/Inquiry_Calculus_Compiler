@@ -51,6 +51,7 @@ modules/items/schemas, duplicate identities, foreign or fuzzy claim edges, blank
 `ImplementationOnly`, blanket correspondence, promoted edge authority, erased module provenance,
 detached source digests, fixture/schema role collapse, and Formal Gate A self-promotion.
 
-Complete implementation review closes only `FORMAL-A-RUST-SURFACE-INVENTORY`. The 36 Rust
-conformance modules and 166 fixture identities remain under `FORMAL-A-FIXTURE-INVENTORY`.
-Formal Gate A remains pending until that field and the final cross-surface coverage relation close.
+Complete implementation review closes only `FORMAL-A-RUST-SURFACE-INVENTORY`. The corrected 36
+Rust conformance modules and 190 fixture-row occurrences are reviewed separately under
+`FORMAL-A-FIXTURE-INVENTORY`. Formal Gate A remains pending until the final cross-surface coverage
+relation closes.

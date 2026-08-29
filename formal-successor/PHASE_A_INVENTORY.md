@@ -39,8 +39,10 @@ node tools/predecessor_inventory_check.js
 
 The first command requires exact regeneration. The second independently re-reads the pinned
 sources and rejects missing declarations, list items, repository blobs, Rust visibility lines,
-fixture identities, altered source ranges, duplicated identities, detached coverage, and Gate A
-self-promotion.
+fixture-row occurrences, altered source ranges, duplicated identities, detached coverage, and Gate
+A self-promotion. Fixture labels admit slash-delimited phase components and one optional terminal
+variant letter; repeated displayed labels retain separate source occurrences rather than collapsing
+through a label-keyed map.
 
 Generation and green checks establish the extraction/source-coverage boundary only. Gate A stays
 `PENDING` while any consequential candidate remains pending review, any executable fixture lacks
@@ -53,3 +55,7 @@ explicit declarations, binding results, unresolved claim boundaries, and canonic
 The Rust semantic/public and schema contraction is governed by
 `PHASE_A_IMPLEMENTATION_CLASSIFICATION.md`. Its exact-symbol edges are correspondence candidates,
 never semantic authority or Phase F preservation results.
+
+The corrected fixture-row field and its execution relations are governed by
+`PHASE_A_FIXTURE_CLASSIFICATION.md`. The corrected pinned boundary contains 190 status-row
+occurrences with 185 displayed labels; all 19 registry labels have status rows.

@@ -62,8 +62,10 @@
   "conformance_surface": {
     "status_path": "CONFORMANCE_STATUS.md",
     "registry_path": "tools/docs_control_check.py",
-    "fixture_id_pattern": "[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+-[0-9]{3}",
-    "coverage_rule": "Every fixture row and every executable PASS-evidence registry entry is inventoried. Shared identities retain both relations; a registry entry without a status row remains an explicit review residual."
+    "fixture_id_pattern": "[A-Z][A-Z0-9]*(?:[/-][A-Z0-9]+)*-[0-9]{3}[A-Z]?",
+    "fixture_id_law": "A displayed fixture label may contain slash-delimited phase components and may end in one uppercase variant letter after the final three digits. The entire first token must match; prefix matches are forbidden.",
+    "row_identity_law": "Every matching Markdown status-row occurrence has its own source identity. A displayed label may name more than one row, so label equality never merges source occurrences.",
+    "coverage_rule": "Every fixture-row occurrence and every executable PASS-evidence registry entry is inventoried. A unique displayed label may join its row to one registry entry; repeated labels retain separate rows, and a registry relation is never manufactured across an ambiguous repeated label. A registry entry without any status row remains an explicit review residual."
   },
   "identity": {
     "algorithm": "sha256",

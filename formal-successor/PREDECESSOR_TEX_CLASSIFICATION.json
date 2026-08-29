@@ -5,7 +5,7 @@
     "schema_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION_SCHEMA.json",
     "schema_sha256": "1e5c46998c3b74a9697d839b5ee72f044a4e2845dc379f1b82535b38a0f19cf8",
     "inventory_path": "formal-successor/PREDECESSOR_INVENTORY.json",
-    "inventory_sha256": "42062b70dc153947b0dfbf303f2e6b8842ef526aef7240652d7c6c43a26f1c92",
+    "inventory_sha256": "f8f3dbc9b061315a1825cc0108c06aade12a8a46e8c21b929b86acb86c77df7b",
     "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
     "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89"
   },

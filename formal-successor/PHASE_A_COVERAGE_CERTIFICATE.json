@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "status": "generated_phase_a_joined_coverage_candidate_not_self_warrant",
+  "generated_from": {
+    "schema_path": "formal-successor/PHASE_A_COVERAGE_SCHEMA.json",
+    "schema_sha256": "99988617e21582b4b3140100ce3745422b7edeba9a61848e36ef732d5b72f070",
+    "inventory_path": "formal-successor/PREDECESSOR_INVENTORY.json",
+    "inventory_sha256": "f8f3dbc9b061315a1825cc0108c06aade12a8a46e8c21b929b86acb86c77df7b",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "implementation_classification_path": "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION.json",
+    "implementation_classification_sha256": "7144c27a243adc19f2f7eead3e7180ec3910a0e5d124b8018f8891a927a5608a",
+    "fixture_classification_path": "formal-successor/PREDECESSOR_FIXTURE_CLASSIFICATION.json",
+    "fixture_classification_sha256": "9d75226dc24cc8fd73d0299b767c41eff49dd9ef9258afe4f3e6f47713e087c3",
+    "predecessor_commit": "4a18e2e308f359a64f19b7d056652f19fd9aaeae"
+  },
+  "observed_boundary": {
+    "inventory_items": 3662,
+    "tex_owned": 1370,
+    "implementation_owned": 2062,
+    "fixture_owned": 226,
+    "manifest_owned": 4,
+    "owner_intersections": 0,
+    "unowned_items": 0,
+    "foreign_owner_records": 0,
+    "implementation_claim_edges": 29,
+    "fixture_claim_edges": 40,
+    "fixture_implementation_targets": 1928,
+    "fixture_witness_file_edges": 6,
+    "fixture_execution_routes": 200,
+    "module_fixture_edges": 187,
+    "invalid_edge_targets": 0,
+    "fixture_unknown_standings": 226,
+    "manifest_classified_items": 4
+  },
+  "ownership": {
+    "owners": {
+      "tex_overlay": {
+        "source_classes": [
+          "tex.declaration",
+          "tex.narrative",
+          "tex.list_item",
+          "tex.display"
+        ],
+        "record_count": 1370,
+        "ordered_source_id_sha256": "d91826a7b41d56968041599dafb248d97587db36d1bea7e0ba7df967b1dca413"
+      },
+      "implementation_overlay": {
+        "source_classes": [
+          "rust.semantic_module_candidate",
+          "rust.public_item",
+          "schema.fixture",
+          "schema.migration"
+        ],
+        "record_count": 2062,
+        "ordered_source_id_sha256": "95d6a413b2e63e1e0906787db67466c52478c85252e2a52cef8f978f95c765dc"
+      },
+      "fixture_overlay": {
+        "source_classes": [
+          "rust.conformance_module",
+          "conformance.fixture"
+        ],
+        "record_count": 226,
+        "ordered_source_id_sha256": "baff8a893abb3cf7c67aa704fd096c750e2de248700ab2a18df6cd28e9e7f5a7"
+      },
+      "inventory_build_classification": {
+        "source_classes": [
+          "rust.crate_manifest"
+        ],
+        "record_count": 4,
+        "ordered_source_id_sha256": "98a9153303e36c876556f27bc35116222f97d5d99ea27588b2968d047ec765ae"
+      }
+    },
+    "intersections": [],
+    "unowned_source_ids": [],
+    "foreign_owner_records": []
+  },
+  "edge_integrity": {
+    "invalid_targets": []
+  },
+  "retained_boundaries": {
+    "tex_dispositions": {
+      "BindingTheorem": 2,
+      "CanonicalProseOnly": 1,
+      "FormalDefinition": 119,
+      "FormalTheorem": 12,
+      "LegacyObligation": 1236
+    },
+    "implementation_dispositions": {
+      "ImplementationOnly": 2049,
+      "LegacyObligation": 13
+    },
+    "fixture_dispositions": {
+      "LegacyObligation": 226
+    },
+    "fixture_successor_standing": {
+      "Unknown": 226
+    },
+    "law": "Total source ownership is inventory closure only. It proves no LegacyObligation, fixture status, implementation correspondence, successor primitive, or later formal gate."
+  },
+  "gate_a_candidate": {
+    "status": "READY_FOR_INDEPENDENT_CHECK",
+    "condition": "Every pinned predecessor item has exactly one source-bound destination or explicit classification and every admitted cross-overlay target is valid.",
+    "prohibited_self_warrant": "This generated certificate cannot pass Gate A; tools/phase_a_coverage_check.js must independently reconstruct and attack the joined relation."
+  }
+}

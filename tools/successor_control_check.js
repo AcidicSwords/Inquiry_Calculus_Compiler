@@ -81,6 +81,12 @@ const required = [
   "formal-successor/PHASE_A_IMPLEMENTATION_CLASSIFICATION.md",
   "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION_SCHEMA.json",
   "formal-successor/PREDECESSOR_IMPLEMENTATION_CLASSIFICATION.json",
+  "formal-successor/PHASE_A_FIXTURE_CLASSIFICATION.md",
+  "formal-successor/PREDECESSOR_FIXTURE_CLASSIFICATION_SCHEMA.json",
+  "formal-successor/PREDECESSOR_FIXTURE_CLASSIFICATION.json",
+  "formal-successor/PHASE_A_COVERAGE.md",
+  "formal-successor/PHASE_A_COVERAGE_SCHEMA.json",
+  "formal-successor/PHASE_A_COVERAGE_CERTIFICATE.json",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -99,6 +105,10 @@ const required = [
   "tools/predecessor_tex_classification_check.js",
   "tools/predecessor_implementation_classification.js",
   "tools/predecessor_implementation_classification_check.js",
+  "tools/predecessor_fixture_classification.js",
+  "tools/predecessor_fixture_classification_check.js",
+  "tools/phase_a_coverage.js",
+  "tools/phase_a_coverage_check.js",
   ".gitattributes",
 ];
 for (const name of required) requireFile(name);
@@ -181,6 +191,26 @@ requireContains("formal-successor/PHASE_A_IMPLEMENTATION_CLASSIFICATION.md", [
   "Formal Gate A remains pending",
 ]);
 
+requireContains("formal-successor/PHASE_A_FIXTURE_CLASSIFICATION.md", [
+  "190 exact status-row occurrences",
+  "registry-only count",
+  "`Unknown` successor standing",
+  "Formal Gate A remains `PENDING`",
+]);
+
+requireContains("formal-successor/PHASE_A_COVERAGE.md", [
+  "all 3,662 source identities",
+  "It cannot pass Gate A",
+  "rejects 19",
+  "Total ownership is not semantic proof",
+]);
+
+requireContains("formal-successor/CONFORMANCE_STATUS.md", [
+  "FORMAL-A-COVERAGE-001 | PASS",
+  "FORMAL-GATE-A | PASS",
+  "inventory closure, not a successor definition",
+]);
+
 let predecessorInventoryGrammar;
 let predecessorInventory;
 try {
@@ -255,6 +285,61 @@ if (
   predecessorImplementationClassification?.formal_gate_a?.status !== "PENDING"
 ) {
   errors.push("Phase A implementation classification must be exact, total, candidate-only, and non-promoting");
+}
+
+let predecessorFixtureClassificationSchema;
+let predecessorFixtureClassification;
+try {
+  predecessorFixtureClassificationSchema = JSON.parse(read("formal-successor/PREDECESSOR_FIXTURE_CLASSIFICATION_SCHEMA.json"));
+  predecessorFixtureClassification = JSON.parse(read("formal-successor/PREDECESSOR_FIXTURE_CLASSIFICATION.json"));
+} catch (error) {
+  errors.push(`predecessor fixture classification control JSON: ${error.message}`);
+}
+if (
+  predecessorFixtureClassificationSchema?.status !==
+    "phase_a_fixture_classification_contract_not_semantic_authority" ||
+  predecessorFixtureClassificationSchema?.inputs?.predecessor_commit !== baseline ||
+  predecessorFixtureClassificationSchema?.standing_law?.successor_standing !== "Unknown"
+) {
+  errors.push("Phase A fixture classification schema is detached from its authority boundary");
+}
+if (
+  predecessorFixtureClassification?.status !==
+    "reviewed_phase_a_fixture_classification_not_semantic_authority" ||
+  predecessorFixtureClassification?.coverage?.classified_source_items !== 226 ||
+  predecessorFixtureClassification?.coverage?.exact_execution_routes !== 200 ||
+  predecessorFixtureClassification?.coverage?.registry_without_status_rows !== 0 ||
+  predecessorFixtureClassification?.coverage?.successor_standing_counts?.Unknown !== 226 ||
+  predecessorFixtureClassification?.coverage?.unclassified_source_items !== 0 ||
+  predecessorFixtureClassification?.formal_gate_a?.status !== "PENDING"
+) {
+  errors.push("Phase A fixture classification must be exact, total, authority-separated, and non-promoting");
+}
+
+let phaseACoverageSchema;
+let phaseACoverageCertificate;
+try {
+  phaseACoverageSchema = JSON.parse(read("formal-successor/PHASE_A_COVERAGE_SCHEMA.json"));
+  phaseACoverageCertificate = JSON.parse(read("formal-successor/PHASE_A_COVERAGE_CERTIFICATE.json"));
+} catch (error) {
+  errors.push(`Phase A coverage control JSON: ${error.message}`);
+}
+if (
+  phaseACoverageSchema?.status !== "phase_a_joined_coverage_contract_not_successor_semantics" ||
+  phaseACoverageSchema?.inputs?.predecessor_commit !== baseline ||
+  phaseACoverageSchema?.expected_boundary_at_pinned_inputs?.inventory_items !== 3662
+) {
+  errors.push("Phase A joined coverage schema is detached from the corrected inventory boundary");
+}
+if (
+  phaseACoverageCertificate?.status !== "generated_phase_a_joined_coverage_candidate_not_self_warrant" ||
+  phaseACoverageCertificate?.observed_boundary?.inventory_items !== 3662 ||
+  phaseACoverageCertificate?.observed_boundary?.owner_intersections !== 0 ||
+  phaseACoverageCertificate?.observed_boundary?.unowned_items !== 0 ||
+  phaseACoverageCertificate?.observed_boundary?.invalid_edge_targets !== 0 ||
+  phaseACoverageCertificate?.gate_a_candidate?.status !== "READY_FOR_INDEPENDENT_CHECK"
+) {
+  errors.push("Phase A coverage certificate must be exact, closed, and non-self-warranting");
 }
 
 const frontier = read("IMPLEMENTATION_FRONTIER.md");
@@ -693,6 +778,10 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/predecessor_tex_classification_check.js",
   "node tools/predecessor_implementation_classification.js check",
   "node tools/predecessor_implementation_classification_check.js",
+  "node tools/predecessor_fixture_classification.js check",
+  "node tools/predecessor_fixture_classification_check.js",
+  "node tools/phase_a_coverage.js check",
+  "node tools/phase_a_coverage_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

@@ -240,14 +240,50 @@ function inspect(inventory, grammar, grammarBytes) {
   baselineBytes.set(grammar.conformance_surface.registry_path, registryBytes);
   const conformanceLines = normalizeNewlines(conformanceBytes.toString("utf8")).split("\n");
   const fixturePattern = new RegExp(`^\\|\\s*\u0060?(${grammar.conformance_surface.fixture_id_pattern})\u0060?(?:\\s+[^|]*)?\\|`, "u");
-  const rowFixtureIds = conformanceLines.map((line) => line.match(fixturePattern)?.[1]).filter(Boolean);
+  const fixtureRows = conformanceLines.flatMap((line, index) => {
+    const match = line.match(fixturePattern);
+    if (!match) return [];
+    const cells = line.split("|").slice(1, -1).map((cell) => cell.trim());
+    const statusIndex = cells.findIndex((cell, cellIndex) => cellIndex > 0 && /^(?:PASS|PENDING|Unknown|Blocked|ResourceBounded)$/u.test(cell));
+    return [{ fixtureId: match[1], line: index + 1, statusColumn: statusIndex >= 0 ? statusIndex + 1 : null, statusLabel: statusIndex >= 0 ? cells[statusIndex] : null }];
+  });
   const registryPattern = /"(Q[A-Z0-9-]+-[0-9]{3})"\s*:\s*\(\s*"([^"]+)"\s*,\s*"([^"]+)"/gu;
-  const registryFixtureIds = [...registryBytes.toString("utf8").matchAll(registryPattern)].map((match) => match[1]);
-  const fixtureIds = [...new Set([...rowFixtureIds, ...registryFixtureIds])].sort();
-  for (const fixtureId of fixtureIds) {
-    if (items.filter((item) => item.id === `PRED-CONFORMANCE-${fixtureId}`).length !== 1) errors.push(`fixture ${fixtureId} does not have exactly one inventory identity`);
+  const registryEntries = [...registryBytes.toString("utf8").matchAll(registryPattern)].map((match) => ({ fixtureId: match[1], testPath: match[2], testFunction: match[3] }));
+  const fixtureIds = [...new Set([...fixtureRows.map((row) => row.fixtureId), ...registryEntries.map((entry) => entry.fixtureId)])].sort();
+  const fixtureItems = items.filter((item) => item.source_class === "conformance.fixture");
+  for (const row of fixtureRows) {
+    const matches = fixtureItems.filter((item) => item.source.path === grammar.conformance_surface.status_path && item.source.start_line === row.line);
+    if (matches.length !== 1) {
+      errors.push(`fixture row ${row.fixtureId} at line ${row.line} has ${matches.length} inventory identities`);
+      continue;
+    }
+    const item = matches[0];
+    if (item.context?.fixture_id !== row.fixtureId) errors.push(`${item.id}: fixture label differs from its exact status row`);
+    if (item.context?.status_row?.line !== row.line) errors.push(`${item.id}: status-row line differs from source incidence`);
+    if (item.context?.status_row?.status_column !== row.statusColumn || item.context?.status_row?.status_label !== row.statusLabel) {
+      errors.push(`${item.id}: status field differs from the exact status row`);
+    }
   }
-  if (inventory.coverage?.repository?.conformance_fixtures !== fixtureIds.length) errors.push("conformance fixture count differs");
+  for (const entry of registryEntries) {
+    const rows = fixtureRows.filter((row) => row.fixtureId === entry.fixtureId);
+    const matches = fixtureItems.filter((item) => item.context?.fixture_id === entry.fixtureId && item.context?.registry_entry !== null);
+    const expected = rows.length <= 1 ? 1 : 0;
+    if (matches.length !== expected) errors.push(`registry fixture ${entry.fixtureId} has ${matches.length} joined identities; expected ${expected}`);
+    if (matches.length === 1) {
+      const relation = matches[0].context.registry_entry;
+      if (relation.test_path !== entry.testPath || relation.test_function !== entry.testFunction) errors.push(`${matches[0].id}: registry route differs from pinned registry bytes`);
+      if (rows.length === 0 && matches[0].source.path !== grammar.conformance_surface.registry_path) errors.push(`${matches[0].id}: registry-only source is not the registry entry`);
+    }
+  }
+  const registryWithoutRows = registryEntries.filter((entry) => !fixtureRows.some((row) => row.fixtureId === entry.fixtureId)).length;
+  const expectedFixtureRecords = fixtureRows.length + registryWithoutRows;
+  if (fixtureItems.length !== expectedFixtureRecords) errors.push("fixture identity count differs from status-row occurrences plus registry-only entries");
+  if (inventory.coverage?.repository?.conformance_fixtures !== expectedFixtureRecords) errors.push("conformance fixture count differs");
+  if (inventory.coverage?.repository?.conformance_status_row_occurrences !== fixtureRows.length) errors.push("conformance status-row occurrence count differs");
+  if (inventory.coverage?.repository?.conformance_fixture_labels !== fixtureIds.length) errors.push("conformance fixture-label count differs");
+  if (inventory.coverage?.repository?.registered_executable_fixtures !== registryEntries.length) errors.push("registered executable fixture count differs");
+  if (inventory.coverage?.repository?.registry_without_status_row !== registryWithoutRows) errors.push("registry-without-status-row count differs");
+  if (JSON.stringify(inventory.coverage?.repository?.fixture_ids) !== JSON.stringify(fixtureIds)) errors.push("fixture label coverage differs");
 
   for (const item of items) {
     let bytes;
@@ -304,6 +340,14 @@ function main() {
   altered.items.find((item) => item.source_class === "rust.public_item").source.sha256 = "0".repeat(64);
   requireRejected("altered public surface", altered, grammar, grammarBytes);
 
+  const deletedFixtureRow = clone(inventory);
+  deletedFixtureRow.items.splice(deletedFixtureRow.items.findIndex((item) => item.source_class === "conformance.fixture" && item.source.path === grammar.conformance_surface.status_path), 1);
+  requireRejected("deleted fixture row occurrence", deletedFixtureRow, grammar, grammarBytes);
+
+  const relabeledFixtureRow = clone(inventory);
+  relabeledFixtureRow.items.find((item) => item.source_class === "conformance.fixture" && item.source.path === grammar.conformance_surface.status_path).context.fixture_id = "QFABRICATED-999";
+  requireRejected("relabeled fixture row occurrence", relabeledFixtureRow, grammar, grammarBytes);
+
   const duplicated = clone(inventory);
   duplicated.items.push(clone(duplicated.items[0]));
   requireRejected("duplicated identity", duplicated, grammar, grammarBytes);
@@ -321,7 +365,7 @@ function main() {
   requireRejected("foreign source revision", foreignRevision, grammar, grammarBytes);
 
   process.stdout.write(
-    `independent predecessor inventory checks passed (${inventory.items.length} items; ${inventory.coverage.pending_review_items} pending; 8/8 mutation breakers)\n`,
+    `independent predecessor inventory checks passed (${inventory.items.length} items; ${inventory.coverage.pending_review_items} pending; 10/10 mutation breakers)\n`,
   );
 }
 
