@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "status": "phase_b_precision_not_improvement_contract_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "precision_module": "formal/InquiryCalculus/Legacy/V20/PrecisionNotImprovement.lean"
+  },
+  "sources": ["PRED-TEX-DECL-D6949640D2F92351"],
+  "required_declarations": [
+    "RepresentationComparisonKind",
+    "PrecisionComparisonSyntax",
+    "ImprovementAssessmentSyntax",
+    "PrecisionNotImprovementObligation"
+  ],
+  "obligations": [
+    "noAutomaticMonotonicity",
+    "protectedBehaviorCriterion",
+    "lowerCostCriterion",
+    "betterRobustnessCriterion",
+    "globalRepresentationOrdering",
+    "noProgramOrRustAuthority"
+  ],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-RELATIONAL-SECTIONS"
+}

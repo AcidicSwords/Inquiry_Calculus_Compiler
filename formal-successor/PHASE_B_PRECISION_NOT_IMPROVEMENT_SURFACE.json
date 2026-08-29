@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_precision_not_improvement_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "904dac38ef686d60a644729b941ba63b4c3243bea21448cab78f913959558352",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "precision_module_sha256": "0e5be4537abad2d5980630e63d1ed7e313a5984fe1e3a568f9f02037b7841a02"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-D6949640D2F92351",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/question-refinement-algebra/PRED-TEX-DECL-D6949640D2F92351",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1316,
+        "end_line": 1318,
+        "sha256": "e3cd1a838513b4aab386da2ce8b41a9657e91dc14d5a4b92a7ecc5676ed06874"
+      },
+      "obligation_status": "Unproved"
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 0,
+    "obligations": 1,
+    "obligation_statuses": [
+      "Unproved"
+    ]
+  },
+  "next_residual": "FORMAL-B-RELATIONAL-SECTIONS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
