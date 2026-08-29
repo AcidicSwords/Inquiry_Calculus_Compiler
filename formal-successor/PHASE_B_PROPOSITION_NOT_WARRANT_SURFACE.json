@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_proposition_not_warrant_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "13749423e2484f414b6225e859c17606df62f40d0604cb86955c9a49c4ff3071",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "proposition_module_sha256": "71dd993f533eacceb5851afedfd78de58d85307766cbf9d523196c8f89b5463e"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-497FAD86E326A81E",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/relation-schemas-and-named-ports/PRED-TEX-PROSE-497FAD86E326A81E",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1064,
+        "end_line": 1064,
+        "sha256": "e6f81f31eb2f333a44ed72bccd0064f0bc06a50e7f25173a50f1cba1288a675a"
+      },
+      "obligation_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-88240F78092AB2AF",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/relation-schemas-and-named-ports/PRED-TEX-DISPLAY-88240F78092AB2AF",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1065,
+        "end_line": 1077,
+        "sha256": "afd3606335d68334cc2f55e75f6361dbaa6d20e096de55e8b109d6742b5cbe4a"
+      },
+      "obligation_status": "Ambiguous"
+    }
+  ],
+  "coverage": {
+    "explicit_definitions": 0,
+    "obligations": 2,
+    "obligation_statuses": [
+      "Unproved",
+      "Ambiguous"
+    ]
+  },
+  "next_residual": "FORMAL-B-MANY-QUESTIONS-GENERATION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

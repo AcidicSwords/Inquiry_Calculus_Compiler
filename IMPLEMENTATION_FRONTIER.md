@@ -12,20 +12,20 @@ actual-return, warrant, probe, and axiom mutations; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate the v2.0 proposition-not-warrant boundary without treating a fully bound relation
-instance as a warranted fact or importing probe/program authority.
+Elaborate the v2.0 one-relation-many-questions generation boundary without treating displayed
+openings as semantic generation laws, concrete answers, or programs.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-PROPOSITION-NOT-WARRANT-BOUNDARY
+id: FORMAL-B-MANY-QUESTIONS-GENERATION
 plan_phase: B
-goal: Classify and reconstruct answer-carrier and valid-completion syntax against canonical question occurrences, postponing actual returns, warrant, probes, programs, successor-primitive, and Rust meaning.
-protected_difference: An answer carrier and validity relation are typed semantic candidates, not actual returns, standing warrant, probes, or programs.
-discriminator: Construct typed carrier and validity syntax from exact source displays, contrast it with actual return, warrant, probe, program, and omission, then contract after exact regeneration isolates the smallest responsible representation.
-horizon: Answer carrier and valid-completion boundary only; canonical question syntax is fixed input, actual returns, warrant, probes, programs, standing, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Classify and reconstruct the one-relation-many-questions opening grammar against checked schemas and canonical question syntax, postponing answer semantics, concrete composition examples, probes, programs, successor-primitive, and Rust meaning.
+protected_difference: Distinct openings are typed candidate variations of one relation schema, not semantic generation laws, answer sets, or programs.
+discriminator: Construct an overcomplete typed opening-variation grammar from the exact source display, contrast it with semantic generation, concrete answers, programs, and omission, then contract after exact regeneration isolates the smallest responsible representation.
+horizon: One-relation-many-questions grammar only; proposition-not-warrant and canonical-question syntax are fixed inputs, answer semantics, concrete examples, probes, programs, standing, and all unrelated LegacyObligations remain explicit, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain typed answer-carrier/validity syntax and then elaborate the next residual selected by that boundary
-if_fail: reopen the earliest answer/validity source or actuality/warrant contamination relation; do not substitute probes, programs, axioms, or Rust behavior
+if_pass: retain the typed opening-variation grammar and then elaborate the next residual selected by that boundary
+if_fail: reopen the earliest generation source, opening identity, or semantics/program contamination relation; do not substitute answers, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker

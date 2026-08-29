@@ -53,6 +53,7 @@ jobs:
           node tools/phase_b_partial_binding_fiber_check.js --compile
           node tools/phase_b_canonical_question_syntax_check.js --compile
           node tools/phase_b_answer_carrier_validity_check.js --compile
+          node tools/phase_b_proposition_not_warrant_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -163,6 +164,8 @@ jobs:
           node --check tools/phase_b_canonical_question_syntax_check.js
           node --check tools/phase_b_answer_carrier_validity.js
           node --check tools/phase_b_answer_carrier_validity_check.js
+          node --check tools/phase_b_proposition_not_warrant.js
+          node --check tools/phase_b_proposition_not_warrant_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -204,6 +207,8 @@ jobs:
           node tools/phase_b_canonical_question_syntax_check.js
           node tools/phase_b_answer_carrier_validity.js check
           node tools/phase_b_answer_carrier_validity_check.js
+          node tools/phase_b_proposition_not_warrant.js check
+          node tools/phase_b_proposition_not_warrant_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
