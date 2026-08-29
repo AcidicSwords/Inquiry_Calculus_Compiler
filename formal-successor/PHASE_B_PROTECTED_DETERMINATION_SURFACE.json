@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_protected_determination_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "0bb65caf45f37ff899aeb28d688951934be93bf7edbde8d3612c372562b15cf5"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-E48BFA8FB441DF39",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/forced-properties-and-near-miss-fields/PRED-TEX-DECL-E48BFA8FB441DF39",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 1479,
+        "end_line": 1490,
+        "sha256": "6b9c49c11f3a290444120520832e2d7fa2d16346929f98ff7e936254a68bac74"
+      }
+    }
+  ],
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

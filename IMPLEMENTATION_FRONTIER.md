@@ -6,17 +6,17 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-PROPERTY-IMAGE-HOLE-001` machine-checks witnessed property-image membership and
-forcedness syntax. It keeps answer selection, filler uniqueness, solver, execution, and successor
-meanings out of the boundary; Gate B remains pending.
+`FORMAL-B-PROTECTED-DETERMINATION-001` machine-checks a declared horizon-relative one-class
+condition. It keeps equivalence laws, literal uniqueness, answer selection, solver, execution, and
+successor meanings out of the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate protected determination without treating horizon-sensitive observational agreement as a
-global equivalence, answer, solver, program behavior, or successor semantics.
+Elaborate exact determination through a signature without treating factorization or kernel inclusion
+as a partial, nondeterministic, uncovered, answer, solver, program, or successor claim.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-PROTECTED-DETERMINATION
+id: FORMAL-B-EXACT-DETERMINATION-SIGNATURE
 plan_phase: B
 goal: Determine the smallest source-regenerative boundary for v2.0 protected determination, preserving a solution field, horizon-relative equivalence, one-class condition, literal uniqueness, answer semantics, successor primitives, and Rust meaning as open unless independently established.
 protected_difference: Protected determination constrains every surviving filler to one horizon-relative equivalence class; it is distinct from literal uniqueness, a selected answer, total solver, program, or successor semantics.
