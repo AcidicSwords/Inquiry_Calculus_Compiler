@@ -7,6 +7,7 @@
     "source-regenerative predecessor elaboration spine with 13 ordered layers",
     "41 exact v2.0 source identities and 13 retained LegacyObligations",
     "independent canonical-source, dependency, compilation, and 17-mutation checks",
+    "cross-platform checker routing with structural mode before Lean installation and explicit compile mode after the pinned Lean action",
     "local FORMAL-B-AMBIENT-BOUNDARY-001 evidence with Formal Gate B still pending",
     "live frontier advanced to FORMAL-B-BINDING-TYPE-SURFACE"
   ],
@@ -22,6 +23,7 @@
     "formal-successor/PHASE_B_PREDECESSOR_SPINE.json",
     "formal-successor/CONFORMANCE_STATUS.md",
     "formal-successor/DECISIONS.jsonl",
+    "formal-successor/FAILURES.jsonl",
     "formal-successor/reports/latest.json",
     "tools/phase_b_predecessor_spine.js",
     "tools/phase_b_predecessor_spine_check.js",
@@ -53,6 +55,7 @@
     "silent classicality and Rust semantic destination",
     "custom axiom, proof gap, or calculus definition in the ambient module",
     "missing ambient theorem or module",
+    "lake absent before formal-toolchain installation versus actual compile failure after installation",
     "detached source and schema digests",
     "Gate B self-promotion",
     "exact spine regeneration and Lean compilation"

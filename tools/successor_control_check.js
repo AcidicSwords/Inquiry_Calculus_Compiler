@@ -826,6 +826,7 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_a_coverage_check.js",
   "node tools/phase_b_predecessor_spine.js check",
   "node tools/phase_b_predecessor_spine_check.js",
+  "node tools/phase_b_predecessor_spine_check.js --compile",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

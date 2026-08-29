@@ -110,6 +110,9 @@ function reject(name, values) {
 }
 
 function main() {
+  const compileAmbient = process.argv.slice(2).includes("--compile");
+  const unknownArguments = process.argv.slice(2).filter((argument) => argument !== "--compile");
+  if (unknownArguments.length > 0) throw new Error(`unknown argument(s): ${unknownArguments.join(", ")}`);
   const loaded = {
     value: readJson("formal-successor/PHASE_B_PREDECESSOR_SPINE.json"),
     schema: readJson("formal-successor/PHASE_B_PREDECESSOR_SPINE_SCHEMA.json"),
@@ -121,9 +124,11 @@ function main() {
   const errors = inspect(...base);
   if (errors.length) throw new Error(errors.join("\n"));
 
-  childProcess.execFileSync("lake", ["env", "lean", "InquiryCalculus/Meta/Ambient.lean"], {
-    cwd: path.join(root, "formal"), stdio: "pipe",
-  });
+  if (compileAmbient) {
+    childProcess.execFileSync("lake", ["env", "lean", "InquiryCalculus/Meta/Ambient.lean"], {
+      cwd: path.join(root, "formal"), stdio: "pipe",
+    });
+  }
 
   const mutations = [];
   function mutation(name, index, edit) {
@@ -149,7 +154,7 @@ function main() {
   mutation("ambient calculus definition", 5, (_value, values) => { values[5] += "\ndef CalculusType := Type\n"; });
   mutation("missing ambient module", 6, (_value, values) => { values[6] = false; });
   for (const [name, values] of mutations) reject(name, values);
-  process.stdout.write(`independent Phase B spine checks passed (13 ordered layers; 41 exact sources; ${mutations.length}/${mutations.length} mutation breakers; Gate B PENDING)\n`);
+  process.stdout.write(`independent Phase B spine checks passed (13 ordered layers; 41 exact sources; ${mutations.length}/${mutations.length} mutation breakers; ambient compile ${compileAmbient ? "checked" : "delegated"}; Gate B PENDING)\n`);
 }
 
 try { main(); } catch (error) { process.stderr.write(`Phase B predecessor spine check: ${error.message}\n`); process.exit(1); }

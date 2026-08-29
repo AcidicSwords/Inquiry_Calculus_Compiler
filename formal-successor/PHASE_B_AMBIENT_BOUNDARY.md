@@ -26,13 +26,14 @@ uses and required strength of that predecessor statement remain an explicit obli
 
 ```text
 node tools/phase_b_predecessor_spine.js check
-node tools/phase_b_predecessor_spine_check.js
+node tools/phase_b_predecessor_spine_check.js --compile
 formal: lake build --wfail
 ```
 
-The independent checker reconstructs every selected source excerpt from the canonical TeX,
-requires an acyclic backward dependency order, compiles the ambient module, and rejects 17
-mutations. Its breakers include layer/source omission, duplicate or foreign ancestry, forward
+The independent checker always reconstructs every selected source excerpt from the canonical TeX,
+requires an acyclic backward dependency order, and rejects 17 mutations. With `--compile` it also
+compiles the ambient module against the installed pinned Lean toolchain. Its breakers include
+layer/source omission, duplicate or foreign ancestry, forward
 dependency, movement across the ambient/calculus boundary, silent classicality, Rust meaning,
 custom declarations or proof gaps in the ambient module, missing theorems/modules, detached
 digests, and Gate B self-promotion.

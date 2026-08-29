@@ -39,6 +39,9 @@ jobs:
           # axiom-audit root is a declaration namespace, not a Lake module root.
           axiom-audit-root: InquiryCalculus
 
+      - name: Recheck the Phase B spine against the installed Lean toolchain
+        run: node tools/phase_b_predecessor_spine_check.js --compile
+
   phase-0:
     runs-on: ubuntu-latest
     timeout-minutes: 20

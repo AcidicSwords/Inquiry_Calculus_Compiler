@@ -73,7 +73,7 @@ node tools/predecessor_fixture_classification_check.js
 node tools/phase_a_coverage.js check
 node tools/phase_a_coverage_check.js
 node tools/phase_b_predecessor_spine.js check
-node tools/phase_b_predecessor_spine_check.js
+node tools/phase_b_predecessor_spine_check.js --compile
 cd formal
 lake build --wfail
 ```
