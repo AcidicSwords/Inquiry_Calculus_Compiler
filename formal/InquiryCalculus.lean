@@ -51,6 +51,7 @@ import InquiryCalculus.Legacy.V20.PositiveNegationFilling
 import InquiryCalculus.Legacy.V20.SemanticAndExecutionCoverage
 import InquiryCalculus.Legacy.V20.TaggedNegationFrontier
 import InquiryCalculus.Legacy.V20.UseSpecificReturnFiber
+import InquiryCalculus.Legacy.V20.ProtectedRecovery
 
 /-!
 # Inquiry Calculus formal successor
