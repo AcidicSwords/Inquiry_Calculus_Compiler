@@ -34,6 +34,7 @@ import InquiryCalculus.Legacy.V20.ExactDeterminationSignature
 import InquiryCalculus.Legacy.V20.ResidualAmbiguity
 import InquiryCalculus.Legacy.V20.RepresentationDefect
 import InquiryCalculus.Legacy.V20.SeparatingContextQuestion
+import InquiryCalculus.Legacy.V20.RepresentationQuestion
 
 /-!
 # Inquiry Calculus formal successor
