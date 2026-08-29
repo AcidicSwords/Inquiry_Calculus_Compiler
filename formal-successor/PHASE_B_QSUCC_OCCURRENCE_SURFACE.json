@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_occurrence_indexed_question_succession_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "1ea2985e044098f2dfb25d1add080f5479e52ad90797333eb562e16d00bb1e8a"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-QSUCC-OCCURRENCE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/derived-occurrence-indexed-question-succession/PRED-TEX-DECL-DEF-QSUCC-OCCURRENCE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 2721,
+        "end_line": 2740,
+        "sha256": "cddfbf4e765008df0017b667da06903dce80f55a1a1934301f6a018fd9ee2413"
+      }
+    }
+  ],
+  "next_residual": "FORMAL-B-QSUCC-OCCURRENCE-TYPING",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
