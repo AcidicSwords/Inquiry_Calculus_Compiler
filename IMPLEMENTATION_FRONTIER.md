@@ -6,26 +6,26 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-SOLUTION-FIELD-WEB-001` machine-checks a typed indexed intersection of residual solution
-fibers. It keeps refinement, answer, solver, execution, and successor meanings out of the boundary;
-Gate B remains pending.
+`FORMAL-B-INDEXED-MEET-REFINEMENT-001` proves one-way solution-field inclusion from a typed web
+embedding. It keeps reverse inclusion, equality, answer, solver, execution, and successor meanings
+out of the boundary; Gate B remains pending.
 
 ## Strongest live obligation
 
-Elaborate indexed-meet refinement without treating inclusion of solution fields as answer semantics,
-a solver, program behavior, or successor semantics.
+Elaborate property image of a hole without treating image values or singleton forcing as an answer,
+solver, program behavior, or successor semantics.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-INDEXED-MEET-REFINEMENT
+id: FORMAL-B-PROPERTY-IMAGE-HOLE
 plan_phase: B
-goal: Determine the smallest source-regenerative boundary for the v2.0 indexed-meet refinement theorem, preserving web inclusion, solution-field inclusion, answer semantics, successor primitives, and Rust meaning as open unless independently established.
-protected_difference: Adding residual constraints refines the solution field only as an inclusion relation; it is distinct from a solver, selected answer, executable search, or successor semantics.
-discriminator: Contrast a source-bound web-inclusion refinement candidate with reverse inclusion, equality, total-answer, solver, program, semantic-evaluation, and omission claims; retain only the exact source-supported inclusion boundary after formal proof and independent checking.
-horizon: Indexed-meet refinement boundary only; solution-field syntax is fixed input, web inclusion meaning, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
+goal: Determine the smallest source-regenerative boundary for the v2.0 property image of a hole, preserving a property map, solution field, image value, forcedness, answer semantics, successor primitives, and Rust meaning as open unless independently established.
+protected_difference: A property image maps the solution field into values; singleton forcing is distinct from a selected answer, total solver, program, or successor semantics.
+discriminator: Contrast a source-bound property-image candidate with selected-answer, singleton-witness, solver, program, semantic-evaluation, and omission claims; retain only the exact source-supported image boundary after regeneration and independent checking.
+horizon: Property-image boundary only; indexed-meet refinement is fixed input, forcedness, answer semantics, execution, and all unrelated LegacyObligations remain explicit unless their exact source classification and independent checks establish otherwise, no Phase C primitive decision or Phase F Rust correspondence is authorized, and Gate B stays pending
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021
 relevant_failures: F-9006, F-9007
-if_pass: retain the smallest checked indexed-meet refinement boundary and then elaborate the next residual selected by its unresolved relation
-if_fail: reopen the earliest web inclusion, fiber, refinement direction, answer, program, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
+if_pass: retain the smallest checked property-image boundary and then elaborate the next residual selected by its unresolved relation
+if_fail: reopen the earliest property map, field, image, forcedness, answer, program, or source boundary relation; do not substitute proofs, axioms, or Rust behavior
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker

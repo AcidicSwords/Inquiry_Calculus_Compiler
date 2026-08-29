@@ -27,6 +27,7 @@ import InquiryCalculus.Legacy.V20.QuestionStructuredHole
 import InquiryCalculus.Legacy.V20.RelationalAbstraction
 import InquiryCalculus.Legacy.V20.AbstractionByRemoval
 import InquiryCalculus.Legacy.V20.SolutionFieldWeb
+import InquiryCalculus.Legacy.V20.IndexedMeetRefinement
 
 /-!
 # Inquiry Calculus formal successor
