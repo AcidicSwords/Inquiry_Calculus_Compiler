@@ -88,6 +88,7 @@ jobs:
           node tools/phase_b_positive_departure_witness_check.js --compile
           node tools/phase_b_departure_relative_positivity_check.js --compile
           node tools/phase_b_derived_boundary_crossing_check.js --compile
+          node tools/phase_b_relation_and_negation_use_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -268,6 +269,8 @@ jobs:
           node --check tools/phase_b_departure_relative_positivity_check.js
           node --check tools/phase_b_derived_boundary_crossing.js
           node --check tools/phase_b_derived_boundary_crossing_check.js
+          node --check tools/phase_b_relation_and_negation_use.js
+          node --check tools/phase_b_relation_and_negation_use_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -379,6 +382,8 @@ jobs:
           node tools/phase_b_departure_relative_positivity_check.js
           node tools/phase_b_derived_boundary_crossing.js check
           node tools/phase_b_derived_boundary_crossing_check.js
+          node tools/phase_b_relation_and_negation_use.js check
+          node tools/phase_b_relation_and_negation_use_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
