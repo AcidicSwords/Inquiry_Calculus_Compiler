@@ -122,6 +122,7 @@ jobs:
           node tools/phase_b_discharge_route_check.js --compile
           node tools/phase_b_llm_possibility_check.js --compile
           node tools/phase_b_prompt_operator_check.js --compile
+          node tools/phase_b_canonical_rendering_elaboration_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -370,6 +371,8 @@ jobs:
           node --check tools/phase_b_llm_possibility_check.js
           node --check tools/phase_b_prompt_operator.js
           node --check tools/phase_b_prompt_operator_check.js
+          node --check tools/phase_b_canonical_rendering_elaboration.js
+          node --check tools/phase_b_canonical_rendering_elaboration_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -549,6 +552,8 @@ jobs:
           node tools/phase_b_llm_possibility_check.js
           node tools/phase_b_prompt_operator.js check
           node tools/phase_b_prompt_operator_check.js
+          node tools/phase_b_canonical_rendering_elaboration.js check
+          node tools/phase_b_canonical_rendering_elaboration_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

@@ -80,6 +80,7 @@ import InquiryCalculus.Legacy.V20.ActiveView
 import InquiryCalculus.Legacy.V20.DischargeRoute
 import InquiryCalculus.Legacy.V20.LLMPossibility
 import InquiryCalculus.Legacy.V20.PromptOperator
+import InquiryCalculus.Legacy.V20.CanonicalRenderingElaboration
 
 /-!
 # Inquiry Calculus formal successor

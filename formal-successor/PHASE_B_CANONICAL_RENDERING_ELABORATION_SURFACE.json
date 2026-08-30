@@ -1,0 +1,381 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_canonical_rendering_elaboration_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "43f3a96941aa828ef07abe95d4ad7ec30d0ed1ef47ca7e866562775e75777609"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-3E7147D6C53D2C5F-02",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/canonical-rendering-and-elaboration/PRED-TEX-PROSE-3E7147D6C53D2C5F-02",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3378,
+        "end_line": 3378,
+        "sha256": "036c781064de7dc7841e7e8a5cffd9cecf677b1dcb6311aa41fb1b4651140e4c"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-9693C0ECD1622DEA",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/canonical-rendering-and-elaboration/PRED-TEX-DISPLAY-9693C0ECD1622DEA",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3379,
+        "end_line": 3382,
+        "sha256": "cf56ae9e85603dee47210000b18a8866a84540a35660e9bf6bfabf10560ba591"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-D0B2E35629A5A449",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/canonical-rendering-and-elaboration/PRED-TEX-PROSE-D0B2E35629A5A449",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3383,
+        "end_line": 3383,
+        "sha256": "504aa01687192092fa47ec6f85187f829dd5316e246c938fa5db9ef409731a2b"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-0EF24CB8DA3AC526",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/canonical-rendering-and-elaboration/PRED-TEX-DISPLAY-0EF24CB8DA3AC526",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3384,
+        "end_line": 3387,
+        "sha256": "5f330430cacd4c1db95f147884961053a4ac13e4739b76f3e283d038ce7179d9"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-299001EBD14C8890",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/canonical-rendering-and-elaboration/PRED-TEX-PROSE-299001EBD14C8890",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3389,
+        "end_line": 3389,
+        "sha256": "b7563e4f51afd34f1983e680098d9511d798b59f09a1fefaf717dbf86130db28"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-5F4F2258AD426694",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/canonical-rendering-and-elaboration/PRED-TEX-DISPLAY-5F4F2258AD426694",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3390,
+        "end_line": 3398,
+        "sha256": "5c4f312cd05d2cbd150e26247a881bd2febc0c1403326c9a33e018048db9ee67"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-94EC6147B33BAE90",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/canonical-rendering-and-elaboration/PRED-TEX-PROSE-94EC6147B33BAE90",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3399,
+        "end_line": 3399,
+        "sha256": "6ed038c908c355baeba7b6888aeed7afa06b588ed994238a746ed9f34b86909d"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-26DAA46116FDEA80",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-PROSE-26DAA46116FDEA80",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3403,
+        "end_line": 3403,
+        "sha256": "e7a5b99c49033edc7428a7335ad029ff9ecca72bde2fb25208645ef64a064e88"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-9A23C4C3EFC4BF09",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-9A23C4C3EFC4BF09",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3405,
+        "end_line": 3405,
+        "sha256": "e3a03e1ea8842048fce9e371ad5719ae5950580cd18077cd1eb4cb1483a4a137"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-6F1FC182B6747802",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-6F1FC182B6747802",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3406,
+        "end_line": 3406,
+        "sha256": "9fa2f2702737359354d89114a36ff26991621b54f2a144f7299102be5f93edb6"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-B0E6F9A2F97D5218",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-B0E6F9A2F97D5218",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3407,
+        "end_line": 3407,
+        "sha256": "485af89b696f725263968468c182dfadc9deb71926c410b3017032d73a21a012"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-92922515D85D024C",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-92922515D85D024C",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3408,
+        "end_line": 3408,
+        "sha256": "62d7289fd2f3cb2570c65cdfb802aa2543b63689872851dbb7ff1be4673e217f"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-D243860255F431A0",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-D243860255F431A0",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3409,
+        "end_line": 3409,
+        "sha256": "e2751e572e92d0f38e3c2ee05b01395b8145a6f4acdf14b79e34ff6bc353effe"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-75EA8CC1BC24911F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-75EA8CC1BC24911F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3410,
+        "end_line": 3410,
+        "sha256": "1a0c80cc872889b8e3411216dd2fb752bb004400325067d6e21f72e39c612d58"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-A326A5D16CCB8938",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-A326A5D16CCB8938",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3411,
+        "end_line": 3411,
+        "sha256": "a21bcfe186b00ad3e17ed32866be6e008c9bb80a5c3c47527846caad367c23b4"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-0B681D4509568950",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-0B681D4509568950",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3412,
+        "end_line": 3412,
+        "sha256": "1b5660b903940b31819317757bc928deefce4c36f177f00de52f22dae449c596"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-C5F077B48AF9A29B",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-C5F077B48AF9A29B",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3413,
+        "end_line": 3413,
+        "sha256": "d4e32614b12a9b0a520167b5c357dca2835a488eead27fb919041419854d9fa0"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-3B81A9D9176EF4C0",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-3B81A9D9176EF4C0",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3414,
+        "end_line": 3414,
+        "sha256": "604ba74c917192a1e8cafcba6998cdb0d706c940953625061957d9630c724fed"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-440AE591E8D9FFFC",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-440AE591E8D9FFFC",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3415,
+        "end_line": 3415,
+        "sha256": "5ec2fc4b470b2b02090daf2738a5c8adf34dff11003cc055d126649ccd7c63ba"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-538C001C38577FE8",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-538C001C38577FE8",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3416,
+        "end_line": 3416,
+        "sha256": "7eb7b2d5b85237831fc8311aef31ab03643e086d3338d7f3bc3e8be82a438058"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-A7BF7BDD5C0467CB",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/rendering-obligations/PRED-TEX-ITEM-A7BF7BDD5C0467CB",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3417,
+        "end_line": 3417,
+        "sha256": "9d1f17d56e7ce5351382569ff99f09210b869d884841e54950aae4c961810662"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-9C1BCC5DE37B02BD",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-interrogative-rendering-and-erasure/PRED-TEX-PROSE-9C1BCC5DE37B02BD",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3422,
+        "end_line": 3426,
+        "sha256": "e8b7c39a4010093f666e61fa949394d85d69bc26a80cdd35fd5e57f05c07c79b"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-33D55A0A07AE96D1",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-interrogative-rendering-and-erasure/PRED-TEX-PROSE-33D55A0A07AE96D1",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3428,
+        "end_line": 3429,
+        "sha256": "85e2afc6960c6614aa8b69507cb68ff62839940b07b5b0a90d60c36e6d5000d7"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-EB9F1FF2DAF1FB7F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-interrogative-rendering-and-erasure/PRED-TEX-DISPLAY-EB9F1FF2DAF1FB7F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3430,
+        "end_line": 3434,
+        "sha256": "f06991a70938dba431b547076d54dcce743cbec6b157d6aa1bdab05a0ef58e41"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-A8A808087D48C054",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-interrogative-rendering-and-erasure/PRED-TEX-PROSE-A8A808087D48C054",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3435,
+        "end_line": 3436,
+        "sha256": "e7e7f75132a01738a5f17df9e8b4af39f2e03437962fe27a1225123660e70686"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-0B92454E14BA918D",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-interrogative-rendering-and-erasure/PRED-TEX-PROSE-0B92454E14BA918D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3438,
+        "end_line": 3444,
+        "sha256": "15b87a4f02ebb25a207de712021b90261d91f77138dd23a03338ce69d45bcb86"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-THM-INTERROGATIVE-LOWERING",
+      "disposition": "FormalTheorem",
+      "destination": "phase:B/Legacy/V20/Claims/derived-interrogative-rendering-and-erasure/PRED-TEX-DECL-THM-INTERROGATIVE-LOWERING",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3446,
+        "end_line": 3453,
+        "sha256": "01f4896366df4b792c94f1a97634afc75105ce2b1477ca0d715b589a2bd8babc"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-COR-NO-INTERROGATIVE-OPCODE",
+      "disposition": "FormalTheorem",
+      "destination": "phase:B/Legacy/V20/Claims/derived-interrogative-rendering-and-erasure/PRED-TEX-DECL-COR-NO-INTERROGATIVE-OPCODE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3465,
+        "end_line": 3470,
+        "sha256": "ff6a9d63ff007c2c7bcdbed6fb88a070cb79ba428f161fdfc17e36dc03722164"
+      },
+      "legacy_status": null
+    }
+  ],
+  "coverage": {
+    "formal_theorems": 2,
+    "obligations": 26
+  },
+  "next_residual": "FORMAL-B-BEHAVIORAL-COMPILER-CORRECTNESS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
