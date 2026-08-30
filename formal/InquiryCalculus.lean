@@ -84,6 +84,7 @@ import InquiryCalculus.Legacy.V20.CanonicalRenderingElaboration
 import InquiryCalculus.Legacy.V20.BehavioralCompilerCorrectness
 import InquiryCalculus.Legacy.V20.QuestionConditionedLLMField
 import InquiryCalculus.Legacy.V20.ThreeDistinctOrders
+import InquiryCalculus.Legacy.V20.AuthoritativeAncestry
 
 /-!
 # Inquiry Calculus formal successor

@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_authoritative_ancestry_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "281b7c5b91a9b507b0bbbd1597a3982f5e33c7969a2e5f2bc24560f2689dcf1d"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-DEF-AUTHORITATIVE-ANCESTRY",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/single-authoritative-ancestry-and-typed-projections/PRED-TEX-DECL-DEF-AUTHORITATIVE-ANCESTRY",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3555,
+        "end_line": 3571,
+        "sha256": "a1a6fadba0d4dc28bbdeaffa660bdc865ef18003a81c701053742ffcf2f96fab"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-6BF3796B3ADB6DA0",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/single-authoritative-ancestry-and-typed-projections/PRED-TEX-DECL-6BF3796B3ADB6DA0",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3573,
+        "end_line": 3580,
+        "sha256": "9d47854e1293e2868034bd6aba7e97896a0e57ad3d734b6f75ea78477e097b47"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-C774411487EAA720",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/single-authoritative-ancestry-and-typed-projections/PRED-TEX-DECL-C774411487EAA720",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3582,
+        "end_line": 3589,
+        "sha256": "f2088a7f9ff3851211206f5ca514e649501f002b7172bae74110e683098d68f7"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-4E5911D6A8CE7A02",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/single-authoritative-ancestry-and-typed-projections/PRED-TEX-PROSE-4E5911D6A8CE7A02",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3591,
+        "end_line": 3593,
+        "sha256": "a0e6951086b83f6ba7aa4a10d4590d28199b8d6f51a47fd868f26fbabd0a6607"
+      },
+      "legacy_status": "Ambiguous"
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 3,
+    "obligations": 1
+  },
+  "next_residual": "FORMAL-B-EVENT-RECORD",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
