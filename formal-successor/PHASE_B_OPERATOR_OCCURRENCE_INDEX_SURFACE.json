@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_operator_occurrence_index_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "0735474e5cbbe76c1f3d3c90758dce0666a67ecde6fc39f3a3196797e790163c"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-51108566F805C424",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/operator-occurrence-index/PRED-TEX-PROSE-51108566F805C424",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3841,
+        "end_line": 3841,
+        "sha256": "84b2ad7d987de3291c85528b1ba22b7189ad3672fefa6e093f46870f17fe0f35"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-DC80917849B95507",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/operator-occurrence-index/PRED-TEX-DISPLAY-DC80917849B95507",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3842,
+        "end_line": 3854,
+        "sha256": "e9b9ad4cc88b4ecb9b7369e2e91fb324ced0238483e2259a0a5d506cacf93d98"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-ED01A921665304A5",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/operator-occurrence-index/PRED-TEX-PROSE-ED01A921665304A5",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3856,
+        "end_line": 3856,
+        "sha256": "cad5fe82604e57a41c50b9a2d65fd348642e7e57b41c120ea0787566c85a2a45"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-F7AE0A8A47011668",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/operator-occurrence-index/PRED-TEX-DISPLAY-F7AE0A8A47011668",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3857,
+        "end_line": 3866,
+        "sha256": "b28484234b07c729d0bea7d9832dccae80905b116a5899cffbf02f2f07be1c34"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-6D85399AAEEA2F37",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/operator-occurrence-index/PRED-TEX-PROSE-6D85399AAEEA2F37",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3868,
+        "end_line": 3868,
+        "sha256": "e7ea066c7c9e55475424180fcfa7ffc165afdd042c2c9195e1cb606d157a2190"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "next_residual": "FORMAL-B-RECURRENT-PROBES",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

@@ -88,6 +88,7 @@ import InquiryCalculus.Legacy.V20.AuthoritativeAncestry
 import InquiryCalculus.Legacy.V20.EventRecord
 import InquiryCalculus.Legacy.V20.DerivedPairedActuality
 import InquiryCalculus.Legacy.V20.StateWorkingPresentation
+import InquiryCalculus.Legacy.V20.OperatorOccurrenceIndex
 
 /-!
 # Inquiry Calculus formal successor
