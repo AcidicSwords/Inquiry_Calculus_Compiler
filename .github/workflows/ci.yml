@@ -128,6 +128,7 @@ jobs:
           node tools/phase_b_three_distinct_orders_check.js --compile
           node tools/phase_b_authoritative_ancestry_check.js --compile
           node tools/phase_b_event_record_check.js --compile
+          node tools/phase_b_derived_paired_actuality_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -388,6 +389,8 @@ jobs:
           node --check tools/phase_b_authoritative_ancestry_check.js
           node --check tools/phase_b_event_record.js
           node --check tools/phase_b_event_record_check.js
+          node --check tools/phase_b_derived_paired_actuality.js
+          node --check tools/phase_b_derived_paired_actuality_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -579,6 +582,8 @@ jobs:
           node tools/phase_b_authoritative_ancestry_check.js
           node tools/phase_b_event_record.js check
           node tools/phase_b_event_record_check.js
+          node tools/phase_b_derived_paired_actuality.js check
+          node tools/phase_b_derived_paired_actuality_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_derived_paired_actuality_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "961ebe2faa58437b6ca88f2de3bdd8cedd12cd76c1f7af1688940629a920f144"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-1C1ECD9B32154BAC",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-paired-actuality-and-question-route-projection/PRED-TEX-PROSE-1C1ECD9B32154BAC",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3666,
+        "end_line": 3667,
+        "sha256": "1586132a416af2948ba8cecbe136ddb0d82c1930556a1064049742e87387c53c"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-DEF-RESOLVED-INQUIRY-OCCURRENCE",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/derived-paired-actuality-and-question-route-projection/PRED-TEX-DECL-DEF-RESOLVED-INQUIRY-OCCURRENCE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3669,
+        "end_line": 3719,
+        "sha256": "66cca6eae3b5d3a80ffdf2d174e15ed159d201b349c892179ead40822794dad7"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-DEF-PAIRED-ACTUALITY-VIEW",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/derived-paired-actuality-and-question-route-projection/PRED-TEX-DECL-DEF-PAIRED-ACTUALITY-VIEW",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3721,
+        "end_line": 3741,
+        "sha256": "b4a6b702ff7b6889282534b9b5e2f2dd3fd13e243540f72212910131619f271b"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-LAW-ONE-OCCURRENCE-SPINE",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-paired-actuality-and-question-route-projection/PRED-TEX-DECL-LAW-ONE-OCCURRENCE-SPINE",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3743,
+        "end_line": 3754,
+        "sha256": "1eaa4a93874d02c1572d14b94b286a9e91d9453605f6f3cbd1f3ceebb0ecc467"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-LAW-RESUME-REPLAY-ORDER",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-paired-actuality-and-question-route-projection/PRED-TEX-DECL-LAW-RESUME-REPLAY-ORDER",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3756,
+        "end_line": 3768,
+        "sha256": "2d03626f5f5292f317acafe21e189c6d8eaa7ae5f391e507c6fce3e371313766"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-DEF-PAIRED-CUE-FIBERS",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/derived-paired-actuality-and-question-route-projection/PRED-TEX-DECL-DEF-PAIRED-CUE-FIBERS",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3770,
+        "end_line": 3804,
+        "sha256": "03a5e96a80008fc477933c47bf9a90f5ac259cb715278227b5b1aa82526230c7"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-LAW-PAIRED-REGENERATION",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/derived-paired-actuality-and-question-route-projection/PRED-TEX-DECL-LAW-PAIRED-REGENERATION",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3806,
+        "end_line": 3812,
+        "sha256": "6587b521ecaaba872ec65aaed941b66166ec55650fde59a207350bb879d15c83"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 3,
+    "obligations": 4
+  },
+  "next_residual": "FORMAL-B-STATE-WORKING-PRESENTATION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
