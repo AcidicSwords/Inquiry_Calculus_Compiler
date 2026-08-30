@@ -1,0 +1,251 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_event_record_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "087c45a1407a16b1c42b40a7542945b2f47a7756e8498e167c829b4dffa26a47"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-D96ED4F5CED10A41",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-PROSE-D96ED4F5CED10A41",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3597,
+        "end_line": 3597,
+        "sha256": "6ea5798460b7e5a8cb334f4c550b5eec142d47696d43eedb3943fd9323718290"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-ED8585D2027DBF36",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-DISPLAY-ED8585D2027DBF36",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3598,
+        "end_line": 3614,
+        "sha256": "3cf8b62a10a18e13f58d3b2bdb2510dcfc2cbc18450076b33e32f8972f041d8e"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-7FFDCEEA605295AD",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-PROSE-7FFDCEEA605295AD",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3615,
+        "end_line": 3615,
+        "sha256": "c9789a912915ec7fda8a726a6f626590919ef7e9104565ce58c1ebe257dde61d"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-5D4ABF42F5A39395",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-DISPLAY-5D4ABF42F5A39395",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3616,
+        "end_line": 3623,
+        "sha256": "1f172bd2612a7a41b42d65b9818cc61b9e6699249271bd439040bf6c55e21807"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-DA58EBD04508B21B",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-PROSE-DA58EBD04508B21B",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3624,
+        "end_line": 3625,
+        "sha256": "4457ec8289d530623811d812e373e9f0f27cf548f02c8111f021535e31874491"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-9535B120F9C87123",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-9535B120F9C87123",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3629,
+        "end_line": 3629,
+        "sha256": "5ae93f09c0a355ccbe2b2c820f0a8d93f938993e7ad83300d1cfea6afc1d1f99"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-CA381C140195796F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-CA381C140195796F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3630,
+        "end_line": 3630,
+        "sha256": "f80c36801b3c03e954b13825975f80a240e9fea3068c0b6724f4bd99498559cd"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-B34E38D28C1C39E6",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-B34E38D28C1C39E6",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3631,
+        "end_line": 3631,
+        "sha256": "e0932e85c6957125e1e2fad07586a45cf1032f562a561cbd253a2459d97c3557"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-D3FD018D5AB8EBD8",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-D3FD018D5AB8EBD8",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3632,
+        "end_line": 3632,
+        "sha256": "c897d71a24b7dbec74b2c53bec7aa3fbb9e4b89178dc6a3331eaa8f2b862039f"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-B8346A80C0E2C374",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-B8346A80C0E2C374",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3633,
+        "end_line": 3633,
+        "sha256": "3094794a25a44971196e6618da62ff8a9a9bc0153af46f00623eeae9184f29ad"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-F20C237E94A4CE58",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-F20C237E94A4CE58",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3634,
+        "end_line": 3634,
+        "sha256": "02bf7a6a60b570dc086c7be18b7a3afed5ccfc44144f92803e265b887a9077f8"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-72BE54FEC047F77A",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-72BE54FEC047F77A",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3635,
+        "end_line": 3635,
+        "sha256": "4987a4d704009d829e22b4b11f9d3b3a5171ed90fba3d243738991312fadf28f"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-2CE82085C34FEFD0",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-2CE82085C34FEFD0",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3636,
+        "end_line": 3636,
+        "sha256": "4376ee70ec4a42895b9ffdecb3fb2de49bbf6a90a94ab1b1a6cf32dee5f98d31"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-41F5361F649724AD",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-41F5361F649724AD",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3637,
+        "end_line": 3637,
+        "sha256": "a47a5e3ab13b349f729185618c8273dbb9026d3066c5f3ea998593176556a63f"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-C748F7A42B00E79F",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-ITEM-C748F7A42B00E79F",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3638,
+        "end_line": 3638,
+        "sha256": "0b3eb14de543fea91ad82592cb808cab132e734fe54b1c89f65fce53197d118d"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-7040B46A77FC28C8",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-PROSE-7040B46A77FC28C8",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3627,
+        "end_line": 3627,
+        "sha256": "6e7f466dbbd5a7c0f22e505a94e50563f21a063d471cb5c3ae806aea82d6aea4"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-DEF-EVENT-FOR-ASK",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/event-record/PRED-TEX-DECL-DEF-EVENT-FOR-ASK",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3641,
+        "end_line": 3658,
+        "sha256": "b6845c24012a96f60b4063c0c6665c27af2242be628f6c13c817e346b1b706d8"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-LAW-RECIPROCAL-ACTUALITY",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/event-record/PRED-TEX-DECL-LAW-RECIPROCAL-ACTUALITY",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3660,
+        "end_line": 3662,
+        "sha256": "ebbec22e8db29a52a832e7a468bd3926f48c6b64b386e82969d3734668795431"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 1,
+    "obligations": 17
+  },
+  "next_residual": "FORMAL-B-DERIVED-PAIRED-ACTUALITY",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
