@@ -76,6 +76,7 @@ import InquiryCalculus.Legacy.V20.GuardedRecurrence
 import InquiryCalculus.Legacy.V20.CompilerArchitecture
 import InquiryCalculus.Legacy.V20.NormalizeOpenRelation
 import InquiryCalculus.Legacy.V20.LocalReciprocalChart
+import InquiryCalculus.Legacy.V20.ActiveView
 
 /-!
 # Inquiry Calculus formal successor
