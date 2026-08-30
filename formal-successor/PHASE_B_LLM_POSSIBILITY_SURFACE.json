@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_llm_possibility_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "aeaa305f77611c1dea7a745338549e4245f93c3bbd0ff2bb2880bd1202021278"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-A197ED86B891B510",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/llm-possibility-relation/PRED-TEX-PROSE-A197ED86B891B510",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3321,
+        "end_line": 3321,
+        "sha256": "e3ada1337ac4f5bc390760fc90042e7fce6ebe6ac67d170ce6ba334f7de6a9a0"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-8946500F57EBF131",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/llm-possibility-relation/PRED-TEX-DISPLAY-8946500F57EBF131",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3322,
+        "end_line": 3333,
+        "sha256": "a0e833ea7117b8514c7e2bd55df73acbf6fc7b71721e02a2b0099c94ee760bac"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-7C859A2B785B3F3D",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/llm-possibility-relation/PRED-TEX-PROSE-7C859A2B785B3F3D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3335,
+        "end_line": 3335,
+        "sha256": "d2d5825b09ce36cb524fd5237571c16528c2f15c9175eb70b66a3ce36604b912"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-94EBEDEC5AE9A947",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/llm-possibility-relation/PRED-TEX-DECL-94EBEDEC5AE9A947",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3337,
+        "end_line": 3345,
+        "sha256": "d6c07b7357482065f53ae0210af6fde068048f10bf66086191c44a0ce0d16150"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "next_residual": "FORMAL-B-PROMPT-OPERATOR",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
