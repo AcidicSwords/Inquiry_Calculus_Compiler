@@ -91,6 +91,7 @@ import InquiryCalculus.Legacy.V20.StateWorkingPresentation
 import InquiryCalculus.Legacy.V20.OperatorOccurrenceIndex
 import InquiryCalculus.Legacy.V20.RecurrentProbes
 import InquiryCalculus.Legacy.V20.ProbeTraces
+import InquiryCalculus.Legacy.V20.FreshProbeComparison
 
 /-!
 # Inquiry Calculus formal successor
