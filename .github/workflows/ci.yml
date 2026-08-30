@@ -125,6 +125,7 @@ jobs:
           node tools/phase_b_canonical_rendering_elaboration_check.js --compile
           node tools/phase_b_behavioral_compiler_correctness_check.js --compile
           node tools/phase_b_question_conditioned_llm_field_check.js --compile
+          node tools/phase_b_three_distinct_orders_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -379,6 +380,8 @@ jobs:
           node --check tools/phase_b_behavioral_compiler_correctness_check.js
           node --check tools/phase_b_question_conditioned_llm_field.js
           node --check tools/phase_b_question_conditioned_llm_field_check.js
+          node --check tools/phase_b_three_distinct_orders.js
+          node --check tools/phase_b_three_distinct_orders_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -564,6 +567,8 @@ jobs:
           node tools/phase_b_behavioral_compiler_correctness_check.js
           node tools/phase_b_question_conditioned_llm_field.js check
           node tools/phase_b_question_conditioned_llm_field_check.js
+          node tools/phase_b_three_distinct_orders.js check
+          node tools/phase_b_three_distinct_orders_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

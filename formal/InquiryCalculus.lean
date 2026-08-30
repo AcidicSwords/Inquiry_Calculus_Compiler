@@ -83,6 +83,7 @@ import InquiryCalculus.Legacy.V20.PromptOperator
 import InquiryCalculus.Legacy.V20.CanonicalRenderingElaboration
 import InquiryCalculus.Legacy.V20.BehavioralCompilerCorrectness
 import InquiryCalculus.Legacy.V20.QuestionConditionedLLMField
+import InquiryCalculus.Legacy.V20.ThreeDistinctOrders
 
 /-!
 # Inquiry Calculus formal successor

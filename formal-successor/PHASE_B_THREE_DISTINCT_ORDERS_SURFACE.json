@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_three_distinct_orders_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "2bbefecc0b4de77049ceed510488df746e8dfe03a9027738ce635fd43d17ef75"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-F36CC80E7FFF1B54",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/three-orders-that-must-not-collapse/PRED-TEX-PROSE-F36CC80E7FFF1B54",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3534,
+        "end_line": 3534,
+        "sha256": "973e3434107eb5d020b2ec6381649518ff19b464a7763c07e13f47846148b9e7"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-041BDF611D4316FF",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/three-orders-that-must-not-collapse/PRED-TEX-DISPLAY-041BDF611D4316FF",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3535,
+        "end_line": 3543,
+        "sha256": "e54b5905a99e319af32fdcfae04d609b69cc757ef48814d63adb7b773bb224db"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-A8627C7FDB127449",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/three-orders-that-must-not-collapse/PRED-TEX-ITEM-A8627C7FDB127449",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3546,
+        "end_line": 3546,
+        "sha256": "293f428d0e5b2ec8dd79d127a087273b61f9113efda14becae37a61a07985032"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-AA69C1B6F04C2561",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/three-orders-that-must-not-collapse/PRED-TEX-ITEM-AA69C1B6F04C2561",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3547,
+        "end_line": 3547,
+        "sha256": "73fc56464ea0a709a3395659d94c0e9fdb99f7a02dfa89aae9d794dd58e12768"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-ITEM-278D968C5CC10D63",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/three-orders-that-must-not-collapse/PRED-TEX-ITEM-278D968C5CC10D63",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3548,
+        "end_line": 3548,
+        "sha256": "7694070b09a9680c0bba3009fb67f75704aeb4610795c10e7e65d9b848288998"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-84BDD2E4A07BBDF9",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/three-orders-that-must-not-collapse/PRED-TEX-PROSE-84BDD2E4A07BBDF9",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3551,
+        "end_line": 3551,
+        "sha256": "531639968c9b7ce25b6f2346558a791e6abdc21fccfad2d72ceebff81df9e375"
+      },
+      "legacy_status": "Ambiguous"
+    }
+  ],
+  "next_residual": "FORMAL-B-AUTHORITATIVE-ANCESTRY-PROJECTIONS",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
