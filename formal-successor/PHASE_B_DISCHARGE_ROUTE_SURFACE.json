@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_discharge_route_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "f5168aa0b7769ce6fca02dc6f045c3758c20b76a8abbfe90ba430bf2feb16181"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-43C268EC9667598C",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-4-select-discharge-route/PRED-TEX-PROSE-43C268EC9667598C",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3310,
+        "end_line": 3310,
+        "sha256": "ac90e3a20c34db23dfa365b7f278a0e6c49f9863cdb636113fb1f927bb4b1a8d"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-9ECC001497F89352",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-4-select-discharge-route/PRED-TEX-DISPLAY-9ECC001497F89352",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3311,
+        "end_line": 3313,
+        "sha256": "58e2e403c9b688a3e566c17892b33201fde6dcd3c07dd9d47f84dd1ac569396b"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-83B75E87175ECBCF",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-4-select-discharge-route/PRED-TEX-PROSE-83B75E87175ECBCF",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3315,
+        "end_line": 3315,
+        "sha256": "0a2b98f6579b4753cfa5c60b5482d6be2b666c0fe05ebd66672980e1ddeb2ab2"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-709F510C67485EC1",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-4-select-discharge-route/PRED-TEX-PROSE-709F510C67485EC1",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3317,
+        "end_line": 3317,
+        "sha256": "425595a2d870239a45daa4c61456d31fce7ad4d80d94753f67e1512d501eba4a"
+      },
+      "legacy_status": "Ambiguous"
+    }
+  ],
+  "next_residual": "FORMAL-B-LLM-POSSIBILITY-RELATION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

@@ -119,6 +119,7 @@ jobs:
           node tools/phase_b_normalize_open_relation_check.js --compile
           node tools/phase_b_local_reciprocal_chart_check.js --compile
           node tools/phase_b_active_view_check.js --compile
+          node tools/phase_b_discharge_route_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -361,6 +362,8 @@ jobs:
           node --check tools/phase_b_local_reciprocal_chart_check.js
           node --check tools/phase_b_active_view.js
           node --check tools/phase_b_active_view_check.js
+          node --check tools/phase_b_discharge_route.js
+          node --check tools/phase_b_discharge_route_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -534,6 +537,8 @@ jobs:
           node tools/phase_b_local_reciprocal_chart_check.js
           node tools/phase_b_active_view.js check
           node tools/phase_b_active_view_check.js
+          node tools/phase_b_discharge_route.js check
+          node tools/phase_b_discharge_route_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
