@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_recurrent_probes_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "a36b8f67f3afc388ba65407bb0f772249ab2fa8065db6c4b2c7b9bb52aa28c41"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DECL-B82BF6C00DAE911C",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/recurrent-probes/PRED-TEX-DECL-B82BF6C00DAE911C",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3872,
+        "end_line": 3888,
+        "sha256": "5bc8da466617515768ce7822a39dc1c14d1740aa14e463451e97a784e7171775"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-5AFC75449C484458",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/recurrent-probes/PRED-TEX-PROSE-5AFC75449C484458",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3890,
+        "end_line": 3890,
+        "sha256": "5ee521fa2aec3d79002a02f341e4a4664a76768e372d21d16c252a9268a24726"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-CE0A25D52C86F9E1",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/recurrent-probes/PRED-TEX-DECL-CE0A25D52C86F9E1",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3892,
+        "end_line": 3904,
+        "sha256": "d71d44d7ddca1f7e53d0c3a39081bb38b4f0a65ebc24f417dd32fa3398711d52"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-DD6DA4C65DB498EC",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/recurrent-probes/PRED-TEX-DECL-DD6DA4C65DB498EC",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3906,
+        "end_line": 3923,
+        "sha256": "b7c2fe44421d51bdfa9ffaf84a82005d0c6cae5595e804a784c1edec42717d07"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "coverage": {
+    "formal_definitions": 2,
+    "obligations": 2
+  },
+  "next_residual": "FORMAL-B-PROBE-TRACES",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

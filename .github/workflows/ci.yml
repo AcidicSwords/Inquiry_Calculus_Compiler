@@ -131,6 +131,7 @@ jobs:
           node tools/phase_b_derived_paired_actuality_check.js --compile
           node tools/phase_b_state_working_presentation_check.js --compile
           node tools/phase_b_operator_occurrence_index_check.js --compile
+          node tools/phase_b_recurrent_probes_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -397,6 +398,8 @@ jobs:
           node --check tools/phase_b_state_working_presentation_check.js
           node --check tools/phase_b_operator_occurrence_index.js
           node --check tools/phase_b_operator_occurrence_index_check.js
+          node --check tools/phase_b_recurrent_probes.js
+          node --check tools/phase_b_recurrent_probes_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -594,6 +597,8 @@ jobs:
           node tools/phase_b_state_working_presentation_check.js
           node tools/phase_b_operator_occurrence_index.js check
           node tools/phase_b_operator_occurrence_index_check.js
+          node tools/phase_b_recurrent_probes.js check
+          node tools/phase_b_recurrent_probes_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
