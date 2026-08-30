@@ -82,6 +82,7 @@ import InquiryCalculus.Legacy.V20.LLMPossibility
 import InquiryCalculus.Legacy.V20.PromptOperator
 import InquiryCalculus.Legacy.V20.CanonicalRenderingElaboration
 import InquiryCalculus.Legacy.V20.BehavioralCompilerCorrectness
+import InquiryCalculus.Legacy.V20.QuestionConditionedLLMField
 
 /-!
 # Inquiry Calculus formal successor
