@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_local_reciprocal_chart_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "f1936437b9d66cf4cfbcccfc2de221334438b36ccc517e3b785323ab1e02cfd6"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-398ED483F6539F35",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-2-construct-the-local-reciprocal-chart/PRED-TEX-PROSE-398ED483F6539F35",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3267,
+        "end_line": 3267,
+        "sha256": "a3026aa0d1a402604b192caa121ef4e49e00f48f9fe811b44b794b171b155ca3"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-2FDA9FEE9C881414",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-2-construct-the-local-reciprocal-chart/PRED-TEX-DISPLAY-2FDA9FEE9C881414",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3268,
+        "end_line": 3290,
+        "sha256": "cbfb9c4488978919ea0255e6601921029c5723443dde9a4a112b2969e5a0eb2f"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-257BAAE2AF9AECB5",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-2-construct-the-local-reciprocal-chart/PRED-TEX-PROSE-257BAAE2AF9AECB5",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3292,
+        "end_line": 3292,
+        "sha256": "32605193babc5ed841360a1796cf88cd04fb905e28aaabbde197ce2a10c02deb"
+      },
+      "legacy_status": "Unproved"
+    }
+  ],
+  "next_residual": "FORMAL-B-ACTIVE-VIEW",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
