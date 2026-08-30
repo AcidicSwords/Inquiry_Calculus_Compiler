@@ -81,6 +81,7 @@ import InquiryCalculus.Legacy.V20.DischargeRoute
 import InquiryCalculus.Legacy.V20.LLMPossibility
 import InquiryCalculus.Legacy.V20.PromptOperator
 import InquiryCalculus.Legacy.V20.CanonicalRenderingElaboration
+import InquiryCalculus.Legacy.V20.BehavioralCompilerCorrectness
 
 /-!
 # Inquiry Calculus formal successor
