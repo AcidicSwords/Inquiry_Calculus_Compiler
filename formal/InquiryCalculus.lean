@@ -74,6 +74,7 @@ import InquiryCalculus.Legacy.V20.SequencingComposition
 import InquiryCalculus.Legacy.V20.OperationalSemantics
 import InquiryCalculus.Legacy.V20.GuardedRecurrence
 import InquiryCalculus.Legacy.V20.CompilerArchitecture
+import InquiryCalculus.Legacy.V20.NormalizeOpenRelation
 
 /-!
 # Inquiry Calculus formal successor

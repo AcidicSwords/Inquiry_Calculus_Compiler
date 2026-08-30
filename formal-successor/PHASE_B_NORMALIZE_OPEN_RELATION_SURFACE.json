@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_normalize_open_relation_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "f3008b0b26c5190ff2bcf51e7d3b7060e508f6cf8f619379dfcf9f217550e5c6"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-DISPLAY-EC61AAFEEB10E05D",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-1-normalize-the-open-relation/PRED-TEX-DISPLAY-EC61AAFEEB10E05D",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3255,
+        "end_line": 3258,
+        "sha256": "a550974371c40ee573ba80c726869ffe852ec8916917b3c58c380827ad35f749"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-PROSE-1910E75E9237BF6E",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-1-normalize-the-open-relation/PRED-TEX-PROSE-1910E75E9237BF6E",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3260,
+        "end_line": 3260,
+        "sha256": "c75d3ce04a8dc517a902d26e5c1e28abf9cfdae5b6e273bbde74aca2e765a585"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DISPLAY-9B1E2CCFEFC1809B",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/stage-1-normalize-the-open-relation/PRED-TEX-DISPLAY-9B1E2CCFEFC1809B",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 3261,
+        "end_line": 3263,
+        "sha256": "09a10df293ec25803cf93e4f23740133c22fda48aafc92e84d3e6c975a75f81a"
+      },
+      "legacy_status": "Ambiguous"
+    }
+  ],
+  "next_residual": "FORMAL-B-LOCAL-RECIPROCAL-CHART",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}
