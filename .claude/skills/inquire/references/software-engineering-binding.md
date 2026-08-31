@@ -187,10 +187,23 @@ when a discriminator witnesses necessity.
 
 ## Recurrence and stops
 
-Fingerprint question occurrence, continuation, bindings, live Frontier, repository actuality,
-horizon, and coverage. Same state plus same answer is no progress. Recur only across a new actual
-return, admitted distinction, representation/binding change, authority change, observed state
-change, or strictly smaller finite frontier.
+Use the explicit recurrence:
+
+    FIELD -> ASK -> ANSWER -> REIFY -> FIELD
+
+For effectful discharge:
+
+    FIELD -> ASK -> SEAL -> RAW -> INTERPRET -> CHECK -> ANSWER -> REIFY -> FIELD
+
+Fingerprint question form, rendering, occurrence, path, bindings, live Frontier, repository
+actuality, horizon, and coverage. Same represented state plus the same Answer is no progress. The
+unchosen field remains live. A consequential Answer must be reified and the field regenerated
+before the next Ask.
+
+A checkpoint records replayable local progress and immediately recurs. It is not task closure.
+Closure additionally requires no unresolved Ask, unreified Answer, dirty field, open actual cycle,
+or new required/productive executable occurrence; Blocked, Unknown, ResourceBounded, and reopening
+conditions remain explicit. Challenge closure adversarially before recording Stop.
 
 Use only:
 

@@ -13,8 +13,9 @@ SPECIFY -> INSPECT -> CONTRAST -> CROSS -> LOCALIZE -> TRACE -> EXPERIMENT
 -> UPDATE -> CHANGE -> VERIFY -> CHALLENGE -> MINIMIZE -> RATCHET
 ```
 
-The Coding and Reciprocal Why corpora supply residual-selected inner question programs. Their
-temporary vocabulary is:
+The Coding and Reciprocal Why corpora supply relational question forms and reciprocal evidence.
+Schema 4 materializes them into a finite live field; it does not prescribe their execution order.
+Their temporary vocabulary is:
 
 ```text
 FRAME -> OPEN -> EXPAND -> DISTINGUISH || CONSTRAIN -> DISCHARGE -> RESOLVE
@@ -26,11 +27,25 @@ Neither list is a semantic opcode set. The predecessor's
 of pressure, not the active successor-construction rhythm. Exact typed relations outrank every
 temporary label.
 
-## The actual default questions
+The active recurrence is:
 
-When no sharper residual selects a smaller principal rhythm, the harness injects and records this
-compiled sequence. Each prompt is backed by stable lines in the pinned Coding corpus, but is
-selected for its relational move rather than its wording.
+```text
+FIELD -> ASK -> ANSWER -> REIFY -> FIELD
+
+effectful:
+FIELD -> ASK -> SEAL -> RAW -> INTERPRET -> CHECK -> ANSWER -> REIFY -> FIELD
+```
+
+The field is a rebuildable engineering projection, not semantic state or authoritative history.
+There is no semantic next-question oracle, universal score, active residual-to-rhythm schedule, or
+fixed method dispatch. Selection uses only explicit execution relations and preserves unchosen
+occurrences.
+
+## The compiled question-form registry
+
+These forms are available to the unordered generator registry. Each prompt is backed by stable
+lines in the pinned Coding corpus and classified by its relational move rather than wording. A
+field materializes only the forms made lawful by its represented surface.
 
 | Position | Compiled ID | Actual question | Main relational movement |
 |---|---|---|---|
@@ -51,7 +66,7 @@ selected for its relational move rather than its wording.
 | FOLD/REOPEN | `CQ-REOPEN` | What future continuation, context, representation, or return would invalidate that fold, and what must remain recoverable? | retain a positive reopening condition |
 | OPEN | `CQ-RESIDUAL` | What is now the strongest unresolved relational difference, and which question actually separates it? | make the supported residual select the next program |
 
-Every principal rhythm also carries the applicable anti-premature-closure questions:
+The registry also contains these anti-premature-closure forms:
 
 | Compiled ID | Actual question |
 |---|---|
@@ -69,8 +84,24 @@ successor primitives.
 
 ## The actual reciprocal challenges
 
-The full default rhythm requires these opposed corpus pairs after an actual return. A challenge may
-be absent only when that named challenge is individually recorded as typed but blocked.
+### Implemented instance boundary
+
+The compiled prompts now also serve as corpus anchors for a bounded relation-instance constructor.
+Reified seeds supply a relation signature, exact bound product/question references, and a joint open
+tuple. The generated prompt names those roles rather than only repeating the generic template.
+For example, opening a separating context while binding two terms and a horizon is a different
+question from opening the terms while binding the context. Prior questions themselves may occupy
+declared `Question` roles, even before an Answer exists. Path, source rendering, and ancestry remain
+part of identity. See `AUTONOMOUS_ITERATION.md` for the executable data contract.
+
+Carrier matching here checks supplied engineering declarations only. No question is automatically
+productive, executable, true, reciprocal, or warranted. The richer generator families and evidence
+licenses remain construction obligations; the following reciprocal table is not a claim that all
+of its motions have been automatically generated or discharged.
+
+These opposed corpus pairs are generator evidence. After an Answer, the regenerated field must
+materialize each reciprocal relation that becomes formable, or retain its typed blocker. They are
+not a fixed post-return checklist.
 
 | Movement | Forward/source question | Reciprocal/source question |
 |---|---|---|
@@ -122,9 +153,10 @@ The LLM may propose a method; the typed question determines what the method must
 analysis, proof search, testing, runtime probing, external observation, checking, and warrant remain
 different discharge routes.
 
-## Residual-selected rhythms
+## Historical schema-3 residual-selected rhythms
 
-The harness does not cycle through all families. The active residual selects a principal rhythm:
+Schema 3 used this fixed bootstrap schedule. It remains readable for historical trace replay and
+migration evidence; it is not the active schema-4 selection policy:
 
 | Residual | Selected rhythm |
 |---|---|
@@ -139,9 +171,9 @@ The harness does not cycle through all families. The active residual selects a p
 | too many tests or questions | QUESTION BASIS |
 | no more specific residual | DEFAULT SUCCESSOR CONSTRUCTION |
 
-Every rhythm declares an exact compiled-question sequence, the reciprocal challenges that must be
-represented or individually blocked, and the relational dimensions it must cover. A residual cannot
-claim another rhythm merely because that rhythm is shorter.
+Every historical rhythm declared an exact compiled-question sequence, reciprocal challenges, and
+coverage dimensions. Schema 4 preserves those forms and their provenance while replacing mandatory
+sequencing with field materialization and occurrence selection.
 
 ## Adequate span and non-redundancy
 
@@ -223,30 +255,31 @@ gaps, failed-fold witnesses, and reopening conditions. It materializes only coor
 from an active or explicitly required residual; it does not enumerate every pair, basin, conflict,
 or formal concept.
 
-Every selected surface question records one disposition:
+Every materialized live occurrence records one disposition:
 
 ```text
-Answered | Productive | Required | Redundant | Inapplicable | Blocked | Unknown
+Productive | Required | Inapplicable | Blocked | Unknown | ResourceBounded
 ```
+
+`Answered` and `Folded` are evidenced transitions, not live dispositions. A matching behavioral
+signature creates an equivalence candidate; it does not create a destructive `Redundant` deletion.
 
 Every resolved completion field preserves one result class:
 
 ```text
-Supported | Plural | ExactEmpty | Unsupported | Unknown | Blocked | ResourceBounded
+Supported | Partial | Plural | ExactEmpty | Unsupported | Unknown | Blocked | ResourceBounded
 ```
 
 `Expected` is inapplicable without a probability model. `Smallest`, `largest`, `strongest`, `best`,
 and `cheapest` are inapplicable without their corresponding preorder, cost, strength, or preference
-relation. Otherwise the query frontier remains nondominated over worst surviving block, leverage,
-cost, risk, authority debt, and coverage gain rather than inventing a scalar score.
+relation. Without an explicit comparator, the query field remains incomparable rather than
+inventing a scalar score.
 
-## Residual-shape method dispatch
+## Method-contract applicability
 
-Methods implement discharge patterns; their names are not semantics. The current derived dispatch
-is ordered boundary to bisection/generalized binary search; decomposable breaker to delta
-debugging; conjunctive conflict to QuickXplain/MUS; competing diagnoses to diagnosis plus
-sequential discrimination; coarse abstraction to CEGAR; synthesis to CEGIS; finite partition to
-partition refinement; unknown automaton to active automata learning; shared-condition basis to
-attribute exploration; multi-context search to assumption-context management; and generic shape
-to a nondominated applicable-method frontier. Every method must retain typed applicability,
-expansion, provenance, failure exits, and reopening.
+Methods implement discharge patterns; their names are not semantics. Schema 4 matches method
+contracts to explicitly represented applicability relations. It never maps a residual shape to a
+mandatory method list. Bisection, delta debugging, QuickXplain, CEGAR, CEGIS, partition refinement,
+and other registered methods remain candidates only when their premises are present. Method failure
+does not close inquiry. Every method retains applicability, expansion, provenance, failure exits,
+and reopening.

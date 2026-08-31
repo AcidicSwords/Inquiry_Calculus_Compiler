@@ -93,6 +93,16 @@ import InquiryCalculus.Legacy.V20.RecurrentProbes
 import InquiryCalculus.Legacy.V20.ProbeTraces
 import InquiryCalculus.Legacy.V20.FreshProbeComparison
 import InquiryCalculus.Legacy.V20.QuestionOrderDiagnostics
+import InquiryCalculus.Legacy.V20.ProtectedBehavioralEquivalence
+import InquiryCalculus.Legacy.V20.ProtectedBehavioralEquivalenceLaws
+import InquiryCalculus.Legacy.V20.HomWiseQuotient
+import InquiryCalculus.Legacy.V20.OperatorDescent
+import InquiryCalculus.Legacy.V20.RegenerativeSufficiency
+import InquiryCalculus.Legacy.V20.RegenerativeEconomyCorrespondence
+import InquiryCalculus.Legacy.V20.DifferentiateOnlyEnough
+import InquiryCalculus.Legacy.V20.Understanding
+import InquiryCalculus.Legacy.V20.AblativeRegeneration
+import InquiryCalculus.Legacy.V20.LearningGain
 
 /-!
 # Inquiry Calculus formal successor

@@ -67,27 +67,35 @@ function conditionKeys(value) {
 
 function readTraceOccurrences(root) {
   const traceDirectory = path.join(root, ".claude", "trace");
-  if (!fs.existsSync(traceDirectory)) return { occurrences: [], sources: [] };
+  if (!fs.existsSync(traceDirectory)) return { occurrences: [], sources: [], lifecycle: {} };
   const occurrences = [];
   const sources = [];
+  const lifecycle = {
+    fields: [], question_occurrences: [], answers: [], provisional_relations: [],
+    dependencies: [], invalidations: [], folds: [], reopenings: [], checkpoints: [], closures: [],
+  };
   const files = fs.readdirSync(traceDirectory).filter((name) => name.endsWith(".jsonl")).sort();
   for (const name of files) {
     const absolute = path.join(traceDirectory, name);
     const bytes = fs.readFileSync(absolute);
-    const candidateLines = bytes.toString("utf8").split(/\r?\n/u).filter(
-      (line) => line.includes('"kind":"residual"') && line.includes('"active_residual"'),
-    );
-    const records = candidateLines.map((line, index) => {
+    const relevantKind = /"kind":"(?:field|ask|answer|reify|invalidate|fold|reopen|checkpoint|closure)"|"kind":"residual"[^\n]*"active_residual"/u;
+    const candidateLines = bytes.toString("utf8").split(/\r?\n/u)
+      .map((line, index) => ({ line, lineNumber: index + 1 }))
+      .filter((entry) => relevantKind.test(entry.line));
+    const records = candidateLines.map(({ line, lineNumber }) => {
       try {
         return JSON.parse(line);
       } catch (error) {
-        fail(`indexed trace occurrence ${name}:${index + 1} is not JSON: ${error.message}`);
+        fail(`indexed trace occurrence ${name}:${lineNumber} is not JSON: ${error.message}`);
       }
     });
     const relevant = records.filter(
       (record) => record.kind === "residual" && typeof record.active_residual === "string",
     );
-    if (relevant.length === 0) continue;
+    const lifecycleRecords = records.filter((record) => new Set([
+      "field", "ask", "answer", "reify", "invalidate", "fold", "reopen", "checkpoint", "closure",
+    ]).has(record.kind));
+    if (relevant.length === 0 && lifecycleRecords.length === 0) continue;
     sources.push({ path: `.claude/trace/${name}`, sha256: sha256(bytes) });
     for (const record of relevant) {
       if (!stableId(record.active_residual)) {
@@ -119,8 +127,37 @@ function readTraceOccurrences(root) {
         next: record.next ?? "Unknown",
       });
     }
+    for (const record of lifecycleRecords) {
+      const ancestry = { trace: `.claude/trace/${name}`, seq: record.seq };
+      if (record.kind === "field") {
+        lifecycle.fields.push({ ...ancestry, field_id: record.field_id, regenerated_from: record.regenerated_from, field_check: record.field_check });
+      } else if (record.kind === "ask") {
+        lifecycle.question_occurrences.push({ ...ancestry, occurrence: record.occurrence, field_id: record.field_id, question_form: record.question_form, rendering: record.rendering, path: record.path, mode: record.mode });
+      } else if (record.kind === "answer") {
+        lifecycle.answers.push({ ...ancestry, occurrence: record.occurrence, ask_occurrence: record.ask_occurrence, resolution_class: record.resolution_class, status: record.status });
+      } else if (record.kind === "reify") {
+        let products = [];
+        try { products = JSON.parse(record.products); } catch { products = []; }
+        for (const product of products) {
+          lifecycle.provisional_relations.push({ ...ancestry, answer_occurrence: record.answer_occurrence, ...product });
+          for (const dependency of product.dependencies ?? []) {
+            lifecycle.dependencies.push({ from: product.id, to: dependency, ...ancestry });
+          }
+        }
+      } else if (record.kind === "invalidate") {
+        lifecycle.invalidations.push({ ...ancestry, product_ids: record.product_ids, cause: record.cause });
+      } else if (record.kind === "fold") {
+        lifecycle.folds.push({ ...ancestry, fold_id: record.fold_id, members: record.members, representative: record.representative, reopen_condition: record.reopen_condition });
+      } else if (record.kind === "reopen") {
+        lifecycle.reopenings.push({ ...ancestry, fold_id: record.fold_id, restored_members: record.restored_members, discriminator: record.discriminator });
+      } else if (record.kind === "checkpoint") {
+        lifecycle.checkpoints.push({ ...ancestry, field_id: record.field_id, remains_open: record.remains_open });
+      } else if (record.kind === "closure") {
+        lifecycle.closures.push({ ...ancestry, field_id: record.field_id, scope: record.scope, warrant: record.warrant });
+      }
+    }
   }
-  return { occurrences, sources };
+  return { occurrences, sources, lifecycle };
 }
 
 function validateSeed(root) {
@@ -196,7 +233,7 @@ function validateSeed(root) {
 function build(root) {
   const { seed, nodes, conditions, source } = validateSeed(root);
   const selected = frontier(root);
-  const { occurrences, sources } = readTraceOccurrences(root);
+  const { occurrences, sources, lifecycle } = readTraceOccurrences(root);
 
   for (const occurrence of occurrences) {
     if (!nodes.has(occurrence.residual_id)) {
@@ -280,7 +317,7 @@ function build(root) {
   basins.sort((left, right) => left.id.localeCompare(right.id));
 
   const topology = {
-    schema: 1,
+    schema: 2,
     status: "derived_rebuildable_preformal_projection_not_successor_semantics_or_history",
     selection_source: selected.relative,
     active_residual: selected.id,
@@ -290,6 +327,7 @@ function build(root) {
     conditions: [...conditions.values()].sort((left, right) => left.id.localeCompare(right.id)),
     nodes: [...nodes.values()].sort((left, right) => left.id.localeCompare(right.id)),
     basins,
+    lifecycle,
   };
   const digest = sha256(JSON.stringify(topology));
   const counts = Object.fromEntries(topology.states.map((state) => [
@@ -307,6 +345,7 @@ function render(root) {
     `active: ${topology.active_residual}`,
     `counts: active=${counts.active} blocked=${counts.blocked} latent=${counts.latent} reopened=${counts.reopened}`,
     `overlap basins: ${topology.basins.length} (derived candidates, not warranted methods)`,
+    `lifecycle: fields=${topology.lifecycle.fields.length} asks=${topology.lifecycle.question_occurrences.length} answers=${topology.lifecycle.answers.length} provisional=${topology.lifecycle.provisional_relations.length} folds=${topology.lifecycle.folds.length} reopens=${topology.lifecycle.reopenings.length} checkpoints=${topology.lifecycle.checkpoints.length}`,
     "closure: local obligation/binding/horizon/coverage only; broader residuals persist",
     "",
   ].join("\n");

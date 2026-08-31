@@ -48,6 +48,7 @@ the trace lawfully first.
    large alternative region, then seal the prediction:
 
        .claude/hooks/ic-trace seal \
+         ask_occurrence=... \
          should_change=... invariants=... discriminator=... wrong_impl=... coverage=...
 
 8. **UPDATE** from the preserved return, not the pre-return story.
@@ -58,50 +59,37 @@ the trace lawfully first.
 12. **MINIMIZE** by safe ablation.
 13. **RATCHET** only durable evidence and replace the live Frontier residual when it changes.
 
-Record a consequential answer with all recurrence coordinates:
+Materialize a finite live field before asking. `members` is a JSON array of occurrence records;
+each includes `occurrence`, `question_form`, `rendering`, exact `prompt`, `source_lines`,
+`generator_ids`, `path`, `disposition`, `executable`, and `dependencies`:
 
-    source_digest="$(sha256sum formal-successor/Questions.txt | cut -d' ' -f1)"
-    program_manifest_digest="$(sha256sum formal-successor/ENGINEERING_QUESTION_PROGRAMS.json | cut -d' ' -f1)"
-    .claude/hooks/ic-trace question \
-      q=... mode=Pure \
-      answer=... branch=... \
-      occurrence=... continuation=... \
-      bindings=... horizon=... coverage=... \
-      authority=... evidence=... \
-      program=QP-PREFORMAL-RESIDUAL-RATCHET \
-      rhythm=<manifest-scheduled-principal-rhythm> \
-      residual_class=<declared-residual-class> \
-      compiled_questions=<exact-required-CQ-ids> \
-      question_families=<derived-family-ids> \
-      coding_questions=<derived-comma-separated-source-lines> \
-      coverage_dimensions=<derived-relational-dimensions> \
-      root_spans=<derived-erasable-root-lowerings> \
-      rhythm_positions=<derived-preformal-positions> \
-      reciprocal_status=represented \
-      reciprocal_challenges=<required-RCP-ids> \
-      blocked_reciprocals=none \
-      reciprocal_pairs=<derived-left:right-pairs-separated-by-semicolons> \
-      reciprocal_axes=<derived-central-axes-or-none> \
-      reciprocal_reason=... \
-      parent_residual=<stable-residual-id-or-none> \
-      condition_ids=<relevant-condition-ids-or-none> \
-      breaker_ids=<relevant-breaker-ids-or-none> \
-      reciprocal_obligation=<represented|blocked|not_applicable> \
-      question_disposition=<Answered|Productive|Required|Redundant|Inapplicable|Blocked|Unknown> \
-      residual_shape=<manifest-residual-shape> \
-      method_frontier=<exact-manifest-method-frontier> \
-      condition_keys=<schema@roles@scope@applicability@grain@orientation-or-none> \
-      source_digest="$source_digest" \
-      program_manifest_digest="$program_manifest_digest"
+    .claude/hooks/ic-trace field \
+      field_id=... members='[...]' basis=... coverage=... \
+      regenerated_from=bootstrap dispositions='{}' removal_evidence='{}'
 
-The occurrence identifies the checked Ask/engineering question use; continuation identifies the
-answer-dependent branch program. Derive the fields from the residual-selected rhythm in
-`formal-successor/ENGINEERING_QUESTION_PROGRAMS.json`; never invent coverage. Every required
-reciprocal challenge must appear in `reciprocal_challenges` or `blocked_reciprocals`, never both. If
-all are blocked, use `reciprocal_status=blocked`, `reciprocal_challenges=none`,
-`reciprocal_pairs=none`, and `reciprocal_axes=none`, with a typed reason naming the unavailable
-capability. New traces pin both input digests in their first record, and the harness refuses a
-residual until the active cycle contains a policy-accepted question after every raw return.
+Select one represented executable occurrence. Source and manifest digests are pinned automatically:
+
+    .claude/hooks/ic-trace ask \
+      q=... mode=<Pure|Generate|Probe|Check|Warrant> occurrence=... field_id=... \
+      question_form=... rendering=... source_lines=... generator_ids=... \
+      reciprocal_relations=... path=... bindings=... horizon=... coverage=... \
+      authority=... evidence=... dependencies=...
+
+Record its Answer separately, then reify explicit products without raising authority:
+
+    .claude/hooks/ic-trace answer \
+      occurrence=... ask_occurrence=... answer=... \
+      resolution_class=<Supported|Partial|Plural|ExactEmpty|Unsupported|Unknown|Blocked|ResourceBounded> \
+      status=<provisional|supported|checked|warranted> polarity=<Positive|Negative|Mixed|None> \
+      residual=... evidence=... coverage=... authority=...
+
+    .claude/hooks/ic-trace reify \
+      answer_occurrence=... status=... products='[...]' new_questions=... coverage=...
+
+After every consequential Answer, append a regenerated `field` before another ordinary Ask. Carry
+forward every unchosen live occurrence. Removal requires an evidenced Answer, typed inapplicability,
+or an explicit fold that preserves ancestry, regeneration, and reopening. Generated products are
+queryable but never Standing merely because they were reified.
 
 An optional derived route occurrence may be recorded:
 
@@ -116,18 +104,21 @@ This projects the trace; it does not create a second semantic history.
 For a safe raw return:
 
     command > temporary-file 2>&1
-    .claude/hooks/ic-trace raw cmd=... file=temporary-file sensitive=false
+    .claude/hooks/ic-trace raw ask_occurrence=... cmd=... file=temporary-file sensitive=false
 
 The trace copies the bytes into ignored digest-addressed storage before interpretation.
 
 For credentials, personal data, or another sensitive return, never copy the bytes:
 
     .claude/hooks/ic-trace raw \
-      cmd=... digest=<safe-sha256> sensitive=true
+      ask_occurrence=... cmd=... digest=<safe-sha256> sensitive=true
 
-Then record the independent interpretation:
+Then record interpretation without mutating Raw, followed by an independent Check:
 
-    .claude/hooks/ic-trace check verdict=... coverage=...
+    .claude/hooks/ic-trace interpret \
+      ask_occurrence=... raw_digest=... interpretation=... provenance=...
+    .claude/hooks/ic-trace check \
+      ask_occurrence=... verdict=... coverage=... evidence=...
     .claude/hooks/ic-trace residual \
       class=... next=... parent_residual=... open_relation=... \
       condition_ids=... condition_keys=... blocker_ids=... breaker_ids=... \
@@ -135,9 +126,9 @@ Then record the independent interpretation:
       failed_fold_ids=... reopen_condition_ids=... overlap_ids=... coverage=... \
       resolution_class=... residual_shape=... method_frontier=... next_question_family=...
 
-The enforced order is `seal -> one or more raw returns -> one or more checks -> residual`.
-No residual can close a prediction before an actual return and check, and a second seal cannot
-replace an open cycle.
+The enforced effectful order is `Ask -> Seal -> Raw -> Interpret -> Check -> Answer -> Reify ->
+Field`. No residual or checkpoint can bypass field regeneration, and a second seal cannot replace
+an open actual cycle.
 
 Residual classes are:
 
@@ -158,7 +149,7 @@ Residual classes are:
 - Do not declare scope unjustified merely because an explicit user task differs from the persistent
   Frontier.
 
-## Close
+## Checkpoint, recur, or close
 
 Update only the record that owns the resulting fact:
 
@@ -167,7 +158,18 @@ Update only the record that owns the resulting fact:
 - actual durable constraint -> append FAILURES.jsonl;
 - next residual -> replace IMPLEMENTATION_FRONTIER.md live block.
 
-Then, after the checked residual:
+After reification and field regeneration, record a replayable checkpoint and continue:
+
+    .claude/hooks/ic-trace checkpoint \
+      field_id=... established=... remains_open=... \
+      fold_changes=... reopen_changes=... coverage=...
+
+A checkpoint is not permission to stop. Only after the task-level closure criterion is met and
+adversarially challenged:
+
+    .claude/hooks/ic-trace closure \
+      field_id=... scope=... warrant=... \
+      adversarial_question=... adversarial_answer=... coverage=...
 
     .claude/hooks/ic-trace stop state=<state> warrant=...
 

@@ -12,11 +12,16 @@ function test(name, body) {
 }
 
 test("1 wide breaker search", () => {
+  const compare = (left, right) => {
+    const leftGain = left.eliminated_region / left.cost;
+    const rightGain = right.eliminated_region / right.cost;
+    return rightGain - leftGain;
+  };
   const selected = policy.selectWideContrast([
     { id: "local-1", admissible: true, decisive: true, eliminated_region: 1, cost: 1 },
     { id: "extreme", admissible: true, decisive: true, eliminated_region: 64, cost: 4 },
     { id: "unsafe", admissible: false, decisive: true, eliminated_region: 1000, cost: 1 },
-  ]);
+  ], compare);
   assert.equal(selected.candidate.id, "extreme");
 });
 
@@ -81,12 +86,16 @@ const questionBase = {
   coverage: "c1",
 };
 
-test("7 question redundancy", () => {
-  const retained = policy.deduplicateQuestions([
+test("7 question equivalence candidates preserve occurrences", () => {
+  const candidates = policy.groupQuestionEquivalenceCandidates([
     { ...questionBase, wording: "Is A separate?", partition: [["a"], ["b"]] },
     { ...questionBase, wording: "Can B merge with A?", partition: [["b"], ["a"]] },
   ]);
-  assert.equal(retained.length, 1);
+  assert.equal(candidates.length, 1);
+  assert.equal(candidates[0].members.length, 2);
+  assert.deepEqual(candidates[0].members.map((question) => question.wording), [
+    "Is A separate?", "Can B merge with A?",
+  ]);
 });
 
 test("8 question non-redundancy", () => {

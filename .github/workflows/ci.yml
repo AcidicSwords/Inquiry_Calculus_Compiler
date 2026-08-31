@@ -135,6 +135,16 @@ jobs:
           node tools/phase_b_probe_traces_check.js --compile
           node tools/phase_b_fresh_probe_comparison_check.js --compile
           node tools/phase_b_question_order_diagnostics_check.js --compile
+          node tools/phase_b_protected_behavioral_equivalence_check.js --compile
+          node tools/protected_equivalence_laws_check.js --compile
+          node tools/hom_wise_quotient_check.js --compile
+          node tools/operator_descent_check.js --compile
+          node tools/regenerative_sufficiency_check.js --compile
+          node tools/regenerative_economy_correspondence_check.js --compile
+          node tools/differentiate_only_enough_check.js --compile
+          node tools/understanding_check.js --compile
+          node tools/ablative_regeneration_check.js --compile
+          node tools/learning_gain_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -206,10 +216,16 @@ jobs:
           node --check .claude/hooks/ic-run.js
           node --check .claude/hooks/ic-append.js
           node --check .claude/hooks/ic-question-program.js
+          node --check .claude/hooks/ic-relational-surface.js
           node --check .claude/hooks/ic-residual-topology.js
           node --check .claude/hooks/ic-construction-policy.js
           node --check tools/harness_control_check.js
           node --check tools/harness_acceptance_check.js
+          node --check tools/harness_lifecycle_check.js
+          node --check .claude/hooks/ic-question-instance.js
+          node --check .claude/hooks/ic-fold-evidence.js
+          node --check tools/harness_question_instance_check.js
+          node --check tools/harness_fold_evidence_check.js
           node --check tools/exploration_algorithm_check.js
           node --check tools/predecessor_inventory.js
           node --check tools/predecessor_inventory_check.js
@@ -409,12 +425,26 @@ jobs:
           node --check tools/phase_b_fresh_probe_comparison_check.js
           node --check tools/phase_b_question_order_diagnostics.js
           node --check tools/phase_b_question_order_diagnostics_check.js
+          node --check tools/phase_b_protected_behavioral_equivalence.js
+          node --check tools/phase_b_protected_behavioral_equivalence_check.js
+          node --check tools/protected_equivalence_laws_check.js
+          node --check tools/hom_wise_quotient_check.js
+          node --check tools/operator_descent_check.js
+          node --check tools/regenerative_sufficiency_check.js
+          node --check tools/regenerative_economy_correspondence_check.js
+          node --check tools/differentiate_only_enough_check.js
+          node --check tools/understanding_check.js
+          node --check tools/ablative_regeneration_check.js
+          node --check tools/learning_gain_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
           bash -n .claude/hooks/ic-stop
           node tools/harness_control_check.js
           node tools/harness_acceptance_check.js
+          node tools/harness_lifecycle_check.js
+          node tools/harness_question_instance_check.js
+          node tools/harness_fold_evidence_check.js
           node tools/exploration_algorithm_check.js
           node tools/predecessor_inventory.js check
           node tools/predecessor_inventory_check.js
@@ -614,6 +644,17 @@ jobs:
           node tools/phase_b_fresh_probe_comparison_check.js
           node tools/phase_b_question_order_diagnostics.js check
           node tools/phase_b_question_order_diagnostics_check.js
+          node tools/phase_b_protected_behavioral_equivalence.js check
+          node tools/phase_b_protected_behavioral_equivalence_check.js
+          node tools/protected_equivalence_laws_check.js
+          node tools/hom_wise_quotient_check.js
+          node tools/operator_descent_check.js
+          node tools/regenerative_sufficiency_check.js
+          node tools/regenerative_economy_correspondence_check.js
+          node tools/differentiate_only_enough_check.js
+          node tools/understanding_check.js
+          node tools/ablative_regeneration_check.js
+          node tools/learning_gain_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

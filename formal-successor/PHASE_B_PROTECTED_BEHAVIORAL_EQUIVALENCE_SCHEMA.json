@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "status": "phase_b_protected_behavioral_equivalence_carrier_not_successor_semantics",
+  "inputs": {
+    "canonical_tex_path": "Inquiry_Calculus_v2_0.tex",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "tex_classification_path": "formal-successor/PREDECESSOR_TEX_CLASSIFICATION.json",
+    "module": "formal/InquiryCalculus/Legacy/V20/ProtectedBehavioralEquivalence.lean"
+  },
+  "sources": [
+    "PRED-TEX-PROSE-60E139ED25B0C85E",
+    "PRED-TEX-DECL-CA927522E6D4370C",
+    "PRED-TEX-DECL-34FF1494752E4183",
+    "PRED-TEX-DECL-E862C58481AED1AA",
+    "PRED-TEX-DECL-2FF1BAC4CB0C0B75"
+  ],
+  "required_declarations": [
+    "ProtectedBehavioralEquivalenceContext",
+    "protectedEquivalenceDefinitionShape",
+    "separatorFamilyDefinitionShape",
+    "separatorCharacterizationUnproved",
+    "workingNondistinctionDefinitionShape",
+    "horizonMonotonicityUnproved",
+    "ProtectedBehavioralEquivalenceSyntax",
+    "ProtectedBehavioralEquivalenceObligation"
+  ],
+  "obligations": [
+    "protectedEquivalenceDefinitionShape",
+    "separatorFamilyDefinitionShape",
+    "workingNondistinctionDefinitionShape",
+    "horizonMonotonicityUnproved",
+    "separatorCharacterizationUnproved",
+    "completenessLicenseAbsent",
+    "noContextExecution",
+    "noConsequenceEvaluation",
+    "noEquivalenceDecision",
+    "noSeparatorFinding",
+    "noHorizonInclusionProof",
+    "noSemanticAuthorityPromotion"
+  ],
+  "source_statuses": ["Ambiguous", "Unproved"],
+  "gate_b": {"status": "PENDING"},
+  "next_residual": "FORMAL-B-PROTECTED-BEHAVIORAL-EQUIVALENCE-CONTINUATION"
+}

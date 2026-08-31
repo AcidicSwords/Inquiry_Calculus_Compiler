@@ -44,18 +44,23 @@ successor conformance.
 question repertoire. Its questions remain ordinary question forms rather than new discharge modes
 or semantic primitives, but the engineering clock must construct its live inquiries from them.
 
-For consequential software/formalization work, prefer the section headed `Engineering one:`
-(the coding section, stable source lines 1031-2995 in the pinned corpus). After every actual return,
-compose it with the final section headed `Reciprocal why:` (stable source lines 5552-7052). The
-machine-readable programs and source anchors live in
+For consequential software/formalization work, derive ordinary question forms from the section
+headed `Engineering one:` (stable source lines 1031-2995) and opposed relations from the final
+section headed `Reciprocal why:` (stable source lines 5552-7052). Questions must be materialized
+before their Answers. Post-return reciprocal pressure remains required where it is formable, but it
+is generated from the reified Answer and regenerated field rather than attached retrospectively as
+the occurrence that supposedly caused the return. The machine-readable forms, source anchors,
+generator registry, and historical schema-3 rhythms live in
 `formal-successor/ENGINEERING_QUESTION_PROGRAMS.json`.
 
-Do not ask the whole corpus mechanically. Select a productive or explicitly required sequence whose
-supported answer classes can change the continuation. Record each selected question by section,
-stable source line, exact occurrence, continuation, binding, horizon, coverage, and evidence.
+Do not ask the whole corpus mechanically. Materialize a finite lawful question field from the
+represented relations. Select one live executable occurrence using only explicit required-
+discharge, dependency, resource, effect, risk, coverage, or Frontier relations that actually
+exist. The unchosen questions remain live. Record question form, rendering, exact occurrence,
+path, bindings, horizon, coverage, provenance, and evidence.
 
 The engineering clock below remains the outer repository work lifecycle. Coding and Reciprocal Why
-questions are residual-selected inner reasoning programs; temporary words such as `FRAME`,
+questions are relationally generated inner reasoning programs; temporary words such as `FRAME`,
 `EXPAND`, `DISTINGUISH`, `CONSTRAIN`, `RECIPROCATE`, and `FOLD/REOPEN` do not replace that lifecycle
 or create another semantic control ontology.
 
@@ -64,8 +69,9 @@ cover where relevant: admissibility; discrimination; path/direction/order; actua
 representation/regeneration. Several paraphrases of one relation do not cover another. `Expose`,
 `Orient`, `Factor`, `Polarize`, `Vary`, and `Ground` classify derived ordinary relation programs;
 they remain hypotheses under the construction specification, not semantic primitives or a fixed
-root wheel. The exact compiled questions, reciprocal motions, principal rhythms, and residual
-scheduler are documented in `formal-successor/QUESTION_RHYTHM.md`.
+root wheel. The compiled forms, reciprocal motions, generator mappings, and historical bootstrap
+rhythms are documented in `formal-successor/QUESTION_RHYTHM.md`. There is no constitutional
+semantic next-question function, universal question score, or active residual-to-rhythm scheduler.
 
 The broad residual index is a rebuildable projection over the append-only trace, the stable
 project-obligation seed in `formal-successor/RESIDUAL_OBLIGATIONS.json`, and the single active
@@ -86,27 +92,21 @@ roles. Local satisfaction under a binding, horizon, and coverage is not global e
 conditions and paths are candidates for factoring only after same-relation typing, breakers,
 applicability, provenance, and reopening survive.
 
-The default composed ratchet is:
+The active recursive lifecycle is:
 
 ```text
-CODING FRAME
-    inspect presence/absence, observability, applicability, scope, invariants, dependencies
--> ACTUAL RETURN
-    proof, countermodel, repository/runtime probe, checker result, or corpus failure
--> RECIPROCAL WHY PAIR
-    why actual A rather than admissible foil B?
-    why B rather than A under the reversed orientation and the same admitted surroundings?
--> BOUNDARY PAIR
-    can A's proposed condition remain while A fails?
-    can A remain while the proposed condition is removed or replaced?
--> STRONG CONTRAST AND CONTRACTION
-    cross the boundary, then remove coordinates until the last consequential distinction
--> PROPAGATION
-    follow changed relations, interfaces, order, effects, evidence, and future modification
--> RECHECK / REPROVE / ABLATE
--> RATCHET
-    retain the discriminator and let the residual select the next coding question sequence
+FIELD -> ASK -> ANSWER -> REIFY -> FIELD
+
+effectful:
+FIELD -> ASK -> SEAL -> ACTUAL OPERATION -> RAW -> INTERPRET -> CHECK
+      -> ANSWER -> REIFY -> FIELD
 ```
+
+The field is a rebuildable engineering projection, not a semantic `State`, a second history, or a
+controller ontology. Relations make questions formable; questions expose relations; Answers add
+relational material; reification makes that material queryable without making it Standing; and
+regeneration exposes the next lawful field. After every consequential Answer, reify its explicit
+products and regenerate the field before another ordinary Ask.
 
 The reciprocal pair is not satisfied by rephrasing the same one-way question. Preserve orientation,
 the whole live alternative field, shared and changed conditions, direction strength, same-path and
@@ -114,20 +114,21 @@ different-path alternatives, necessity and sufficiency breakers, evidence indepe
 returns when the final distinction is removed. If the reverse question is inapplicable, record the
 typed applicability failure; do not manufacture symmetry.
 
-The engineering trace must cite the compiled questions required by the residual-selected principal
-rhythm. After a consequential return, every reciprocal challenge required by that rhythm must be
-represented with its declared opposed corpus pair or individually recorded as typed but blocked.
-A green checker without this answer-dependent composition is an occurrence, not a completed inquiry
-ratchet.
+Each Ask must select a represented live occurrence and cite its compiled form, rendering identity,
+generator ancestry, source lines, and applicable reciprocal relations. After a consequential
+Answer, regenerate formable reciprocal, boundary, path, support, propagation, fold, and reopening
+questions from the enlarged surface. A green checker without this Answer-dependent reification and
+field regeneration is evidence, not a completed inquiry cycle.
+If a reciprocal occurrence is formable but not executable, retain it as typed but blocked with the
+unavailable capability; do not manufacture symmetry or silently remove it.
 
 Every new trace pins the byte digests of `formal-successor/Questions.txt` and
-`formal-successor/ENGINEERING_QUESTION_PROGRAMS.json` in its first policy record. The harness refuses
-to close a sealed cycle until every raw return is followed by a question record that cites the
-declared composed program, its residual-selected compiled-question sequence, independently derived
-family/dimension/root/position/source coverage, and exact represented/blocked reciprocal closure.
-Stored question records must remain bound to the policy
-active at their occurrence; controlled policy transitions preserve exact ancestry. This is a
-process check: it neither warrants the answer nor introduces a calculus primitive.
+`formal-successor/ENGINEERING_QUESTION_PROGRAMS.json` in its first policy record. Active schema 4
+separates `field`, `ask`, `seal`, `raw`, `interpret`, `check`, `answer`, `reify`, `invalidate`,
+`fold`, `reopen`, `residual`, `checkpoint`, and `closure`. Historical schemas remain readable.
+Stored occurrences remain bound to the policy active at their occurrence; controlled transitions
+preserve exact ancestry. This is a process check: it neither warrants an Answer nor introduces a
+calculus primitive.
 
 An accepted instruction is a cached answer. Apply it directly while its scope, evidence, and
 reopen condition remain unchanged. Questioning reopens an answer only when a live protected
@@ -1307,15 +1308,35 @@ Preserve:
 - prediction before mutation;
 - explicit user-authorized control revisions for protected authority/harness files;
 - append-only, collision-safe trace records;
-- the enforced `seal -> raw -> check -> residual` state transition, with no replacement seal;
+- historical schema-1/2/3 validation and the active schema-4
+  `field -> ask -> answer -> reify -> field` state transition;
+- the effectful `ask -> seal -> raw -> interpret -> check -> answer` ordering, with no replacement
+  seal and no Raw fabricated by `Generate`;
 - safe raw-return preservation or sensitive digest-only recording;
-- first-record question-corpus policy pinning and one validated coding/reciprocal question program
-  before each sealed cycle can reach a residual;
-- occurrence/continuation/bindings/frontier/horizon/coverage/authority/evidence/actuality-aware
-  fingerprints;
+- first-record question-corpus/manifest policy pinning, represented field membership, separate Ask
+  and Answer occurrences, and field regeneration after every consequential Answer;
+- form/rendering/occurrence/path/bindings/frontier/horizon/coverage/authority/evidence/actuality-aware
+  identity and fingerprints;
+- provisional dependency invalidation, evidenced fold ancestry, and discriminator-driven reopening;
 - exact parsing of the one live Frontier block;
 - repeated-state refusal and finite fuel;
-- no stop with an open sealed cycle and no `Satisfied` stop without an external warrant reference.
+- Ask-charged fuel rather than bookkeeping-charged fuel;
+- replayable checkpoints distinct from task closure;
+- no Stop with an unresolved Ask, Answer awaiting reification, dirty field, open actual cycle, or
+  absent task-level closure, and no `Satisfied` Stop without an external warrant reference.
+
+All lifecycle consumers must use the validated `ic-trace state` projection. An open inquiry
+is not an open mutation permission: only the live sealed Probe permits consequential mutation,
+and its Answer ends that permission. Fold/invalidation/reopening changes require field refresh;
+reopening must restore every omitted member before progress. Closure references the actual
+checked adversarial Ask/Answer occurrences and their regenerated field, and expires when
+consequential state changes. A `Satisfied` Stop cannot retain unresolved field members.
+
+Compatible schema-4 policy transitions require controlled pre-return evidence. Cross-schema
+lifecycle migration starts a new manifest-selected trace after the checked predecessor closes,
+pinning its exact bytes; it does not reinterpret historical records under a replacement state
+machine. No environment override may downgrade the active schema. Unreadable ancestry must fail
+closed, including on repeated Stop-hook invocation.
 
 Where the harness records an engineering search cycle, it should preserve enough information to
 distinguish:

@@ -5,8 +5,9 @@
 # Ending there is the exact failure the seal exists to prevent: the action
 # happened, and nothing on record says whether it did what was predicted.
 #
-# `stop_hook_active` is honoured.  A gate that cannot be satisfied is a hang,
-# not a discipline, so the second pass always yields.
+# Schema-3 traces retain the historical second-pass escape. Schema-4 traces do
+# not treat a replayable checkpoint as task closure; they remain gated until a
+# separate closure and stop record exist.
 
 set -uo pipefail
 
@@ -36,7 +37,13 @@ fi
 
 stop_hook_active="$(printf '%s' "$PAYLOAD" |
     awk -v want="stop_hook_active" -f "$HERE/ic-json.awk")"
-[ "$stop_hook_active" = "true" ] && exit 0
+if ! lifecycle="$(bash "$HERE/ic-trace" state 2>&1)"; then
+    block "The active trace is malformed or unreadable and cannot establish a validated lifecycle: ${lifecycle}"
+fi
+active_schema="$(printf '%s' "$lifecycle" | node -e 'const fs=require("fs");process.stdout.write(String(JSON.parse(fs.readFileSync(0,"utf8")).schema??""));')"
+case "$active_schema" in
+    1|2|3) [ "$stop_hook_active" = "true" ] && exit 0 ;;
+esac
 
 if ! trace_status="$(bash "$HERE/ic-trace" status 2>&1)"; then
     reason="The active inquiry trace is malformed or unreadable, so cycle closure cannot be established safely.\n\n${trace_status}\n\nPreserve the malformed trace as ancestry and initialize a new trace; do not rewrite it."
@@ -44,6 +51,9 @@ if ! trace_status="$(bash "$HERE/ic-trace" status 2>&1)"; then
 fi
 
 if bash "$HERE/ic-trace" stop-pending >/dev/null 2>&1; then
+    if [ "$active_schema" = "4" ]; then
+        block "The active schema-4 inquiry has no completed task-level closure and stop. A checkpoint is replayable progress, not permission to terminate. Resolve or explicitly retain every live occurrence, reify any consequential Answer, regenerate the field, record an adversarially challenged closure, then append its lawful stop."
+    fi
     block "A checked residual has no terminal stop record. Record the lawful stop state with a nonempty warrant before ending the turn."
 fi
 

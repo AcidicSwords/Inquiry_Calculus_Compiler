@@ -14,15 +14,15 @@ if BLOCK="$(node "$HERE/ic-frontier.js" "$FRONTIER" block 2>&1)"; then
 else
     BLOCK="INVALID: ${BLOCK#ic-frontier: }"
 fi
-if QUESTION_RHYTHM="$(node "$HERE/ic-question-program.js" summary "$ROOT" 2>&1)"; then
+if QUESTION_FIELD_POLICY="$(node "$HERE/ic-question-program.js" summary "$ROOT" 2>&1)"; then
     :
 else
-    QUESTION_RHYTHM="INVALID: ${QUESTION_RHYTHM#ic-question-program: }"
+    QUESTION_FIELD_POLICY="INVALID: ${QUESTION_FIELD_POLICY#ic-question-program: }"
 fi
-if RESIDUAL_TOPOLOGY="$(node "$HERE/ic-residual-topology.js" projection "$ROOT" 2>&1)"; then
+if ACTIVE_SURFACE="$(node "$HERE/ic-relational-surface.js" projection "$ROOT" 2>&1)"; then
     :
 else
-    RESIDUAL_TOPOLOGY="INVALID: ${RESIDUAL_TOPOLOGY#ic-residual-topology: }"
+    ACTIVE_SURFACE="INVALID: ${ACTIVE_SURFACE#ic-relational-surface: }"
 fi
 
 CONTEXT="INQUIRY HARNESS ACTIVE -- consequential work runs the engineering clock.
@@ -30,20 +30,16 @@ CONTEXT="INQUIRY HARNESS ACTIVE -- consequential work runs the engineering clock
   SPECIFY -> INSPECT -> CONTRAST -> CROSS -> LOCALIZE -> TRACE -> EXPERIMENT
   -> UPDATE -> CHANGE -> VERIFY -> CHALLENGE -> MINIMIZE -> RATCHET
 
-  Explicit user tasks may temporarily supersede the persistent Frontier.
-  The thirteen positions are the outer repository lifecycle. Select the inner
-  Coding + Reciprocal-Why rhythm from the live residual; do not run either as a
-  checklist or replace the lifecycle with temporary rhythm vocabulary.
-  Before mutation: probe actuality, name the protected difference, construct a
-  decisive admissible contrast large enough to cross it, then seal the prediction.
-  After each actual return, audit exactly what it established, represent every
-  residual-required reciprocal challenge or individually record why it is blocked,
-  then subtract from the known crossing toward the protected boundary.
-  SEARCH WIDELY; COMMIT NARROWLY. Ratchet only the smallest checked relation,
-  retain unresolved active/blocked/latent/reopened fields with ancestry, propagate
-  through shared conditions and roles, and treat local closure as scope-relative.
-  After mutation: preserve the raw return, check it against the seal, classify
-  the residual, subtract excess, update the owning state record, and stop lawfully.
+  FIELD -> ASK -> ANSWER -> REIFY -> FIELD.
+  Effectful: FIELD -> ASK -> SEAL -> RAW -> INTERPRET -> CHECK -> ANSWER -> REIFY -> FIELD.
+  Reconstruct the represented relational surface and materialize a finite lawful
+  question field. Select only an actually represented executable occurrence using
+  explicit dependency, resource, effect, risk, coverage, or Frontier relations.
+  There is no semantic next-question oracle. Unchosen occurrences remain live.
+  SEARCH WIDELY; COMMIT NARROWLY. Generated material is queryable but not Standing.
+  After every consequential Answer, reify its products without raising authority,
+  propagate invalidations/folds/reopenings, and regenerate the field before Ask.
+  A replayable checkpoint is not task closure; Stop requires separate closure.
 
   Unknown != Negative. Generated != Actual != Checked != Warranted.
   Semantic coverage != execution coverage. Fiber != selected return.
@@ -52,11 +48,11 @@ CONTEXT="INQUIRY HARNESS ACTIVE -- consequential work runs the engineering clock
 Exact live frontier block:
 ${BLOCK}
 
-Compact calculus-aligned question-program policy:
-${QUESTION_RHYTHM}
+Compact question-field policy:
+${QUESTION_FIELD_POLICY}
 
-Rebuildable residual-index summary (the Frontier selects one active node):
-${RESIDUAL_TOPOLOGY}
+Rebuildable active relational surface:
+${ACTIVE_SURFACE}
 
 Ledger:
 ${STATUS}"

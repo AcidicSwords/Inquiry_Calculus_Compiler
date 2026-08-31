@@ -15,7 +15,7 @@ const dispositions = [
   policy.classifyQuestion({ coverage: "partial" }).disposition,
 ];
 assert.deepEqual(dispositions, [
-  "Answered", "Productive", "Required", "Redundant", "Inapplicable", "Blocked", "Unknown",
+  "Answered", "Productive", "Required", "Productive", "Inapplicable", "Blocked", "Unknown",
 ]);
 
 for (const term of ["expected", "smallest", "largest", "strongest", "best", "cheapest"]) {
@@ -61,6 +61,12 @@ for (const [shape, methods] of Object.entries(expectedDispatch)) {
   assert.deepEqual(policy.chooseMethodFrontier(shape), methods);
 }
 
+const applicableMethods = policy.matchApplicableMethods([
+  { id: "Bisection", applicable_when: ["declared_order", "monotone_boundary"] },
+  { id: "DeltaDebugging", applicable_when: ["decomposable_contrast", "executable_ablation"] },
+], ["declared_order", "monotone_boundary"]);
+assert.deepEqual(applicableMethods.map((method) => method.id), ["Bisection"]);
+
 assert.equal(policy.resolveField({
   coverage_complete: false, coverage: "sample", classes: [], certificate: null,
 }).resolution, "Unknown");
@@ -71,11 +77,20 @@ assert.equal(policy.resolveField({
   coverage_complete: true, coverage: "finite-complete", classes: ["a", "b"],
 }).resolution, "Plural");
 
+const dominates = (left, right) => {
+  const noWorse = left.worst <= right.worst && left.leverage >= right.leverage &&
+    left.cost <= right.cost && left.risk <= right.risk &&
+    left.authority_debt <= right.authority_debt && left.coverage_gain >= right.coverage_gain;
+  const better = left.worst < right.worst || left.leverage > right.leverage ||
+    left.cost < right.cost || left.risk < right.risk ||
+    left.authority_debt < right.authority_debt || left.coverage_gain > right.coverage_gain;
+  return noWorse && better;
+};
 const frontier = policy.selectQuestionFrontier([
   { id: "dominated", worst: 8, leverage: 1, cost: 8, risk: 2, authority_debt: 2, coverage_gain: 1 },
   { id: "wide", worst: 3, leverage: 5, cost: 4, risk: 1, authority_debt: 0, coverage_gain: 5 },
   { id: "cheap", worst: 5, leverage: 2, cost: 1, risk: 0, authority_debt: 0, coverage_gain: 2 },
-]);
+], dominates);
 assert.deepEqual(frontier.map((question) => question.id), ["wide", "cheap"]);
 
 process.stdout.write("question-bank exploration algorithm checks passed\n");

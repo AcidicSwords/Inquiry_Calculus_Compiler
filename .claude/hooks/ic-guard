@@ -43,7 +43,10 @@ protected_groups() {
     local p
     p="$(norm "$1")"
     case "$p" in
-        *".claude/hooks"*|*".claude/settings"*|*".claude/skills/inquire"*)
+        *".claude/hooks"*|*".claude/settings"*|*".claude/skills/inquire"*|\
+        *"formal-successor/engineering_question_programs.json"*|\
+        *"formal-successor/autonomous_iteration.md"*|\
+        *"formal-successor/question_rhythm.md"*)
             printf '%s\n' harness ;;
     esac
     case "$p" in
@@ -59,7 +62,7 @@ protected_groups() {
     esac
 }
 
-cycle_open() { bash "$HERE/ic-trace" open >/dev/null 2>&1; }
+cycle_open() { bash "$HERE/ic-trace" mutation-open >/dev/null 2>&1; }
 control_open() { bash "$HERE/ic-trace" control-open "$1" >/dev/null 2>&1; }
 
 touches_trace_storage() {
@@ -86,7 +89,7 @@ is_direct_trace_command() {
         .claude/hooks/ic-trace|./.claude/hooks/ic-trace|"$ROOT_NORM/.claude/hooks/ic-trace") ;;
         *) return 1 ;;
     esac
-    [[ "$remainder" =~ ^[[:space:]]+(init|status|open|stop-pending|control-open|ensure|question|seal|raw|check|residual|stop|note|control|policy-transition|route)([[:space:]].*)?[[:space:]]*$ ]]
+    [[ "$remainder" =~ ^[[:space:]]+(init|status|state|open|mutation-open|stop-pending|control-open|ensure|question|field|ask|seal|raw|interpret|check|answer|reify|invalidate|fold|reopen|checkpoint|closure|residual|stop|note|control|policy-transition|route)([[:space:]].*)?[[:space:]]*$ ]]
 }
 
 is_trace_execution_attempt() {

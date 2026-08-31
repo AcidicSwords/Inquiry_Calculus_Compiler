@@ -75,6 +75,9 @@ const explorationAlgorithmPath = path.join(
   questionDirectory,
   "QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md",
 );
+// Exercise the complete historical schema-3 protocol in isolation. Active
+// schema-4 lifecycle behavior has its own adversarial harness below; retaining
+// this suite proves old trace validation and protections did not disappear.
 const environment = { ...process.env, CLAUDE_PROJECT_DIR: sandbox };
 
 function fileDigest(filePath) {
@@ -88,7 +91,7 @@ function unique(values) {
 function derivedProgramFields(residualClass = "default") {
   const manifest = JSON.parse(fs.readFileSync(questionProgramsPath, "utf8"));
   const harness = manifest.preformal_harness;
-  const rhythmId = harness.residual_schedule[residualClass];
+  const rhythmId = harness.legacy_residual_schedule[residualClass];
   const rhythm = harness.principal_rhythms.find((candidate) => candidate.id === rhythmId);
   const questionMap = new Map(harness.compiled_questions.map((question) => [question.id, question]));
   const challengeMap = new Map(
@@ -369,6 +372,13 @@ async function main() {
   writeFrontier();
 
   const traceSource = fs.readFileSync(path.join(hooks, "ic-trace"), "utf8");
+  // Simulate historical issuance in the isolated fixture only. Production init
+  // always uses its pinned manifest; there is no environment downgrade switch.
+  const legacyBootstrap = traceSource
+    .replace(/^([ \t]*)policy_schema="\$\(node [^\r\n]+$/mu, '$1policy_schema="3"')
+    .replace(/^([ \t]*)kv\[question_program_schema\]="\$\(node [^\r\n]+$/mu, '$1kv[question_program_schema]="3"');
+  assert.notEqual(legacyBootstrap, traceSource, "historical fixture bootstrap was not installed");
+  fs.writeFileSync(path.join(hooks, "ic-trace"), legacyBootstrap);
   assert.ok(
     traceSource.includes('bash "$0" control-open'),
     "ic-trace recursive control checks must select Bash explicitly for mode-100644 Linux checkouts",
@@ -422,7 +432,7 @@ async function main() {
   );
   const questionProgramValidator = path.join(hooks, "ic-question-program.js");
   const scheduledResiduals = Object.keys(
-    JSON.parse(fs.readFileSync(questionProgramsPath, "utf8")).preformal_harness.residual_schedule,
+    JSON.parse(fs.readFileSync(questionProgramsPath, "utf8")).preformal_harness.legacy_residual_schedule,
   );
   for (const residualClass of scheduledResiduals) {
     const result = execute(process.execPath, [
@@ -817,6 +827,23 @@ async function main() {
   requireSuccess(result, "recursive stop launcher");
   assert.equal(result.stdout, "", "active Stop hook must yield without recursion");
 
+  // Production schema-4 issuance starts after the fully checked legacy trace
+  // closes, and records its exact predecessor bytes. It does not reinterpret
+  // legacy records under a different state machine midway through a cycle.
+  fs.writeFileSync(path.join(hooks, "ic-trace"), traceSource);
+  try {
+    requireSuccess(trace("init", ["legacy-to-current"]), "closed legacy to current migration");
+    const newName = fs.readFileSync(path.join(traceDirectory, ".state"), "utf8");
+    const newPolicy = JSON.parse(fs.readFileSync(path.join(traceDirectory, newName), "utf8").trim());
+    assert.equal(newPolicy.question_program_schema, "4");
+    assert.equal(newPolicy.predecessor_policy_schema, "3");
+    assert.equal(newPolicy.predecessor_trace_sha256, fileDigest(initializedTrace));
+    assert.equal(newPolicy.predecessor_trace, `.claude/trace/${path.basename(initializedTrace)}`);
+  } finally {
+    fs.writeFileSync(path.join(hooks, "ic-trace"), legacyBootstrap);
+    fs.writeFileSync(path.join(traceDirectory, ".state"), path.basename(initializedTrace));
+  }
+
   // A user-authorized, pre-return policy transition permits the question
   // program to evolve without detaching earlier question occurrences from the
   // policy that checked them.
@@ -966,14 +993,14 @@ async function main() {
     assert.ok(injected.includes(`${key}: ${value}`), `injection omitted ${key}`);
   }
   for (const fragment of [
-    "QUESTION PROGRAM RHYTHM-DEFAULT-SUCCESSOR-CONSTRUCTION",
+    "QUESTION FIELD SCHEMA 4",
     "families: Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14",
     "CONSTRAIN<->RELEASE",
     "DISTINGUISH<->COARSEN",
-    "selection: residual-selected",
-    "RESIDUAL INDEX",
-    "active: HARNESS-001",
-    "closure: local obligation/binding/horizon/coverage only",
+    "selection: no semantic next-question oracle",
+    "ACTIVE RELATIONAL ENGINEERING SURFACE",
+    "frontier: HARNESS-001",
+    "residuals: active=1",
   ]) {
     assert.ok(injected.includes(fragment), `injection omitted question rhythm ${fragment}`);
   }
@@ -1119,8 +1146,9 @@ async function main() {
   requireSuccess(result, "corrupt stale lock recovery");
   assert.equal(fs.existsSync(corruptLock), false);
 
-  // End-to-end Stop invocation must fail closed on an unreadable active trace,
-  // while the host-controlled recursion flag still prevents a Stop-hook loop.
+  // End-to-end Stop must fail closed when the schema itself cannot be validated.
+  // The earlier positive fixture retains the recursion escape for valid legacy
+  // traces; unreadability must not turn an unknown/schema-4 trace into legacy.
   fs.writeFileSync(path.join(traceDirectory, ".state"), "malformed-active.jsonl");
   fs.writeFileSync(path.join(traceDirectory, "malformed-active.jsonl"), "not-json\n");
   result = runner(
@@ -1131,7 +1159,7 @@ async function main() {
   assert.match(result.stdout, /malformed or unreadable/i);
   result = runner("stop", `${JSON.stringify({ stop_hook_active: true })}\n`);
   requireSuccess(result, "active malformed stop recursion");
-  assert.equal(result.stdout, "", "active Stop hook must yield even on malformed ancestry");
+  assert.match(result.stdout, /"decision":"block"/u, "unreadable schema must not bypass Stop on the recursion flag");
 
   process.stdout.write("harness control checks passed\n");
 }

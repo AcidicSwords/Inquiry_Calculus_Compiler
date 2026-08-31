@@ -376,6 +376,37 @@ const required = [
   "formal-successor/PHASE_B_QUESTION_ORDER_DIAGNOSTICS_SCHEMA.json",
   "formal-successor/PHASE_B_QUESTION_ORDER_DIAGNOSTICS_SURFACE.json",
   "formal/InquiryCalculus/Legacy/V20/QuestionOrderDiagnostics.lean",
+  "formal-successor/PHASE_B_PROTECTED_BEHAVIORAL_EQUIVALENCE_SCHEMA.json",
+  "formal-successor/PHASE_B_PROTECTED_BEHAVIORAL_EQUIVALENCE_SURFACE.json",
+  "formal/InquiryCalculus/Legacy/V20/ProtectedBehavioralEquivalence.lean",
+  "formal/InquiryCalculus/Legacy/V20/ProtectedBehavioralEquivalenceLaws.lean",
+  "tools/protected_equivalence_laws_check.js",
+  "tools/hom_wise_quotient_check.js",
+  "tools/operator_descent_check.js",
+  ".claude/hooks/ic-fold-evidence.js",
+  "tools/harness_fold_evidence_check.js",
+  "formal/InquiryCalculus/Legacy/V20/HomWiseQuotient.lean",
+  "formal-successor/PHASE_B_HOM_WISE_QUOTIENT.md",
+  "formal/InquiryCalculus/Legacy/V20/OperatorDescent.lean",
+  "formal-successor/PHASE_B_OPERATOR_DESCENT.md",
+  "formal/InquiryCalculus/Legacy/V20/RegenerativeSufficiency.lean",
+  "formal-successor/PHASE_B_REGENERATIVE_SUFFICIENCY.md",
+  "tools/regenerative_sufficiency_check.js",
+  "formal/InquiryCalculus/Legacy/V20/RegenerativeEconomyCorrespondence.lean",
+  "formal-successor/PHASE_B_REGENERATIVE_ECONOMY_CORRESPONDENCE.md",
+  "tools/regenerative_economy_correspondence_check.js",
+  "formal/InquiryCalculus/Legacy/V20/DifferentiateOnlyEnough.lean",
+  "formal-successor/PHASE_B_DIFFERENTIATE_ONLY_ENOUGH.md",
+  "tools/differentiate_only_enough_check.js",
+  "formal/InquiryCalculus/Legacy/V20/Understanding.lean",
+  "formal-successor/PHASE_B_UNDERSTANDING.md",
+  "tools/understanding_check.js",
+  "formal/InquiryCalculus/Legacy/V20/AblativeRegeneration.lean",
+  "formal-successor/PHASE_B_ABLATIVE_REGENERATION.md",
+  "tools/ablative_regeneration_check.js",
+  "formal/InquiryCalculus/Legacy/V20/LearningGain.lean",
+  "formal-successor/PHASE_B_LEARNING_GAIN.md",
+  "tools/learning_gain_check.js",
   "formal-successor/Questions.txt",
   "formal-successor/PREDECESSOR_BASELINE.md",
   "formal-successor/CONFORMANCE_STATUS.md",
@@ -384,9 +415,12 @@ const required = [
   "formal-successor/FAILURES.jsonl",
   "formal-successor/reports/latest.json",
   ".claude/hooks/ic-question-program.js",
+  ".claude/hooks/ic-question-instance.js",
+  ".claude/hooks/ic-relational-surface.js",
   ".claude/hooks/ic-residual-topology.js",
   ".claude/hooks/ic-construction-policy.js",
   "tools/harness_acceptance_check.js",
+  "tools/harness_question_instance_check.js",
   "tools/exploration_algorithm_check.js",
   "tools/predecessor_inventory.js",
   "tools/predecessor_inventory_check.js",
@@ -444,10 +478,10 @@ requireContains("AGENTS.md", [
   "Operational question programs from `Questions.txt`",
   "outer repository work lifecycle",
   "admissibility; discrimination; path/direction/order; actuality/support; and",
-  "RECIPROCAL WHY PAIR",
+  "FIELD -> ASK -> ANSWER -> REIFY -> FIELD",
   "first policy record",
-  "residual-selected compiled-question sequence",
-  "represented with its declared opposed corpus pair or individually recorded as typed but blocked",
+  "generator ancestry",
+  "typed but blocked",
   "QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md",
 ]);
 
@@ -459,9 +493,9 @@ requireContains(".claude/hooks/ic-question-program.js", [
 ]);
 
 requireContains(".claude/hooks/ic-inject", [
-  "outer repository lifecycle",
-  "residual-required reciprocal challenge",
-  "decisive admissible contrast",
+  "FIELD -> ASK -> ANSWER -> REIFY -> FIELD",
+  "There is no semantic next-question oracle",
+  "A replayable checkpoint is not task closure",
 ]);
 
 requireContains(".claude/skills/inquire/references/software-engineering-binding.md", [
@@ -473,14 +507,14 @@ requireContains(".claude/skills/inquire/references/software-engineering-binding.
 
 requireContains("formal-successor/QUESTION_RHYTHM.md", [
   "## Two control levels",
-  "## The actual default questions",
+  "## The compiled question-form registry",
   "## The actual reciprocal challenges",
   "CONSTRAIN <-> RELEASE",
   "DISTINGUISH <-> COARSEN",
-  "## Residual-selected rhythms",
+  "## Historical schema-3 residual-selected rhythms",
   "## Rebuildable residual index",
   "## Demand-driven boundary incidence",
-  "## Residual-shape method dispatch",
+  "## Method-contract applicability",
 ]);
 
 requireContains(".gitattributes", ["formal-successor/Questions.txt -text -whitespace"]);
@@ -488,9 +522,9 @@ requireContains(".gitattributes", ["formal-successor/Questions.txt -text -whites
 requireContains("formal-successor/AUTONOMOUS_ITERATION.md", [
   "## Persistent objective",
   "## Resume coordinate",
-  "## One finite ratchet",
-  "After each actual return",
-  "The harness rejects a residual while any raw return lacks a subsequent",
+  "## Persistent recursive ratchet",
+  "After every consequential Answer",
+  "A checkpoint is not task closure",
   "## Phase progression",
   "## Autonomous safety boundary",
 ]);
@@ -944,7 +978,7 @@ try {
 }
 const expectedInputs = new Map([
   ["Inquiry_Calculus_v2_0.tex", "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89"],
-  ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md", "c62ac86b3f551d03ce687e28f0870f53af19a22d70f41fe4a468e707d4da540e"],
+  ["formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md", "5550d67fa62fc17a94226c1a7ffe3145ad1c4c10c79833411174c6acc212cefd"],
   ["formal-successor/Questions.txt", "5a0dbb45bd1e9ff838a0396f6a1f17ba23cfa726889d28ab9b809b0c9b9cd019"],
   ["formal-successor/PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md", "fc80d0e84a3fa5a2a16a15354e4ae5d6b7f342f9cfe8bdaf3d2b83c2fe8e357e"],
   ["formal-successor/PREFORMAL_SEARCH_ASYMMETRY.md", "74f6abf1fb944e76d65071c83ff0fe319ed008d4d6e086de20afe22ca323c765"],
@@ -977,8 +1011,26 @@ try {
 if (questionPrograms) {
   const questions = read("formal-successor/Questions.txt").split(/\r?\n/u);
   const line = (number) => questions[number - 1] ?? "";
-  if (questionPrograms.schema !== 3) {
-    errors.push("active engineering question-program manifest must use schema 3");
+  if (questionPrograms.schema !== 4) {
+    errors.push("active engineering question-program manifest must use schema 4");
+  }
+  const lifecycle = questionPrograms.active_lifecycle;
+  if (lifecycle?.fold_evidence?.schema !== 2) errors.push("active folds require re-executable first-order correspondence, evidence-bound report admission and reopening");
+  if (lifecycle?.trace_schema !== 4 ||
+      JSON.stringify(lifecycle?.recurrence) !== JSON.stringify(["FIELD", "ASK", "ANSWER", "REIFY", "FIELD"])) {
+    errors.push("active engineering question-program manifest lacks the explicit recursive lifecycle");
+  }
+  if ((lifecycle?.generator_registry ?? []).length === 0 ||
+      (lifecycle?.forbidden_selection ?? []).some((item) => typeof item !== "string")) {
+    errors.push("active engineering question-program manifest lacks its generator registry or selection prohibitions");
+  }
+  if (Object.hasOwn(lifecycle ?? {}, "method_dispatch") || Object.hasOwn(lifecycle ?? {}, "residual_schedule")) {
+    errors.push("active engineering question-program manifest installs fixed semantic dispatch or scheduling");
+  }
+  if (lifecycle?.relational_instances?.schema !== 1 ||
+      lifecycle.relational_instances.default_disposition !== "Unknown" ||
+      lifecycle.relational_instances.default_executable !== false) {
+    errors.push("relation-instance generation must preserve provisional formability without inferred execution");
   }
   if (questionPrograms.source_sha256 !== expectedInputs.get("formal-successor/Questions.txt")) {
     errors.push("engineering question programs are not bound to the accepted corpus digest");
@@ -1225,11 +1277,11 @@ if (questionPrograms) {
       }
     }
   }
-  for (const [residual, rhythm] of Object.entries(harness?.residual_schedule ?? {})) {
+  for (const [residual, rhythm] of Object.entries(harness?.legacy_residual_schedule ?? {})) {
     if (!rhythmIds.has(rhythm)) errors.push(`residual ${residual} selects unknown rhythm ${rhythm}`);
   }
-  if (harness?.residual_schedule?.default !== "RHYTHM-DEFAULT-SUCCESSOR-CONSTRUCTION") {
-    errors.push("default successor-construction rhythm is not the residual-schedule fallback");
+  if (harness?.legacy_residual_schedule?.default !== "RHYTHM-DEFAULT-SUCCESSOR-CONSTRUCTION") {
+    errors.push("legacy successor-construction rhythm is not preserved for schema-3 replay");
   }
   if (questionPrograms.composition?.id !== "QP-PREFORMAL-RESIDUAL-RATCHET") {
     errors.push("active composition is not the preformal residual ratchet");
@@ -1350,6 +1402,10 @@ requireContains(".github/workflows/ci.yml", [
   "codex/formal-successor",
   "tools/successor_control_check.js",
   "node --check .claude/hooks/ic-question-program.js",
+  "node --check .claude/hooks/ic-question-instance.js",
+  "node tools/harness_question_instance_check.js",
+  "node tools/harness_fold_evidence_check.js",
+  "node --check .claude/hooks/ic-fold-evidence.js",
   "node tools/predecessor_inventory.js check",
   "node tools/predecessor_inventory_check.js",
   "node tools/predecessor_tex_classification.js check",
@@ -1549,6 +1605,26 @@ requireContains(".github/workflows/ci.yml", [
   "node tools/phase_b_fresh_probe_comparison_check.js",
   "node tools/phase_b_question_order_diagnostics.js check",
   "node tools/phase_b_question_order_diagnostics_check.js",
+  "node tools/phase_b_protected_behavioral_equivalence.js check",
+  "node tools/phase_b_protected_behavioral_equivalence_check.js",
+  "node tools/protected_equivalence_laws_check.js",
+  "node tools/protected_equivalence_laws_check.js --compile",
+  "node tools/hom_wise_quotient_check.js --compile",
+  "node tools/hom_wise_quotient_check.js",
+  "node tools/operator_descent_check.js --compile",
+  "node tools/operator_descent_check.js",
+  "node tools/regenerative_sufficiency_check.js --compile",
+  "node tools/regenerative_sufficiency_check.js",
+  "node tools/regenerative_economy_correspondence_check.js --compile",
+  "node tools/regenerative_economy_correspondence_check.js",
+  "node tools/differentiate_only_enough_check.js --compile",
+  "node tools/differentiate_only_enough_check.js",
+  "node tools/understanding_check.js --compile",
+  "node tools/understanding_check.js",
+  "node tools/ablative_regeneration_check.js --compile",
+  "node tools/ablative_regeneration_check.js",
+  "node tools/learning_gain_check.js --compile",
+  "node tools/learning_gain_check.js",
   "lake-package-directory: formal",
   'LEAN_NUM_THREADS: "1"',
   "leanchecker: true",

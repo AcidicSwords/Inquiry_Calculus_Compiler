@@ -6468,3 +6468,50 @@ IMPLEMENT.
 This final sequence is a construction procedure.
 
 It is not to be copied into the successor as a master slogan unless the formal successor itself independently regenerates that exact decomposition and its exact canonical language.
+
+---
+
+# 116. Bootstrap inquiry-lifecycle obligations
+
+These are acceptance obligations on the branch-local construction harness. They do not add
+successor primitives, define semantic state, warrant a candidate theorem, or install an autonomous
+semantic controller.
+
+The active construction harness shall expose a rebuildable relational engineering surface and a
+finite live question field. Its ordinary recurrence is:
+
+\[
+\mathrm{Field}\to\mathrm{Ask}\to\mathrm{Answer}\to\mathrm{Reify}\to\mathrm{Field}.
+\]
+
+For effectful discharge it shall refine to:
+
+\[
+\mathrm{Field}\to\mathrm{Ask}\to\mathrm{Seal}\to\mathrm{Raw}\to
+\mathrm{Interpret}\to\mathrm{Check}\to\mathrm{Answer}\to\mathrm{Reify}\to\mathrm{Field}.
+\]
+
+The harness shall preserve the following distinctions:
+
+- a question form, its rendering, a path-sensitive occurrence, and its Answer are not identical;
+- generated material is queryable but does not thereby become Actual, checked, warranted, or
+  Standing;
+- Raw is immutable ancestry and is not its Interpretation, Check, Warrant, or standing result;
+- a consequential Answer must be reified and the field regenerated before the next ordinary Ask;
+- unchosen live occurrences remain represented until answered, typed inapplicable, blocked,
+  resource bounded, or folded under independently checked protected equivalence, regeneration, and
+  reopening evidence;
+- a newly admitted discriminator that does not factor through a fold reopens its preserved ancestry;
+- method use follows explicit applicability contracts and method failure does not close inquiry;
+- execution policy may select among lawful incomparable occurrences but cannot define a semantic
+  next-question oracle or universal question score;
+- a finite checkpoint is replayable local progress, not task closure; and
+- task closure requires no unresolved Ask, unreified Answer, dirty surface, open actual cycle, or
+  newly materialized required/productive executable occurrence, while every remaining part is
+  explicitly Blocked, Unknown, ResourceBounded, or retained as a reopening condition.
+
+The trace shall retain append-only ancestry, policy and migration evidence, occurrence/path
+identity, sealed effectful predictions, Raw digests, interpretations, checks, Answers, reified
+products and dependencies, invalidations, folds, reopenings, residuals, checkpoints, and separate
+closures. Historical trace schemas remain readable. The trace and its projections remain process
+evidence only; they cannot acquire semantic authority from enforcing these obligations.

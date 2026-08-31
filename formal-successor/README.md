@@ -16,14 +16,14 @@ remain in one repository.
 the deferred Rust cursor. Successor evidence, decisions, failures, inventories, and propagation
 reports live here and never overwrite predecessor state merely because the successor differs.
 
-`ENGINEERING_QUESTION_PROGRAMS.json` makes the pinned corpus operational. Autonomous cycles select
-residual-matched compiled questions backed by line-addressed Coding corpus questions and compose
-them with required opposed challenges from `Reciprocal why:` after actual returns. These programs
-govern inner inquiry dynamics inside the repository engineering clock; they do not make wording,
-temporary rhythm names, or v2.0 root lowerings semantic authority. New traces pin both files,
-derive family/dimension/root/position/source coverage, and require every residual-selected
-reciprocal challenge to be represented or individually blocked. `QUESTION_RHYTHM.md` lists the
-actual default prompts, reciprocal pairs, program families, and residual schedule.
+`ENGINEERING_QUESTION_PROGRAMS.json` makes the pinned corpus operational. Active schema 4 provides
+an unordered relational generator registry over line-addressed Coding forms and opposed
+`Reciprocal why:` evidence. A rebuilt field materializes lawful question occurrences before their
+Answers; consequential Answers are reified and the field is regenerated before the next Ask.
+These controls do not make wording, temporary rhythm names, or v2.0 root lowerings semantic
+authority. They install no semantic next-question oracle, universal score, or fixed method
+dispatch. Historical schema-3 rhythms remain replayable. `QUESTION_RHYTHM.md` lists the forms,
+reciprocal pairs, generator families, and historical bootstrap schedules.
 
 `PREFORMAL_SUCCESSOR_CODING_INQUIRY_HARNESS.md` is the byte-preserved user-supplied construction
 method compiled by that manifest. It is explicitly not successor semantics unless the checked
@@ -39,14 +39,84 @@ index is rebuilt from that seed, append-only traces, and the one Frontier select
 deleted without losing evidence.
 `QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md` further derives a demand-driven computation from
 the complete question corpus: typed boundary-feature incidence, exact condition identity,
-question dispositions, residual-shape method dispatch, partial-order query selection, and explicit
-complexity preconditions. It is pinned process input, not successor mathematics. Its illustrative
+question dispositions, candidate method contracts, partial-order query selection, and explicit
+complexity preconditions. Its fixed residual-shape dispatch remains historical input rather than
+active policy. It is pinned process input, not successor mathematics. Its illustrative
 Rust surface is intentionally not implemented before Formal Gate F.
 
 The root `IMPLEMENTATION_FRONTIER.md` is intentionally the one live cursor so the existing inquiry
 harness can autonomously recur on this branch without being redirected to the old Rust residual.
-`AUTONOMOUS_ITERATION.md` is the restart-safe operational runbook for one finite ratchet and for
-Phase A-N progression; it does not own moving state or semantic authority.
+`AUTONOMOUS_ITERATION.md` is the restart-safe operational runbook for persistent recursive
+checkpoints, separate task closure, and Phase A-N progression; it does not own moving state or
+semantic authority.
+
+Schema-4 migration is still under audit, not certified complete. Current lifecycle
+tests cover ordering, evidence-backed question retirement, occurrence identity,
+Generate authority, Windows raw capture, and closure/reopening state propagation.
+Fold report admission now resolves checked Raw ancestry and exact members, binds each
+declared finite continuation to first-order question-identity projection data,
+re-executes it over every member, and forces reopening after support/coverage changes.
+Arbitrary model/tool continuation truth, horizon sufficiency and full recursive
+question generation remain live obligations;
+see the current trace projection and successor conformance coverage.
+
+`PHASE_B_PROTECTED_BEHAVIORAL_EQUIVALENCE.md` records the source-definition
+boundary: typed parallel terms, contextual equality, separator membership, and
+finite tested nondistinction. Its independent source/structure checks replace an
+insufficient names-only check. The source carrier preserves the original unproved
+statement classifications. A separate proof module now establishes conditional
+equivalence/horizon/separator laws and the finite-test countermodel; its explicit
+classical-premise boundary and independent theorem-contract checks are described
+in the same document. No source definition or successor gate is silently promoted.
+
+`PHASE_B_HOM_WISE_QUOTIENT.md` connects that equivalence to endpoint-indexed
+quotients and a supplied operation's conditional descent. Independent contracts
+check both directions of the congruence boundary; a three-term countermodel
+rejects unconditional composition. This does not license recurrent operator
+descent or engineering-history folds without their own continuation evidence.
+
+`PHASE_B_OPERATOR_DESCENT.md` recovers the relational continuation square and
+constructively characterizes descent to a supplied next representation by equality
+of whole continuation images on current quotient fibers. Its two-state countermodel
+separates fixed protected descent from the weaker source existential, whose next map
+can erase the future distinction. The original protectedness and sufficiency claims
+remain Unproved, and no executor, engineering fold, Rust change, or Gate-B pass follows.
+
+`PHASE_B_REGENERATIVE_SUFFICIENCY.md` recovers regenerative sufficiency as
+relational reconstruction of every component required by a supplied protected
+horizon, with dependent component types and supplied protected-equivalence
+judgments. A separate supplied revision-role family preserves the stronger
+inquiry-regenerative requirement. Independent missing-component and
+missing-revision countermodels reject one-output recovery and collapse of the two
+definitions without introducing execution, a universal component ontology, or Rust
+semantics.
+
+`PHASE_B_REGENERATIVE_ECONOMY_CORRESPONDENCE.md` connects that dependent
+inquiry-regenerative predicate to the existing source-classified economy carrier.
+It requires every supplied license coordinate and a supplied preorder, preserves
+incomparable minima and empty frontiers, and rejects named consequence
+factorization as a substitute for inquiry regeneration.
+
+`PHASE_B_DIFFERENTIATE_ONLY_ENOUGH.md` conditionally elaborates the adjacent
+Unproved law as finite active-presentation ablation. It requires positive typed
+loss evidence at the retained boundary and definitionally preserves authoritative
+ancestry; economy membership, Unknown, or a missing probe cannot manufacture
+necessity.
+
+`PHASE_B_UNDERSTANDING.md` recovers Understanding only as a definitional alias
+of checked inquiry-regenerative sufficiency. Missing and available revision-route
+models show the alias preserves exactly that boundary without creating a new
+semantic species or making claims about memory or stored history.
+
+`PHASE_B_ABLATIVE_REGENERATION.md` recovers typed shaped ablation, the complete
+regeneration solution field, and protected quotient singletonhood. A fixed
+two-filler field becomes one or two protected classes solely by changing the
+protected equivalence, without selecting or executing a filler.
+
+`PHASE_B_LEARNING_GAIN.md` recovers the exact standing learning-gain boundary:
+one supplied capability must improve strictly while protected behavior, resource
+order, and warrant boundaries survive. Historical evidence is not the learned
+capacity, and the adjacent global law remains Unproved.
 
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean

@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "status": "generated_phase_b_protected_behavioral_equivalence_surface_not_successor_semantics",
+  "generated_from": {
+    "schema_sha256": "5442bf2de526f4982f48a0fc7c6a393699a1e12284d709d88da73a5027909773",
+    "tex_classification_sha256": "e92e2eddc199cd8b4d6befc99a5cc42f4e02aaa42cbc42f23f7879f8c6c7808b",
+    "canonical_tex_sha256": "1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+    "module_sha256": "36f8a3cd3aad59cfda3eb807e214c87156fdd4b573946cfb4268eb3eda7bbccf"
+  },
+  "records": [
+    {
+      "source_id": "PRED-TEX-PROSE-60E139ED25B0C85E",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/protected-behavioral-equivalence/PRED-TEX-PROSE-60E139ED25B0C85E",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 4004,
+        "end_line": 4004,
+        "sha256": "5be5fc735aa440940b4d57b9d2eee989bf1fa01c09efc41c45bc8cf3a224de78"
+      },
+      "legacy_status": "Ambiguous"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-CA927522E6D4370C",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/protected-behavioral-equivalence/PRED-TEX-DECL-CA927522E6D4370C",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 4006,
+        "end_line": 4016,
+        "sha256": "af8f22f869eddb47b0486be0a21c82766376e0e357fae861d2c87672745434b1"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-34FF1494752E4183",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/protected-behavioral-equivalence/PRED-TEX-DECL-34FF1494752E4183",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 4018,
+        "end_line": 4035,
+        "sha256": "f32d8b79457b93ba58cc13d15483ef26096a0fb7eed455121395aa6e4d026101"
+      },
+      "legacy_status": null
+    },
+    {
+      "source_id": "PRED-TEX-DECL-E862C58481AED1AA",
+      "disposition": "LegacyObligation",
+      "destination": "phase:B/Legacy/V20/Obligations/protected-behavioral-equivalence/PRED-TEX-DECL-E862C58481AED1AA",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 4037,
+        "end_line": 4051,
+        "sha256": "f9c2ef1f7b81aa2328d9a0d5732176e0f1a39a94155db19d9b64cb77ba851813"
+      },
+      "legacy_status": "Unproved"
+    },
+    {
+      "source_id": "PRED-TEX-DECL-2FF1BAC4CB0C0B75",
+      "disposition": "FormalDefinition",
+      "destination": "phase:B/Legacy/V20/Definitions/protected-behavioral-equivalence/PRED-TEX-DECL-2FF1BAC4CB0C0B75",
+      "source": {
+        "path": "Inquiry_Calculus_v2_0.tex",
+        "revision": "sha256:1f548e0fa3e8374a01b6268e813cedcc757b26ed460adb5b82fe8ba60ca1dd89",
+        "start_line": 4053,
+        "end_line": 4059,
+        "sha256": "94c8e576572bb7299ac4029003df83e8a4e451eae0e0c6dbc3c1dc2d9ead96f2"
+      },
+      "legacy_status": null
+    }
+  ],
+  "next_residual": "FORMAL-B-PROTECTED-BEHAVIORAL-EQUIVALENCE-CONTINUATION",
+  "formal_gate_b": {
+    "status": "PENDING"
+  }
+}

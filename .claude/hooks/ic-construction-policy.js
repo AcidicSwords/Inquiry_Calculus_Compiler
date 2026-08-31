@@ -9,16 +9,15 @@ function requireArray(value, label) {
   return value;
 }
 
-function selectWideContrast(candidates) {
+function selectWideContrast(candidates, compare) {
   const admissible = requireArray(candidates, "candidates").filter(
     (candidate) => candidate.admissible && candidate.decisive,
   );
   if (admissible.length === 0) return { status: "Unknown", candidate: null };
-  const ordered = admissible.toSorted((left, right) => {
-    const leftGain = left.eliminated_region / Math.max(left.cost, Number.EPSILON);
-    const rightGain = right.eliminated_region / Math.max(right.cost, Number.EPSILON);
-    return rightGain - leftGain || right.eliminated_region - left.eliminated_region;
-  });
+  if (typeof compare !== "function") {
+    return { status: "incomparable_frontier", candidates: structuredClone(admissible) };
+  }
+  const ordered = admissible.toSorted(compare);
   return { status: "selected", candidate: ordered[0] };
 }
 
@@ -87,13 +86,24 @@ function questionBehaviorSignature(question) {
   ].join("\0");
 }
 
-function deduplicateQuestions(questions) {
-  const retained = new Map();
+function groupQuestionEquivalenceCandidates(questions) {
+  const groups = new Map();
   for (const question of requireArray(questions, "questions")) {
     const signature = questionBehaviorSignature(question);
-    if (!retained.has(signature)) retained.set(signature, question);
+    if (!groups.has(signature)) groups.set(signature, []);
+    groups.get(signature).push(structuredClone(question));
   }
-  return [...retained.values()];
+  return [...groups.entries()].map(([signature, members]) => ({
+    status: "equivalence_candidate_not_folded",
+    signature,
+    members,
+  }));
+}
+
+// Historical callers may still ask for this operation. It intentionally no
+// longer destroys occurrences; schema 4 requires an evidenced fold instead.
+function deduplicateQuestions(questions) {
+  return groupQuestionEquivalenceCandidates(questions).flatMap((group) => group.members);
 }
 
 function findJointBreaker(coordinates, evaluate) {
@@ -145,7 +155,7 @@ function acceptanceAuthority({ baselineDigest, candidateDigest, authority }) {
   return authority === "explicit_user_control_migration" ? "authorized_change" : "reject_self_warrant";
 }
 
-const METHOD_DISPATCH = Object.freeze({
+const LEGACY_METHOD_DISPATCH = Object.freeze({
   OrderedBoundary: ["Bisection", "GeneralizedBinarySearch"],
   DecomposableBreaker: ["DeltaDebugging"],
   ConjunctiveConflict: ["QuickXplain", "MUS"],
@@ -160,9 +170,17 @@ const METHOD_DISPATCH = Object.freeze({
 });
 
 function chooseMethodFrontier(shape) {
-  const methods = METHOD_DISPATCH[shape];
+  const methods = LEGACY_METHOD_DISPATCH[shape];
   if (!methods) throw new Error(`unknown residual shape ${shape}`);
   return [...methods];
+}
+
+function matchApplicableMethods(methodContracts, availableRelations) {
+  const available = new Set(requireArray(availableRelations, "availableRelations"));
+  return requireArray(methodContracts, "methodContracts").filter((contract) =>
+    requireArray(contract.applicable_when, `${contract.id}.applicable_when`)
+      .every((relation) => available.has(relation)),
+  ).map((contract) => structuredClone(contract));
 }
 
 function normalizeConditionKey(key) {
@@ -194,7 +212,9 @@ function classifyQuestion(question) {
   if (question.answer !== undefined) return { disposition: "Answered", answer: question.answer };
   if (question.inapplicable_reason) return { disposition: "Inapplicable", reason: question.inapplicable_reason };
   if (question.blocked_reason) return { disposition: "Blocked", reason: question.blocked_reason };
-  if (question.redundant_via) return { disposition: "Redundant", via: question.redundant_via };
+  if (question.redundant_via) {
+    return { disposition: "Productive", equivalence_candidate_via: question.redundant_via };
+  }
   if (question.required) return { disposition: "Required" };
   if (question.productive) return { disposition: "Productive" };
   return { disposition: "Unknown", coverage: question.coverage ?? "undeclared" };
@@ -229,17 +249,9 @@ function comparatorApplicability(term, binding) {
     : { disposition: "Inapplicable", reason: `missing ${requirement}` };
 }
 
-function selectQuestionFrontier(questions) {
+function selectQuestionFrontier(questions, dominates) {
   const candidates = requireArray(questions, "questions");
-  const dominates = (left, right) => {
-    const noWorse = left.worst <= right.worst && left.leverage >= right.leverage &&
-      left.cost <= right.cost && left.risk <= right.risk &&
-      left.authority_debt <= right.authority_debt && left.coverage_gain >= right.coverage_gain;
-    const better = left.worst < right.worst || left.leverage > right.leverage ||
-      left.cost < right.cost || left.risk < right.risk ||
-      left.authority_debt < right.authority_debt || left.coverage_gain > right.coverage_gain;
-    return noWorse && better;
-  };
+  if (typeof dominates !== "function") return structuredClone(candidates);
   return candidates.filter((candidate) => !candidates.some(
     (other) => other !== candidate && dominates(other, candidate),
   ));
@@ -254,9 +266,11 @@ module.exports = {
   closureFromSearch,
   comparatorApplicability,
   deduplicateQuestions,
+  groupQuestionEquivalenceCandidates,
   factorMethod,
   findJointBreaker,
   localizeContradiction,
+  matchApplicableMethods,
   narrowRatchet,
   questionBehaviorSignature,
   normalizeConditionKey,

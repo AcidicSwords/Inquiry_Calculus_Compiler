@@ -27,26 +27,31 @@ Every autonomous run reconstructs its state from repository evidence instead of 
    conformance, decisions, failures, and `ACTIVE_INPUTS.json`.
 3. Verify the pinned input digests and run `node tools/successor_control_check.js`.
 4. Read the current formal modules and the source surfaces named by the live residual.
-5. Initialize a finite trace. Its first record pins `Questions.txt` and
-   `ENGINEERING_QUESTION_PROGRAMS.json`.
+5. Resume the active trace and its remaining fuel using `ic-trace state`. Initialize
+   a new finite trace only after lawful task closure and Stop. Its first record pins
+   `Questions.txt`, `ENGINEERING_QUESTION_PROGRAMS.json`, and the closed predecessor
+   trace digest when present; a checkpoint does not reset fuel.
 6. Continue only the strongest live residual. Do not revive the deferred Rust frontier or invent a
    second moving cursor.
 
 If repository evidence conflicts with remembered state, repository evidence wins. If governing
 authorities conflict in the same scope, stop that branch as `Unknown` until authority is resolved.
 
-## One finite ratchet
+## Persistent recursive ratchet
 
-Each iteration is a closed, replayable deformation of the current candidate (C_t):
+Each finite iteration is a replayable checkpoint in a persistent recursive process:
 
 ```text
 RECONSTRUCT CURRENT STATE
 -> SELECT ONE LIVE RESIDUAL
--> FRAME WITH DECLARED CODING QUESTIONS
+-> REBUILD THE DERIVED RELATIONAL SURFACE
+-> MATERIALIZE A FINITE LIVE QUESTION FIELD
+-> ASK ONE REPRESENTED EXECUTABLE OCCURRENCE
 -> CONSTRUCT A DECISIVE ADMISSIBLE CONTRAST
--> SEAL THE PREDICTION
--> OBTAIN AND PRESERVE AN ACTUAL RETURN
--> COMPOSE THE RETURN WITH RECIPROCAL-WHY QUESTIONS
+-> FOR EFFECTFUL DISCHARGE: SEAL -> OPERATE -> RAW -> INTERPRET -> CHECK
+-> ANSWER WITHOUT EXCEEDING THE RETURN'S AUTHORITY
+-> REIFY EXPLICIT PRODUCTS, DEPENDENCIES, BREAKERS, HOLES, FOLDS, AND REOPENINGS
+-> REGENERATE THE QUESTION FIELD
 -> LOCALIZE BY PARTITION / SUBTRACTION / BACKOFF
 -> BUILD THE SMALLEST TYPED SURVIVOR
 -> COMPUTE AND RECHECK DEPENDENCY CLOSURE
@@ -55,8 +60,14 @@ RECONSTRUCT CURRENT STATE
 -> RERUN AFFECTED CORPUS AND REPRESENTATION CHECKS
 -> RERUN SUCCESSOR REGENERATION AT DECLARED COVERAGE
 -> RATCHET EVIDENCE AND THE NEXT SINGLE RESIDUAL
--> STOP LAWFULLY
+-> RECORD A CHECKPOINT
+-> RECUR
 ```
+
+A checkpoint is not task closure. Task closure is a separate, adversarially challenged event and is
+lawful only when no Ask, unreified Answer, dirty field, open actual cycle, or newly materialized
+required/productive executable question remains. Blocked, Unknown, ResourceBounded, and reopening
+conditions remain explicit rather than disappearing.
 
 The exploration and commitment scales are different. Cast a wide admissible net of contrasts,
 alien cases, reversals, removals, paths, joint variations, contradictions, and blockers; commit
@@ -74,8 +85,9 @@ for Rust or because a nearby Lean declaration is easy to add.
 
 ### 2. Frame the inquiry
 
-Choose applicable source lines from declared `QP-CODING-*` programs. Bind the exact occurrence,
-continuation, environment, scope, horizon, coverage, authority, and evidence route. Identify:
+Reconstruct the explicit engineering surface, then materialize applicable question occurrences
+from the schema-4 generator registry and pinned source forms. Bind form, rendering, occurrence,
+path, environment, scope, horizon, coverage, authority, provenance, and evidence route. Identify:
 
 ```text
 current observable
@@ -86,13 +98,43 @@ independent discriminator
 invariants
 ```
 
-The question program constrains process; it does not supply an answer or warrant. Select the
-principal rhythm from the declared residual schedule in `QUESTION_RHYTHM.md`. For a substantial
-pass, cover the applicable admissibility, discrimination, path/direction/order, actuality/support,
-representation/regeneration, and frontier/ancestry/reuse relations. Select among the Q1--Q14
-derived families by the live residual; do not rotate through them. Rephrasing one relation does not increase coverage. The
-roots classify derived ordinary question programs and must remain erasable; they are not a fixed
-semantic wheel.
+The question field constrains process; it does not supply an Answer or warrant. There is no
+semantic next-question oracle, fixed residual schedule, or universal score. Select from the live
+field only through explicit required-discharge, dependency, resource, effect, risk, coverage, or
+Frontier relations. When lawful occurrences remain incomparable, execution policy may choose one;
+the others remain live. The Q1--Q14 families and roots classify ordinary relational generators and
+must remain erasable; they are not a fixed semantic wheel.
+
+#### Bounded relation-instance construction
+
+The implemented constructor is `.claude/hooks/ic-question-instance.js`. Reified products may
+declare an `inquiry_carrier`, an `inquiry_relation` with ordered `{name, carrier}` roles, or an
+`inquiry_seed`. These are provisional engineering declarations, not checked successor types.
+A seed names a corpus `question_form`, a previously reified `relation_product`, a role-to-reference
+`bindings` map, a nonempty ordered `open_roles` tuple, and an occurrence `path`. Every role must be
+exactly bound or open. Product references use `{kind: "product", id: "..."}`; previously
+materialized ordinary questions use `{kind: "question", id: "..."}` with carrier `Question`.
+The latter need not have an Answer. There is no separate MetaQuestion constructor.
+
+The reified seed must retain every dependency read by generation, including the dependencies of a
+question used as a subject. Its applicability, horizon, and coverage are retained in the generated
+instance. `ic-relational-surface.js json ROOT` exposes `generated_questions`: deterministic
+corpus-anchored prompts with their exact relation, role bindings, open tuple, ancestry, and path.
+Merge these into the next field without dropping unchosen occurrences. The append gate refuses
+field regeneration that omits a newly reified seed, forged instance meaning, dangling references,
+wrong carrier declarations, overlapping bound/open roles, or an executable invalidated dependency.
+An Ask must preserve the instance's canonical binding JSON, dependency list, horizon, and coverage.
+
+Generation defaults to `Unknown` and non-executable. A declared discharge route or actual required
+obligation must separately justify readiness. Querying a relation does not assert that it holds or
+that its open tuple has a witness. A seed with another path or ancestry is not deduplicated, and a
+changed corpus rendering receives a different occurrence identity. Generated candidates and blocked
+generation failures are visible projections, not new authoritative history.
+
+This is only role opening/binding and recursive subject construction. It does **not** yet implement
+the full family of reciprocal, composition, transport, local-permutation, fold-license, or basin-escape
+generators. The corpus's opposed questions remain distinct obligations; swapping two same-carrier
+bindings does not prove a converse, inverse, reciprocal return, or complete relational coverage.
 
 ### 3. Cross and localize
 
@@ -105,20 +147,73 @@ After a crossing, partition and subtract the successful contrast. Retain all inc
 survivors when uniqueness is not established. Do not infer a cause from the size or location of the
 exploratory change.
 
-### 4. Apply the reciprocal question program
+### 4. Answer, reify, reciprocate, and regenerate
 
-After each actual return, record a validated `QP-PREFORMAL-RESIDUAL-RATCHET` question occurrence.
-It must cite the exact compiled sequence selected by the residual and account for every required
-reciprocal challenge as either:
+The Ask exists before its Answer. For effectful discharge, preserve the exact order
+`Ask -> Seal -> Raw -> Interpret -> Check -> Answer`; Pure and Generate do not fabricate actuality.
+After every consequential Answer, reify explicit products with their status, provenance,
+dependencies, applicability, coverage, and horizon. Generated products become queryable but not
+Standing. Then regenerate the field and materialize every newly formable reciprocal challenge as
+either:
 
 - represented by its declared opposed corpus pair; or
 - individually typed but blocked, with the unavailable capability or inapplicability recorded.
 
-The two central axes—constrain/release and distinguish/coarsen—remain distinct. Then apply the
-required path, direction, support, fold/reopen, and answer/next-question challenges selected by the
-rhythm. A pre-return question, one-way paraphrase, convenient singleton, or green build does not
-close this obligation. The harness rejects a residual while any raw return lacks a subsequent
-validated composition.
+The two central axes—constrain/release and distinguish/coarsen—remain distinct. Regenerate path,
+direction, support, fold/reopen, propagation, and Answer/question-succession relations from the
+enlarged surface. A one-way paraphrase, convenient singleton, or green build does not close this
+obligation. Unchosen materialized questions remain live unless an Answer, typed inapplicability, or
+evidenced fold licenses their removal.
+
+The current machine retirement path resolves `Answered` to the matching complete Answer
+occurrence. Partial/Unknown answers do not retire the question. An inapplicability assertion
+alone is not an implemented retirement license: retain that occurrence with its disposition.
+Reopening restores every omitted fold member before another Ask or checkpoint. Fold and
+invalidation events likewise require a refreshed field; their evidence adequacy remains a
+separate construction obligation rather than being inferred from a nonempty reference.
+
+Active fold-evidence policy 2 resolves `protected_equivalence_evidence` and
+`regeneration` to distinct, previously reified checked products. Each must originate
+in a completed checked Probe Answer whose Check and Answer cite its immutable Raw
+JSON report. Merely writing `checker:...` or marking a candidate `checked` is not
+enough. The fold supplies `protected_continuations` as a JSON list of independently
+admitted continuation-product identities. Evidence must match the exact members,
+their occurrence/rendering/path digests, representative, horizon, coverage, and
+continuation list. All currently admitted targeted continuations must be covered and
+each continuation must be applicable to every proposed fold member.
+
+Reports use schema 2. A checked continuation product carries
+`inquiry_protection: {schema: 2, targets, execution, raw_digest}`. `execution` is
+inspectable first-order data with the exact form
+`{schema: 1, language: "question_identity_projection", field}`; `field` must be an
+immutable question-occurrence identity coordinate. Its Raw `protected_continuation`
+report repeats the exact `targets` and `execution` claim and supplies one Supported
+observation per target. Admission independently re-executes the projection over the
+represented question occurrences and rejects any different reported value. It does
+not evaluate opaque code, host closures, tools, or model behavior.
+
+A schema-2 `fold_check` report contains `claim` with `schema`, `relation` (`protected_equivalence` or
+`regeneration`), `members`, `member_identities`, `representative`, `continuations`,
+`horizon`, and `coverage`. The checked product carries that claim as `fold_evidence`,
+plus `raw_digest`, and declares its continuation/support dependencies. Equivalence
+reports contain one Supported `observations` cell (`member`, `continuation`, `value`)
+for every declared member/continuation pair; each value must equal the independently
+re-executed continuation and then agree across the fold. Regeneration
+reports contain `regenerated_members`, preserving every exact occurrence identity.
+The executable positive examples are in `tools/harness_fold_evidence_check.js`;
+`.claude/hooks/ic-fold-evidence.js` owns admission and identity projection.
+
+This establishes report-to-execution correspondence only for the declared finite
+question-identity projection—not the truth of an arbitrary external/model
+observation or the sufficiency of the selected horizon. Those remain independent
+inquiry obligations. A new protected continuation
+outside the old coverage, withdrawn transitive support, or migration of an old
+label-only fold requires explicit `reopen` and restoration. Reopening may occur
+after reification and before the required field refresh; another Ask may not.
+Historical policy-0 and policy-1 reports retain their occurrence-time rules. A
+controlled transition to policy 2 reopens their active folds rather than silently
+granting the stronger correspondence. Evidence policy cannot be downgraded. Raw
+evidence must remain available with its original bytes.
 
 The append-only trace is the ancestry source. `RESIDUAL_OBLIGATIONS.json` supplies stable project
 obligation seeds, while the broad residual index is rebuilt from those seeds, trace coordinates,
@@ -165,17 +260,40 @@ to the local theorem.
 The report is evidence, never theorem authority. Git owns chronology. README files remain static
 orientation.
 
-### 9. Close or recur
+### 9. Checkpoint, recur, or close
 
-A local pass closes only when the affected dependency closure stabilizes and produces no new
-consequential type failure, theorem failure, countermodel, corpus residual, lexical ambiguity,
-binding failure, or implementation-conformance failure. Close the trace with exactly one lawful
-status: `Satisfied`, `Equivalent`, `Impossible`, `Blocked`, `Unknown`, or `ResourceBounded`.
+A local pass reaches a checkpoint when its Answer is reified, the field is regenerated, the
+affected dependency closure stabilizes, and durable evidence/residuals are recorded. Continue from
+that regenerated field without treating the checkpoint as task termination.
 
-Only `Satisfied` closes the selected task. Otherwise preserve the supported partial result and
-make the residual the next typed question. Recurrence requires a new actual return, protected
-distinction, binding/representation/authority change, repository change, or strict reduction of a
-finite frontier. Never repeat the same question in the same state.
+Task-level closure additionally requires no unresolved Ask, no Answer awaiting reification, no
+dirty surface, no open actual cycle, no newly materialized required/productive executable question,
+and explicit retention of all Blocked, Unknown, ResourceBounded, and reopening conditions. Challenge
+that state with a final adversarial question, then record `closure` and one lawful Stop status:
+`Satisfied`, `Equivalent`, `Impossible`, `Blocked`, `Unknown`, or `ResourceBounded`. Never repeat the
+same occurrence in the same represented state.
+
+Use actual occurrence IDs for `closure.adversarial_question` and
+`closure.adversarial_answer`. The Answer must be checked through Probe/Check, complete,
+reified, and responsible for the closing field regeneration. The harness checks that ancestry,
+not the semantic sufficiency of the challenge or the truth of an asserted warrant. Any later
+consequential transition invalidates that closure. `Satisfied` requires no unresolved field
+members; an explicitly blocked/unknown field cannot be relabeled success.
+If the final challenge itself is unresolved, declare `closure.state` as `Unknown`,
+`Blocked`, or `ResourceBounded`, matching its retained Answer (or a resource-bounded
+Partial Answer), and use the same Stop state. That is an explicit non-successful
+closure, not an exemption from Ask/Answer/reification/field ancestry.
+
+`ic-trace state` is the validated lifecycle projection used by status, Stop, and the active
+surface. `open` includes incomplete inquiry bookkeeping; `mutation-open` is narrower and
+requires the live sealed Probe. An Answer ends that mutation permission even before reification.
+
+Compatible schema-4 policy changes require user-authorized harness control and a sealed,
+pre-return Probe. Do not switch a legacy trace's state machine midway through its history.
+Finish its checked legacy cycle and lawful Stop, then initialize the manifest-selected schema
+with the exact predecessor trace pin. Environment variables cannot select a weaker schema.
+The historical second-pass Stop escape applies only to a validated legacy trace; unreadable
+ancestry cannot use it to bypass the current lifecycle.
 
 ## Phase progression
 
@@ -210,6 +328,8 @@ gates. The branch-wide baseline is:
 ```text
 node tools/successor_control_check.js
 node tools/harness_control_check.js
+node tools/harness_lifecycle_check.js
+node tools/harness_question_instance_check.js
 node tools/predecessor_inventory.js check
 node tools/predecessor_inventory_check.js
 node tools/predecessor_tex_classification.js check

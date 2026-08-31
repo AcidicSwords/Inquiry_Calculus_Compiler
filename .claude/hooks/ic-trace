@@ -17,7 +17,7 @@ DEFAULT_FUEL=24
 RESIDUAL_CLASSES="none persists regression wrong_locus missing_dep weak_discriminator env_failure unknown resource"
 STOP_STATES="Satisfied Equivalent Impossible Blocked Unknown ResourceBounded"
 MODES="Pure Generate Probe Check Warrant"
-RESOLUTIONS="Supported Plural ExactEmpty Unsupported Unknown Blocked ResourceBounded"
+RESOLUTIONS="Supported Partial Plural ExactEmpty Unsupported Unknown Blocked ResourceBounded"
 
 die() { printf 'ic-trace: %s\n' "$*" >&2; exit 1; }
 
@@ -49,6 +49,19 @@ trace_file() {
 validate_trace() {
     node "$ROOT/.claude/hooks/ic-append.js" validate "$1" >/dev/null ||
         die "active trace failed structural validation"
+}
+
+read_lifecycle() {
+    lifecycle_json="$(node "$ROOT/.claude/hooks/ic-append.js" state "$1")" ||
+        die "active trace failed lifecycle validation"
+}
+
+lifecycle_value() {
+    printf '%s' "$lifecycle_json" | node -e '
+const fs = require("fs");
+const value = JSON.parse(fs.readFileSync(0, "utf8"))[process.argv[1]];
+process.stdout.write(String(value ?? ""));
+' "$1"
 }
 
 last_line_of_kind() {
@@ -91,23 +104,23 @@ fingerprint() {
 }
 
 cmd="${1:-}"
-[ -n "$cmd" ] || die "usage: ic-trace <init|status|open|stop-pending|control-open|KIND> [k=v ...]"
+[ -n "$cmd" ] || die "usage: ic-trace <init|status|state|open|mutation-open|stop-pending|control-open|KIND> [k=v ...]"
 shift || true
 
 case "$cmd" in
 init)
+    predecessor_fields=""
     if [ -f "$STATE" ]; then
         current="$(trace_file 2>/dev/null || true)"
         if [ -n "$current" ] && node "$ROOT/.claude/hooks/ic-append.js" validate "$current" >/dev/null 2>&1; then
-            last_seal="$(last_line_of_kind "$current" seal)"
-            last_res="$(last_line_of_kind "$current" residual)"
-            last_stop="$(last_line_of_kind "$current" stop)"
-            if [ -n "$last_seal" ] && { [ -z "$last_res" ] || [ "$last_seal" -gt "$last_res" ]; }; then
+            read_lifecycle "$current"
+            if [ "$(lifecycle_value open)" = "true" ]; then
                 die "cannot initialize a new trace while the current sealed cycle is open"
             fi
-            if [ -n "$last_res" ] && { [ -z "$last_stop" ] || [ "$last_res" -gt "$last_stop" ]; }; then
-                die "cannot initialize a new trace before the checked residual has a lawful stop"
+            if [ "$(lifecycle_value can_initialize)" != "true" ]; then
+                die "cannot initialize a new trace before the checked residual/task closure has a lawful stop"
             fi
+            predecessor_fields=",\"predecessor_trace\":\".claude/trace/$(basename "$current")\",\"predecessor_trace_sha256\":\"$(lifecycle_value trace_sha256)\",\"predecessor_policy_schema\":\"$(lifecycle_value schema)\""
         fi
     fi
     mkdir -p "$TRACE_DIR"
@@ -123,12 +136,18 @@ init)
     [ "${#source_digest}" -eq 64 ] || die "cannot pin Questions.txt for the new trace"
     [ "${#manifest_digest}" -eq 64 ] || die "cannot pin engineering question programs for the new trace"
     [ -n "$policy_schema" ] || die "cannot read engineering question-program schema"
-    policy_record="$(printf '{\"ts\":\"%s\",\"kind\":\"policy\",\"question_program_schema\":\"%s\",\"source_digest\":\"%s\",\"program_manifest_digest\":\"%s\"}\n' \
-        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$policy_schema" "$source_digest" "$manifest_digest")"
+    policy_record="$(printf '{\"ts\":\"%s\",\"kind\":\"policy\",\"question_program_schema\":\"%s\",\"source_digest\":\"%s\",\"program_manifest_digest\":\"%s\"%s}\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$policy_schema" "$source_digest" "$manifest_digest" "$predecessor_fields")"
     printf '%s\n' "$policy_record" |
         node "$ROOT/.claude/hooks/ic-append.js" append "$created" >/dev/null ||
         die "cannot initialize question-program policy"
     printf 'trace: .claude/trace/%s (fuel %s)\n' "$(basename "$created")" "$DEFAULT_FUEL"
+    exit 0
+    ;;
+state)
+    [ -f "$STATE" ] || { printf '{"schema":null,"open":false,"mutation_open":false,"stop_pending":false,"can_initialize":true}\n'; exit 0; }
+    read_lifecycle "$(trace_file)"
+    printf '%s\n' "$lifecycle_json"
     exit 0
     ;;
 status)
@@ -137,17 +156,17 @@ status)
         exit 0
     fi
     f="$(trace_file)"
-    validate_trace "$f"
+    read_lifecycle "$f"
     printf 'file    : .claude/trace/%s\n' "$(cat "$STATE")"
     printf 'records : %s\n' "$(wc -l <"$f" | tr -d ' ')"
     printf 'fuel    : %s\n' "$(cat "$FUEL" 2>/dev/null || printf '?')"
-    last_seal="$(last_line_of_kind "$f" seal)"
-    last_res="$(last_line_of_kind "$f" residual)"
-    if [ -n "$last_seal" ] && { [ -z "$last_res" ] || [ "$last_seal" -gt "$last_res" ]; }; then
-        printf 'cycle   : OPEN (seal at line %s, no later residual)\n' "$last_seal"
+    if [ "$(lifecycle_value open)" = "true" ]; then
+        printf 'cycle   : OPEN (validated lifecycle has unresolved work)\n'
     else
         printf 'cycle   : closed\n'
     fi
+    printf 'mutation: %s\n' "$(lifecycle_value mutation_open)"
+    printf 'stop pending: %s\n' "$(lifecycle_value stop_pending)"
     if bash "$0" control-open >/dev/null 2>&1; then
         printf 'control : authorized for current cycle\n'
     else
@@ -155,26 +174,20 @@ status)
     fi
     exit 0
     ;;
-open)
+open|mutation-open)
     [ -f "$STATE" ] || exit 1
     f="$(trace_file)"
-    validate_trace "$f"
-    last_seal="$(last_line_of_kind "$f" seal)"
-    last_res="$(last_line_of_kind "$f" residual)"
-    [ -n "$last_seal" ] || exit 1
-    [ -z "$last_res" ] && exit 0
-    [ "$last_seal" -gt "$last_res" ]
+    read_lifecycle "$f"
+    key="open"
+    [ "$cmd" != "mutation-open" ] || key="mutation_open"
+    [ "$(lifecycle_value "$key")" = "true" ]
     exit
     ;;
 stop-pending)
     [ -f "$STATE" ] || exit 1
     f="$(trace_file)"
-    validate_trace "$f"
-    last_res="$(last_line_of_kind "$f" residual)"
-    last_stop="$(last_line_of_kind "$f" stop)"
-    [ -n "$last_res" ] || exit 1
-    [ -z "$last_stop" ] && exit 0
-    [ "$last_res" -gt "$last_stop" ]
+    read_lifecycle "$f"
+    [ "$(lifecycle_value stop_pending)" = "true" ]
     exit
     ;;
 control-open)
@@ -182,6 +195,16 @@ control-open)
     f="$(trace_file)"
     validate_trace "$f"
     wanted="${1:-}"
+    read_lifecycle "$f"
+    if [ "$(lifecycle_value schema)" = "4" ]; then
+        printf '%s' "$lifecycle_json" | node -e '
+const fs=require("fs"), control=JSON.parse(fs.readFileSync(0,"utf8")).control;
+const wanted=process.argv[1];
+process.exit(control && /user|human/i.test(control.authority) &&
+  (!wanted || control.scope.toLowerCase().split(/[,;\s]+/).includes(wanted)) ? 0 : 1);
+' "$wanted"
+        exit
+    fi
     last_control="$(last_line_of_kind "$f" control)"
     last_res="$(last_line_of_kind "$f" residual)"
     last_stop="$(last_line_of_kind "$f" stop)"
@@ -207,12 +230,18 @@ control-open)
     exit 0
     ;;
 policy-transition) cmd="policy_transition" ;;
-ensure|question|seal|raw|check|residual|stop|note|control|route) ;;
+ensure|question|field|ask|seal|raw|interpret|check|answer|reify|invalidate|fold|reopen|residual|checkpoint|closure|stop|note|control|route) ;;
 *) die "unknown kind '$cmd'" ;;
 esac
 
 f="$(trace_file)"
 validate_trace "$f"
+active_schema="$(node -e '
+const fs=require("fs");
+const records=fs.readFileSync(process.argv[1],"utf8").trimEnd().split(/\r?\n/).filter(Boolean).map(JSON.parse);
+const policy=records.filter((record)=>record.kind==="policy"||record.kind==="policy_transition").at(-1);
+process.stdout.write(String(policy?.question_program_schema??""));
+' "$f")" || die "cannot read active trace schema"
 declare -A kv=()
 for arg in "$@"; do
     case "$arg" in
@@ -220,6 +249,11 @@ for arg in "$@"; do
     *) die "argument '$arg' is not key=value" ;;
     esac
 done
+
+if [ "$cmd" = "ask" ]; then
+    kv[source_digest]="$(sha256sum "$ROOT/formal-successor/Questions.txt" | cut -d' ' -f1)"
+    kv[program_manifest_digest]="$(sha256sum "$ROOT/formal-successor/ENGINEERING_QUESTION_PROGRAMS.json" | cut -d' ' -f1)"
+fi
 
 if [ "$cmd" = "residual" ]; then
     topology_context="$(node "$ROOT/.claude/hooks/ic-residual-topology.js" context "$ROOT")" ||
@@ -259,6 +293,7 @@ need() {
 case "$cmd" in
 ensure) need task authority invariants ;;
 question)
+    [ "$active_schema" != "4" ] || die "schema 4 uses separate field, ask, answer, and reify records"
     need q mode answer branch occurrence continuation bindings horizon coverage authority evidence \
         program rhythm residual_class compiled_questions question_families coding_questions \
         coverage_dimensions root_spans rhythm_positions reciprocal_status \
@@ -268,20 +303,50 @@ question)
         source_digest program_manifest_digest
     in_list "${kv[mode]}" "$MODES" || die "mode must be one of: $MODES"
     ;;
-seal) need should_change invariants discriminator wrong_impl coverage ;;
-raw) need cmd ;;
-check) need verdict coverage ;;
+field) need field_id members basis coverage regenerated_from dispositions removal_evidence ;;
+ask)
+    [ "$active_schema" = "4" ] || die "explicit Ask records require schema 4"
+    need q mode occurrence field_id question_form rendering source_lines generator_ids \
+        reciprocal_relations path bindings horizon coverage authority evidence dependencies \
+        source_digest program_manifest_digest
+    in_list "${kv[mode]}" "$MODES" || die "mode must be one of: $MODES"
+    ;;
+seal)
+    need should_change invariants discriminator wrong_impl coverage
+    [ "$active_schema" != "4" ] || need ask_occurrence
+    ;;
+raw)
+    need cmd
+    [ "$active_schema" != "4" ] || need ask_occurrence
+    ;;
+interpret) need ask_occurrence raw_digest interpretation provenance ;;
+check)
+    need verdict coverage
+    [ "$active_schema" != "4" ] || need ask_occurrence evidence
+    ;;
+answer)
+    need occurrence ask_occurrence answer resolution_class status polarity residual evidence coverage authority
+    in_list "${kv[resolution_class]}" "$RESOLUTIONS" || die "resolution_class must be one of: $RESOLUTIONS"
+    ;;
+reify) need answer_occurrence status products new_questions coverage ;;
+invalidate) need product_ids cause evidence ;;
+fold) need fold_id members representative protected_equivalence_evidence regeneration reopen_condition horizon coverage ;;
+reopen) need fold_id restored_members discriminator evidence ;;
 residual)
     need class next parent_residual open_relation condition_ids blocker_ids breaker_ids \
         condition_keys separator_ids survived_contrast_ids conflict_ids gap_ids failed_fold_ids \
-        reopen_condition_ids overlap_ids coverage resolution_class residual_shape method_frontier \
-        next_question_family residual_topology_digest \
+        reopen_condition_ids overlap_ids coverage resolution_class residual_topology_digest \
         active_residual unresolved_field closure_scope
+    if [ "$active_schema" != "4" ]; then
+        need residual_shape method_frontier next_question_family
+    fi
     in_list "${kv[class]}" "$RESIDUAL_CLASSES" ||
         die "class must be one of: $RESIDUAL_CLASSES"
     in_list "${kv[resolution_class]}" "$RESOLUTIONS" ||
         die "resolution_class must be one of: $RESOLUTIONS"
     ;;
+checkpoint) need field_id established remains_open fold_changes reopen_changes coverage ;;
+closure) need field_id scope warrant adversarial_question adversarial_answer coverage ;;
 stop)
     need state warrant
     in_list "${kv[state]}" "$STOP_STATES" || die "state must be one of: $STOP_STATES"
@@ -301,7 +366,7 @@ policy_transition) need authority reason predecessor_source_digest \
 route) need source_occurrence answer successor_occurrence provenance ;;
 esac
 
-if [ "$cmd" = "residual" ]; then
+if [ "$cmd" = "residual" ] && [ "$active_schema" != "4" ]; then
     node -e '
 const policy = require(process.argv[1]);
 const expected = policy.chooseMethodFrontier(process.argv[2]).join(",");
@@ -322,7 +387,9 @@ if [ "$cmd" = "raw" ]; then
         die "raw sensitive= must be true or false"
     if [ -n "${kv[file]:-}" ]; then
         [ -f "${kv[file]}" ] || die "raw file '${kv[file]}' does not exist"
-        kv[digest]="$(sha256sum "${kv[file]}" | cut -d' ' -f1)"
+        # Hash bytes through stdin: GNU filename escaping otherwise prefixes the
+        # digest with a backslash for native Windows/backslash-containing paths.
+        kv[digest]="$(sha256sum <"${kv[file]}" | cut -d' ' -f1)"
         if [ "$sensitive" = "false" ]; then
             mkdir -p "$RAW_DIR"
             target="$RAW_DIR/${kv[digest]}"
@@ -362,6 +429,15 @@ if [ "$cmd" = "question" ]; then
     q_program_context="${kv[q]}|${kv[program]}|${kv[rhythm]}|${kv[residual_class]}|${kv[compiled_questions]}|${kv[question_families]}|${kv[coding_questions]}|${kv[coverage_dimensions]}|${kv[root_spans]}|${kv[rhythm_positions]}|${kv[reciprocal_status]}|${kv[reciprocal_challenges]}|${kv[blocked_reciprocals]}|${kv[reciprocal_pairs]}|${kv[reciprocal_axes]}|${kv[parent_residual]}|${kv[condition_ids]}|${kv[breaker_ids]}|${kv[reciprocal_obligation]}|${kv[question_disposition]}|${kv[residual_shape]}|${kv[method_frontier]}|${kv[condition_keys]}|${kv[source_digest]}|${kv[program_manifest_digest]}"
     fp="$(fingerprint "$q_program_context" "${kv[occurrence]}" "${kv[continuation]}" "${kv[bindings_normalized]}" "${kv[horizon_normalized]}" "${kv[coverage_normalized]}" "${kv[authority_normalized]}" "${kv[evidence_normalized]}")"
 fi
+if [ "$cmd" = "ask" ]; then
+    kv[bindings_normalized]="$(normalize_coordinate "${kv[bindings]}")"
+    kv[horizon_normalized]="$(normalize_coordinate "${kv[horizon]}")"
+    kv[coverage_normalized]="$(normalize_coordinate "${kv[coverage]}")"
+    kv[authority_normalized]="$(normalize_coordinate "${kv[authority]}")"
+    kv[evidence_normalized]="$(normalize_coordinate "${kv[evidence]}")"
+    ask_context="${kv[q]}|${kv[field_id]}|${kv[question_form]}|${kv[rendering]}|${kv[source_lines]}|${kv[generator_ids]}|${kv[reciprocal_relations]}|${kv[path]}|${kv[dependencies]}|${kv[source_digest]}|${kv[program_manifest_digest]}"
+    fp="$(fingerprint "$ask_context" "${kv[occurrence]}" field-regeneration "${kv[bindings_normalized]}" "${kv[horizon_normalized]}" "${kv[coverage_normalized]}" "${kv[authority_normalized]}" "${kv[evidence_normalized]}")"
+fi
 
 record="$({
     printf '{"ts":"%s","kind":"%s"' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$cmd"
@@ -371,7 +447,7 @@ record="$({
     done
     printf '}\n'
 })"
-if [ "$cmd" = "question" ]; then
+if [ "$cmd" = "question" ] || [ "$cmd" = "ask" ]; then
     seq="$(printf '%s\n' "$record" |
         node "$ROOT/.claude/hooks/ic-append.js" append "$f" "$FUEL")" ||
         die "validated trace append failed"
