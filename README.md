@@ -37,9 +37,8 @@ Research is consulted only when a live residual needs one of its distinctions. I
 - `ic-cli` remains the narrow command-line boundary and contains no independent semantic machinery.
 - `formal` is the pinned Lean/Lake proof project for the successor.
 - `formal-successor` owns successor inputs, inventories, evidence, decisions, failures, and
-  propagation reports. These do not overwrite predecessor ledgers. Its
-  `AUTONOMOUS_ITERATION.md` runbook defines how a fresh run resumes, records replayable checkpoints,
-  and persists until task-level closure.
+  propagation reports. These do not overwrite predecessor ledgers. The construction specification
+  and the generated `.claude/hooks/ic-spine.js` projection provide one cohesive inquiry path.
 
 ## Build and verification
 
@@ -62,11 +61,8 @@ The formal branch also runs:
 
 ```bash
 node tools/successor_control_check.js
-node tools/harness_control_check.js
-node tools/harness_lifecycle_check.js
-node tools/harness_question_instance_check.js
-node tools/harness_recursive_generator_check.js
-node tools/harness_fold_evidence_check.js
+node tools/inquiry_spine_check.js
+node tools/inquiry_spine_lifecycle_check.js
 node tools/predecessor_inventory.js check
 node tools/predecessor_inventory_check.js
 node tools/predecessor_tex_classification.js check
@@ -101,28 +97,21 @@ node tools/understanding_check.js --compile
 node tools/ablative_regeneration_check.js --compile
 node tools/learning_gain_check.js --compile
 node tools/method_promotion_check.js --compile
+node tools/traversal_learning_check.js --compile
+node tools/question_pattern_learning_check.js --compile
+node tools/memory_recovery_check.js --compile
 cd formal
 lake build --wfail
 ```
 
-New inquiry traces pin the supplied question corpus and its declared engineering programs. Active
-schema 4 explicitly records `Field -> Ask -> Answer -> Reify -> Field`; effectful occurrences refine
-that path through `Seal -> Raw -> Interpret -> Check`. Unchosen live questions remain represented,
-generated products remain non-Standing, and a checkpoint is distinct from task closure. Historical
-schema-3 rhythms remain readable as migration evidence. The generator registry, reciprocal source
-relations, and historical bootstrap schedules are projected in
-`formal-successor/QUESTION_RHYTHM.md`.
-Active fold policy 2 admits only exact checked report ancestry whose declared finite
-question-identity projection is independently re-executed over every fold member.
-This is an engineering correspondence check, not a claim that arbitrary model/tool
-continuations are correct or that the selected protected horizon is sufficient.
-The consolidated provisional method is pinned in
-`formal-successor/SUCCESSOR_CONSTRUCTION_HARNESS_SPEC.md`. Its broad residual index is a deletable
-projection rebuilt from append-only trace evidence and
-`formal-successor/RESIDUAL_OBLIGATIONS.json`.
-The pinned question-bank-derived computational extension is
-`formal-successor/QUESTION_BANK_DERIVED_EXPLORATION_ALGORITHM.md`; it remains preformal and does
-not authorize pre-Gate-F Rust semantic work.
+New inquiry traces pin `Questions.txt` and the compact derived
+`formal-successor/INQUIRY_SPINE_CONTRACT.json`. The sole model-facing recurrence is
+`RELATE -> OPEN -> TURN -> RETURN -> DISTINGUISH -> FOLD -> CARRY -> RELATE`.
+The underlying event lifecycle makes returns accountable without becoming another reasoning loop.
+Unchosen live questions remain represented, generated products remain non-Standing, typed paths
+remain distinct from actual history, transported discriminators can reopen inadequate folds, and a
+checkpoint remains distinct from task closure. The broad residual index remains a deletable
+projection rebuilt from append-only evidence and `formal-successor/RESIDUAL_OBLIGATIONS.json`.
 The Phase A source universe and its non-promotion boundary are documented in
 `formal-successor/PHASE_A_INVENTORY.md`; its generated inventory keeps unresolved classification
 visible rather than converting source coverage into Gate A.

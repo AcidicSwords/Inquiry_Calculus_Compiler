@@ -44,9 +44,7 @@ protected_groups() {
     p="$(norm "$1")"
     case "$p" in
         *".claude/hooks"*|*".claude/settings"*|*".claude/skills/inquire"*|\
-        *"formal-successor/engineering_question_programs.json"*|\
-        *"formal-successor/autonomous_iteration.md"*|\
-        *"formal-successor/question_rhythm.md"*)
+        *"formal-successor/inquiry_spine_contract.json"*)
             printf '%s\n' harness ;;
     esac
     case "$p" in
@@ -54,7 +52,7 @@ protected_groups() {
         *"inquiry_calculus_v2_0_comprehensive_implementation_plan.md"*) printf '%s\n' plan ;;
     esac
     case "$p" in
-        *".github/workflows"*|*"tools/docs_control_check.py"*|*"tools/harness_control_check.js"*)
+        *".github/workflows"*|*"tools/docs_control_check.py"*|*"tools/inquiry_spine_check.js"*|*"tools/inquiry_spine_lifecycle_check.js"*)
             printf '%s\n' ci ;;
     esac
     case "$p" in

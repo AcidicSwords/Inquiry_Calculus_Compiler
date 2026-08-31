@@ -146,6 +146,9 @@ jobs:
           node tools/ablative_regeneration_check.js --compile
           node tools/learning_gain_check.js --compile
           node tools/method_promotion_check.js --compile
+          node tools/traversal_learning_check.js --compile
+          node tools/question_pattern_learning_check.js --compile
+          node tools/memory_recovery_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -216,19 +219,16 @@ jobs:
           set -euo pipefail
           node --check .claude/hooks/ic-run.js
           node --check .claude/hooks/ic-append.js
+          node --check .claude/hooks/ic-contract.js
+          node --check .claude/hooks/ic-spine.js
           node --check .claude/hooks/ic-question-program.js
           node --check .claude/hooks/ic-relational-surface.js
           node --check .claude/hooks/ic-residual-topology.js
           node --check .claude/hooks/ic-construction-policy.js
-          node --check tools/harness_control_check.js
-          node --check tools/harness_acceptance_check.js
-          node --check tools/harness_lifecycle_check.js
+          node --check tools/inquiry_spine_check.js
+          node --check tools/inquiry_spine_lifecycle_check.js
           node --check .claude/hooks/ic-question-instance.js
           node --check .claude/hooks/ic-fold-evidence.js
-          node --check tools/harness_question_instance_check.js
-          node --check tools/harness_recursive_generator_check.js
-          node --check tools/harness_fold_evidence_check.js
-          node --check tools/exploration_algorithm_check.js
           node --check tools/predecessor_inventory.js
           node --check tools/predecessor_inventory_check.js
           node --check tools/predecessor_tex_classification.js
@@ -439,17 +439,15 @@ jobs:
           node --check tools/ablative_regeneration_check.js
           node --check tools/learning_gain_check.js
           node --check tools/method_promotion_check.js
+          node --check tools/traversal_learning_check.js
+          node --check tools/question_pattern_learning_check.js
+          node --check tools/memory_recovery_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
           bash -n .claude/hooks/ic-stop
-          node tools/harness_control_check.js
-          node tools/harness_acceptance_check.js
-          node tools/harness_lifecycle_check.js
-          node tools/harness_question_instance_check.js
-          node tools/harness_recursive_generator_check.js
-          node tools/harness_fold_evidence_check.js
-          node tools/exploration_algorithm_check.js
+          node tools/inquiry_spine_check.js
+          node tools/inquiry_spine_lifecycle_check.js
           node tools/predecessor_inventory.js check
           node tools/predecessor_inventory_check.js
           node tools/predecessor_tex_classification.js check
@@ -660,6 +658,9 @@ jobs:
           node tools/ablative_regeneration_check.js
           node tools/learning_gain_check.js
           node tools/method_promotion_check.js
+          node tools/traversal_learning_check.js
+          node tools/question_pattern_learning_check.js
+          node tools/memory_recovery_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

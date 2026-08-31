@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
-# ic-stop -- Stop gate.  A turn may not end on an open cycle.
-#
-# An open cycle is a sealed prediction whose return was never interpreted.
-# Ending there is the exact failure the seal exists to prevent: the action
-# happened, and nothing on record says whether it did what was predicted.
-#
-# Schema-3 traces retain the historical second-pass escape. Schema-4 traces do
-# not treat a replayable checkpoint as task closure; they remain gated until a
-# separate closure and stop record exist.
+# ic-stop -- schema-5 stop gate for the one inquiry spine.
 
 set -uo pipefail
 
@@ -22,64 +14,33 @@ block() {
 }
 
 if ! printf '%s' "$PAYLOAD" | node -e '
-    const fs = require("node:fs");
-    try {
-      const value = JSON.parse(fs.readFileSync(0, "utf8"));
-      if (value === null || Array.isArray(value) || typeof value !== "object") {
-        process.exit(1);
-      }
-    } catch {
-      process.exit(1);
-    }
-  '; then
-    block "Malformed stop-hook payload; lawful cycle closure cannot be established."
+const fs = require("node:fs");
+try {
+  const value = JSON.parse(fs.readFileSync(0, "utf8"));
+  if (value === null || Array.isArray(value) || typeof value !== "object") process.exit(1);
+} catch { process.exit(1); }
+'; then
+    block "Malformed stop-hook payload; lawful inquiry state cannot be established."
 fi
 
-stop_hook_active="$(printf '%s' "$PAYLOAD" |
-    awk -v want="stop_hook_active" -f "$HERE/ic-json.awk")"
 if ! lifecycle="$(bash "$HERE/ic-trace" state 2>&1)"; then
-    block "The active trace is malformed or unreadable and cannot establish a validated lifecycle: ${lifecycle}"
+    block "The active trace is malformed or unreadable: ${lifecycle}"
 fi
-active_schema="$(printf '%s' "$lifecycle" | node -e 'const fs=require("fs");process.stdout.write(String(JSON.parse(fs.readFileSync(0,"utf8")).schema??""));')"
-case "$active_schema" in
-    1|2|3) [ "$stop_hook_active" = "true" ] && exit 0 ;;
-esac
+schema="$(printf '%s' "$lifecycle" | node -e '
+const fs=require("fs");process.stdout.write(String(JSON.parse(fs.readFileSync(0,"utf8")).schema??""));
+')"
+[ "$schema" = "5" ] || block "Only the consolidated schema-5 inquiry spine is live. Preserve older evidence in Git and create an explicit schema-5 migration trace."
 
 if ! trace_status="$(bash "$HERE/ic-trace" status 2>&1)"; then
-    reason="The active inquiry trace is malformed or unreadable, so cycle closure cannot be established safely.\n\n${trace_status}\n\nPreserve the malformed trace as ancestry and initialize a new trace; do not rewrite it."
-    block "$reason"
+    block "The active inquiry trace is malformed or unreadable. Preserve it as ancestry rather than rewriting it.\n\n${trace_status}"
+fi
+
+if bash "$HERE/ic-trace" open >/dev/null 2>&1; then
+    block 'An inquiry occurrence is unresolved. Complete RETURN through Raw, Interpret, Check, Answer, and Reify, then regenerate FIELD before ending the turn.'
 fi
 
 if bash "$HERE/ic-trace" stop-pending >/dev/null 2>&1; then
-    if [ "$active_schema" = "4" ]; then
-        block "The active schema-4 inquiry has no completed task-level closure and stop. A checkpoint is replayable progress, not permission to terminate. Resolve or explicitly retain every live occurrence, reify any consequential Answer, regenerate the field, record an adversarially challenged closure, then append its lawful stop."
-    fi
-    block "A checked residual has no terminal stop record. Record the lawful stop state with a nonempty warrant before ending the turn."
+    block 'The active field has no challenged task-level closure and lawful stop. A checkpoint is replayable progress, not task completion. Continue the executable Frontier or record an explicitly supported partial stop state after closure.'
 fi
 
-bash "$HERE/ic-trace" open >/dev/null 2>&1 || exit 0
-
-REASON='A cycle is still open: you sealed a prediction and never closed it.
-
-Close it against what actually returned, not against what you meant:
-
-  .claude/hooks/ic-trace raw      cmd=... file=...      (preserve it first)
-  .claude/hooks/ic-trace check    verdict=... coverage=...
-  .claude/hooks/ic-trace residual class=<none|persists|regression|wrong_locus|
-                                        missing_dep|weak_discriminator|
-                                        env_failure|unknown|resource> \
-    next=... parent_residual=... open_relation=... condition_ids=... condition_keys=... \
-    blocker_ids=... breaker_ids=... separator_ids=... survived_contrast_ids=... \
-    conflict_ids=... gap_ids=... failed_fold_ids=... reopen_condition_ids=... \
-    overlap_ids=... coverage=... resolution_class=... residual_shape=... \
-    method_frontier=... next_question_family=...
-
-Then name the stop state -- Satisfied requires a warrant, and Unknown is a
-lawful result:
-
-  .claude/hooks/ic-trace stop state=<Satisfied|Equivalent|Impossible|Blocked|
-                                     Unknown|ResourceBounded>'
-
-printf '{"decision":"block","reason":"%s"}\n' \
-    "$(printf '%s' "$REASON" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
-         | awk 'BEGIN { ORS = "" } { if (NR > 1) printf "\\n"; print }')"
+exit 0

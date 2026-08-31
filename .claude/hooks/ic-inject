@@ -1,61 +1,16 @@
 #!/usr/bin/env bash
-# ic-inject -- UserPromptSubmit reminder and exact live-frontier projection.
+# ic-inject -- inject only the one generated inquiry-spine projection.
 
 set -uo pipefail
-
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
 cat >/dev/null
 
-STATUS="$(bash "$HERE/ic-trace" status 2>&1 | sed 's/^/  /')"
-FRONTIER="$ROOT/IMPLEMENTATION_FRONTIER.md"
-if BLOCK="$(node "$HERE/ic-frontier.js" "$FRONTIER" block 2>&1)"; then
+if CONTEXT="$(node "$HERE/ic-spine.js" context "$ROOT" 2>&1)"; then
     :
 else
-    BLOCK="INVALID: ${BLOCK#ic-frontier: }"
+    CONTEXT="INQUIRY SPINE INVALID: ${CONTEXT#ic-spine: }"
 fi
-if QUESTION_FIELD_POLICY="$(node "$HERE/ic-question-program.js" summary "$ROOT" 2>&1)"; then
-    :
-else
-    QUESTION_FIELD_POLICY="INVALID: ${QUESTION_FIELD_POLICY#ic-question-program: }"
-fi
-if ACTIVE_SURFACE="$(node "$HERE/ic-relational-surface.js" projection "$ROOT" 2>&1)"; then
-    :
-else
-    ACTIVE_SURFACE="INVALID: ${ACTIVE_SURFACE#ic-relational-surface: }"
-fi
-
-CONTEXT="INQUIRY HARNESS ACTIVE -- consequential work runs the engineering clock.
-
-  SPECIFY -> INSPECT -> CONTRAST -> CROSS -> LOCALIZE -> TRACE -> EXPERIMENT
-  -> UPDATE -> CHANGE -> VERIFY -> CHALLENGE -> MINIMIZE -> RATCHET
-
-  FIELD -> ASK -> ANSWER -> REIFY -> FIELD.
-  Effectful: FIELD -> ASK -> SEAL -> RAW -> INTERPRET -> CHECK -> ANSWER -> REIFY -> FIELD.
-  Reconstruct the represented relational surface and materialize a finite lawful
-  question field. Select only an actually represented executable occurrence using
-  explicit dependency, resource, effect, risk, coverage, or Frontier relations.
-  There is no semantic next-question oracle. Unchosen occurrences remain live.
-  SEARCH WIDELY; COMMIT NARROWLY. Generated material is queryable but not Standing.
-  After every consequential Answer, reify its products without raising authority,
-  propagate invalidations/folds/reopenings, and regenerate the field before Ask.
-  A replayable checkpoint is not task closure; Stop requires separate closure.
-
-  Unknown != Negative. Generated != Actual != Checked != Warranted.
-  Semantic coverage != execution coverage. Fiber != selected return.
-  Ledger order != causal order. No self-warrant.
-
-Exact live frontier block:
-${BLOCK}
-
-Compact question-field policy:
-${QUESTION_FIELD_POLICY}
-
-Rebuildable active relational surface:
-${ACTIVE_SURFACE}
-
-Ledger:
-${STATUS}"
 
 printf '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"%s"}}\n' "$(printf '%s' "$CONTEXT" |
         sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\t/\\t/g' |

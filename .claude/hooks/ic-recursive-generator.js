@@ -31,42 +31,41 @@ function validateSurface(surface) {
   }
 }
 
-function generate(surface, manifest) {
+function generate(surface, contract) {
   validateSurface(surface);
-  const contract = manifest.active_lifecycle.recursive_generator_contract;
-  if (!contract || contract.schema !== 1 || !Array.isArray(contract.families)) throw new Error("missing recursive generator contract");
-  const forms = new Map(manifest.preformal_harness.compiled_questions.map((form) => [form.id, form]));
-  const families = new Map(contract.families.map((family) => [family.id, family]));
+  if (!Array.isArray(contract.path_generators)) throw new Error("missing path generator contract");
+  const forms = new Map(contract.question_forms.map((form) => [form.id, form]));
+  const families = new Map(contract.path_generators.map((family) => [family.id, family]));
   const output = [];
-  function emit(familyId, inputs, path, dependencies, detail) {
+  function emit(familyId, inputs, context, path, dependencies, detail) {
     const family = families.get(familyId); if (!family) throw new Error(`undeclared generator family ${familyId}`);
     const form = forms.get(family.question_form); if (!form) throw new Error(`undeclared generator form ${family.question_form}`);
     const derivation = { schema: 1, family: familyId, inputs, detail };
-    const identity = digest([family.question_form, derivation, path, dependencies]);
-    const generatorIds = manifest.active_lifecycle.generator_registry.filter((entry) => entry.question_forms.includes(family.question_form)).map((entry) => entry.id);
+    const identity = digest([family.question_form, derivation, context, path, dependencies]);
+    const generatorIds = contract.generator_registry.filter((entry) => entry.question_forms.includes(family.question_form)).map((entry) => entry.id);
     output.push({ occurrence: `QG-${identity}`, rendering: `RG-${identity}`, question_form: family.question_form,
       prompt: `${form.prompt}\nDerived from represented ${family.requires.join(" + ")}: ${detail}.`, source_lines: form.source_lines,
-      generator_ids: generatorIds, path, dependencies: [...new Set(dependencies)], derivation,
+      generator_ids: generatorIds, context, path, dependencies: [...new Set(dependencies)], derivation,
       disposition: "Unknown", executable: false });
   }
-  for (const relation of surface.relations) emit("DIRECT", [relation.id], `${relation.path}/direct`, [relation.id, ...relation.dependencies], `relation ${relation.id}`);
-  for (const relation of surface.relations) if (relation.reverse_id) emit("RECIPROCAL", [relation.id, relation.reverse_id], `${relation.path}/reciprocal`, [relation.id, relation.reverse_id, ...relation.dependencies], `declared opposed uses ${relation.id} and ${relation.reverse_id}`);
+  for (const relation of surface.relations) emit("DIRECT", [relation.id], `relation:${relation.id}`, `${relation.path}/direct`, [relation.id, ...relation.dependencies], `relation ${relation.id}`);
+  for (const relation of surface.relations) if (relation.reverse_id) emit("RECIPROCAL", [relation.id, relation.reverse_id], `reciprocal:${relation.id}:${relation.reverse_id}`, `${relation.path}/reciprocal`, [relation.id, relation.reverse_id, ...relation.dependencies], `declared opposed uses ${relation.id} and ${relation.reverse_id}`);
   for (const left of surface.relations) for (const right of surface.relations) if (left.id !== right.id && left.target === right.source) {
-    emit("COMPOSE", [left.id, right.id], `${left.path}/then/${right.path}`, [left.id, right.id, ...left.dependencies, ...right.dependencies], `typed incidence ${left.source} -> ${left.target} -> ${right.target}`);
+    emit("COMPOSE", [left.id, right.id], `composition:${right.id}∘${left.id}`, `${left.path}/then/${right.path}`, [left.id, right.id, ...left.dependencies, ...right.dependencies], `typed incidence ${left.source} -> ${left.target} -> ${right.target}`);
   }
   for (const relation of surface.relations) for (const discriminator of surface.discriminators) if (relation.target === discriminator.domain) {
-    emit("TRANSPORT", [relation.id, discriminator.id], `${relation.path}/transport/${discriminator.path}`, [relation.id, discriminator.id, ...relation.dependencies, ...discriminator.dependencies], `downstream discriminator ${discriminator.id} transported through ${relation.id}`);
+    emit("TRANSPORT", [relation.id, discriminator.id], `transport:${discriminator.id}∘${relation.id}`, `${relation.path}/transport/${discriminator.path}`, [relation.id, discriminator.id, ...relation.dependencies, ...discriminator.dependencies], `downstream discriminator ${discriminator.id} transported through ${relation.id}`);
   }
-  for (const question of surface.questions) emit("QUESTION_SUBJECT", [question.occurrence], `${question.path}/question-subject`, [question.occurrence, ...question.dependencies], `ordinary question occurrence ${question.occurrence}`);
+  for (const question of surface.questions) emit("QUESTION_SUBJECT", [question.occurrence], `question-subject:${question.context}`, `${question.path}/question-subject`, [question.occurrence, ...question.dependencies], `ordinary question occurrence ${question.occurrence}`);
   for (let i = 0; i < surface.questions.length; i += 1) for (let j = i + 1; j < surface.questions.length; j += 1) {
     const left = surface.questions[i], right = surface.questions[j];
-    if (left.context === right.context && left.exchangeable && right.exchangeable) emit("PERMUTE", [left.occurrence, right.occurrence], `${left.context}/permute`, [left.occurrence, right.occurrence, ...left.dependencies, ...right.dependencies], `declared exchangeable order ${left.occurrence};${right.occurrence}`);
+    if (left.context === right.context && left.exchangeable && right.exchangeable) emit("PERMUTE", [left.occurrence, right.occurrence], `permutation:${left.context}`, `${left.context}/permute`, [left.occurrence, right.occurrence, ...left.dependencies, ...right.dependencies], `declared exchangeable order ${left.occurrence};${right.occurrence}`);
   }
-  for (const relation of surface.relations) emit("REGENERATE", [relation.id], `${relation.path}/regenerate`, [relation.id, ...relation.dependencies], `question basis that could regenerate ${relation.id}`);
+  for (const relation of surface.relations) emit("REGENERATE", [relation.id], `regeneration:${relation.id}`, `${relation.path}/regenerate`, [relation.id, ...relation.dependencies], `question basis that could regenerate ${relation.id}`);
   return output;
 }
 
-function materialize(product, context, manifest) {
+function materialize(product, context, contract) {
   if (!product?.inquiry_generator_surface) throw new Error("missing inquiry_generator_surface");
   const surface = product.inquiry_generator_surface;
   validateSurface(surface);
@@ -86,25 +85,25 @@ function materialize(product, context, manifest) {
   for (const discriminator of surface.discriminators) {
     if (!context.products.has(discriminator.id)) throw new Error(`generator surface discriminator is not reified: ${discriminator.id}`);
   }
-  return generate(surface, manifest).map((member) => {
+  return generate(surface, contract).map((member) => {
     const derivation = { ...member.derivation, surface_product: product.id };
     const dependencies = [...new Set([product.id, ...member.dependencies, ...product.dependencies])];
-    const identity = digest([member.question_form, derivation, member.path, dependencies]);
+    const identity = digest([member.question_form, derivation, member.context, member.path, dependencies]);
     return { ...member, occurrence: `QG-${identity}`, rendering: `RG-${identity}`, dependencies, derivation };
   });
 }
 
-function validateProduct(product, context, manifest) {
+function validateProduct(product, context, contract) {
   if (!Object.hasOwn(product, "inquiry_generator_surface")) return;
-  materialize(product, context, manifest);
+  materialize(product, context, contract);
 }
 
-function validateMember(member, context, manifest) {
+function validateMember(member, context, contract) {
   const surfaceId = member.derivation?.surface_product;
   if (!surfaceId) throw new Error("derived question lacks generator surface ancestry");
   const product = context.products.get(surfaceId);
   if (!product?.inquiry_generator_surface) throw new Error(`missing generator surface product ${surfaceId}`);
-  const expected = materialize(product, context, manifest).find((candidate) => candidate.occurrence === member.occurrence);
+  const expected = materialize(product, context, contract).find((candidate) => candidate.occurrence === member.occurrence);
   const immutable = (question) => {
     const { disposition: _disposition, executable: _executable, ...identity } = question;
     return identity;
@@ -117,16 +116,15 @@ function validateMember(member, context, manifest) {
   }
 }
 
-function validateRendering(member, manifest) {
-  const contract = manifest.active_lifecycle.recursive_generator_contract;
-  const family = contract?.families?.find((candidate) => candidate.id === member.derivation?.family);
-  const form = manifest.preformal_harness.compiled_questions.find((candidate) => candidate.id === member.question_form);
+function validateRendering(member, contract) {
+  const family = contract.path_generators?.find((candidate) => candidate.id === member.derivation?.family);
+  const form = contract.question_forms.find((candidate) => candidate.id === member.question_form);
   if (!family || !form || family.question_form !== member.question_form || member.derivation?.schema !== 1 ||
       !Array.isArray(member.derivation.inputs) || typeof member.derivation.detail !== "string" || !member.derivation.detail) {
     throw new Error("derived question has no declared family/form rendering");
   }
   const prompt = `${form.prompt}\nDerived from represented ${family.requires.join(" + ")}: ${member.derivation.detail}.`;
-  const identity = digest([member.question_form, member.derivation, member.path, member.dependencies]);
+  const identity = digest([member.question_form, member.derivation, member.context, member.path, member.dependencies]);
   if (member.prompt !== prompt || member.rendering !== `RG-${identity}` || member.occurrence !== `QG-${identity}`) {
     throw new Error("derived question rendering identity or prompt changed");
   }

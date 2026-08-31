@@ -64,48 +64,6 @@ function revisitFold(fold, continuation) {
     : { ...fold, state: fold.state };
 }
 
-function questionBehaviorSignature(question) {
-  const normalizedPartition = question.partition
-    .map((cell) => [...cell].sort().join("+"))
-    .sort()
-    .join("|");
-  return [
-    question.underlying_relation,
-    question.partial_binding,
-    [...question.exposed_ports].sort().join("+"),
-    question.scope,
-    question.grain,
-    question.discharge_obligation,
-    normalizedPartition,
-    question.path,
-    question.mode,
-    question.continuation,
-    question.binding,
-    question.horizon,
-    question.coverage,
-  ].join("\0");
-}
-
-function groupQuestionEquivalenceCandidates(questions) {
-  const groups = new Map();
-  for (const question of requireArray(questions, "questions")) {
-    const signature = questionBehaviorSignature(question);
-    if (!groups.has(signature)) groups.set(signature, []);
-    groups.get(signature).push(structuredClone(question));
-  }
-  return [...groups.entries()].map(([signature, members]) => ({
-    status: "equivalence_candidate_not_folded",
-    signature,
-    members,
-  }));
-}
-
-// Historical callers may still ask for this operation. It intentionally no
-// longer destroys occurrences; schema 4 requires an evidenced fold instead.
-function deduplicateQuestions(questions) {
-  return groupQuestionEquivalenceCandidates(questions).flatMap((group) => group.members);
-}
-
 function findJointBreaker(coordinates, evaluate) {
   requireArray(coordinates, "coordinates");
   for (let size = 1; size <= coordinates.length; size += 1) {
@@ -153,26 +111,6 @@ function factorMethod(pathOccurrences) {
 function acceptanceAuthority({ baselineDigest, candidateDigest, authority }) {
   if (baselineDigest === candidateDigest) return "unchanged";
   return authority === "explicit_user_control_migration" ? "authorized_change" : "reject_self_warrant";
-}
-
-const LEGACY_METHOD_DISPATCH = Object.freeze({
-  OrderedBoundary: ["Bisection", "GeneralizedBinarySearch"],
-  DecomposableBreaker: ["DeltaDebugging"],
-  ConjunctiveConflict: ["QuickXplain", "MUS"],
-  CompetingDiagnoses: ["ModelBasedDiagnosis", "SequentialDiscrimination"],
-  CoarseAbstraction: ["CEGAR"],
-  Synthesis: ["CEGIS"],
-  FinitePartition: ["PartitionRefinement"],
-  UnknownAutomaton: ["ActiveAutomataLearning"],
-  SharedConditionBasis: ["AttributeExploration"],
-  MultiContext: ["AssumptionContextManagement"],
-  Generic: ["NondominatedApplicableMethods"],
-});
-
-function chooseMethodFrontier(shape) {
-  const methods = LEGACY_METHOD_DISPATCH[shape];
-  if (!methods) throw new Error(`unknown residual shape ${shape}`);
-  return [...methods];
 }
 
 function matchApplicableMethods(methodContracts, availableRelations) {
@@ -260,19 +198,15 @@ function selectQuestionFrontier(questions, dominates) {
 module.exports = {
   acceptanceAuthority,
   buildReverseIncidence,
-  chooseMethodFrontier,
   classifyQuestion,
   closeLocalResidual,
   closureFromSearch,
   comparatorApplicability,
-  deduplicateQuestions,
-  groupQuestionEquivalenceCandidates,
   factorMethod,
   findJointBreaker,
   localizeContradiction,
   matchApplicableMethods,
   narrowRatchet,
-  questionBehaviorSignature,
   normalizeConditionKey,
   residualsSharingCoordinate,
   resolveField,

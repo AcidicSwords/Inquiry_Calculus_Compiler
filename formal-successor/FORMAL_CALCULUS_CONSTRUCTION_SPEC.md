@@ -5674,53 +5674,46 @@ Rerun predecessor and successor conformance.
 
 ---
 
-# 104. Continuous refinement loop within every phase
+# 104. One cohesive inquiry spine within every phase
 
-Every phase repeats:
+Construction phases are obligation regions, not independent procedures. Every live obligation is
+worked through the same model-facing recurrence:
 
-```text
-READ CURRENT FORMAL STATE
-↓
-SELECT STRONGEST LIVE RESIDUAL
-↓
-FORM A TYPED QUESTION
-↓
-CONSTRUCT A STRONG / MAXIMAL CONTRAST
-↓
-OBTAIN AN ACTUAL RETURN:
-    PROOF
-    COUNTERMODEL
-    RUNTIME RETURN
-    CORPUS FAILURE
-    CHECKER RESULT
-    DOMAIN RESULT
-↓
-UPDATE FROM THAT RETURN
-↓
-PROPOSE THE SMALLEST TYPED CHANGE
-↓
-COMPUTE DEPENDENCY CLOSURE
-↓
-RECHECK AND REPROVE
-↓
-SEARCH FOR A STRONGER BREAKER
-↓
-ABLATE
-↓
-TEST JOINT REMOVALS
-↓
-RERUN QUESTION CORPUS
-↓
-RERUN NOTATION/PROSE ROUND TRIPS
-↓
-RERUN SUCCESSOR REGENERATION
-↓
-RETAIN ONLY WHAT SURVIVES
-```
+\[
+\boxed{
+\mathsf{RELATE}
+\to\mathsf{OPEN}
+\to\mathsf{TURN}
+\to\mathsf{RETURN}
+\to\mathsf{DISTINGUISH}
+\to\mathsf{FOLD}
+\to\mathsf{CARRY}
+\circlearrowleft .
+}
+\]
 
-Stop a branch only at a lawful stopping status.
+- **RELATE** reconstructs represented forms, typed relations, roles, dependencies, contexts, and
+  authority levels.
+- **OPEN** exposes one typed unfilled position or unresolved protected distinction.
+- **TURN** applies a lawful deformation: reciprocal binding, decisive contrast, removal,
+  substitution, joint/context/order variation, path factorization, representation change,
+  question-on-question, proof-presupposition, or breaker construction.
+- **RETURN** discharges the question through its required `Pure`, `Generate`, `Probe`, `Check`, or
+  `Warrant` route without collapsing those authorities.
+- **DISTINGUISH** records exactly what the return separates, excludes, supports, leaves plural,
+  leaves `Unknown`, invalidates, or makes newly formable.
+- **FOLD** removes only distinctions that positively preserve the declared protected behavior,
+  regeneration, ancestry, and reopening condition.
+- **CARRY** composes every newly live discriminator through relevant typed ancestry, tests crossed
+  folds, creates reopening obligations, and reconstructs the changed relational field.
 
-Do not manufacture closure by weakening the horizon or hiding an unresolved breaker.
+Strong contrast, localization, dependency propagation, reproving, ablation, corpus checks,
+round-trips, and regeneration are ordinary `TURN`, `RETURN`, `DISTINGUISH`, `FOLD`, or `CARRY`
+programs. They are not another clock or fixed stage list. A phase or gate merely constrains which
+relations are open and what evidence may discharge them.
+
+Stop a branch only at a lawful coverage-relative status. Do not manufacture closure by weakening
+the horizon or hiding an unresolved breaker.
 
 ---
 
@@ -6439,79 +6432,78 @@ The project is ready to continue ordinary implementation only when this statemen
 
 > The active Inquiry Calculus is one machine-checked typed formal system with one authoritative semantic representation family and as many genuinely distinct typed syntactic categories as its mathematics requires. Its canonical notation and canonical prose are reciprocal representations of that same semantic authority. Its canonical questions elaborate to lawful open relations; when a question is used to discriminate a carrier, the corresponding evaluation role and relation are explicit. Its semantic question completeness is distinguished from current executable coverage. Its protected future is represented by typed semantic protection specifications whose execution/evidence uses remain separately typed. Its distinctions and equivalences are defined by typed relation profiles rather than undefined ordinary-language terms. Its runtime program syntax has a structural theory independent of weak observational quotienting, while program observational equivalence reuses the same typed protection machinery as the rest of the calculus. Actuality and evidence authority remain explicit. Its transformations are category-typed, proof-carrying, effect-aware, backend-aware, and incapable of silently weakening authority. Temporary semantic structure may be removed only when its protected contribution has been extracted and regeneration remains possible. Its compression and minimization state exactly what is preserved. Its deterministic and relational regeneration laws are separately well typed. Its linear/Hilbert binding proves the complete Consequence Subspace theorem chain rather than merely referring to a geometric analogy. Its language can explain the question corpus without creating a second interrogative ontology. Every semantic change propagates through the formal dependency graph and survives countermodel search, ablation, and regeneration. The successor is conservative over the predecessor fragment it actually preserves and explicitly corrective over the remainder. The successor can be regenerated from the predecessor and independently checked returns without consulting the historical exploration that produced this construction specification. The Rust implementation implements this formal object rather than defining it.
 
-The external construction process is therefore:
-
-\[
-\boxed{
-\textbf{
-FORMALIZE
-\to
-QUESTION
-\to
-BREAK
-\to
-REFINE
-\to
-PROPAGATE
-\to
-REPROVE
-\to
-ABLATE
-\to
-REGENERATE
-\to
-IMPLEMENT.
-}
-}
-\]
-
-This final sequence is a construction procedure.
-
-It is not to be copied into the successor as a master slogan unless the formal successor itself independently regenerates that exact decomposition and its exact canonical language.
+Formalization, breaking, refinement, propagation, reproving, ablation, regeneration, and
+implementation are derived operations within the one inquiry spine above. They must not be
+presented or encoded as another model-facing sequence. None becomes successor semantics unless the
+formal successor independently regenerates and warrants it.
 
 ---
 
-# 116. Bootstrap inquiry-lifecycle obligations
+# 116. Executable realization of the one inquiry spine
 
-These are acceptance obligations on the branch-local construction harness. They do not add
-successor primitives, define semantic state, warrant a candidate theorem, or install an autonomous
-semantic controller.
+These are acceptance obligations on the branch-local harness. They do not add successor
+primitives, define semantic state, warrant a theorem, or install a semantic scheduler.
 
-The active construction harness shall expose a rebuildable relational engineering surface and a
-finite live question field. Its ordinary recurrence is:
+The sole public harness entry point reconstructs repository actuality, a derived relational
+surface, typed compositional paths, ordinary question occurrences, transported discriminators,
+fold/reopening obligations, a path-indexed model context, and the executable frontier. The compact
+machine contract is a checked projection of this specification and `Questions.txt`; it is not a
+second authority and contains no fixed rhythm, Q-family execution order, residual-to-question
+schedule, or residual-class-to-method dispatch.
+
+The accountability protocol underneath `RETURN` is not a second reasoning recurrence. A pure
+return records `Field/Ask/Answer/Reify/Field`; an effectful return additionally records
+`Seal/Operation/Raw/Interpret/Check`. The model is shown only the recurrence in section 104.
+
+For represented transformations
 
 \[
-\mathrm{Field}\to\mathrm{Ask}\to\mathrm{Answer}\to\mathrm{Reify}\to\mathrm{Field}.
+X_i\xrightarrow{U_i}X_{i+1},
+\qquad
+P_{i:j}=U_{j-1}\circ\cdots\circ U_i,
 \]
 
-For effectful discharge it shall refine to:
+and a compatible later discriminator (C_{q_t}:X_t\rightsquigarrow A(q_t)), the harness derives
 
 \[
-\mathrm{Field}\to\mathrm{Ask}\to\mathrm{Seal}\to\mathrm{Raw}\to
-\mathrm{Interpret}\to\mathrm{Check}\to\mathrm{Answer}\to\mathrm{Reify}\to\mathrm{Field}.
+\boxed{D_{i,t}=C_{q_t}\circ P_{i:t}.}
 \]
 
-The harness shall preserve the following distinctions:
+This is `CARRY`: ordinary typed composition, not an inverse, a generic backward relation, or a new
+semantic `TransportQuestion` constructor. Path order is represented ancestry and is not causal or
+actual history without separate actuality evidence. Question form, rendering, occurrence, context,
+path, and Answer remain distinct identities.
 
-- a question form, its rendering, a path-sensitive occurrence, and its Answer are not identical;
-- generated material is queryable but does not thereby become Actual, checked, warranted, or
-  Standing;
-- Raw is immutable ancestry and is not its Interpretation, Check, Warrant, or standing result;
-- a consequential Answer must be reified and the field regenerated before the next ordinary Ask;
-- unchosen live occurrences remain represented until answered, typed inapplicable, blocked,
-  resource bounded, or folded under independently checked protected equivalence, regeneration, and
-  reopening evidence;
-- a newly admitted discriminator that does not factor through a fold reopens its preserved ancestry;
-- method use follows explicit applicability contracts and method failure does not close inquiry;
-- execution policy may select among lawful incomparable occurrences but cannot define a semantic
-  next-question oracle or universal question score;
-- a finite checkpoint is replayable local progress, not task closure; and
-- task closure requires no unresolved Ask, unreified Answer, dirty surface, open actual cycle, or
-  newly materialized required/productive executable occurrence, while every remaining part is
-  explicitly Blocked, Unknown, ResourceBounded, or retained as a reopening condition.
+For a fold (c:X\to\widehat X) and protected discriminator family \(\mathcal H\), positive fold
+evidence requires
 
-The trace shall retain append-only ancestry, policy and migration evidence, occurrence/path
-identity, sealed effectful predictions, Raw digests, interpretations, checks, Answers, reified
-products and dependencies, invalidations, folds, reopenings, residuals, checkpoints, and separate
-closures. Historical trace schemas remain readable. The trace and its projections remain process
-evidence only; they cannot acquire semantic authority from enforcing these obligations.
+\[
+\forall D\in\mathcal H,\;\exists\widehat D:\;D=\widehat D\circ c
+\]
+
+together with exact ancestry, regeneration, coverage, and a positive reopening condition. If a
+later carried discriminator (D_{\mathrm{new}}) cannot be shown to factor through (c), continued
+fold validity is `Unknown`; a supported separation reopens the fold. Similar wording and selected
+endpoint equality never license compression.
+
+The harness must preserve append-only evidence, collision-safe append, immutable Raw, no fabricated
+actuality, `Unknown != Negative`, `Generated != Standing`, Ask-before-Answer, answer-dependent
+continuation, represented-path-versus-actual-history, no silent live-question disappearance,
+positive fold/reopening evidence, seal-before-effect, derived-cache nonauthority,
+checkpoint-versus-closure, and self-application-versus-self-warrant.
+
+Every live question leaves the field only as Answered, evidenced Folded, typed Inapplicable,
+reasoned Blocked, explicitly ResourceBounded, or superseded by a typed refinement that preserves
+ancestry. Selection uses only represented required-discharge, dependency, Frontier, effect, risk,
+coverage, resource, cost, or supplied preference relations. A deterministic identity tie-break may
+allocate execution among incomparable live occurrences but makes no semantic optimality claim and
+deletes none of them.
+
+Methods are relational contracts (`Applicable`, `Requires`, `Handles`, `Produces`, `FailsAs`,
+`ResumesAfter`, `Checks`). Repeated paths are only method-fold candidates. There is no active
+residual-shape method dispatcher.
+
+Task closure is coverage-relative and requires no unresolved Ask, unreified Answer, dirty field,
+open effectful return, newly formable Required/Productive executable question, unchecked relevant
+path transport, or fold awaiting a carried discriminator check. A checkpoint never requests the
+user merely to choose the next ordinary question.

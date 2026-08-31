@@ -33,7 +33,7 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/ic-run.js\" inject",
             "timeout": 15,
-            "statusMessage": "loading the loop"
+            "statusMessage": "loading the inquiry spine"
           }
         ]
       }

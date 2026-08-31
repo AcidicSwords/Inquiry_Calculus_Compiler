@@ -12,6 +12,7 @@ const crypto = require("node:crypto");
 const { build: buildResidualTopology } = require("./ic-residual-topology.js");
 const instances = require("./ic-question-instance.js");
 const recursiveGenerator = require("./ic-recursive-generator.js");
+const contractLoader = require("./ic-contract.js");
 
 function parseTrace(root) {
   const traceDirectory = path.join(root, ".claude", "trace");
@@ -38,7 +39,7 @@ function parseJson(value, fallback) {
 
 function build(root) {
   const trace = parseTrace(root);
-  const manifest = JSON.parse(fs.readFileSync(path.join(root, "formal-successor", "ENGINEERING_QUESTION_PROGRAMS.json"), "utf8"));
+  const contract = contractLoader.read(root).contract;
   const topology = buildResidualTopology(root).topology;
   const fields = trace.records.filter((record) => record.kind === "field");
   const asks = trace.records.filter((record) => record.kind === "ask");
@@ -82,7 +83,7 @@ function build(root) {
   const generatedQuestions = [];
   for (const product of products.filter((product) => product.inquiry_seed)) {
     try {
-      const member = instances.materialize(product, context, manifest);
+      const member = instances.materialize(product, context, contract);
       if (member.dependencies.some((id) => invalidated.has(id))) member.disposition = "Blocked";
       if (!completed.has(member.occurrence)) generatedQuestions.push(member);
     } catch (error) {
@@ -93,7 +94,7 @@ function build(root) {
   }
   for (const product of products.filter((candidate) => candidate.inquiry_generator_surface)) {
     try {
-      for (const member of recursiveGenerator.materialize(product, context, manifest)) {
+      for (const member of recursiveGenerator.materialize(product, context, contract)) {
         if (member.dependencies.some((id) => invalidated.has(id))) member.disposition = "Blocked";
         if (!completed.has(member.occurrence)) generatedQuestions.push(member);
       }
@@ -105,9 +106,9 @@ function build(root) {
     ...products.filter((product) => !invalidated.has(product.id)).map((product) => product.kind),
     ...members.flatMap((member) => member.dependencies ?? []),
   ]);
-  const methods = manifest.active_lifecycle.method_contract_registry.map((contract) => {
-    const missing = contract.applicable_when.filter((relation) => !availableRelations.has(relation));
-    return { id: contract.id, applicable: missing.length === 0, missing };
+  const methods = contract.method_contracts.map((method) => {
+    const missing = method.applicable_when.filter((relation) => !availableRelations.has(relation));
+    return { id: method.id, applicable: missing.length === 0, missing };
   });
   return {
     schema: 1,

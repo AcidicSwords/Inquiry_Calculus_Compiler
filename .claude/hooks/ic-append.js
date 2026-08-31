@@ -9,7 +9,6 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const {
   validatePolicy,
-  validatePolicyTransition,
   validateFieldRecord,
   validateReifiedSeeds,
   validateQuestionProgram,
@@ -19,8 +18,9 @@ const {
 const instances = require("./ic-question-instance.js");
 const recursiveGenerator = require("./ic-recursive-generator.js");
 const foldEvidence = require("./ic-fold-evidence.js");
+const contractLoader = require("./ic-contract.js");
 const repositoryRoot = path.resolve(__dirname, "../..");
-const loadManifest = () => JSON.parse(fs.readFileSync(path.join(repositoryRoot, "formal-successor", "ENGINEERING_QUESTION_PROGRAMS.json"), "utf8"));
+const loadContract = () => contractLoader.read(repositoryRoot).contract;
 
 const [operation, tracePath, fuelPath] = process.argv.slice(2);
 if (!new Set(["validate", "state", "append"]).has(operation) || !tracePath) {
@@ -165,141 +165,27 @@ function validatedRecords() {
     return record;
   });
   const policies = records.filter((record) => record.kind === "policy");
-  const transitions = records.filter((record) => record.kind === "policy_transition");
-  if (policies.length > 1 || (policies.length === 1 && policies[0].seq !== 1)) {
-    fail("question-program policy must occur exactly once at the first record");
-  }
-  if (transitions.length > 0 && policies.length !== 1) {
-    fail("question-program policy transition requires a first-record policy");
+  if (records.length > 0 && (policies.length !== 1 || policies[0].seq !== 1)) {
+    fail("the schema-5 inquiry-spine policy must occur exactly once at the first record");
   }
   if (policies.length === 1) {
-    let activePolicy = policies[0];
-    validatePolicy(activePolicy);
+    const policy = policies[0];
+    validatePolicy(policy);
     for (const record of records) {
-      if (record.kind === "policy_transition") {
-        validatePolicyTransition(record, activePolicy);
-        activePolicy = record;
+      if (record.kind === "policy_transition" || record.kind === "question") {
+        fail(`line ${record.seq} uses a retired controller record kind`);
       }
-      if (record.kind === "question" || record.kind === "ask") validateStoredQuestion(record, activePolicy);
+      if (record.kind === "ask") validateStoredQuestion(record, policy);
       if (record.kind === "field") validateStoredField(record);
     }
   }
-  validateStateMachine(records);
+  if (records.length > 0) validateStateMachine(records);
   validatedTraceDigest = crypto.createHash("sha256").update(text).digest("hex");
   return records;
 }
 
 function readStdin() {
   return fs.readFileSync(0, "utf8");
-}
-
-function validateLegacyStateMachine(records) {
-  let cycle = null;
-  let lastResidual = 0;
-  let lastStop = 0;
-  let questionProgramPolicy = false;
-  let pendingControl = false;
-
-  for (const record of records) {
-    switch (record.kind) {
-      case "policy":
-        questionProgramPolicy = true;
-        break;
-      case "control":
-        if (cycle === null) pendingControl = true;
-        else cycle.control = true;
-        break;
-      case "policy_transition":
-        if (
-          cycle === null ||
-          !cycle.control ||
-          cycle.raw !== 0 ||
-          cycle.check !== 0 ||
-          cycle.questions !== 0
-        ) {
-          fail(
-            `line ${record.seq} changes question-program policy outside a controlled pre-return cycle`,
-          );
-        }
-        questionProgramPolicy = true;
-        break;
-      case "question":
-        if (
-          questionProgramPolicy &&
-          cycle !== null &&
-          cycle.uncomposedReturns > 0
-        ) {
-          cycle.questions += 1;
-          cycle.uncomposedReturns -= 1;
-        }
-        break;
-      case "seal":
-        if (cycle !== null) {
-          fail(`line ${record.seq} opens a seal before the prior cycle closes`);
-        }
-        cycle = {
-          raw: 0,
-          check: 0,
-          questions: 0,
-          uncomposedReturns: 0,
-          control: pendingControl,
-        };
-        pendingControl = false;
-        break;
-      case "raw":
-        if (cycle === null) {
-          fail(`line ${record.seq} records a raw return without an open seal`);
-        }
-        cycle.raw += 1;
-        cycle.uncomposedReturns += 1;
-        break;
-      case "check":
-        if (cycle === null || cycle.raw === 0) {
-          fail(`line ${record.seq} checks before an actual raw return`);
-        }
-        cycle.check += 1;
-        break;
-      case "residual":
-        if (
-          cycle === null ||
-          cycle.raw === 0 ||
-          cycle.check === 0 ||
-          (questionProgramPolicy &&
-            (cycle.questions === 0 || cycle.uncomposedReturns !== 0))
-        ) {
-          fail(
-            `line ${record.seq} closes a cycle before every raw return has a subsequent question program and check`,
-          );
-        }
-        cycle = null;
-        lastResidual = record.seq;
-        break;
-      case "stop": {
-        if (cycle !== null) {
-          fail(`line ${record.seq} stops while a sealed cycle is open`);
-        }
-        if (lastResidual === 0 || lastResidual <= lastStop) {
-          fail(`line ${record.seq} has no new checked residual to stop on`);
-        }
-        if (typeof record.warrant !== "string" || record.warrant.trim() === "") {
-          fail(`line ${record.seq} stop requires a nonempty warrant`);
-        }
-        if (record.state === "Satisfied") {
-          const warrant = record.warrant.toLowerCase().replace(/\s+/g, "");
-          if (/^(?:none|self|agent|generated)(?:$|[:/_-])/u.test(warrant)) {
-            fail(`line ${record.seq} Satisfied stop has a self warrant`);
-          }
-        }
-        lastStop = record.seq;
-        break;
-      }
-      default:
-        break;
-    }
-  }
-
-  return { open: cycle !== null, mutation_open: cycle !== null,
-    stop_pending: lastResidual > lastStop, can_initialize: cycle === null && lastResidual <= lastStop };
 }
 
 function parseJsonObject(record, field) {
@@ -343,12 +229,12 @@ function validateFieldTransition(previous, next, state, record) {
   const nextByOccurrence = new Map(next.members.map((member) => [member.occurrence, member]));
   for (const member of next.members) {
     if (Object.hasOwn(member, "relational_instance")) instances.validateMember(member, state);
-    if (Object.hasOwn(member, "derivation")) recursiveGenerator.validateMember(member, state, loadManifest());
+    if (Object.hasOwn(member, "derivation")) recursiveGenerator.validateMember(member, state, loadContract());
     // Readiness can change; an occurrence's question and derivation cannot.
     // A changed question/path needs a new occurrence, retaining the old ancestry.
     const identity = JSON.stringify([
       member.question_form, member.rendering, member.prompt, member.source_lines,
-      member.generator_ids, member.path, member.dependencies,
+      member.generator_ids, member.context, member.path, member.dependencies,
       ...(Object.hasOwn(member, "relational_instance") ? [instances.canonical(member.relational_instance)] : []),
       ...(Object.hasOwn(member, "derivation") ? [recursiveGenerator.canonical(member.derivation)] : []),
     ]);
@@ -416,7 +302,7 @@ function validateFieldTransition(previous, next, state, record) {
   }
 }
 
-function validateV4StateMachine(records) {
+function validateSpineStateMachine(records) {
   const state = {
     field: null,
     ask: null,
@@ -428,7 +314,7 @@ function validateV4StateMachine(records) {
     productOrigins: new Map(),
     raws: [],
     checks: [],
-    foldEvidenceSchema: "0",
+    foldEvidenceSchema: "2",
     questionIdentities: new Map(),
     questions: new Map(),
     fieldIds: new Set(),
@@ -451,30 +337,14 @@ function validateV4StateMachine(records) {
   for (const record of records) {
     // A closure certifies one state, not every later state in this trace.
     if (new Set(["field", "ask", "seal", "raw", "interpret", "check", "answer", "reify",
-      "invalidate", "fold", "reopen", "route", "policy_transition"]).has(record.kind)) state.lastClosure = 0;
+      "invalidate", "fold", "reopen", "route"]).has(record.kind)) state.lastClosure = 0;
     switch (record.kind) {
       case "policy":
-        state.foldEvidenceSchema = record.fold_evidence_schema ?? "0";
+        if (record.fold_evidence_schema !== "2") fail(`line ${record.seq} must use fold evidence schema 2`);
         break;
       case "control":
         for (const key of ["authority", "residual", "predecessor", "scope"]) requireRecordString(record, key);
         state.control = record;
-        break;
-      case "policy_transition":
-        if (record.question_program_schema !== "4") fail(`line ${record.seq} cannot downgrade schema-4 lifecycle`);
-        if (!state.control || !/user|human/iu.test(state.control.authority) ||
-            !state.control.scope.toLowerCase().split(/[,;\s]+/u).includes("harness") ||
-            !/user|human/iu.test(record.authority) || !state.actual || state.actual.raw !== 0) {
-          fail(`line ${record.seq} changes policy outside a user-controlled pre-return Probe cycle`);
-        }
-        state.foldEvidenceSchema = record.fold_evidence_schema ?? "0";
-        if (state.foldEvidenceSchema !== "0") {
-          for (const fold of state.folds.values()) if (fold.state === "folded" && fold.evidence_schema !== Number(state.foldEvidenceSchema)) {
-            fold.reopen_required = true;
-            fold.reopen_reasons = ["evidence-policy-migration"];
-            state.fieldRefresh = true;
-          }
-        }
         break;
       case "field": {
         if ([...state.folds.values()].some((fold) => fold.state === "folded" && fold.reopen_required)) {
@@ -508,7 +378,7 @@ function validateV4StateMachine(records) {
         break;
       }
       case "ask": {
-        for (const key of ["q", "mode", "occurrence", "field_id", "question_form", "rendering", "path", "bindings", "horizon", "coverage", "authority", "evidence", "dependencies"]) {
+        for (const key of ["q", "mode", "occurrence", "field_id", "question_form", "rendering", "context", "path", "bindings", "horizon", "coverage", "authority", "evidence", "dependencies"]) {
           requireRecordString(record, key);
         }
         if (!new Set(["Pure", "Generate", "Probe", "Check", "Warrant"]).has(record.mode)) {
@@ -524,7 +394,7 @@ function validateV4StateMachine(records) {
         if (!member) fail(`line ${record.seq} Ask occurrence is not represented in the live field`);
         if (!member.executable) fail(`line ${record.seq} selects a non-executable question occurrence`);
         if (member.question_form !== record.question_form || member.rendering !== record.rendering ||
-            member.prompt !== record.q || member.path !== record.path) {
+            member.prompt !== record.q || member.context !== record.context || member.path !== record.path) {
           fail(`line ${record.seq} Ask identity does not match its represented field occurrence`);
         }
         if (member.relational_instance) {
@@ -651,13 +521,11 @@ function validateV4StateMachine(records) {
           }
           if (state.products.has(product.id)) fail(`line ${record.seq} reuses product id ${product.id}`);
           instances.validateProduct(product, state);
-          recursiveGenerator.validateProduct(product, state, loadManifest());
+          recursiveGenerator.validateProduct(product, state, loadContract());
           state.products.set(product.id, product);
           state.productOrigins.set(product.id, state.awaitingReify.occurrence);
-          if (state.foldEvidenceSchema !== "0") {
-            if (product.inquiry_protection) foldEvidence.protection(product, state, repositoryRoot);
-            if (product.fold_evidence) foldEvidence.certificate(product, state, repositoryRoot);
-          }
+          if (product.inquiry_protection) foldEvidence.protection(product, state, repositoryRoot);
+          if (product.fold_evidence) foldEvidence.certificate(product, state, repositoryRoot);
         }
         foldEvidence.refresh(state);
         state.reifiedAnswer = state.awaitingReify.occurrence;
@@ -696,13 +564,13 @@ function validateV4StateMachine(records) {
         requireIndependentEvidence(record, "regeneration");
         if (!members.includes(record.representative)) fail(`line ${record.seq} fold representative is not a member`);
         if (state.folds.has(record.fold_id)) fail(`line ${record.seq} repeats fold id ${record.fold_id}`);
-        const admission = state.foldEvidenceSchema !== "0" ? foldEvidence.admitFold(record, state, repositoryRoot) : {};
+        const admission = foldEvidence.admitFold(record, state, repositoryRoot);
         state.folds.set(record.fold_id, { members, representative: record.representative, state: "folded", ...admission });
         state.fieldRefresh = true;
         break;
       }
       case "reopen": {
-        if (state.foldEvidenceSchema !== "0" ? (state.ask || state.awaitingReify || state.actual) : unresolved()) {
+        if (state.ask || state.awaitingReify || state.actual) {
           fail(`line ${record.seq} reopens before the prior lifecycle is reified/regenerated`);
         }
         for (const key of ["fold_id", "restored_members", "discriminator", "evidence"]) requireRecordString(record, key);
@@ -812,7 +680,7 @@ function validateV4StateMachine(records) {
         state.control = null;
         break;
       case "question":
-        fail(`line ${record.seq} uses legacy combined question/answer in schema 4`);
+        fail(`line ${record.seq} uses retired combined question/answer instead of the inquiry spine`);
       default:
         break;
     }
@@ -831,13 +699,10 @@ function validateV4StateMachine(records) {
 
 function validateStateMachine(records) {
   const initialPolicy = records.find((record) => record.kind === "policy");
-  if (initialPolicy?.question_program_schema !== "4" && records.some((record) =>
-    record.kind === "policy_transition" && record.question_program_schema === "4")) {
-    fail("cross-schema lifecycle migration requires a fresh trace after lawful predecessor closure; historical replay remains unchanged");
+  if (initialPolicy?.question_program_schema !== "5") {
+    fail("only the consolidated schema-5 inquiry spine is live; use the offline Git ancestry for historical traces");
   }
-  return initialPolicy?.question_program_schema === "4"
-    ? validateV4StateMachine(records)
-    : validateLegacyStateMachine(records);
+  return validateSpineStateMachine(records);
 }
 
 function consumeQuestionFuel() {
@@ -890,7 +755,7 @@ try {
   lockFd = acquireLock();
   const records = validatedRecords();
   if (operation === "state") {
-    const policy = records.filter((record) => record.kind === "policy" || record.kind === "policy_transition").at(-1);
+    const policy = records.find((record) => record.kind === "policy");
     process.stdout.write(`${JSON.stringify({ schema: policy?.question_program_schema ?? null,
       record_count: records.length, trace_sha256: validatedTraceDigest, ...validateStateMachine(records) })}\n`);
   }
@@ -916,38 +781,14 @@ try {
     ) {
       fail("append input must be an object with no seq/parent and a nonempty kind");
     }
-    if (record.kind === "question") {
-      if (
-        typeof record.fp !== "string" ||
-        record.fp.length === 0 ||
-        typeof record.answer !== "string"
-      ) {
-        fail("question record requires nonempty fp and string answer");
-      }
-      record.question_program_check = validateQuestionProgram(
-        record,
-        path.resolve(__dirname, "../.."),
-      );
-      const policy = [...records]
-        .reverse()
-        .find((prior) => new Set(["policy", "policy_transition"]).has(prior.kind));
-      if (policy) validateStoredQuestion(record, policy);
-      if (
-        records.some(
-          (prior) => prior.fp === record.fp && prior.answer === record.answer,
-        )
-      ) {
-        fail(
-          "repeated state: same occurrence, continuation, bindings, frontier, " +
-            "horizon, coverage, repository actuality, and answer",
-        );
-      }
+    if (record.kind === "question" || record.kind === "policy_transition") {
+      fail("retired controller record kinds cannot enter a schema-5 trace");
     }
     if (record.kind === "field") {
       record.field_check = validateFieldRecord(record, path.resolve(__dirname, "../.."));
     }
     if (record.kind === "reify") {
-      const policy = records.findLast((prior) => prior.kind === "policy" || prior.kind === "policy_transition");
+      const policy = records.find((prior) => prior.kind === "policy");
       validateReifiedSeeds(record, path.resolve(__dirname, "../.."), policy);
     }
     if (record.kind === "ask") {
@@ -960,29 +801,22 @@ try {
       );
       const policy = [...records]
         .reverse()
-        .find((prior) => new Set(["policy", "policy_transition"]).has(prior.kind));
+        .find((prior) => prior.kind === "policy");
       if (policy) validateStoredQuestion(record, policy);
       if (records.some((prior) => prior.kind === "ask" && prior.fp === record.fp)) {
         fail("repeated state: same Ask occurrence and relational coordinates");
       }
     }
-    if (["policy", "policy_transition"].includes(record.kind) && record.question_program_schema === "4") {
-      const manifestBytes = fs.readFileSync(path.join(repositoryRoot, "formal-successor/ENGINEERING_QUESTION_PROGRAMS.json"));
-      if (crypto.createHash("sha256").update(manifestBytes).digest("hex") !== record.program_manifest_digest) fail("new policy must pin the current manifest");
-      const version = String(JSON.parse(manifestBytes).active_lifecycle?.fold_evidence?.schema ?? 0);
-      if (record.fold_evidence_schema !== undefined && record.fold_evidence_schema !== version) fail("fold evidence policy differs from pinned manifest");
+    if (record.kind === "policy") {
+      const loaded = contractLoader.read(repositoryRoot);
+      if (loaded.contractDigest !== record.program_manifest_digest) fail("new policy must pin the current inquiry-spine contract");
+      const version = String(loaded.contract.fold?.evidence_schema ?? 0);
+      if (record.fold_evidence_schema !== undefined && record.fold_evidence_schema !== version) fail("fold evidence policy differs from the contract");
       record.fold_evidence_schema = version;
     }
     if (record.kind === "policy") {
       if (records.length !== 0) fail("question-program policy must be the first record");
       validatePolicy(record);
-    }
-    if (record.kind === "policy_transition") {
-      const predecessor = [...records]
-        .reverse()
-        .find((prior) => new Set(["policy", "policy_transition"]).has(prior.kind));
-      if (!predecessor) fail("question-program policy transition has no predecessor");
-      validatePolicyTransition(record, predecessor);
     }
     const expectedSeq = records.length + 1;
     const stored = {
@@ -991,7 +825,7 @@ try {
       ...record,
     };
     validateStateMachine([...records, stored]);
-    if (record.kind === "question" || record.kind === "ask") {
+    if (record.kind === "ask") {
       consumeQuestionFuel();
     }
     if (record.kind === "note" && record.event === "checkpoint_resume") {

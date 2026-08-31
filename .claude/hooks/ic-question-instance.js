@@ -114,16 +114,17 @@ function render(formPrompt, instance) {
     `Horizon: ${JSON.stringify(instance.horizon)}. Coverage: ${JSON.stringify(instance.coverage)}.`;
 }
 
-function materialize(product, context, manifest) {
+function materialize(product, context, contract) {
   const compiled = compileSeed(product, context);
-  const form = manifest.preformal_harness.compiled_questions.find((entry) => entry.id === compiled.question_form);
+  const form = contract.question_forms.find((entry) => entry.id === compiled.question_form);
   if (!form) throw new Error(`undeclared question form ${compiled.question_form}`);
   const instance = compiled.instance;
   const member = {
     question_form: compiled.question_form,
     prompt: render(form.prompt, instance), source_lines: form.source_lines,
-    generator_ids: manifest.active_lifecycle.generator_registry.filter((entry) => entry.question_forms.includes(form.id)).map((entry) => entry.id),
-    path: compiled.path, dependencies: compiled.dependencies, relational_instance: instance,
+    generator_ids: contract.generator_registry.filter((entry) => entry.question_forms.includes(form.id)).map((entry) => entry.id),
+    context: `relation:${instance.relation_product}`, path: compiled.path,
+    dependencies: compiled.dependencies, relational_instance: instance,
     // Formability supplies no execution capability or productive/required warrant.
     disposition: "Unknown", executable: false,
   };
@@ -132,7 +133,8 @@ function materialize(product, context, manifest) {
 }
 
 function renderingIdentity(member) {
-  return digest([member.question_form, member.relational_instance, member.prompt, member.source_lines, member.generator_ids]);
+  return digest([member.question_form, member.relational_instance, member.prompt, member.source_lines,
+    member.generator_ids, member.context, member.path]);
 }
 
 function validateMember(member, context) {

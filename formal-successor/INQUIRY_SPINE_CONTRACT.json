@@ -1,0 +1,96 @@
+{
+  "schema": 5,
+  "status": "derived_machine_contract_not_semantic_or_procedural_authority",
+  "authority": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
+  "corpus": {
+    "path": "formal-successor/Questions.txt",
+    "sha256": "5a0dbb45bd1e9ff838a0396f6a1f17ba23cfa726889d28ab9b809b0c9b9cd019"
+  },
+  "model_recurrence": ["RELATE", "OPEN", "TURN", "RETURN", "DISTINGUISH", "FOLD", "CARRY"],
+  "lifecycle": {
+    "schema": 5,
+    "pure": ["FIELD", "ASK", "ANSWER", "REIFY", "FIELD"],
+    "effectful": ["FIELD", "ASK", "SEAL", "OPERATION", "RAW", "INTERPRET", "CHECK", "ANSWER", "REIFY", "FIELD"],
+    "resolution_classes": ["Supported", "Partial", "Plural", "ExactEmpty", "Unsupported", "Unknown", "Blocked", "ResourceBounded"],
+    "live_dispositions": ["Productive", "Required", "Blocked", "Unknown", "ResourceBounded", "Inapplicable"],
+    "terminal_dispositions": ["Answered", "Inapplicable", "Folded"]
+  },
+  "question_identity": ["question_form", "rendering", "occurrence", "context", "path", "bindings", "horizon", "coverage"],
+  "question_forms": [
+    {"id":"CQ-FRAME-FIELD","prompt":"What is here and how is it related?","source_lines":[1033,1051,1073,1075]},
+    {"id":"CQ-OPEN-POSITION","prompt":"What consequential relation and which of its typed roles or ports is actually open?","source_lines":[1037,1039,1083,1251]},
+    {"id":"CQ-SHAPED-HOLE","prompt":"If this filling is removed while its typed relational position remains, what lawful completions can occupy the shaped hole and which protected distinction makes one unique?","source_lines":[1947,2493,2621,2941]},
+    {"id":"CQ-LIVE-ALTERNATIVES","prompt":"Which live admissible fillings matter differently to the protected future?","source_lines":[1037,1039,1045,1189]},
+    {"id":"CQ-STRONG-CONTRAST","prompt":"What large valid contrast makes that protected difference obvious?","source_lines":[1313,1317,1321]},
+    {"id":"CQ-ACTUAL-DISCHARGE","prompt":"What actual test, proof, probe, or return can discriminate that relation without redefining it?","source_lines":[1189,1369,1385]},
+    {"id":"CQ-RETURN-RESOLUTION","prompt":"What did the return actually establish, exclude, leave possible, or leave Unknown?","source_lines":[1369,1373,1379,1395]},
+    {"id":"CQ-WHY-FOIL","prompt":"Why this supported result rather than the strongest still-admissible foil?","source_lines":[1309,1311,1907,1909]},
+    {"id":"CQ-CARRIER","prompt":"What condition, path, role, or distinction actually carries the protected difference?","source_lines":[1307,1397,1433]},
+    {"id":"CQ-REMOVE-CARRIER","prompt":"Can the alleged carrier be removed, reversed, replaced, bypassed, or reordered while the result remains?","source_lines":[1235,1251,1263,1415]},
+    {"id":"CQ-SUBTRACT-CONTRAST","prompt":"How much of the decisive contrast can be subtracted while the protected difference remains?","source_lines":[1323,1325,1327,1329]},
+    {"id":"CQ-BOUNDARY","prompt":"What survives at the boundary, and does one further removal reopen the alternative?","source_lines":[1331,1337]},
+    {"id":"CQ-GROUND","prompt":"What independent return grounds the surviving relation, and what would defeat it?","source_lines":[1369,1381,1385,1387]},
+    {"id":"CQ-FOLD","prompt":"What distinction, question, or representation can now be folded without protected loss while required regeneration remains possible?","source_lines":[2469,2493,2497,2499]},
+    {"id":"CQ-REOPEN","prompt":"What future continuation, context, representation, or return would invalidate that fold, and what must remain recoverable?","source_lines":[2503,2879,2981]},
+    {"id":"CQ-WIDE-FIELD","prompt":"Which unresolved breakers, blockers, contradictions, similarities, and recurrences remain outside this local determination?","source_lines":[2353,2355,2357,2359,2963]},
+    {"id":"CQ-COLLISION-SEPARATOR","prompt":"Which applicability, premise, role, path, or representation distinction separates the constraints that collided?","source_lines":[1685,1689,2391,2393]},
+    {"id":"CQ-PROPAGATE-RESIDUAL","prompt":"Which unresolved obligations mention the same conditions or roles, and what does this local return change for each of them?","source_lines":[1685,2829,2835,2839]},
+    {"id":"CQ-OVERLAP-RECURRENCE","prompt":"Does this recurring condition instantiate the same typed relation seen elsewhere, a new conjunction, or merely the same words?","source_lines":[1339,1739,2507,2829,2887]},
+    {"id":"CQ-BLOCKER-CHAIN","prompt":"What missing representational, observational, computational, evidential, or authoritative capability blocks this relation, and can another method discharge it?","source_lines":[2355,2357,2553,2749]},
+    {"id":"CQ-LOCAL-CLOSURE","prompt":"What is closed only for this obligation, binding, horizon, and coverage, and what remains latent, blocked, reopened, or unsearched beyond it?","source_lines":[2015,2353,2355,2357,2359,2963,2995]},
+    {"id":"CQ-RESIDUAL","prompt":"What is now the strongest unresolved relational difference, and which question actually separates it?","source_lines":[2963,2993,2995]},
+    {"id":"CQ-ORIENT","prompt":"What remains compatible backward, and which ambiguity appears only under reverse reconstruction?","source_lines":[1123,1125,1127,1135]},
+    {"id":"CQ-SUCCESSION","prompt":"What changes under reordering, and could the endpoint remain while the actual history differed?","source_lines":[1057,1059,1061,1111,1263]},
+    {"id":"CQ-REPAIR","prompt":"What over-repair unquestionably removes the actual failure, what can be subtracted, and what rebreaks it?","source_lines":[2859,2865,2869,2871,2879,2885]},
+    {"id":"CQ-SUBSTITUTE","prompt":"Can another filling occupy the same relational role, preserve the protected result, and regenerate the source when transported back?","source_lines":[1251,1253,1421,1425]}
+  ],
+  "generator_registry": [
+    {"id":"GEN-RELATE","requires":["represented_forms_or_relations"],"question_forms":["CQ-FRAME-FIELD"]},
+    {"id":"GEN-OPEN","requires":["typed_unfilled_or_unresolved_relation"],"question_forms":["CQ-OPEN-POSITION","CQ-SHAPED-HOLE","CQ-BLOCKER-CHAIN","CQ-RESIDUAL"]},
+    {"id":"GEN-TURN","requires":["formable_consequential_deformation"],"question_forms":["CQ-STRONG-CONTRAST","CQ-REMOVE-CARRIER","CQ-SUBTRACT-CONTRAST","CQ-BOUNDARY","CQ-ORIENT","CQ-SUCCESSION","CQ-REPAIR","CQ-SUBSTITUTE"]},
+    {"id":"GEN-RETURN","requires":["declared_discharge_route"],"question_forms":["CQ-ACTUAL-DISCHARGE","CQ-GROUND"]},
+    {"id":"GEN-DISTINGUISH","requires":["returned_or_colliding_alternatives"],"question_forms":["CQ-LIVE-ALTERNATIVES","CQ-RETURN-RESOLUTION","CQ-WHY-FOIL","CQ-CARRIER","CQ-COLLISION-SEPARATOR","CQ-OVERLAP-RECURRENCE","CQ-LOCAL-CLOSURE"]},
+    {"id":"GEN-FOLD","requires":["positive_protected_factorization_or_reopening_evidence"],"question_forms":["CQ-FOLD","CQ-REOPEN"]},
+    {"id":"GEN-CARRY","requires":["live_discriminator_and_compatible_ancestry"],"question_forms":["CQ-PROPAGATE-RESIDUAL","CQ-WIDE-FIELD"]}
+  ],
+  "path_generators": [
+    {"id":"DIRECT","question_form":"CQ-OPEN-POSITION","requires":["represented_relation"]},
+    {"id":"RECIPROCAL","question_form":"CQ-ORIENT","requires":["relation","explicit_reverse_relation"]},
+    {"id":"COMPOSE","question_form":"CQ-CARRIER","requires":["typed_target_source_incidence"]},
+    {"id":"TRANSPORT","question_form":"CQ-PROPAGATE-RESIDUAL","requires":["relation_target","downstream_discriminator_domain"]},
+    {"id":"QUESTION_SUBJECT","question_form":"CQ-OVERLAP-RECURRENCE","requires":["ordinary_question_occurrence"]},
+    {"id":"PERMUTE","question_form":"CQ-SUCCESSION","requires":["shared_context","explicit_exchangeability"]},
+    {"id":"REGENERATE","question_form":"CQ-REOPEN","requires":["represented_relation"]}
+  ],
+  "method_contracts": [
+    {"id":"Bisection","applicable_when":["declared_order","monotone_boundary"]},
+    {"id":"DeltaDebugging","applicable_when":["decomposable_contrast","executable_ablation"]},
+    {"id":"QuickXplain","applicable_when":["finite_constraint_set","conflict_oracle"]},
+    {"id":"CEGAR","applicable_when":["abstraction","counterexample_checker"]},
+    {"id":"CEGIS","applicable_when":["candidate_generator","candidate_checker"]},
+    {"id":"PartitionRefinement","applicable_when":["finite_partition","protected_separator"]},
+    {"id":"NondominatedApplicableMethods","applicable_when":["explicit_method_contracts","declared_resource_preorder_or_incomparability"]}
+  ],
+  "fold": {
+    "evidence_schema": 2,
+    "required": ["members","protected_horizon","protected_discriminators","supporting_evidence","regeneration_path","reopening_condition","provenance"],
+    "reopen_when": "a_new_supported_transported_discriminator_fails_to_factor_through_the_fold"
+  },
+  "closure": {
+    "coverage_relative": true,
+    "requires": ["no_unreified_answer","no_dirty_field","no_open_effectful_return","no_unhandled_required_executable_question","path_transport_checked","folds_checked_against_new_discriminators"]
+  },
+  "invariants": [
+    "generated_not_actual_not_supported_not_warranted_not_standing",
+    "unknown_not_negative",
+    "question_form_not_rendering_not_occurrence_not_context",
+    "represented_path_not_actual_history",
+    "return_fiber_not_selected_return",
+    "converse_not_inverse",
+    "unchosen_live_questions_remain_live",
+    "reification_does_not_raise_authority",
+    "fold_requires_positive_evidence_and_reopening",
+    "checkpoint_not_closure",
+    "self_application_not_self_warrant"
+  ]
+}
