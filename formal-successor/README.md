@@ -118,6 +118,12 @@ one supplied capability must improve strictly while protected behavior, resource
 order, and warrant boundaries survive. Historical evidence is not the learned
 capacity, and the adjacent global law remains Unproved.
 
+`PHASE_B_METHOD_PROMOTION.md` recovers the exact seven-condition method-fold
+boundary. A recurrent path is promotable only through typed alignment, protected
+equivalence, continuation descent, gain or necessary purpose, recoverable defining
+evidence, a stored unlock, and explicit future-output non-warrant. The relation is
+pure and performs no fold or execution.
+
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does

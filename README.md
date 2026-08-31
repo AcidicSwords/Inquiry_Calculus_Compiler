@@ -100,6 +100,7 @@ node tools/differentiate_only_enough_check.js --compile
 node tools/understanding_check.js --compile
 node tools/ablative_regeneration_check.js --compile
 node tools/learning_gain_check.js --compile
+node tools/method_promotion_check.js --compile
 cd formal
 lake build --wfail
 ```

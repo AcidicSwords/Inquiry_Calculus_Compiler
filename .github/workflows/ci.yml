@@ -145,6 +145,7 @@ jobs:
           node tools/understanding_check.js --compile
           node tools/ablative_regeneration_check.js --compile
           node tools/learning_gain_check.js --compile
+          node tools/method_promotion_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -437,6 +438,7 @@ jobs:
           node --check tools/understanding_check.js
           node --check tools/ablative_regeneration_check.js
           node --check tools/learning_gain_check.js
+          node --check tools/method_promotion_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -657,6 +659,7 @@ jobs:
           node tools/understanding_check.js
           node tools/ablative_regeneration_check.js
           node tools/learning_gain_check.js
+          node tools/method_promotion_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

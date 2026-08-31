@@ -103,6 +103,7 @@ import InquiryCalculus.Legacy.V20.DifferentiateOnlyEnough
 import InquiryCalculus.Legacy.V20.Understanding
 import InquiryCalculus.Legacy.V20.AblativeRegeneration
 import InquiryCalculus.Legacy.V20.LearningGain
+import InquiryCalculus.Legacy.V20.MethodPromotion
 
 /-!
 # Inquiry Calculus formal successor
