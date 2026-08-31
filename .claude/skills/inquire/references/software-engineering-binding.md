@@ -201,6 +201,10 @@ unchosen field remains live. A consequential Answer must be reified and the fiel
 before the next Ask.
 
 A checkpoint records replayable local progress and immediately recurs. It is not task closure.
+When finite Ask fuel is exactly exhausted at such a clean checkpoint and a Required/Productive
+executable occurrence remains, `ic-trace resume` appends an ancestry-bound continuation and grants
+one canonical finite ratchet. It cannot repeat for the same checkpoint, change semantic priority,
+or manufacture closure.
 Closure additionally requires no unresolved Ask, unreified Answer, dirty field, open actual cycle,
 or new required/productive executable occurrence; Blocked, Unknown, ResourceBounded, and reopening
 conditions remain explicit. Challenge closure adversarially before recording Stop.

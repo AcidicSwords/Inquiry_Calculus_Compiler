@@ -11,6 +11,7 @@ const cp = require("node:child_process");
 const crypto = require("node:crypto");
 const { build: buildResidualTopology } = require("./ic-residual-topology.js");
 const instances = require("./ic-question-instance.js");
+const recursiveGenerator = require("./ic-recursive-generator.js");
 
 function parseTrace(root) {
   const traceDirectory = path.join(root, ".claude", "trace");
@@ -87,6 +88,16 @@ function build(root) {
     } catch (error) {
       // A candidate seed with an unavailable corpus form must remain visible;
       // it must not erase the rest of the surface or pretend inquiry is empty.
+      generationFailures.push({ seed_product: product.id, state: "Blocked", reason: error.message });
+    }
+  }
+  for (const product of products.filter((candidate) => candidate.inquiry_generator_surface)) {
+    try {
+      for (const member of recursiveGenerator.materialize(product, context, manifest)) {
+        if (member.dependencies.some((id) => invalidated.has(id))) member.disposition = "Blocked";
+        if (!completed.has(member.occurrence)) generatedQuestions.push(member);
+      }
+    } catch (error) {
       generationFailures.push({ seed_product: product.id, state: "Blocked", reason: error.message });
     }
   }

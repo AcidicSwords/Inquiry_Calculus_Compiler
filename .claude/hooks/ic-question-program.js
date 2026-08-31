@@ -9,6 +9,7 @@ const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
 const instances = require("./ic-question-instance.js");
+const recursiveGenerator = require("./ic-recursive-generator.js");
 
 const V1_QUESTION_FIELDS = [
   "program",
@@ -414,7 +415,8 @@ function validateQuestionProgram(record, root) {
   const question = questionContracts.get(record.question_form);
   if (!question) throw new Error(`question form ${record.question_form} is undeclared`);
   if (record.rendering !== `RENDER-${record.question_form}` &&
-      !(manifest.active_lifecycle.relational_instances?.schema === 1 && /^RI-[0-9a-f]{64}$/u.test(record.rendering))) {
+      !(manifest.active_lifecycle.relational_instances?.schema === 1 && /^RI-[0-9a-f]{64}$/u.test(record.rendering)) &&
+      !(manifest.active_lifecycle.recursive_generator_contract?.schema === 1 && /^RG-[0-9a-f]{64}$/u.test(record.rendering))) {
     throw new Error(`rendering must preserve question-form identity RENDER-${record.question_form}`);
   }
   const questions = sourceBytes.toString("utf8").split(/\r?\n/u);
@@ -519,6 +521,8 @@ function validateFieldRecord(record, root) {
       }
       // Reference/role checks require trace ancestry and are enforced by the
       // shared append/replay state machine, not by this manifest-only check.
+    } else if (Object.hasOwn(member, "derivation")) {
+      recursiveGenerator.validateRendering(member, manifest);
     } else if (member.rendering !== `RENDER-${member.question_form}` || member.prompt !== form.prompt) {
       throw new Error(`${member.occurrence}: rendering identity or prompt changed`);
     }

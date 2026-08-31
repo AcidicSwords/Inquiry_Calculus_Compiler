@@ -1295,6 +1295,12 @@ Recur only across:
 
 Every loop uses finite fuel.
 
+Fuel exhaustion at a clean replayable checkpoint is not semantic completion. If the regenerated
+field still contains a Required/Productive executable occurrence, use the guarded
+`.claude/hooks/ic-trace resume reason=...` transition. It may grant exactly one canonical finite
+ratchet for the latest checkpoint under current user-authorized harness control. It must not
+repeat for the same checkpoint, alter question priority, initialize a new trace, or claim closure.
+
 If contraction is not reducing the live frontier, change search strategy rather than continuing
 one-component-at-a-time indefinitely.
 

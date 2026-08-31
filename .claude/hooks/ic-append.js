@@ -17,8 +17,10 @@ const {
   validateStoredQuestion,
 } = require("./ic-question-program.js");
 const instances = require("./ic-question-instance.js");
+const recursiveGenerator = require("./ic-recursive-generator.js");
 const foldEvidence = require("./ic-fold-evidence.js");
 const repositoryRoot = path.resolve(__dirname, "../..");
+const loadManifest = () => JSON.parse(fs.readFileSync(path.join(repositoryRoot, "formal-successor", "ENGINEERING_QUESTION_PROGRAMS.json"), "utf8"));
 
 const [operation, tracePath, fuelPath] = process.argv.slice(2);
 if (!new Set(["validate", "state", "append"]).has(operation) || !tracePath) {
@@ -341,12 +343,14 @@ function validateFieldTransition(previous, next, state, record) {
   const nextByOccurrence = new Map(next.members.map((member) => [member.occurrence, member]));
   for (const member of next.members) {
     if (Object.hasOwn(member, "relational_instance")) instances.validateMember(member, state);
+    if (Object.hasOwn(member, "derivation")) recursiveGenerator.validateMember(member, state, loadManifest());
     // Readiness can change; an occurrence's question and derivation cannot.
     // A changed question/path needs a new occurrence, retaining the old ancestry.
     const identity = JSON.stringify([
       member.question_form, member.rendering, member.prompt, member.source_lines,
       member.generator_ids, member.path, member.dependencies,
       ...(Object.hasOwn(member, "relational_instance") ? [instances.canonical(member.relational_instance)] : []),
+      ...(Object.hasOwn(member, "derivation") ? [recursiveGenerator.canonical(member.derivation)] : []),
     ]);
     const priorIdentity = state.questionIdentities.get(member.occurrence);
     if (priorIdentity !== undefined && priorIdentity !== identity) {
@@ -356,9 +360,13 @@ function validateFieldTransition(previous, next, state, record) {
     state.questions.set(member.occurrence, member);
   }
   const representedSeeds = new Set([...state.questions.values()].map((member) => member.relational_instance?.seed_product));
+  const representedGeneratorSurfaces = new Set([...state.questions.values()].map((member) => member.derivation?.surface_product));
   for (const product of state.products.values()) {
     if (product.inquiry_seed && !representedSeeds.has(product.id)) {
       fail(`line ${record.seq} fails to materialize reified inquiry seed ${product.id}`);
+    }
+    if (product.inquiry_generator_surface && !representedGeneratorSurfaces.has(product.id)) {
+      fail(`line ${record.seq} fails to materialize reified inquiry generator surface ${product.id}`);
     }
   }
   if (state.requiredRestore.size > 0) {
@@ -432,6 +440,7 @@ function validateV4StateMachine(records) {
     fieldRefresh: false,
     control: null,
     lastCheckpoint: 0,
+    lastCheckpointResume: 0,
     lastClosure: 0,
     closureOutcome: null,
     lastStop: 0,
@@ -642,6 +651,7 @@ function validateV4StateMachine(records) {
           }
           if (state.products.has(product.id)) fail(`line ${record.seq} reuses product id ${product.id}`);
           instances.validateProduct(product, state);
+          recursiveGenerator.validateProduct(product, state, loadManifest());
           state.products.set(product.id, product);
           state.productOrigins.set(product.id, state.awaitingReify.occurrence);
           if (state.foldEvidenceSchema !== "0") {
@@ -720,6 +730,32 @@ function validateV4StateMachine(records) {
         if (record.field_id !== state.field.id) fail(`line ${record.seq} checkpoints a stale field`);
         state.lastCheckpoint = record.seq;
         break;
+      case "note":
+        if (record.event === "checkpoint_resume") {
+          for (const key of ["field_id", "checkpoint", "fuel_grant", "authority", "reason", "remaining_open", "text"]) {
+            requireRecordString(record, key);
+          }
+          if (!state.field || unresolved()) fail(`line ${record.seq} resumes an unresolved lifecycle`);
+          if (record.field_id !== state.field.id) fail(`line ${record.seq} resumes a stale field`);
+          if (state.lastCheckpoint === 0 || Number(record.checkpoint) !== state.lastCheckpoint) {
+            fail(`line ${record.seq} does not name the latest checkpoint`);
+          }
+          if (state.lastCheckpointResume >= state.lastCheckpoint) {
+            fail(`line ${record.seq} repeats checkpoint fuel renewal without a newer checkpoint`);
+          }
+          if (!state.control || !/user|human/iu.test(state.control.authority) ||
+              !state.control.scope.toLowerCase().split(/[,;\s]+/u).includes("harness") ||
+              !/user|human/iu.test(record.authority)) {
+            fail(`line ${record.seq} checkpoint continuation requires current user-authorized harness control`);
+          }
+          if (!state.field.members.some((member) => member.executable &&
+              new Set(["Productive", "Required"]).has(member.disposition))) {
+            fail(`line ${record.seq} checkpoint continuation has no live productive executable question`);
+          }
+          if (record.fuel_grant !== "24") fail(`line ${record.seq} checkpoint continuation must grant one canonical 24-Ask ratchet`);
+          state.lastCheckpointResume = record.seq;
+        }
+        break;
       case "residual":
         if (!state.field || unresolved()) {
           fail(`line ${record.seq} records a residual before field regeneration`);
@@ -787,7 +823,8 @@ function validateV4StateMachine(records) {
     field_id: state.field?.id ?? null, unresolved_ask: state.ask?.occurrence ?? null,
     answer_awaiting_reification: state.awaitingReify?.occurrence ?? null,
     surface_dirty: state.dirty || state.fieldRefresh || state.requiredRestore.size > 0,
-    restore_required: [...state.requiredRestore], last_closure: state.lastClosure, last_stop: state.lastStop,
+    restore_required: [...state.requiredRestore], last_checkpoint: state.lastCheckpoint,
+    last_checkpoint_resume: state.lastCheckpointResume, last_closure: state.lastClosure, last_stop: state.lastStop,
     control: state.control, fold_evidence_schema: state.foldEvidenceSchema,
     folds: [...state.folds].map(([id, fold]) => ({ fold_id: id, ...fold })) };
 }
@@ -823,6 +860,25 @@ function consumeQuestionFuel() {
   const fd = fs.openSync(path.resolve(fuelPath), "w", 0o600);
   try {
     fs.writeFileSync(fd, String(remaining - 1));
+    fs.fsyncSync(fd);
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+function renewCheckpointFuel(grant) {
+  if (!fuelPath) fail("checkpoint continuation requires a fuel file");
+  let text;
+  try {
+    text = fs.readFileSync(path.resolve(fuelPath), "utf8").trim();
+  } catch (error) {
+    fail(`cannot read checkpoint fuel: ${error.message}`);
+  }
+  if (text !== "0") fail("checkpoint continuation requires exactly exhausted fuel");
+  if (grant !== "24") fail("checkpoint continuation grant must be exactly 24");
+  const fd = fs.openSync(path.resolve(fuelPath), "w", 0o600);
+  try {
+    fs.writeFileSync(fd, grant);
     fs.fsyncSync(fd);
   } finally {
     fs.closeSync(fd);
@@ -937,6 +993,9 @@ try {
     validateStateMachine([...records, stored]);
     if (record.kind === "question" || record.kind === "ask") {
       consumeQuestionFuel();
+    }
+    if (record.kind === "note" && record.event === "checkpoint_resume") {
+      renewCheckpointFuel(record.fuel_grant);
     }
     const storedInput = `${JSON.stringify(stored)}\n`;
     const fd = fs.openSync(absolute, "a", 0o600);

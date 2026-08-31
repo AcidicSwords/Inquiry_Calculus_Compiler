@@ -104,8 +104,9 @@ fingerprint() {
 }
 
 cmd="${1:-}"
-[ -n "$cmd" ] || die "usage: ic-trace <init|status|state|open|mutation-open|stop-pending|control-open|KIND> [k=v ...]"
+[ -n "$cmd" ] || die "usage: ic-trace <init|status|state|open|mutation-open|stop-pending|control-open|resume|KIND> [k=v ...]"
 shift || true
+resume_requested=false
 
 case "$cmd" in
 init)
@@ -230,6 +231,7 @@ process.exit(control && /user|human/i.test(control.authority) &&
     exit 0
     ;;
 policy-transition) cmd="policy_transition" ;;
+resume) resume_requested=true; cmd="note" ;;
 ensure|question|field|ask|seal|raw|interpret|check|answer|reify|invalidate|fold|reopen|residual|checkpoint|closure|stop|note|control|route) ;;
 *) die "unknown kind '$cmd'" ;;
 esac
@@ -249,6 +251,20 @@ for arg in "$@"; do
     *) die "argument '$arg' is not key=value" ;;
     esac
 done
+
+if [ "$resume_requested" = "true" ]; then
+    bash "$0" control-open harness >/dev/null 2>&1 ||
+        die "checkpoint continuation requires current user-authorized harness control"
+    read_lifecycle "$f"
+    [ "$(lifecycle_value open)" = "false" ] || die "checkpoint continuation requires a closed local lifecycle"
+    kv[event]="checkpoint_resume"
+    kv[field_id]="$(lifecycle_value field_id)"
+    kv[checkpoint]="$(lifecycle_value last_checkpoint)"
+    kv[fuel_grant]="$DEFAULT_FUEL"
+    kv[authority]="user-authorized harness control"
+    kv[remaining_open]="live Productive/Required executable field members"
+    kv[text]="continue from checkpoint ${kv[checkpoint]} without claiming task closure or changing semantic priority"
+fi
 
 if [ "$cmd" = "ask" ]; then
     kv[source_digest]="$(sha256sum "$ROOT/formal-successor/Questions.txt" | cut -d' ' -f1)"
@@ -358,7 +374,13 @@ stop)
         esac
     fi
     ;;
-note) need text ;;
+note)
+    if [ "${kv[event]:-}" = "checkpoint_resume" ]; then
+        need field_id checkpoint fuel_grant authority reason remaining_open text
+    else
+        need text
+    fi
+    ;;
 control) need authority residual predecessor scope ;;
 policy_transition) need authority reason predecessor_source_digest \
     predecessor_program_manifest_digest source_digest program_manifest_digest \
@@ -447,7 +469,7 @@ record="$({
     done
     printf '}\n'
 })"
-if [ "$cmd" = "question" ] || [ "$cmd" = "ask" ]; then
+if [ "$cmd" = "question" ] || [ "$cmd" = "ask" ] || { [ "$cmd" = "note" ] && [ "${kv[event]:-}" = "checkpoint_resume" ]; }; then
     seq="$(printf '%s\n' "$record" |
         node "$ROOT/.claude/hooks/ic-append.js" append "$f" "$FUEL")" ||
         die "validated trace append failed"

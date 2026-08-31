@@ -30,7 +30,16 @@ Every autonomous run reconstructs its state from repository evidence instead of 
 5. Resume the active trace and its remaining fuel using `ic-trace state`. Initialize
    a new finite trace only after lawful task closure and Stop. Its first record pins
    `Questions.txt`, `ENGINEERING_QUESTION_PROGRAMS.json`, and the closed predecessor
-   trace digest when present; a checkpoint does not reset fuel.
+   trace digest when present. A checkpoint does not silently reset fuel. When its
+   canonical 24-Ask budget is exactly exhausted while a clean regenerated field still
+   contains a live Required/Productive executable occurrence, continue the same task with:
+
+       .claude/hooks/ic-trace resume reason="continue persistent autonomous task"
+
+   This appends a policy-compatible `note/event=checkpoint_resume` bound to the latest
+   checkpoint and field, then grants exactly one new 24-Ask ratchet. It requires current
+   user-authorized harness control, cannot repeat for the same checkpoint, cannot operate
+   before fuel reaches zero, and neither changes question priority nor claims closure.
 6. Continue only the strongest live residual. Do not revive the deferred Rust frontier or invent a
    second moving cursor.
 

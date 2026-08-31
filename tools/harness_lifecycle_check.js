@@ -137,6 +137,14 @@ function reify(answerOccurrence, overrides = {}) {
   };
 }
 
+function checkpointResume(fieldId, checkpoint, overrides = {}) {
+  return {
+    kind: "note", event: "checkpoint_resume", field_id: fieldId, checkpoint: String(checkpoint),
+    fuel_grant: "24", authority: "user fixture", reason: "continue persistent ratchet",
+    remaining_open: "live productive occurrence", text: "checkpoint continuation fixture", ...overrides,
+  };
+}
+
 function basic(name, members = [member("QO-1")]) {
   const state = scenario(name);
   append(state, field("FIELD-1", members));
@@ -182,6 +190,49 @@ function basic(name, members = [member("QO-1")]) {
     adversarial_question: "QO-1", adversarial_answer: "ANS-PROBE", coverage: "fixture" });
   reject(state, { kind: "stop", state: "Satisfied", warrant: "independent lifecycle checks" }, /unresolved field/iu);
   append(state, { kind: "stop", state: "Unknown", warrant: "independent lifecycle checks; QO-2 remains blocked" });
+}
+
+// Exhausted Ask fuel may renew exactly once from a clean checkpoint with a live
+// executable field and current user-authorized harness control. This continues
+// the task without manufacturing closure or changing semantic priority.
+{
+  const state = basic("checkpoint-fuel-continuation");
+  append(state, { kind: "control", authority: "user fixture", residual: "persistent field",
+    predecessor: "prior ratchet", scope: "harness" });
+  append(state, { kind: "checkpoint", field_id: "FIELD-1", established: "clean local ratchet",
+    remains_open: "QO-1", fold_changes: "none", reopen_changes: "none", coverage: "fixture" });
+  const checkpoint = snapshot(state).last_checkpoint;
+  fs.writeFileSync(state.fuel, "0");
+  append(state, checkpointResume("FIELD-1", checkpoint));
+  assert.equal(fs.readFileSync(state.fuel, "utf8"), "24");
+  reject(state, checkpointResume("FIELD-1", checkpoint), /repeats checkpoint fuel renewal/iu);
+  append(state, ask("FIELD-1", "QO-1"));
+  assert.equal(fs.readFileSync(state.fuel, "utf8"), "23");
+}
+{
+  const state = basic("checkpoint-continuation-needs-control");
+  append(state, { kind: "checkpoint", field_id: "FIELD-1", established: "clean",
+    remains_open: "QO-1", fold_changes: "none", reopen_changes: "none", coverage: "fixture" });
+  fs.writeFileSync(state.fuel, "0");
+  reject(state, checkpointResume("FIELD-1", snapshot(state).last_checkpoint), /user-authorized harness control/iu);
+}
+{
+  const state = basic("checkpoint-continuation-needs-exhaustion");
+  append(state, { kind: "control", authority: "user fixture", residual: "persistent field",
+    predecessor: "prior ratchet", scope: "harness" });
+  append(state, { kind: "checkpoint", field_id: "FIELD-1", established: "clean",
+    remains_open: "QO-1", fold_changes: "none", reopen_changes: "none", coverage: "fixture" });
+  reject(state, checkpointResume("FIELD-1", snapshot(state).last_checkpoint), /exactly exhausted fuel/iu);
+}
+{
+  const state = basic("checkpoint-continuation-needs-live-question",
+    [member("QO-1", "CQ-FRAME-FIELD", "path-a", { disposition: "Unknown", executable: false })]);
+  append(state, { kind: "control", authority: "user fixture", residual: "persistent field",
+    predecessor: "prior ratchet", scope: "harness" });
+  append(state, { kind: "checkpoint", field_id: "FIELD-1", established: "clean",
+    remains_open: "Unknown only", fold_changes: "none", reopen_changes: "none", coverage: "fixture" });
+  fs.writeFileSync(state.fuel, "0");
+  reject(state, checkpointResume("FIELD-1", snapshot(state).last_checkpoint), /no live productive executable question/iu);
 }
 
 // Mandatory negative lifecycle and non-collapse cases.
@@ -495,6 +546,26 @@ function snapshot(state) {
   const raw = spawnSync(process.execPath, [appendProgram, "state", state.trace], { encoding: "utf8", windowsHide: true });
   assert.equal(raw.status, 0, raw.stderr);
   return JSON.parse(raw.stdout);
+}
+
+// The public launcher derives the checkpoint and field from validated state;
+// callers cannot choose a different history coordinate or fuel amount.
+{
+  const state = basic("checkpoint-resume-launcher");
+  append(state, { kind: "control", authority: "user fixture", residual: "persistent field",
+    predecessor: "prior ratchet", scope: "harness" });
+  append(state, { kind: "checkpoint", field_id: "FIELD-1", established: "clean",
+    remains_open: "QO-1", fold_changes: "none", reopen_changes: "none", coverage: "fixture" });
+  fs.writeFileSync(state.fuel, "0");
+  const resumed = hook(state, "ic-trace", ["resume", "reason=continue autonomous task"]);
+  assert.equal(resumed.status, 0, resumed.stderr);
+  const traceDirectory = path.join(sandbox, ".claude", "trace");
+  assert.equal(fs.readFileSync(path.join(traceDirectory, ".fuel"), "utf8"), "24");
+  const records = fs.readFileSync(path.join(traceDirectory, "hook-state.jsonl"), "utf8")
+    .trimEnd().split(/\r?\n/u).map(JSON.parse);
+  assert.equal(records.at(-1).kind, "note");
+  assert.equal(records.at(-1).event, "checkpoint_resume");
+  assert.equal(records.at(-1).checkpoint, String(snapshot(state).last_checkpoint));
 }
 
 // A non-successful closure preserves unanswered material, including when the

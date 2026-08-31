@@ -151,6 +151,20 @@
         "source_programs": ["QP-CODING-PROPAGATE-RATCHET", "QP-WHY-QUESTION-RATCHET"]
       }
     ],
+    "recursive_generator_contract": {
+      "schema": 1,
+      "status": "bounded_first_order_engineering_derivation_not_semantic_completeness_or_question_selection",
+      "families": [
+        {"id": "DIRECT", "generator_id": "GEN-EXPOSE-FRAME", "question_form": "CQ-OPEN-POSITION", "requires": ["represented_relation"]},
+        {"id": "RECIPROCAL", "generator_id": "GEN-POLARIZE-RECIPROCAL", "question_form": "CQ-ORIENT", "requires": ["relation", "explicit_reverse_relation"]},
+        {"id": "COMPOSE", "generator_id": "GEN-ORIENT-PATH", "question_form": "CQ-CARRIER", "requires": ["typed_target_source_incidence"]},
+        {"id": "TRANSPORT", "generator_id": "GEN-ORIENT-PATH", "question_form": "CQ-PROPAGATE-RESIDUAL", "requires": ["relation_target", "downstream_discriminator_domain"]},
+        {"id": "QUESTION_SUBJECT", "generator_id": "GEN-FACTOR-REGENERATE", "question_form": "CQ-OVERLAP-RECURRENCE", "requires": ["ordinary_question_occurrence"]},
+        {"id": "PERMUTE", "generator_id": "GEN-ORIENT-PATH", "question_form": "CQ-SUCCESSION", "requires": ["two_questions", "shared_context", "explicit_exchangeability"]},
+        {"id": "REGENERATE", "generator_id": "GEN-FACTOR-REGENERATE", "question_form": "CQ-REOPEN", "requires": ["represented_relation"]}
+      ],
+      "invariants": ["explicit_incidence_only", "path_and_ancestry_in_identity", "unknown_non_executable_default", "no_dedup_across_ancestry", "no_selection", "no_semantic_warrant"]
+    },
     "rendering_identity": "question_form_plus_exact_prompt_source_lines_family_and_occurrence_path",
     "selection_law": "materialize_a_finite_lawful_field_then_select_an_occurrence_only_by_explicit_required_dependency_resource_effect_risk_coverage_or_frontier_relations; preserve_unchosen_questions",
     "forbidden_selection": ["universal_semantic_next_question", "universal_question_score", "fixed_residual_to_rhythm_schedule"],

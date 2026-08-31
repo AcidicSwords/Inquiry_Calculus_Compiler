@@ -89,7 +89,7 @@ is_direct_trace_command() {
         .claude/hooks/ic-trace|./.claude/hooks/ic-trace|"$ROOT_NORM/.claude/hooks/ic-trace") ;;
         *) return 1 ;;
     esac
-    [[ "$remainder" =~ ^[[:space:]]+(init|status|state|open|mutation-open|stop-pending|control-open|ensure|question|field|ask|seal|raw|interpret|check|answer|reify|invalidate|fold|reopen|checkpoint|closure|residual|stop|note|control|policy-transition|route)([[:space:]].*)?[[:space:]]*$ ]]
+    [[ "$remainder" =~ ^[[:space:]]+(init|status|state|open|mutation-open|stop-pending|control-open|resume|ensure|question|field|ask|seal|raw|interpret|check|answer|reify|invalidate|fold|reopen|checkpoint|closure|residual|stop|note|control|policy-transition|route)([[:space:]].*)?[[:space:]]*$ ]]
 }
 
 is_trace_execution_attempt() {

@@ -65,6 +65,7 @@ node tools/successor_control_check.js
 node tools/harness_control_check.js
 node tools/harness_lifecycle_check.js
 node tools/harness_question_instance_check.js
+node tools/harness_recursive_generator_check.js
 node tools/harness_fold_evidence_check.js
 node tools/predecessor_inventory.js check
 node tools/predecessor_inventory_check.js

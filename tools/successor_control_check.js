@@ -421,6 +421,8 @@ const required = [
   ".claude/hooks/ic-construction-policy.js",
   "tools/harness_acceptance_check.js",
   "tools/harness_question_instance_check.js",
+  ".claude/hooks/ic-recursive-generator.js",
+  "tools/harness_recursive_generator_check.js",
   "tools/exploration_algorithm_check.js",
   "tools/predecessor_inventory.js",
   "tools/predecessor_inventory_check.js",
@@ -525,6 +527,7 @@ requireContains("formal-successor/AUTONOMOUS_ITERATION.md", [
   "## Persistent recursive ratchet",
   "After every consequential Answer",
   "A checkpoint is not task closure",
+  "ic-trace resume",
   "## Phase progression",
   "## Autonomous safety boundary",
 ]);

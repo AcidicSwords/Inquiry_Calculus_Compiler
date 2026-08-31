@@ -225,6 +225,7 @@ jobs:
           node --check .claude/hooks/ic-question-instance.js
           node --check .claude/hooks/ic-fold-evidence.js
           node --check tools/harness_question_instance_check.js
+          node --check tools/harness_recursive_generator_check.js
           node --check tools/harness_fold_evidence_check.js
           node --check tools/exploration_algorithm_check.js
           node --check tools/predecessor_inventory.js
@@ -444,6 +445,7 @@ jobs:
           node tools/harness_acceptance_check.js
           node tools/harness_lifecycle_check.js
           node tools/harness_question_instance_check.js
+          node tools/harness_recursive_generator_check.js
           node tools/harness_fold_evidence_check.js
           node tools/exploration_algorithm_check.js
           node tools/predecessor_inventory.js check

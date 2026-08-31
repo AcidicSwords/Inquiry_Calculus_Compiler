@@ -164,6 +164,15 @@ After reification and field regeneration, record a replayable checkpoint and con
       field_id=... established=... remains_open=... \
       fold_changes=... reopen_changes=... coverage=...
 
+If and only if Ask fuel is exactly exhausted at that clean checkpoint while the regenerated
+field still has a Required/Productive executable occurrence, continue the same trace with:
+
+    .claude/hooks/ic-trace resume reason="continue persistent autonomous task"
+
+This is an append-only checkpoint continuation under current user-authorized harness control.
+It grants one canonical finite ratchet; it does not select the next question, create standing,
+or turn the checkpoint into closure.
+
 A checkpoint is not permission to stop. Only after the task-level closure criterion is met and
 adversarially challenged:
 
