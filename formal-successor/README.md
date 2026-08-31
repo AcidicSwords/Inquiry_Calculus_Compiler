@@ -113,6 +113,10 @@ requires exact chain recovery.
 as four independent relations. Reacquisition advantage is a separate supplied
 nondominated-frontier comparison and does not create direct use or reconstruction.
 
+`PHASE_B_HISTORICAL_RECONSTRUCTION.md` separates immutable historical references
+from generated working candidates and retains protected-distinct candidates as a
+plural inquiry obligation without adding a selection operation.
+
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does

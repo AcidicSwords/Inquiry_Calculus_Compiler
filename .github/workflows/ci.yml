@@ -149,6 +149,7 @@ jobs:
           node tools/traversal_learning_check.js --compile
           node tools/question_pattern_learning_check.js --compile
           node tools/memory_recovery_check.js --compile
+          node tools/historical_reconstruction_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -442,6 +443,7 @@ jobs:
           node --check tools/traversal_learning_check.js
           node --check tools/question_pattern_learning_check.js
           node --check tools/memory_recovery_check.js
+          node --check tools/historical_reconstruction_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -661,6 +663,7 @@ jobs:
           node tools/traversal_learning_check.js
           node tools/question_pattern_learning_check.js
           node tools/memory_recovery_check.js
+          node tools/historical_reconstruction_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

@@ -100,6 +100,7 @@ node tools/method_promotion_check.js --compile
 node tools/traversal_learning_check.js --compile
 node tools/question_pattern_learning_check.js --compile
 node tools/memory_recovery_check.js --compile
+node tools/historical_reconstruction_check.js --compile
 cd formal
 lake build --wfail
 ```
