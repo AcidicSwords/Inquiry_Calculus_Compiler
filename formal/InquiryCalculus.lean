@@ -122,6 +122,7 @@ import InquiryCalculus.Legacy.V20.CompressionLicense
 import InquiryCalculus.Legacy.V20.ApproximateCompression
 import InquiryCalculus.Legacy.V20.UnlockField
 import InquiryCalculus.Legacy.V20.Reopening
+import InquiryCalculus.Legacy.V20.PatternSeparation
 
 /-!
 # Inquiry Calculus formal successor

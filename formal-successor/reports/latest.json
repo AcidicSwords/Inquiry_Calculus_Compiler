@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-PATTERN-SEPARATION",
-  "status": "ONE_SPINE_AND_EIGHTEEN_FORMAL_RATCHETS_CHECKED_FRONTIER_RECONCILED",
+  "frontier": "FORMAL-B-SEMANTIC-QUESTION-UNIVERSE",
+  "status": "ONE_SPINE_AND_NINETEEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -27,7 +27,8 @@
     "A candidate compression licence now retains eight typed coordinates, and unchanged quotient outputs cannot establish licence completeness or exactness",
     "Approximate compression now retains direction-sensitive distortion beside scalar error, gain, residual, reopening, and continuation coordinates",
     "Unlocks now retain distinct observational, dynamic, and context trigger kinds with active status",
-    "Reopening now requires active unlock, preserved history, localized identification, restored recovery material, refinement, and a recorded breaker"
+    "Reopening now requires active unlock, preserved history, localized identification, restored recovery material, refinement, and a recorded breaker",
+    "Pattern separation now keeps working similarity distinct from protected consequence and keeps completion conditional on all-live equivalence or explicit approximation"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -89,7 +90,10 @@
     "tools/unlock_field_check.js",
     "formal/InquiryCalculus/Legacy/V20/Reopening.lean",
     "formal-successor/PHASE_B_REOPENING.md",
-    "tools/reopening_check.js"
+    "tools/reopening_check.js",
+    "formal/InquiryCalculus/Legacy/V20/PatternSeparation.lean",
+    "formal-successor/PHASE_B_PATTERN_SEPARATION.md",
+    "tools/pattern_separation_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -99,7 +103,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-PATTERN-SEPARATION",
+    "FORMAL-B-SEMANTIC-QUESTION-UNIVERSE",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -124,12 +128,13 @@
     "Exact compression-license sources, complete/depleted licence contrasts, nine source ablations, and four axiom-free Lean proof audits",
     "Exact approximate-compression sources, equal-error opposite-direction contrast, nine source ablations, and four axiom-free Lean proof audits",
     "Exact unlock definition, three active tagged triggers, inactive-trigger contrast, five source ablations, and five axiom-free Lean proof audits",
-    "Exact reopening sources, complete/deleted-history/inactive-trigger contrasts, six source ablations, and three axiom-free Lean proof audits"
+    "Exact reopening sources, complete/deleted-history/inactive-trigger contrasts, six source ablations, and three axiom-free Lean proof audits",
+    "Exact pattern-separation sources, merged/split and exact/unlicensed/approximate completion contrasts, six source ablations, and five axiom-free Lean proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Pattern separation is the active successor residual; every checked compression/reopening boundary remains bounded to its supplied finite contract",
+    "The semantic question universe is the active successor residual; every checked compression/reopening/pattern boundary remains bounded to its supplied finite contract",
     "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],
   "question_corpus_rerun": true,

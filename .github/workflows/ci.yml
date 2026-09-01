@@ -164,6 +164,7 @@ jobs:
           node tools/approximate_compression_check.js --compile
           node tools/unlock_field_check.js --compile
           node tools/reopening_check.js --compile
+          node tools/pattern_separation_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
