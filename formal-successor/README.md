@@ -216,6 +216,12 @@ with finite breakers. Complement, counterexample, alternative design, separator,
 positive-negation keep distinct identities; cross-kind transport requires a binding-supplied
 correspondence, and generation alone grants no semantic admission or standing.
 
+`PHASE_B_OPERATIONAL_ROOT_ALIASES.md` retains the eleven operational names as removable
+presentations over supplied nonempty root expansions. Transparency preserves typing,
+applicability, whole supported-answer behavior, authority, failure exits, provenance, and
+reopening, and it adds no primitive, runtime opcode, or scheduler. The finite sample expansions do
+not assert canonical successor meanings, and the source law remains unproved.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

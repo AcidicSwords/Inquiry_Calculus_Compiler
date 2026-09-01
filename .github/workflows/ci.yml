@@ -172,6 +172,9 @@ jobs:
           node tools/required_nondominant_frontier_check.js --compile
           node tools/semantic_executable_frontier_check.js --compile
           node tools/blocked_unknown_residual_check.js --compile
+          node tools/derived_interrogative_roots_check.js --compile
+          node tools/no_universal_polarization_check.js --compile
+          node tools/operational_root_aliases_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest

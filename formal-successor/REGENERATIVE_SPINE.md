@@ -17,6 +17,9 @@ architectural constraints now:
 
 - `Orient` is one of six roots with two orientations, not two primitives; reification adds no
   seventh root.
+- the eleven operational names survive only as removable presentations over supplied root
+  expansions whose typing, behavior, authority, failure, provenance, and reopening boundaries are
+  preserved; they add no primitive, opcode, or scheduler.
 - semantic transport, reciprocal mates, and paired-path consequences are candidates derivable
   from relational composition, while actual answer-dependent succession stays distinct.
 - determination, quotient maximality, and the converse reopening witness require explicit
