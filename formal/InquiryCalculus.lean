@@ -131,6 +131,7 @@ import InquiryCalculus.Legacy.V20.RequiredNondominantFrontier
 import InquiryCalculus.Legacy.V20.SemanticExecutableFrontier
 import InquiryCalculus.Legacy.V20.BlockedUnknownResidual
 import InquiryCalculus.Legacy.V20.DerivedInterrogativeRoots
+import InquiryCalculus.Legacy.V20.NoUniversalPolarization
 
 /-!
 # Inquiry Calculus formal successor

@@ -211,6 +211,11 @@ reuse the same family, and no root adds primitive, actuality, authority, or sche
 checked predecessor boundary also supplies the first primitive-elimination result retained in the
 regenerative spine; it does not promote successor semantics or pass Gate B.
 
+`PHASE_B_NO_UNIVERSAL_POLARIZATION.md` retains the following source law as an unproved obligation
+with finite breakers. Complement, counterexample, alternative design, separator, and contextual
+positive-negation keep distinct identities; cross-kind transport requires a binding-supplied
+correspondence, and generation alone grants no semantic admission or standing.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

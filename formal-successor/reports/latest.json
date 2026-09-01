@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-NO-UNIVERSAL-POLARIZATION",
-  "status": "ONE_SPINE_AND_TWENTY_SEVEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-OPERATIONAL-ROOT-ALIASES",
+  "status": "ONE_SPINE_AND_TWENTY_EIGHT_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -37,7 +37,8 @@
     "Semantic and executable frontier membership now retains independent prerequisites and classified execution before shared required-nondominant projection",
     "Blocked and Unknown residuals now preserve required nonexecution and failed-search non-negativity instead of idle or negative collapse",
     "The six interrogative roots are transparent presentations; Orient remains one root with two variants and reification adds no seventh root",
-    "The reciprocal-regenerative reformulation is integrated as seven dependency inquiries and ten planned theorem obligations rather than appended as successor semantics"
+    "The reciprocal-regenerative reformulation is integrated as seven dependency inquiries and ten planned theorem obligations rather than appended as successor semantics",
+    "Polarization retains five binding-indexed relation identities and cannot manufacture semantic admission or standing"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -131,7 +132,10 @@
     "tools/blocked_unknown_residual_check.js",
     "formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean",
     "formal-successor/PHASE_B_DERIVED_INTERROGATIVE_ROOTS.md",
-    "tools/derived_interrogative_roots_check.js"
+    "tools/derived_interrogative_roots_check.js",
+    "formal/InquiryCalculus/Legacy/V20/NoUniversalPolarization.lean",
+    "formal-successor/PHASE_B_NO_UNIVERSAL_POLARIZATION.md",
+    "tools/no_universal_polarization_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -141,7 +145,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-NO-UNIVERSAL-POLARIZATION",
+    "FORMAL-B-OPERATIONAL-ROOT-ALIASES",
     "Completion relation, question-use evaluation, observation transport, QMate, determination refinement, factorization, reopening, and productivity obligations remain PLANNED at their lawful gates",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
@@ -177,12 +181,13 @@
     "Exact semantic-executable-frontier sources, membership and classified-execution contrasts, eight source ablations, and nine axiom-free Lean proof audits",
     "Exact blocked-Unknown-residual sources, required residual and failed-search contrasts, six source ablations, and eight axiom-free Lean proof audits",
     "Exact derived-root sources, six-root/two-orientation and reification-reuse contrasts, seven source ablations, and twelve axiom-free Lean proof audits",
-    "Regenerative-spine artifact/dependency/disposition/frontier synchronization and 34-entry planned theorem registry checks"
+    "Regenerative-spine artifact/dependency/disposition/frontier synchronization and 34-entry planned theorem registry checks",
+    "Exact no-universal-polarization source, separated/bridged correspondence contrasts, four admission noncollapses, six source ablations, and ten axiom-free proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "No-universal polarization is the active predecessor-surface residual; every checked derived-root and earlier boundary remains bounded to its supplied finite contract",
+    "Operational root aliases are the active predecessor-surface residual; every checked polarization, derived-root, and earlier boundary remains bounded to its supplied finite contract",
     "The reciprocal-regenerative integration map and theorem registry are planning evidence, not successor semantics or proof",
     "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],

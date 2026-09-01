@@ -180,7 +180,7 @@
   ],
   "unresolved_typed_obligations": ["IC-THM-C-007","IC-THM-C-008","IC-THM-C-009","IC-THM-C-010","IC-THM-C-011","IC-THM-C-012","IC-THM-E-004","IC-THM-H-006","IC-THM-H-007","IC-THM-H-008"],
   "current_strongest_formal_frontier": {
-    "id": "FORMAL-B-NO-UNIVERSAL-POLARIZATION",
+    "id": "FORMAL-B-OPERATIONAL-ROOT-ALIASES",
     "authority": "IMPLEMENTATION_FRONTIER.md",
     "duplication_status": "checked synchronized projection only"
   },

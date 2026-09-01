@@ -181,6 +181,9 @@ observational, dynamic, and context-contract triggers stay distinct.
 The six-root primitive-elimination boundary is documented in
 `formal-successor/PHASE_B_DERIVED_INTERROGATIVE_ROOTS.md`; `Orient` has two presentation variants
 without becoming two roots, and reification adds no seventh root.
+The adjacent no-universal-polarization boundary is documented in
+`formal-successor/PHASE_B_NO_UNIVERSAL_POLARIZATION.md`; five relation kinds and explicit
+binding-supplied correspondence remain separate from semantic admission and standing.
 The reciprocal-regenerative reformulation is integrated through the non-authoritative
 `formal-successor/REGENERATIVE_SPINE.json` dependency projection and the expanded planned theorem
 registry. Neither artifact promotes a candidate relation or creates another live frontier.
