@@ -110,6 +110,7 @@ import InquiryCalculus.Legacy.V20.MemoryRecovery
 import InquiryCalculus.Legacy.V20.HistoricalReconstruction
 import InquiryCalculus.Legacy.V20.ClaimLifecycle
 import InquiryCalculus.Legacy.V20.SupportEnvironments
+import InquiryCalculus.Legacy.V20.OpenDependencyBoundary
 
 /-!
 # Inquiry Calculus formal successor
