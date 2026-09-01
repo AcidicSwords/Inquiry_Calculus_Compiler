@@ -104,6 +104,7 @@ node tools/historical_reconstruction_check.js --compile
 node tools/exact_representation_quotient_check.js --compile
 node tools/continuation_sufficiency_check.js --compile
 node tools/regenerative_preservation_check.js --compile
+node tools/recovery_reopening_contract_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -163,6 +164,9 @@ and commute with the quotient, while a source action that splits a quotient fibe
 The regenerative-preservation boundary is documented in
 `formal-successor/PHASE_B_REGENERATIVE_PRESERVATION.md`; recovery requires an explicit witness
 for the specified source, not merely a retained quotient image.
+The recovery/reopening boundary is documented in
+`formal-successor/PHASE_B_RECOVERY_REOPENING_CONTRACT.md`; provenance, residual, factorization,
+recovery, and unlock coordinates remain independently required for every protected requirement.
 
 ## Current implementation state
 
