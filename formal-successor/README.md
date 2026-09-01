@@ -222,6 +222,11 @@ applicability, whole supported-answer behavior, authority, failure exits, proven
 reopening, and it adds no primitive, runtime opcode, or scheduler. The finite sample expansions do
 not assert canonical successor meanings, and the source law remains unproved.
 
+`PHASE_B_STATIC_PAIR_DISCIPLINE.md` retains inverse, converse, logical breaker dual,
+binding-supplied adjoint, and same-use reciprocal return as five presentation identities. Its
+many-to-one countermodel separates converse from strict inverse; bridge and reciprocal witnesses
+retain their exact continuation and occurrence evidence. The universal source claim remains open.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-STATIC-PAIR-DISCIPLINE",
-  "status": "ONE_SPINE_AND_TWENTY_NINE_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-ANSWER-CONDITIONED-UNLOCK",
+  "status": "ONE_SPINE_AND_THIRTY_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -39,7 +39,8 @@
     "The six interrogative roots are transparent presentations; Orient remains one root with two variants and reification adds no seventh root",
     "The reciprocal-regenerative reformulation is integrated as seven dependency inquiries and ten planned theorem obligations rather than appended as successor semantics",
     "Polarization retains five binding-indexed relation identities and cannot manufacture semantic admission or standing",
-    "Eleven operational names are removable root-composition presentations only under exact preservation and non-promotion obligations"
+    "Eleven operational names are removable root-composition presentations only under exact preservation and non-promotion obligations",
+    "Static backward-looking names retain distinct evidence requirements; converse is not inverse and semantic backward presentation is not same-use reciprocal succession"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -139,7 +140,10 @@
     "tools/no_universal_polarization_check.js",
     "formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean",
     "formal-successor/PHASE_B_OPERATIONAL_ROOT_ALIASES.md",
-    "tools/operational_root_aliases_check.js"
+    "tools/operational_root_aliases_check.js",
+    "formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean",
+    "formal-successor/PHASE_B_STATIC_PAIR_DISCIPLINE.md",
+    "tools/static_pair_discipline_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -149,7 +153,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-STATIC-PAIR-DISCIPLINE",
+    "FORMAL-B-ANSWER-CONDITIONED-UNLOCK",
     "Completion relation, question-use evaluation, observation transport, QMate, determination refinement, factorization, reopening, and productivity obligations remain PLANNED at their lawful gates",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
@@ -187,12 +191,13 @@
     "Exact derived-root sources, six-root/two-orientation and reification-reuse contrasts, seven source ablations, and twelve axiom-free Lean proof audits",
     "Regenerative-spine artifact/dependency/disposition/frontier synchronization and 34-entry planned theorem registry checks",
     "Exact no-universal-polarization source, separated/bridged correspondence contrasts, four admission noncollapses, six source ablations, and ten axiom-free proof audits",
-    "Exact operational-alias source, well-shaped expansions, complete/depleted transparency contrasts, shared sample-root shapes, twelve source ablations, and fourteen axiom-free proof audits"
+    "Exact operational-alias source, well-shaped expansions, complete/depleted transparency contrasts, shared sample-root shapes, twelve source ablations, and fourteen axiom-free proof audits",
+    "Exact static-pair sources, many-to-one converse/no-inverse contrast, supplied bridge and reciprocal provenance contrasts, sixteen source ablations, and sixteen axiom-free proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Static pair discipline is the active predecessor-surface residual; every checked operational-alias, polarization, derived-root, and earlier boundary remains bounded to its supplied finite contract",
+    "Answer-conditioned unlock is the active predecessor-surface residual; every checked static-pair, operational-alias, polarization, derived-root, and earlier boundary remains bounded to its supplied finite contract",
     "The reciprocal-regenerative integration map and theorem registry are planning evidence, not successor semantics or proof",
     "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],

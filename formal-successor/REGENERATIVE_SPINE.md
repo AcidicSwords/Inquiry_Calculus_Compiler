@@ -20,6 +20,9 @@ architectural constraints now:
 - the eleven operational names survive only as removable presentations over supplied root
   expansions whose typing, behavior, authority, failure, provenance, and reopening boundaries are
   preserved; they add no primitive, opcode, or scheduler.
+- static backward-looking names remain presentations with distinct evidence requirements: converse
+  is not inverse, a supplied adjoint law is not co-availability, and same-use reciprocal return
+  retains actual use, departure, coverage, whole-fiber, and provenance coordinates.
 - semantic transport, reciprocal mates, and paired-path consequences are candidates derivable
   from relational composition, while actual answer-dependent succession stays distinct.
 - determination, quotient maximality, and the converse reopening witness require explicit

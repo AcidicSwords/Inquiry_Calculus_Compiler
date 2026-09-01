@@ -188,6 +188,9 @@ The operational-name primitive-elimination boundary is documented in
 `formal-successor/PHASE_B_OPERATIONAL_ROOT_ALIASES.md`; eleven names remain removable presentations
 over supplied nonempty root expansions only when every preservation and non-promotion obligation
 holds.
+The static-pair boundary is documented in `formal-successor/PHASE_B_STATIC_PAIR_DISCIPLINE.md`;
+converse, inverse, logical dual, supplied adjoint, and same-use reciprocal return retain distinct
+evidence requirements, and semantic backward presentation never manufactures actual succession.
 The reciprocal-regenerative reformulation is integrated through the non-authoritative
 `formal-successor/REGENERATIVE_SPINE.json` dependency projection and the expanded planned theorem
 registry. Neither artifact promotes a candidate relation or creates another live frontier.

@@ -133,6 +133,7 @@ import InquiryCalculus.Legacy.V20.BlockedUnknownResidual
 import InquiryCalculus.Legacy.V20.DerivedInterrogativeRoots
 import InquiryCalculus.Legacy.V20.NoUniversalPolarization
 import InquiryCalculus.Legacy.V20.OperationalRootAliases
+import InquiryCalculus.Legacy.V20.StaticPairDiscipline
 
 /-!
 # Inquiry Calculus formal successor
