@@ -126,6 +126,7 @@ import InquiryCalculus.Legacy.V20.PatternSeparation
 import InquiryCalculus.Legacy.V20.SemanticQuestionUniverse
 import InquiryCalculus.Legacy.V20.ExecutableQuestionUniverse
 import InquiryCalculus.Legacy.V20.DerivedQuestionAvailability
+import InquiryCalculus.Legacy.V20.QuestionProductivity
 
 /-!
 # Inquiry Calculus formal successor

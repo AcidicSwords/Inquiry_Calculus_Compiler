@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-QUESTION-PRODUCTIVITY",
-  "status": "ONE_SPINE_AND_TWENTY_TWO_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-REQUIRED-NONDOMINANT-FRONTIER",
+  "status": "ONE_SPINE_AND_TWENTY_THREE_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -31,7 +31,8 @@
     "Pattern separation now keeps working similarity distinct from protected consequence and keeps completion conditional on all-live equivalence or explicit approximation",
     "Semantic question growth now retains injective typed preservation and an outside-image strictness witness instead of replacement or identity growth",
     "Executable question membership now remains a resource-profiled semantic subset, preserving the same Ask occurrence across execution profiles",
-    "Derived question availability now retains formability, scope, execution, completion, coverage, readiness, productivity, and required discharge as separate typed relations"
+    "Derived question availability now retains formability, scope, execution, completion, coverage, readiness, productivity, and required discharge as separate typed relations",
+    "Question productivity now retains exact occurrence identity and a binding-supplied successor lifting instead of normalized-question or universal-equality classification"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -105,7 +106,10 @@
     "tools/executable_question_universe_check.js",
     "formal/InquiryCalculus/Legacy/V20/DerivedQuestionAvailability.lean",
     "formal-successor/PHASE_B_DERIVED_QUESTION_AVAILABILITY.md",
-    "tools/derived_question_availability_check.js"
+    "tools/derived_question_availability_check.js",
+    "formal/InquiryCalculus/Legacy/V20/QuestionProductivity.lean",
+    "formal-successor/PHASE_B_QUESTION_PRODUCTIVITY.md",
+    "tools/question_productivity_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -115,7 +119,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-QUESTION-PRODUCTIVITY",
+    "FORMAL-B-REQUIRED-NONDOMINANT-FRONTIER",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -144,12 +148,13 @@
     "Exact pattern-separation sources, merged/split and exact/unlicensed/approximate completion contrasts, six source ablations, and five axiom-free Lean proof audits",
     "Exact semantic-question-universe sources, conservative/identity/replacement contrasts, five source ablations, and four axiom-free Lean proof audits",
     "Exact executable-question-universe sources, low/high resource and same-occurrence contrasts, eight source ablations, and nine axiom-free Lean proof audits",
-    "Exact derived-question-availability sources, availability-coordinate and productive/required contrasts, eight source ablations, and nine axiom-free Lean proof audits"
+    "Exact derived-question-availability sources, availability-coordinate and productive/required contrasts, eight source ablations, and nine axiom-free Lean proof audits",
+    "Exact question-productivity sources, occurrence-index and supplied-lifting contrasts, eight source ablations, and eight axiom-free Lean proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Question productivity is the active successor residual; every checked derived-availability and earlier boundary remains bounded to its supplied finite contract",
+    "The required-protected nondominant frontier is the active successor residual; every checked question-productivity and earlier boundary remains bounded to its supplied finite contract",
     "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],
   "question_corpus_rerun": true,
