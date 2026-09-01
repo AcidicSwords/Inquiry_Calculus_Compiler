@@ -144,6 +144,12 @@ applicability and scope distinct inside their shared clause. Six atomic breakers
 coordinate is dispensable; policy absence remains distinguishable, and closed support does not
 itself establish target standing.
 
+`PHASE_B_LEAST_FIXED_POINT_STANDING.md` reconstructs explicit grounded ingress and the
+monotone standing operator, defines standing as the intersection-based least fixed point, and
+proves the finite no-rootless-positive-support-cycle theorem. Its decisive model also exhibits
+a strictly larger fixed point, separates dependency emptiness from ingress, and keeps finite
+iteration stabilization distinct from general effective convergence.
+
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does

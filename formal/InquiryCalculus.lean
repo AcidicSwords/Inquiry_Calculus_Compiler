@@ -112,6 +112,7 @@ import InquiryCalculus.Legacy.V20.ClaimLifecycle
 import InquiryCalculus.Legacy.V20.SupportEnvironments
 import InquiryCalculus.Legacy.V20.OpenDependencyBoundary
 import InquiryCalculus.Legacy.V20.ClosedSupport
+import InquiryCalculus.Legacy.V20.LeastFixedPointStanding
 
 /-!
 # Inquiry Calculus formal successor

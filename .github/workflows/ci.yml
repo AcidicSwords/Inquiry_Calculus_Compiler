@@ -154,6 +154,7 @@ jobs:
           node tools/support_environments_check.js --compile
           node tools/open_dependency_boundary_check.js --compile
           node tools/closed_support_check.js --compile
+          node tools/least_fixed_point_standing_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -453,6 +454,7 @@ jobs:
           node --check tools/support_environments_check.js
           node --check tools/open_dependency_boundary_check.js
           node --check tools/closed_support_check.js
+          node --check tools/least_fixed_point_standing_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -678,6 +680,7 @@ jobs:
           node tools/support_environments_check.js
           node tools/open_dependency_boundary_check.js
           node tools/closed_support_check.js
+          node tools/least_fixed_point_standing_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
