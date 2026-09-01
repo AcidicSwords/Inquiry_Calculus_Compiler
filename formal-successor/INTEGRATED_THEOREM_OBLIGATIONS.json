@@ -1,0 +1,297 @@
+{
+  "schema": 1,
+  "status": "planned_candidate_theorem_family_not_successor_semantics",
+  "authority": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md#103.1",
+  "source_provenance": {
+    "kind": "user_supplied_cohesive_self_hosting_inquiry_spine_specification",
+    "sha256": "7af86d14d36c63e995cf02a5c2bca04eb1dbc1ee67728a4dede846d6aba7dcb",
+    "absorbed_sections": ["10", "46", "50", "51", "52", "54", "55", "61", "63"],
+    "authority_note": "The imported document supplied construction pressure. This registry is governed by the construction specification and does not warrant any listed claim."
+  },
+  "promotion_contract": {
+    "initial_status": "PLANNED",
+    "allowed_terminal_statuses": ["PROVED", "BROKEN", "INAPPLICABLE"],
+    "required_evidence": [
+      "typed_formal_statement",
+      "dependency_closure",
+      "lean_kernel_return_or_checked_countermodel",
+      "independent_contract_checker",
+      "proof_dependency_audit",
+      "conformance_record_with_coverage_and_reopen_condition"
+    ],
+    "noncollapse": [
+      "planned_is_not_proved",
+      "harness_check_is_not_successor_theorem",
+      "predecessor_analogue_is_not_successor_promotion",
+      "countermodel_is_not_positive_theorem",
+      "local_theorem_is_not_gate_pass",
+      "requested_claim_may_be_broken_or_typed_inapplicable"
+    ]
+  },
+  "obligations": [
+    {
+      "id": "IC-THM-C-001",
+      "title": "Contextual occurrence typing and composition",
+      "gate": "C",
+      "kind": "definition_and_laws",
+      "statement": "CtxOcc(P,R,S) = S ∘ R ∘ P, with typed endpoints and occurrence identity retained.",
+      "depends_on": [],
+      "disposition": "prove_or_refine",
+      "decisive_check": "Reject reversed composition, erased intermediate types, and collapse of contextual occurrence into value equality.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-002",
+      "title": "Question transport along a represented path",
+      "gate": "C",
+      "kind": "definition_and_laws",
+      "statement": "C_q^P = C_q ∘ P for a compatible typed path, without introducing an inverse or a new primitive transport operator.",
+      "depends_on": ["IC-THM-C-001"],
+      "disposition": "prove_or_refine",
+      "decisive_check": "Reject endpoint mismatch, path-order reversal, inferred actuality, and reciprocal-as-inverse collapse.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-003",
+      "title": "Discriminator pullback composition",
+      "gate": "C",
+      "kind": "theorem",
+      "statement": "(S ∘ R)^* K = R^*(S^* K) whenever the discriminator transport is well typed.",
+      "depends_on": ["IC-THM-C-001", "IC-THM-C-002"],
+      "disposition": "prove_or_break",
+      "decisive_check": "Prove from the retained transport definition or exhibit the smallest binding in which the proposed equality is ill typed or false.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-004",
+      "title": "Co-anchored meet",
+      "gate": "C",
+      "kind": "definition_and_laws",
+      "statement": "For a simultaneous question set B, ~_B = ⋂(q in B) ~_q under one fixed anchor and applicability region.",
+      "depends_on": ["IC-THM-C-002"],
+      "disposition": "prove_or_refine",
+      "decisive_check": "Reject mixed anchors, hidden sequential updates, and empty-family conclusions stronger than the supplied binding licenses.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-005",
+      "title": "Forward distinction transport",
+      "gate": "C",
+      "kind": "theorem",
+      "statement": "(D_K)_L = D_(L ∘ K) for the selected typed relational image definition.",
+      "depends_on": ["IC-THM-C-001"],
+      "disposition": "prove_or_break",
+      "decisive_check": "Check the exact image convention and reject a proof that silently assumes functionality, totality, or inverse transport.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-006",
+      "title": "Condition-solution polarity",
+      "gate": "C",
+      "kind": "theorem",
+      "statement": "W ⊆ Cond^X_Θ(S) iff S ⊆ Sol^X_W under the independently retained condition and solution definitions.",
+      "depends_on": [],
+      "disposition": "prove_or_break",
+      "decisive_check": "Pressure-test both directions, empty families, applicability, and typed evaluation without collapsing polarity into path transport.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-D-001",
+      "title": "Co-anchored versus sequential noncollapse",
+      "gate": "D",
+      "kind": "countermodel",
+      "statement": "Simultaneous co-anchored refinement need not represent answer-conditioned sequential inquiry.",
+      "depends_on": ["IC-THM-C-004"],
+      "disposition": "construct_countermodel",
+      "decisive_check": "Provide a finite typed model in which the simultaneous profile and at least one sequential update have protected-different consequences.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-D-002",
+      "title": "Three-way arrangement distinction",
+      "gate": "D",
+      "kind": "countermodel_family",
+      "statement": "Q_(B∪C), U_C ∘ U_B, and U_B ∘ U_C remain pairwise distinct where a binding exposes the distinctions.",
+      "depends_on": ["IC-THM-C-004"],
+      "disposition": "construct_countermodels",
+      "decisive_check": "Witness each claimed separation independently and retain typed inapplicability where a composition is unavailable.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-D-003",
+      "title": "Reciprocal section is not an inverse",
+      "gate": "D",
+      "kind": "countermodel",
+      "statement": "A use-indexed reciprocal return section, a converse, and an inverse are not generally identical.",
+      "depends_on": ["IC-THM-C-002"],
+      "disposition": "construct_countermodel",
+      "decisive_check": "Use a many-to-many relation with a plural return fiber and reject selected-return or endpoint equality as inversion evidence.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-E-001",
+      "title": "Adjacent-order localization",
+      "gate": "E",
+      "kind": "theorem",
+      "statement": "Protectedly different lawful finite orderings connected by lawful adjacent swaps contain at least one adjacent swap that changes the protected consequence.",
+      "depends_on": ["IC-THM-D-002"],
+      "disposition": "prove_or_break",
+      "decisive_check": "Distinguish semantic difference from a typing-blocked swap and state the connectivity and finiteness premises explicitly.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-E-002",
+      "title": "Path-sensitive answer section",
+      "gate": "E",
+      "kind": "theorem_and_countermodel",
+      "statement": "Equal answer values do not imply equal answer occurrences, paths, environments, support, or continuations.",
+      "depends_on": ["IC-THM-C-001", "IC-THM-D-001"],
+      "disposition": "prove_and_exhibit_countermodel",
+      "decisive_check": "Construct equal endpoint values with protected-different path-indexed continuations.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-E-003",
+      "title": "Three-way arrangement operational realization",
+      "gate": "E",
+      "kind": "theorem_family",
+      "statement": "The simultaneous and two sequential arrangements elaborate to distinct well-typed programs whose denotations preserve the Gate D separations when applicable.",
+      "depends_on": ["IC-THM-D-002", "IC-THM-E-002"],
+      "disposition": "prove_or_retain_residual",
+      "decisive_check": "Require structural bind and operational semantics; a syntax-only distinction is insufficient.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-001",
+      "title": "Pure closure laws",
+      "gate": "H",
+      "kind": "theorem_family",
+      "statement": "The admitted pure closure operator is extensive, monotone, idempotent, and compatible with its declared incremental closure operation.",
+      "depends_on": ["IC-THM-E-003"],
+      "disposition": "prove_or_break_each_law",
+      "decisive_check": "State the carrier, order, regime, and incremental operation; do not infer semantic or effectful closure from a pure operator.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-002",
+      "title": "Bounded fixed-regime stabilization",
+      "gate": "H",
+      "kind": "theorem",
+      "statement": "A finite admitted fixed regime stabilizes under the checked closure operator within an explicit bound.",
+      "depends_on": ["IC-THM-H-001"],
+      "disposition": "prove_or_break",
+      "decisive_check": "Require finite carrier/regime and unchanged operator; reject an unbounded, effectful, or dynamically expanding generalization.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-003",
+      "title": "Protected compression factorization",
+      "gate": "H",
+      "kind": "theorem_family",
+      "statement": "A fold c is exact for protected family H only when every D in H factors as D = D_hat ∘ c with retained ancestry, coverage, and regeneration evidence.",
+      "depends_on": ["IC-THM-C-005"],
+      "disposition": "prove_or_refine",
+      "decisive_check": "Reject selected-sample agreement, endpoint equality, or missing continuations as sufficient factorization evidence.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-004",
+      "title": "Historical reopening under a transported discriminator",
+      "gate": "H",
+      "kind": "theorem",
+      "statement": "A supported later discriminator that does not factor through an earlier fold invalidates exactness relative to the enlarged protected family and reopens the folded ancestry.",
+      "depends_on": ["IC-THM-C-002", "IC-THM-H-003"],
+      "disposition": "prove_or_break",
+      "decisive_check": "Distinguish failed factorization search (Unknown) from a supported separation, and require exact fold/discriminator ancestry.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-005",
+      "title": "Regenerative irredundancy",
+      "gate": "H",
+      "kind": "theorem_family",
+      "statement": "Every retained consequential distinction has a protected consequence or an explicit unresolved ablation obligation, including joint ablations.",
+      "depends_on": ["IC-THM-H-003", "IC-THM-H-004"],
+      "disposition": "prove_or_retain_residual",
+      "decisive_check": "Reject singleton-only minimality, unproved necessity, and deletion of ancestry or reopening conditions.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-J-001",
+      "title": "Canonical render-elaborate round trip",
+      "gate": "J",
+      "kind": "theorem_family",
+      "statement": "elab(render(q)) ≡ q for every admitted canonical question category, with the exact equality level stated.",
+      "depends_on": ["IC-THM-C-002", "IC-THM-E-002"],
+      "disposition": "prove_or_retain_typed_residual",
+      "decisive_check": "Check notation and canonical prose separately; do not extend the result to arbitrary free prose.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-K-001",
+      "title": "Linear discriminator pullback",
+      "gate": "K",
+      "kind": "binding_theorem",
+      "statement": "For linear P and q in a lawful finite-dimensional linear binding, q_eff = P^T q.",
+      "depends_on": ["IC-THM-C-003"],
+      "disposition": "prove_with_binding_assumptions",
+      "decisive_check": "Type all spaces and duals and reject promotion to universal calculus structure.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-K-002",
+      "title": "Linear contextual pullback composition",
+      "gate": "K",
+      "kind": "binding_theorem",
+      "statement": "For a lawful linear contextual composite S ∘ R ∘ P, q_eff = P^T R^T S^T q.",
+      "depends_on": ["IC-THM-C-003", "IC-THM-K-001"],
+      "disposition": "prove_with_binding_assumptions",
+      "decisive_check": "Check transpose order, dimensions, and correspondence with the general typed pullback theorem.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-K-003",
+      "title": "Protected adjacent-order discriminator",
+      "gate": "K",
+      "kind": "binding_theorem_and_countermodel",
+      "statement": "The adjacent order difference observed by q is q^T S(BA-AB)Px; BA ≠ AB alone does not imply protected order difference.",
+      "depends_on": ["IC-THM-E-001", "IC-THM-K-002"],
+      "disposition": "prove_and_construct_blind_discriminator_countermodel",
+      "decisive_check": "Prove the displayed difference and exhibit noncommuting A,B whose commutator is invisible to the supplied protected observation.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-L-001",
+      "title": "Lawful self-reentry",
+      "gate": "L",
+      "kind": "theorem_family",
+      "statement": "Reified inquiry products may re-enter ordinary typed inquiry without obtaining actuality, warrant, or standing from self-application.",
+      "depends_on": ["IC-THM-E-002", "IC-THM-H-005"],
+      "disposition": "prove_or_retain_residual",
+      "decisive_check": "Require explicit universe/type stratification and reject self-warrant, hidden quotation collapse, and total reification.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-L-002",
+      "title": "Proof-presupposition recursion",
+      "gate": "L",
+      "kind": "metatheorem_and_termination_boundary",
+      "statement": "Every consequential theorem exposes a typed Requires relation to premises recursively classified to the declared ambient metalanguage boundary.",
+      "depends_on": ["IC-THM-L-001"],
+      "disposition": "prove_or_bound",
+      "decisive_check": "Separate definitions, prior theorems, binding assumptions, predecessor obligations, actuality, evidence, and hidden prose assumptions; do not ask the calculus to regenerate Lean.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-L-003",
+      "title": "Regenerative successor equivalence",
+      "gate": "L",
+      "kind": "acceptance_theorem",
+      "statement": "If checked successor C1 regenerates as C1', then C1' ≡_(H_C) C1 without consulting the historical construction scaffold.",
+      "depends_on": ["IC-THM-H-002", "IC-THM-H-004", "IC-THM-H-005", "IC-THM-J-001", "IC-THM-L-001", "IC-THM-L-002"],
+      "disposition": "prove_or_fail_gate",
+      "decisive_check": "Delete the historical scaffold in an isolated reconstruction, regenerate, and check the declared protected equivalence with independent evidence.",
+      "status": "PLANNED"
+    }
+  ]
+}

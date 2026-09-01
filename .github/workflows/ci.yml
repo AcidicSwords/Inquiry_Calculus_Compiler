@@ -228,6 +228,7 @@ jobs:
           node --check .claude/hooks/ic-construction-policy.js
           node --check tools/inquiry_spine_check.js
           node --check tools/inquiry_spine_lifecycle_check.js
+          node --check tools/integrated_theorem_obligations_check.js
           node --check .claude/hooks/ic-question-instance.js
           node --check .claude/hooks/ic-fold-evidence.js
           node --check tools/predecessor_inventory.js
@@ -450,6 +451,7 @@ jobs:
           bash -n .claude/hooks/ic-stop
           node tools/inquiry_spine_check.js
           node tools/inquiry_spine_lifecycle_check.js
+          node tools/integrated_theorem_obligations_check.js
           node tools/predecessor_inventory.js check
           node tools/predecessor_inventory_check.js
           node tools/predecessor_tex_classification.js check

@@ -23,6 +23,13 @@ lifecycle evidence requirements, method contracts, fold/reopening requirements, 
 laws. It contains no fixed rhythm, Q-family execution sequence, historical-document hashes,
 residual-to-question schedule, or residual-class-to-method dispatch.
 
+`INTEGRATED_THEOREM_OBLIGATIONS.json` retains the theorem and countermodel family absorbed from the
+cohesive self-hosting spine specification. It assigns each candidate to its earliest lawful formal
+gate and records dependencies, decisive checks, and promotion evidence. Every entry begins
+`PLANNED`; the registry is not successor semantics, a second roadmap, or evidence that a theorem is
+true. `tools/integrated_theorem_obligations_check.js` prevents omissions, gate inversions, and
+promotion without the separately required formal evidence.
+
 `.claude/hooks/ic-spine.js` is the sole public context projection. It reconstructs the current
 relational surface, typed compositional paths, transported discriminators, folds, executable
 frontier, and coverage-relative closure. Its fields, path indexes, and contexts are deletable

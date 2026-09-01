@@ -5674,6 +5674,51 @@ Rerun predecessor and successor conformance.
 
 ---
 
+## 103.1 Integrated theorem-obligation schedule
+
+The theorem family recovered from the cohesive self-hosting inquiry-spine specification is retained
+as construction pressure in `INTEGRATED_THEOREM_OBLIGATIONS.json`. Planning a claim does not admit
+it as successor mathematics. Each entry must be activated only after its listed dependencies and
+gate-local carrier are available, then proved, broken by a checked countermodel, or classified as
+typed inapplicable. A similarly named v2.0 theorem, a harness test, or a generated candidate cannot
+discharge it.
+
+| ID | Earliest gate | Planned formal return |
+|---|---:|---|
+| `IC-THM-C-001` | C | Contextual occurrence typing and composition |
+| `IC-THM-C-002` | C | Question transport along a represented path |
+| `IC-THM-C-003` | C | Discriminator pullback composition |
+| `IC-THM-C-004` | C | Co-anchored meet |
+| `IC-THM-C-005` | C | Forward distinction transport |
+| `IC-THM-C-006` | C | Condition-solution polarity |
+| `IC-THM-D-001` | D | Co-anchored versus sequential noncollapse countermodel |
+| `IC-THM-D-002` | D | Three-way arrangement distinction countermodel family |
+| `IC-THM-D-003` | D | Reciprocal section is not an inverse countermodel |
+| `IC-THM-E-001` | E | Adjacent-order localization |
+| `IC-THM-E-002` | E | Path-sensitive answer section and countermodel |
+| `IC-THM-E-003` | E | Three-way arrangement operational realization |
+| `IC-THM-H-001` | H | Pure closure laws |
+| `IC-THM-H-002` | H | Bounded fixed-regime stabilization |
+| `IC-THM-H-003` | H | Protected compression factorization |
+| `IC-THM-H-004` | H | Historical reopening under a transported discriminator |
+| `IC-THM-H-005` | H | Regenerative irredundancy, including joint ablation |
+| `IC-THM-J-001` | J | Canonical render-elaborate round trips |
+| `IC-THM-K-001` | K | Linear discriminator pullback |
+| `IC-THM-K-002` | K | Linear contextual pullback composition |
+| `IC-THM-K-003` | K | Protected adjacent-order discriminator and blindness countermodel |
+| `IC-THM-L-001` | L | Lawful self-reentry without self-warrant |
+| `IC-THM-L-002` | L | Proof-presupposition recursion to the ambient boundary |
+| `IC-THM-L-003` | L | Regenerative successor equivalence without historical scaffold |
+
+Every registry entry remains `PLANNED` until it has a typed formal statement, complete dependency
+closure, a Lean kernel return or checked countermodel, an independent contract checker, a proof
+dependency audit, and a conformance record stating coverage and reopening. `PROVED`, `BROKEN`, and
+`INAPPLICABLE` are the only terminal classifications; none alone passes its gate. The registry is a
+machine-checked projection of this schedule, not another roadmap, cursor, semantic authority, or
+reasoning loop.
+
+---
+
 # 104. One cohesive inquiry spine within every phase
 
 Construction phases are obligation regions, not independent procedures. Every live obligation is

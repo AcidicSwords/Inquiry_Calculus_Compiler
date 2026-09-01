@@ -10,6 +10,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 
 require("./inquiry_spine_check.js");
+require("./integrated_theorem_obligations_check.js");
 
 const read = (relative) => fs.readFileSync(path.join(root, ...relative.split("/")), "utf8");
 const spec = read("formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md");
@@ -23,6 +24,8 @@ assert.match(spec, /There is no active\s+residual-shape method dispatcher/);
 assert.match(agents, /sole model-facing recurrence/);
 assert.equal(active.authority_path.length, 3);
 assert.equal(active.derived_machine_contract.role, "rebuildable_implementation_contract_not_independent_authority");
+assert.deepEqual(active.derived_planning_registries.map(({ role }) => role),
+  ["gate_indexed_candidate_theorem_obligations_not_semantic_authority"]);
 assert.equal((frontier.match(/<!-- LIVE_FRONTIER_BEGIN -->/g) ?? []).length, 1);
 assert.equal((frontier.match(/<!-- LIVE_FRONTIER_END -->/g) ?? []).length, 1);
 const frontierIds = [...frontier.matchAll(/^id: ([A-Z0-9-]+)$/gmu)].map((match) => match[1]);

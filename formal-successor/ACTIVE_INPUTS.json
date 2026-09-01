@@ -11,7 +11,7 @@
     {
       "path": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
       "role": "single_successor_construction_and_acceptance_authority",
-      "sha256": "d6cb3e64345d29c8a072bc6816d317070794ec95c163de32f707dbb00916b70f"
+      "sha256": "96308f91941c6e93eb6e880130a2e1d360f8b47e363bd48492a1f9c4a4abee1e"
     },
     {
       "path": "formal-successor/Questions.txt",
@@ -23,5 +23,12 @@
     "path": "formal-successor/INQUIRY_SPINE_CONTRACT.json",
     "role": "rebuildable_implementation_contract_not_independent_authority",
     "sha256": "dca2678ddaa07f8a7974d8a3fd500bb6768698fb2abb5d3b6632127afa51954f"
-  }
+  },
+  "derived_planning_registries": [
+    {
+      "path": "formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json",
+      "role": "gate_indexed_candidate_theorem_obligations_not_semantic_authority",
+      "sha256": "18326957f03c413dd90419b50db7ae892e6ab0adb318dd0c7dc2055481727c37"
+    }
+  ]
 }

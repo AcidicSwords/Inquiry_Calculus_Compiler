@@ -35,6 +35,7 @@ required = [
     "IMPLEMENTATION_FRONTIER.md",
     "formal-successor/ACTIVE_INPUTS.json",
     "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
+    "formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json",
     "formal-successor/INQUIRY_SPINE_CONTRACT.json",
     "formal-successor/Questions.txt",
     ".claude/hooks/ic-spine.js",
@@ -72,6 +73,15 @@ try:
         path = ROOT / str(item.get("path", ""))
         if not path.is_file() or item.get("sha256") != digest(path):
             fail(f"ACTIVE_INPUTS digest mismatch: {item.get('path')}")
+    planning_registries = active.get("derived_planning_registries", [])
+    if [item.get("role") for item in planning_registries] != [
+        "gate_indexed_candidate_theorem_obligations_not_semantic_authority"
+    ]:
+        fail("ACTIVE_INPUTS.json does not expose the derived theorem-obligation registry")
+    for item in planning_registries:
+        path = ROOT / str(item.get("path", ""))
+        if not path.is_file() or item.get("sha256") != digest(path):
+            fail(f"ACTIVE_INPUTS digest mismatch: {item.get('path')}")
     if active.get("derived_machine_contract", {}).get("role") != "rebuildable_implementation_contract_not_independent_authority":
         fail("machine contract is not explicitly derived/non-authoritative")
 except (json.JSONDecodeError, OSError, TypeError) as error:
@@ -98,6 +108,16 @@ try:
         fail("question forms are not exactly covered by relation generators")
 except (json.JSONDecodeError, OSError, TypeError) as error:
     fail(f"INQUIRY_SPINE_CONTRACT.json: {error}")
+
+try:
+    theorem_registry = json.loads(read("formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json"))
+    if theorem_registry.get("status") != "planned_candidate_theorem_family_not_successor_semantics":
+        fail("integrated theorem registry claims semantic authority")
+    obligations = theorem_registry.get("obligations", [])
+    if len(obligations) != 24 or any(item.get("status") != "PLANNED" for item in obligations):
+        fail("integrated theorem registry is incomplete or contains an unsupported promotion")
+except (json.JSONDecodeError, OSError, TypeError) as error:
+    fail(f"INTEGRATED_THEOREM_OBLIGATIONS.json: {error}")
 
 spec = read("formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md")
 agents = read("AGENTS.md")
