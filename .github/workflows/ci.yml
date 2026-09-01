@@ -165,6 +165,7 @@ jobs:
           node tools/unlock_field_check.js --compile
           node tools/reopening_check.js --compile
           node tools/pattern_separation_check.js --compile
+          node tools/semantic_question_universe_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
