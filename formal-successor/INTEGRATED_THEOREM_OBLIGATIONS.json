@@ -8,6 +8,12 @@
     "absorbed_sections": ["10", "46", "50", "51", "52", "54", "55", "61", "63"],
     "authority_note": "The imported document supplied construction pressure. This registry is governed by the construction specification and does not warrant any listed claim."
   },
+  "additional_source_provenance": {
+    "kind": "user_supplied_reciprocal_regenerative_reformulation",
+    "sha256": "ac529ef95b8bdbbcf6c83c8bc7a74545970bc0754ad4b8ebcde3946fe1733c83",
+    "absorbed_sections": ["III", "IV", "V", "VI", "VIII", "IX", "X", "XVIII", "XIX", "XXVI", "XXVII", "XXVIII", "XXX", "XXXV", "XLIX", "LI"],
+    "authority_note": "The reformulation supplies candidate relations and dependency pressure only. Each candidate remains planned until independently proved, broken, or typed inapplicable under the construction specification."
+  },
   "promotion_contract": {
     "initial_status": "PLANNED",
     "allowed_terminal_statuses": ["PROVED", "BROKEN", "INAPPLICABLE"],
@@ -96,6 +102,72 @@
       "status": "PLANNED"
     },
     {
+      "id": "IC-THM-C-007",
+      "title": "Completion relation and exact question fiber",
+      "gate": "C",
+      "kind": "definition_and_theorem",
+      "statement": "For a typed relation schema R and explicit nonempty open-port family I, define C_(R,I) : B_(R,I) ⇝ A_(R,I) by relational satisfaction after disjoint binding merge, and prove Fib(?_I R[beta]) = Prof_(C_(R,I))(beta).",
+      "depends_on": [],
+      "disposition": "prove_or_refine",
+      "decisive_check": "Require typed disjoint closed/open port coverage and reject silently existential ports, malformed merges, candidate-carrier/completion collapse, and return-fiber/selected-return collapse.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-008",
+      "title": "Question-use evaluation as relational composition",
+      "gate": "C",
+      "kind": "definition_elimination_and_theorem",
+      "statement": "A question-use on X is a typed binding relation delta : X ⇝ B_(R,I), with Eval_(R,I,delta) = C_(R,I) ∘ delta. DiscRole retains only independently required applicability, scope, representation, or execution witnesses not derivable from delta.",
+      "depends_on": ["IC-THM-C-007"],
+      "disposition": "derive_and_ablate_or_identify_missing_structure",
+      "decisive_check": "Construct a well-typed delta whose evaluation composes, then test whether each current DiscRole coordinate is derivable; retain only a coordinate whose removal produces a protected typed countermodel.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-009",
+      "title": "Typed observation universe and contravariant transport",
+      "gate": "C",
+      "kind": "definition_and_laws",
+      "statement": "Obs(X) = Σ A, Rel(X,A); T* (A,E) = (A,E ∘ T); identity and (S ∘ T)*E = T*(S*E) follow from relational identities and associativity without reverse execution.",
+      "depends_on": ["IC-THM-C-001", "IC-THM-C-008"],
+      "disposition": "derive_or_break",
+      "decisive_check": "Check universe levels and endpoints, preserve the observation codomain, and reject any proof that assumes functionality, converse, inverse, syntactic representability, or execution.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-010",
+      "title": "Represented reciprocal mate composition",
+      "gate": "C",
+      "kind": "derived_definition_and_theorem",
+      "statement": "QMate(T,uX,L,uY) abbreviates L ∘ E_uX = E_uY ∘ T; identity mates and composition of QMate(T,uX,L,uY) with QMate(S,uY,M,uZ) yield QMate(S∘T,uX,M∘L,uZ).",
+      "depends_on": ["IC-THM-C-001", "IC-THM-C-009"],
+      "disposition": "derive_or_break",
+      "decisive_check": "Verify all four carrier endpoints and both associativity rewrites; reject imported inverse, adjunction, answer-selection, or actual-succession assumptions.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-011",
+      "title": "Paired represented-path consequence invariant",
+      "gate": "C",
+      "kind": "theorem_family",
+      "statement": "For a finite typed path P_(i:n) and terminal consequence E_n, E_i = E_n ∘ P_(i:n) and E_i ∘ P_(0:i) = E_n ∘ P_(0:n), while represented transport remains distinct from answer-dependent occurrence succession.",
+      "depends_on": ["IC-THM-C-001", "IC-THM-C-009"],
+      "disposition": "prove_or_break",
+      "decisive_check": "Prove by typed finite path composition and exhibit equal transported endpoints with different occurrence histories so the theorem cannot rewrite actual succession.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-C-012",
+      "title": "Protected determination bridge and horizon refinement",
+      "gate": "C",
+      "kind": "theorem_family",
+      "statement": "Determines_H(W,x) is x∈Sol(W) with every survivor H-equivalent to x, equivalently the inhabited quotient image is the singleton [x]_H. Under H⊆H' and prior Determines_H(W,x), Determines_H'(W,x) iff Alt_(H→H')(W,x) is empty; failure generates an ordinary typed completion obligation for Delta.",
+      "depends_on": ["IC-THM-C-006"],
+      "disposition": "prove_with_exact_hypotheses_or_break",
+      "decisive_check": "Require x∈Sol(W), equivalence laws, typed horizon inclusion, and quotient-image rather than raw quotient equality; test empty solution fields and omitted prior determination as breakers.",
+      "status": "PLANNED"
+    },
+    {
       "id": "IC-THM-D-001",
       "title": "Co-anchored versus sequential noncollapse",
       "gate": "D",
@@ -162,6 +234,17 @@
       "status": "PLANNED"
     },
     {
+      "id": "IC-THM-E-004",
+      "title": "Occurrence productivity as protected continuation discrimination",
+      "gate": "E",
+      "kind": "definition_elimination_and_countermodel",
+      "statement": "For an occurrence-indexed supported-answer continuation relation K_omega and protected observation family H, Productive_H(omega) is the existence of two lawful supported answers with protected-different continuation profiles; selection, formability, applicability, executability, support, and warrant remain separate.",
+      "depends_on": ["IC-THM-C-009", "IC-THM-E-002"],
+      "disposition": "derive_and_ablate_or_retain_missing_coordinate",
+      "decisive_check": "Use identical normalized question forms with different occurrence continuations, and separately vary selection/executability/support to ensure none is inferred from semantic productivity.",
+      "status": "PLANNED"
+    },
+    {
       "id": "IC-THM-H-001",
       "title": "Pure closure laws",
       "gate": "H",
@@ -214,6 +297,39 @@
       "depends_on": ["IC-THM-H-003", "IC-THM-H-004"],
       "disposition": "prove_or_retain_residual",
       "decisive_check": "Reject singleton-only minimality, unproved necessity, and deletion of ancestry or reopening conditions.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-006",
+      "title": "Relational factorization-kernel equivalence",
+      "gate": "H",
+      "kind": "theorem_and_constructive_boundary",
+      "statement": "For functional c : X → Xhat and relation E : X ⇝ A, descent E = Ehat ∘ Graph(c) is equivalent to ker(c) ⊆ ker* E under the stated ambient representative or quotient-image construction assumptions.",
+      "depends_on": ["IC-THM-C-009"],
+      "disposition": "prove_or_classify_binding_conditional",
+      "decisive_check": "Prove the forward direction constructively; for the reverse direction state whether existential image descent, quotient elimination, choice, or extensionality is used, and test nonfunctional compression as an inapplicable foil.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-007",
+      "title": "Protected exact-fold kernel and maximal semantic quotient",
+      "gate": "H",
+      "kind": "theorem_family",
+      "statement": "ExactFold_H(c) iff ker(c) ⊆ equiv_H follows from familywise factorization. When quotient formation is admitted, q_H : X → X/equiv_H is maximally identifying among exact semantic folds, without requiring an implementation to materialize it.",
+      "depends_on": ["IC-THM-C-012", "IC-THM-H-003", "IC-THM-H-006"],
+      "disposition": "prove_with_quotient_hypotheses_or_classify_inapplicable",
+      "decisive_check": "Separate exactness from coarsest characterization and implementation choice; test a finer exact map, an overcoarse inexact map, and an ambient binding without quotient formation.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "IC-THM-H-008",
+      "title": "Positive reopening as witnessed factorization failure",
+      "gate": "H",
+      "kind": "theorem_family_and_countermodel",
+      "statement": "Break(E,c;x,y) means c(x)=c(y) and unequal E-profiles. It implies failure of E descent; the converse is existential under the exact logical assumptions. Adding E to a protected horizon invalidates an old exact fold exactly when such a collapsed-fiber separator is supported, not when factorization search merely fails.",
+      "depends_on": ["IC-THM-H-004", "IC-THM-H-006", "IC-THM-H-007"],
+      "disposition": "prove_directions_and_classify_assumptions",
+      "decisive_check": "Distinguish a positive collapsed-fiber separator from Unknown search failure, preserve old-fold ancestry, and test inactive or unsupported observations as non-reopening foils.",
       "status": "PLANNED"
     },
     {

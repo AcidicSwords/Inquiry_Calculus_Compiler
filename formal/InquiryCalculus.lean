@@ -130,6 +130,7 @@ import InquiryCalculus.Legacy.V20.QuestionProductivity
 import InquiryCalculus.Legacy.V20.RequiredNondominantFrontier
 import InquiryCalculus.Legacy.V20.SemanticExecutableFrontier
 import InquiryCalculus.Legacy.V20.BlockedUnknownResidual
+import InquiryCalculus.Legacy.V20.DerivedInterrogativeRoots
 
 /-!
 # Inquiry Calculus formal successor

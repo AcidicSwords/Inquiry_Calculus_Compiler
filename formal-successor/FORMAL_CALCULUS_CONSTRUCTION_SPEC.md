@@ -5676,8 +5676,11 @@ Rerun predecessor and successor conformance.
 
 ## 103.1 Integrated theorem-obligation schedule
 
-The theorem family recovered from the cohesive self-hosting inquiry-spine specification is retained
-as construction pressure in `INTEGRATED_THEOREM_OBLIGATIONS.json`. Planning a claim does not admit
+The theorem family recovered from the cohesive self-hosting inquiry-spine specification and the
+later reciprocal-regenerative reformulation is retained as construction pressure in
+`INTEGRATED_THEOREM_OBLIGATIONS.json`. The later reformulation is integrated by dependency and
+primitive elimination; it is not an addendum and does not displace already checked machinery
+without a typed derivation or breaker. Planning a claim does not admit
 it as successor mathematics. Each entry must be activated only after its listed dependencies and
 gate-local carrier are available, then proved, broken by a checked countermodel, or classified as
 typed inapplicable. A similarly named v2.0 theorem, a harness test, or a generated candidate cannot
@@ -5691,17 +5694,27 @@ discharge it.
 | `IC-THM-C-004` | C | Co-anchored meet |
 | `IC-THM-C-005` | C | Forward distinction transport |
 | `IC-THM-C-006` | C | Condition-solution polarity |
+| `IC-THM-C-007` | C | Completion relation and exact question fiber |
+| `IC-THM-C-008` | C | Question-use evaluation as relational composition and `DiscRole` ablation |
+| `IC-THM-C-009` | C | Typed observation universe and contravariant transport |
+| `IC-THM-C-010` | C | Represented reciprocal mate composition |
+| `IC-THM-C-011` | C | Paired represented-path consequence invariant |
+| `IC-THM-C-012` | C | Protected determination bridge and horizon refinement |
 | `IC-THM-D-001` | D | Co-anchored versus sequential noncollapse countermodel |
 | `IC-THM-D-002` | D | Three-way arrangement distinction countermodel family |
 | `IC-THM-D-003` | D | Reciprocal section is not an inverse countermodel |
 | `IC-THM-E-001` | E | Adjacent-order localization |
 | `IC-THM-E-002` | E | Path-sensitive answer section and countermodel |
 | `IC-THM-E-003` | E | Three-way arrangement operational realization |
+| `IC-THM-E-004` | E | Occurrence productivity as protected continuation discrimination |
 | `IC-THM-H-001` | H | Pure closure laws |
 | `IC-THM-H-002` | H | Bounded fixed-regime stabilization |
 | `IC-THM-H-003` | H | Protected compression factorization |
 | `IC-THM-H-004` | H | Historical reopening under a transported discriminator |
 | `IC-THM-H-005` | H | Regenerative irredundancy, including joint ablation |
+| `IC-THM-H-006` | H | Relational factorization-kernel equivalence |
+| `IC-THM-H-007` | H | Protected exact-fold kernel and maximal semantic quotient |
+| `IC-THM-H-008` | H | Positive reopening as witnessed factorization failure |
 | `IC-THM-J-001` | J | Canonical render-elaborate round trips |
 | `IC-THM-K-001` | K | Linear discriminator pullback |
 | `IC-THM-K-002` | K | Linear contextual pullback composition |

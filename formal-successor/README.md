@@ -24,11 +24,19 @@ laws. It contains no fixed rhythm, Q-family execution sequence, historical-docum
 residual-to-question schedule, or residual-class-to-method dispatch.
 
 `INTEGRATED_THEOREM_OBLIGATIONS.json` retains the theorem and countermodel family absorbed from the
-cohesive self-hosting spine specification. It assigns each candidate to its earliest lawful formal
+cohesive self-hosting spine specification and the later reciprocal-regenerative reformulation. It
+assigns each candidate to its earliest lawful formal
 gate and records dependencies, decisive checks, and promotion evidence. Every entry begins
 `PLANNED`; the registry is not successor semantics, a second roadmap, or evidence that a theorem is
 true. `tools/integrated_theorem_obligations_check.js` prevents omissions, gate inversions, and
 promotion without the separately required formal evidence.
+
+`REGENERATIVE_SPINE.json` is the compact rebuildable construction memory for those candidates. It
+maps proposed relations to the exact current definitions they touch, records hypotheses, derivation
+status, breakers, propagation surfaces, predecessor-preservation conditions, and primitive
+elimination, and mirrors the one live frontier under an exact synchronization check. It is neither
+a second history nor a second scheduler, and its `proved` entries remain scoped to the checked
+predecessor modules unless a successor theorem is separately promoted.
 
 `.claude/hooks/ic-spine.js` is the sole public context projection. It reconstructs the current
 relational surface, typed compositional paths, transported discriminators, folds, executable
@@ -196,6 +204,12 @@ remain explicit later obligations, and Formal Gate B remains pending.
 `PHASE_B_PARTIAL_BINDING_FIBER.md` then preserves nonempty open-port selection, typed partial
 assignment, and completion-fiber carrier syntax while leaving satisfaction and question formation
 open. Formal Gate B remains pending.
+
+`PHASE_B_DERIVED_INTERROGATIVE_ROOTS.md` records the later exact source boundary for six derived
+roots. `Orient` remains one root with forward and converse presentation variants, reified questions
+reuse the same family, and no root adds primitive, actuality, authority, or scheduling power. This
+checked predecessor boundary also supplies the first primitive-elimination result retained in the
+regenerative spine; it does not promote successor semantics or pass Gate B.
 
 ## Propagation back to Rust
 

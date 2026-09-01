@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-DERIVED-INTERROGATIVE-ROOTS",
-  "status": "ONE_SPINE_AND_TWENTY_SIX_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-NO-UNIVERSAL-POLARIZATION",
+  "status": "ONE_SPINE_AND_TWENTY_SEVEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -35,7 +35,9 @@
     "Question productivity now retains exact occurrence identity and a binding-supplied successor lifting instead of normalized-question or universal-equality classification",
     "Required frontier membership now retains union with ordinary nondominance and exact same-dependency substitute discharge without shielding optional work",
     "Semantic and executable frontier membership now retains independent prerequisites and classified execution before shared required-nondominant projection",
-    "Blocked and Unknown residuals now preserve required nonexecution and failed-search non-negativity instead of idle or negative collapse"
+    "Blocked and Unknown residuals now preserve required nonexecution and failed-search non-negativity instead of idle or negative collapse",
+    "The six interrogative roots are transparent presentations; Orient remains one root with two variants and reification adds no seventh root",
+    "The reciprocal-regenerative reformulation is integrated as seven dependency inquiries and ten planned theorem obligations rather than appended as successor semantics"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -51,6 +53,11 @@
     "formal-successor/INQUIRY_SPINE_CONTRACT.json",
     "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
     "formal-successor/ACTIVE_INPUTS.json",
+    "formal-successor/REGENERATIVE_SPINE.json",
+    "formal-successor/REGENERATIVE_SPINE.md",
+    "formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json",
+    "tools/regenerative_spine_check.js",
+    "tools/integrated_theorem_obligations_check.js",
     "tools/inquiry_spine_check.js",
     "tools/inquiry_spine_lifecycle_check.js",
     "tools/successor_control_check.js",
@@ -121,7 +128,10 @@
     "tools/semantic_executable_frontier_check.js",
     "formal/InquiryCalculus/Legacy/V20/BlockedUnknownResidual.lean",
     "formal-successor/PHASE_B_BLOCKED_UNKNOWN_RESIDUAL.md",
-    "tools/blocked_unknown_residual_check.js"
+    "tools/blocked_unknown_residual_check.js",
+    "formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean",
+    "formal-successor/PHASE_B_DERIVED_INTERROGATIVE_ROOTS.md",
+    "tools/derived_interrogative_roots_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -131,7 +141,8 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-DERIVED-INTERROGATIVE-ROOTS",
+    "FORMAL-B-NO-UNIVERSAL-POLARIZATION",
+    "Completion relation, question-use evaluation, observation transport, QMate, determination refinement, factorization, reopening, and productivity obligations remain PLANNED at their lawful gates",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -164,12 +175,15 @@
     "Exact question-productivity sources, occurrence-index and supplied-lifting contrasts, eight source ablations, and eight axiom-free Lean proof audits",
     "Exact required-nondominant-frontier sources, required/substitute/optional and no-preorder contrasts, eight source ablations, and eight axiom-free Lean proof audits",
     "Exact semantic-executable-frontier sources, membership and classified-execution contrasts, eight source ablations, and nine axiom-free Lean proof audits",
-    "Exact blocked-Unknown-residual sources, required residual and failed-search contrasts, six source ablations, and eight axiom-free Lean proof audits"
+    "Exact blocked-Unknown-residual sources, required residual and failed-search contrasts, six source ablations, and eight axiom-free Lean proof audits",
+    "Exact derived-root sources, six-root/two-orientation and reification-reuse contrasts, seven source ablations, and twelve axiom-free Lean proof audits",
+    "Regenerative-spine artifact/dependency/disposition/frontier synchronization and 34-entry planned theorem registry checks"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Derived interrogative roots are the active successor residual; every checked blocked-Unknown and earlier boundary remains bounded to its supplied finite contract",
+    "No-universal polarization is the active predecessor-surface residual; every checked derived-root and earlier boundary remains bounded to its supplied finite contract",
+    "The reciprocal-regenerative integration map and theorem registry are planning evidence, not successor semantics or proof",
     "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],
   "question_corpus_rerun": true,

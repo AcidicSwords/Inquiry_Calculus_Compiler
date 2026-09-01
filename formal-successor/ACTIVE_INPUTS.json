@@ -11,7 +11,7 @@
     {
       "path": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
       "role": "single_successor_construction_and_acceptance_authority",
-      "sha256": "96308f91941c6e93eb6e880130a2e1d360f8b47e363bd48492a1f9c4a4abee1e"
+      "sha256": "3856044f40975b0c83eb10bb191060f42832d97227a39249daf5a0f44425e448"
     },
     {
       "path": "formal-successor/Questions.txt",
@@ -24,11 +24,16 @@
     "role": "rebuildable_implementation_contract_not_independent_authority",
     "sha256": "dca2678ddaa07f8a7974d8a3fd500bb6768698fb2abb5d3b6632127afa51954f"
   },
+  "derived_construction_memory": {
+    "path": "formal-successor/REGENERATIVE_SPINE.json",
+    "role": "rebuildable_regenerative_dependency_projection_not_semantic_authority",
+    "sha256": "a16b635db1b6498e30f9c71c8c864b671ed1651a8988616626b9cb3fa9c8b7f5"
+  },
   "derived_planning_registries": [
     {
       "path": "formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json",
       "role": "gate_indexed_candidate_theorem_obligations_not_semantic_authority",
-      "sha256": "18326957f03c413dd90419b50db7ae892e6ab0adb318dd0c7dc2055481727c37"
+      "sha256": "96b438f8a4221b7ce003366f59cde90875e4968ac56cdcf1d24fc98ea49061ca"
     }
   ]
 }

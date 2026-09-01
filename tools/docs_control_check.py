@@ -37,6 +37,7 @@ required = [
     "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
     "formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json",
     "formal-successor/INQUIRY_SPINE_CONTRACT.json",
+    "formal-successor/REGENERATIVE_SPINE.json",
     "formal-successor/Questions.txt",
     ".claude/hooks/ic-spine.js",
     ".claude/hooks/ic-inject",
@@ -69,7 +70,7 @@ try:
     authority = active.get("authority_path", [])
     if [item.get("role") for item in authority] != expected_roles:
         fail("ACTIVE_INPUTS.json does not expose the single forward authority path")
-    for item in authority + [active.get("derived_machine_contract", {})]:
+    for item in authority + [active.get("derived_machine_contract", {}), active.get("derived_construction_memory", {})]:
         path = ROOT / str(item.get("path", ""))
         if not path.is_file() or item.get("sha256") != digest(path):
             fail(f"ACTIVE_INPUTS digest mismatch: {item.get('path')}")
@@ -84,6 +85,8 @@ try:
             fail(f"ACTIVE_INPUTS digest mismatch: {item.get('path')}")
     if active.get("derived_machine_contract", {}).get("role") != "rebuildable_implementation_contract_not_independent_authority":
         fail("machine contract is not explicitly derived/non-authoritative")
+    if active.get("derived_construction_memory", {}).get("role") != "rebuildable_regenerative_dependency_projection_not_semantic_authority":
+        fail("regenerative construction memory is not explicitly derived/non-authoritative")
 except (json.JSONDecodeError, OSError, TypeError) as error:
     fail(f"ACTIVE_INPUTS.json: {error}")
 
@@ -114,7 +117,7 @@ try:
     if theorem_registry.get("status") != "planned_candidate_theorem_family_not_successor_semantics":
         fail("integrated theorem registry claims semantic authority")
     obligations = theorem_registry.get("obligations", [])
-    if len(obligations) != 24 or any(item.get("status") != "PLANNED" for item in obligations):
+    if len(obligations) != 34 or any(item.get("status") != "PLANNED" for item in obligations):
         fail("integrated theorem registry is incomplete or contains an unsupported promotion")
 except (json.JSONDecodeError, OSError, TypeError) as error:
     fail(f"INTEGRATED_THEOREM_OBLIGATIONS.json: {error}")
