@@ -171,6 +171,7 @@ jobs:
           node tools/question_productivity_check.js --compile
           node tools/required_nondominant_frontier_check.js --compile
           node tools/semantic_executable_frontier_check.js --compile
+          node tools/blocked_unknown_residual_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
