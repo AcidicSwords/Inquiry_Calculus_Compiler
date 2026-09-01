@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-SEMANTIC-EXECUTABLE-FRONTIER",
-  "status": "ONE_SPINE_AND_TWENTY_FOUR_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-BLOCKED-UNKNOWN-RESIDUAL",
+  "status": "ONE_SPINE_AND_TWENTY_FIVE_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -33,7 +33,8 @@
     "Executable question membership now remains a resource-profiled semantic subset, preserving the same Ask occurrence across execution profiles",
     "Derived question availability now retains formability, scope, execution, completion, coverage, readiness, productivity, and required discharge as separate typed relations",
     "Question productivity now retains exact occurrence identity and a binding-supplied successor lifting instead of normalized-question or universal-equality classification",
-    "Required frontier membership now retains union with ordinary nondominance and exact same-dependency substitute discharge without shielding optional work"
+    "Required frontier membership now retains union with ordinary nondominance and exact same-dependency substitute discharge without shielding optional work",
+    "Semantic and executable frontier membership now retains independent prerequisites and classified execution before shared required-nondominant projection"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -113,7 +114,10 @@
     "tools/question_productivity_check.js",
     "formal/InquiryCalculus/Legacy/V20/RequiredNondominantFrontier.lean",
     "formal-successor/PHASE_B_REQUIRED_NONDOMINANT_FRONTIER.md",
-    "tools/required_nondominant_frontier_check.js"
+    "tools/required_nondominant_frontier_check.js",
+    "formal/InquiryCalculus/Legacy/V20/SemanticExecutableFrontier.lean",
+    "formal-successor/PHASE_B_SEMANTIC_EXECUTABLE_FRONTIER.md",
+    "tools/semantic_executable_frontier_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -123,7 +127,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-SEMANTIC-EXECUTABLE-FRONTIER",
+    "FORMAL-B-BLOCKED-UNKNOWN-RESIDUAL",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -154,12 +158,13 @@
     "Exact executable-question-universe sources, low/high resource and same-occurrence contrasts, eight source ablations, and nine axiom-free Lean proof audits",
     "Exact derived-question-availability sources, availability-coordinate and productive/required contrasts, eight source ablations, and nine axiom-free Lean proof audits",
     "Exact question-productivity sources, occurrence-index and supplied-lifting contrasts, eight source ablations, and eight axiom-free Lean proof audits",
-    "Exact required-nondominant-frontier sources, required/substitute/optional and no-preorder contrasts, eight source ablations, and eight axiom-free Lean proof audits"
+    "Exact required-nondominant-frontier sources, required/substitute/optional and no-preorder contrasts, eight source ablations, and eight axiom-free Lean proof audits",
+    "Exact semantic-executable-frontier sources, membership and classified-execution contrasts, eight source ablations, and nine axiom-free Lean proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "The semantic and executable frontier is the active successor residual; every checked required-nondominant and earlier boundary remains bounded to its supplied finite contract",
+    "Blocked and Unknown residual preservation is the active successor residual; every checked semantic-executable and earlier boundary remains bounded to its supplied finite contract",
     "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],
   "question_corpus_rerun": true,
