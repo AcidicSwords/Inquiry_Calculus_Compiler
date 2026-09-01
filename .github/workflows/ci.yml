@@ -156,6 +156,7 @@ jobs:
           node tools/closed_support_check.js --compile
           node tools/least_fixed_point_standing_check.js --compile
           node tools/applicability_support_separation_check.js --compile
+          node tools/exact_representation_quotient_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -457,6 +458,7 @@ jobs:
           node --check tools/closed_support_check.js
           node --check tools/least_fixed_point_standing_check.js
           node --check tools/applicability_support_separation_check.js
+          node --check tools/exact_representation_quotient_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -684,6 +686,7 @@ jobs:
           node tools/closed_support_check.js
           node tools/least_fixed_point_standing_check.js
           node tools/applicability_support_separation_check.js
+          node tools/exact_representation_quotient_check.js
 
       - name: Install pinned official Tectonic
         shell: bash

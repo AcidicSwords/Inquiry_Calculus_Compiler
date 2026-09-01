@@ -101,6 +101,7 @@ node tools/traversal_learning_check.js --compile
 node tools/question_pattern_learning_check.js --compile
 node tools/memory_recovery_check.js --compile
 node tools/historical_reconstruction_check.js --compile
+node tools/exact_representation_quotient_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -150,6 +151,10 @@ leaving satisfaction, valid completion, and question semantics open.
 The canonical-question syntax boundary is documented in
 `formal-successor/PHASE_B_CANONICAL_QUESTION_SYNTAX.md`; answers, validity, probes, and programs
 remain separate later layers.
+The exact-quotient boundary is documented in
+`formal-successor/PHASE_B_EXACT_REPRESENTATION_QUOTIENT.md`; forward consequence sufficiency,
+finite tested nondistinction, and coarsest characterization remain distinct, while continuation
+descent stays an explicitly open later obligation.
 
 ## Current implementation state
 

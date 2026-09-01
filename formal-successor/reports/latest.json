@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-EXACT-REPRESENTATION-QUOTIENT",
-  "status": "ONE_SPINE_AND_TEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-CONTINUATION-SUFFICIENCY",
+  "status": "ONE_SPINE_AND_ELEVEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -19,7 +19,8 @@
     "Requirement, environment supply, independent discharge, positive openness, and ordinary question targets now remain distinct",
     "Closed support now retains all five source clauses and remains distinct from target standing",
     "Grounded ingress and monotone closed support now generate intersection-defined least standing while rootless positive cycles and arbitrary fixed points remain excluded",
-    "Applicability, support, historical warrant class, and certificate references now remain independently typed across deactivation"
+    "Applicability, support, historical warrant class, and certificate references now remain independently typed across deactivation",
+    "A supplied exact quotient now has forward protected-consequence sufficiency while finite tested nondistinction, coarsest characterization, and continuation descent remain distinct"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -57,7 +58,10 @@
     "tools/least_fixed_point_standing_check.js",
     "formal/InquiryCalculus/Legacy/V20/ApplicabilitySupportSeparation.lean",
     "formal-successor/PHASE_B_APPLICABILITY_SUPPORT_SEPARATION.md",
-    "tools/applicability_support_separation_check.js"
+    "tools/applicability_support_separation_check.js",
+    "formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean",
+    "formal-successor/PHASE_B_EXACT_REPRESENTATION_QUOTIENT.md",
+    "tools/exact_representation_quotient_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -67,7 +71,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-EXACT-REPRESENTATION-QUOTIENT",
+    "FORMAL-B-CONTINUATION-SUFFICIENCY",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -84,12 +88,13 @@
     "Exact open-dependency definition and retained Ambiguous question-target obligations, local closure contrasts, and axiom-free Lean proof audits",
     "Exact closed-support obligations, six atomic breakers, policy-absence distinction, and axiom-free Lean proof audits",
     "Exact standing sources, grounded/rootless/nonleast-fixed-point contrasts, seventeen source ablations, and seventeen axiom-free Lean proof audits",
-    "Exact applicability/support sources, opposed-use and deactivation contrasts, fourteen source ablations, and thirteen axiom-free Lean proof audits"
+    "Exact applicability/support sources, opposed-use and deactivation contrasts, fourteen source ablations, and thirteen axiom-free Lean proof audits",
+    "Exact quotient/consequence/continuation source boundary, overcoarse and finer-map contrasts, six source ablations, and six axiom-free Lean proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Exact representation quotient is now the active successor residual"
+    "Continuation sufficiency is now the active successor residual; exact quotient evidence remains bounded to its supplied forward law"
   ],
   "question_corpus_rerun": true,
   "regeneration_rerun": true,
