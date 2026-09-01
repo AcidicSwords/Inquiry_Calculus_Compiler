@@ -139,6 +139,11 @@ candidate and environment while separating requirement, environment supply, and 
 discharge. A positively open dependency constructs an indexed ordinary question target but no
 Ask occurrence, Answer, event, or standing result.
 
+`PHASE_B_CLOSED_SUPPORT.md` retains the predecessor's five closure clauses while keeping
+applicability and scope distinct inside their shared clause. Six atomic breakers show that no
+coordinate is dispensable; policy absence remains distinguishable, and closed support does not
+itself establish target standing.
+
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does

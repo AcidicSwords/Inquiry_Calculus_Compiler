@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-08-31",
-  "frontier": "FORMAL-B-CLOSED-SUPPORT",
-  "status": "ONE_SPINE_AND_SEVEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-LEAST-FIXED-POINT-STANDING",
+  "status": "ONE_SPINE_AND_EIGHT_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -16,7 +16,8 @@
     "Historical references now remain distinct from plural generated reconstruction candidates",
     "Claim generation, truth, partial reification, candidacy, warrant, and standing now remain distinct",
     "Candidate support environments, explicit support, plural subset-minimality, warrant, and standing now remain distinct",
-    "Requirement, environment supply, independent discharge, positive openness, and ordinary question targets now remain distinct"
+    "Requirement, environment supply, independent discharge, positive openness, and ordinary question targets now remain distinct",
+    "Closed support now retains all five source clauses and remains distinct from target standing"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -45,7 +46,10 @@
     "tools/support_environments_check.js",
     "formal/InquiryCalculus/Legacy/V20/OpenDependencyBoundary.lean",
     "formal-successor/PHASE_B_OPEN_DEPENDENCY_BOUNDARY.md",
-    "tools/open_dependency_boundary_check.js"
+    "tools/open_dependency_boundary_check.js",
+    "formal/InquiryCalculus/Legacy/V20/ClosedSupport.lean",
+    "formal-successor/PHASE_B_CLOSED_SUPPORT.md",
+    "tools/closed_support_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -55,7 +59,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-CLOSED-SUPPORT",
+    "FORMAL-B-LEAST-FIXED-POINT-STANDING",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -69,12 +73,13 @@
     "Exact historical-reconstruction source, plural ancestry model, source ablations, and Lean proof audits",
     "Exact claim-lifecycle source, exact input-claim ancestry, partial-reification contrasts, unsupported-promotion breakers, source ablations, and Lean proof audits",
     "Exact support-environment definitions, plural subset-minimality contrast, local ablations, and axiom-free Lean proof audits",
-    "Exact open-dependency definition and retained Ambiguous question-target obligations, local closure contrasts, and axiom-free Lean proof audits"
+    "Exact open-dependency definition and retained Ambiguous question-target obligations, local closure contrasts, and axiom-free Lean proof audits",
+    "Exact closed-support obligations, six atomic breakers, policy-absence distinction, and axiom-free Lean proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Closed support is now the active successor residual"
+    "Least-fixed-point standing is now the active successor residual"
   ],
   "question_corpus_rerun": true,
   "regeneration_rerun": true,
