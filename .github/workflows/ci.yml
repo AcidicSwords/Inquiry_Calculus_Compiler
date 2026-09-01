@@ -163,6 +163,7 @@ jobs:
           node tools/compression_license_check.js --compile
           node tools/approximate_compression_check.js --compile
           node tools/unlock_field_check.js --compile
+          node tools/reopening_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -471,6 +472,7 @@ jobs:
           node --check tools/compression_license_check.js
           node --check tools/approximate_compression_check.js
           node --check tools/unlock_field_check.js
+          node --check tools/reopening_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -705,6 +707,7 @@ jobs:
           node tools/compression_license_check.js
           node tools/approximate_compression_check.js
           node tools/unlock_field_check.js
+          node tools/reopening_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
