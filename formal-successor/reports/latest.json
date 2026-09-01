@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-APPROXIMATE-COMPRESSION",
-  "status": "ONE_SPINE_AND_FIFTEEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-PATTERN-SEPARATION",
+  "status": "ONE_SPINE_AND_EIGHTEEN_FORMAL_RATCHETS_CHECKED_FRONTIER_RECONCILED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -24,7 +24,10 @@
     "Protected continuation descent now requires a supplied commuting target action, while a quotient-fiber-splitting source action is rejected",
     "Regenerative preservation now requires a target-to-specified-source witness, while a wrong-source witness fails despite the same quotient image",
     "Recovery and reopening now retain five independently required requirement-indexed coordinates instead of treating regeneration as the whole contract",
-    "A candidate compression licence now retains eight typed coordinates, and unchanged quotient outputs cannot establish licence completeness or exactness"
+    "A candidate compression licence now retains eight typed coordinates, and unchanged quotient outputs cannot establish licence completeness or exactness",
+    "Approximate compression now retains direction-sensitive distortion beside scalar error, gain, residual, reopening, and continuation coordinates",
+    "Unlocks now retain distinct observational, dynamic, and context trigger kinds with active status",
+    "Reopening now requires active unlock, preserved history, localized identification, restored recovery material, refinement, and a recorded breaker"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -77,7 +80,16 @@
     "tools/recovery_reopening_contract_check.js",
     "formal/InquiryCalculus/Legacy/V20/CompressionLicense.lean",
     "formal-successor/PHASE_B_COMPRESSION_LICENSE.md",
-    "tools/compression_license_check.js"
+    "tools/compression_license_check.js",
+    "formal/InquiryCalculus/Legacy/V20/ApproximateCompression.lean",
+    "formal-successor/PHASE_B_APPROXIMATE_COMPRESSION.md",
+    "tools/approximate_compression_check.js",
+    "formal/InquiryCalculus/Legacy/V20/UnlockField.lean",
+    "formal-successor/PHASE_B_UNLOCK_FIELD.md",
+    "tools/unlock_field_check.js",
+    "formal/InquiryCalculus/Legacy/V20/Reopening.lean",
+    "formal-successor/PHASE_B_REOPENING.md",
+    "tools/reopening_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -87,7 +99,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-APPROXIMATE-COMPRESSION",
+    "FORMAL-B-PATTERN-SEPARATION",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -109,12 +121,16 @@
     "Exact continuation source, compatible and quotient-fiber-splitting contrasts, six source ablations, and four axiom-free Lean proof audits",
     "Exact regenerative sources, right-source/wrong-source witness contrast, five source ablations, and three axiom-free Lean proof audits",
     "Exact recovery/reopening sources, five coordinate-depletion contrasts, seven source ablations, and six axiom-free Lean proof audits",
-    "Exact compression-license sources, complete/depleted licence contrasts, nine source ablations, and four axiom-free Lean proof audits"
+    "Exact compression-license sources, complete/depleted licence contrasts, nine source ablations, and four axiom-free Lean proof audits",
+    "Exact approximate-compression sources, equal-error opposite-direction contrast, nine source ablations, and four axiom-free Lean proof audits",
+    "Exact unlock definition, three active tagged triggers, inactive-trigger contrast, five source ablations, and five axiom-free Lean proof audits",
+    "Exact reopening sources, complete/deleted-history/inactive-trigger contrasts, six source ablations, and three axiom-free Lean proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Regenerative preservation is now the active successor residual; exact quotient and continuation evidence remain bounded to their supplied laws"
+    "Pattern separation is the active successor residual; every checked compression/reopening boundary remains bounded to its supplied finite contract",
+    "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],
   "question_corpus_rerun": true,
   "regeneration_rerun": true,
