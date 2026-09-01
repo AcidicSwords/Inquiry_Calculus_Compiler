@@ -169,6 +169,7 @@ jobs:
           node tools/executable_question_universe_check.js --compile
           node tools/derived_question_availability_check.js --compile
           node tools/question_productivity_check.js --compile
+          node tools/required_nondominant_frontier_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
