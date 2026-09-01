@@ -129,6 +129,11 @@ candidacy, typed failure inquiry, warrant, and standing separate. Its finite con
 includes both successful unwarranted candidacy and failed reification of a true statement;
 question syntax, answer type, confidence, generation, and candidacy cannot promote standing.
 
+`PHASE_B_SUPPORT_ENVIRONMENTS.md` gives the five support-material roles distinct typed
+constructors and keeps candidate environments separate from an explicit supplied support
+relation. Two incomparable subset-minimal environments coexist, their supported union is
+nonminimal, and support supplies neither warrant nor standing.
+
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does

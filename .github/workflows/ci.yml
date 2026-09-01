@@ -151,6 +151,7 @@ jobs:
           node tools/memory_recovery_check.js --compile
           node tools/historical_reconstruction_check.js --compile
           node tools/claim_lifecycle_check.js --compile
+          node tools/support_environments_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest
@@ -447,6 +448,7 @@ jobs:
           node --check tools/memory_recovery_check.js
           node --check tools/historical_reconstruction_check.js
           node --check tools/claim_lifecycle_check.js
+          node --check tools/support_environments_check.js
           bash -n .claude/hooks/ic-trace
           bash -n .claude/hooks/ic-guard
           bash -n .claude/hooks/ic-inject
@@ -669,6 +671,7 @@ jobs:
           node tools/memory_recovery_check.js
           node tools/historical_reconstruction_check.js
           node tools/claim_lifecycle_check.js
+          node tools/support_environments_check.js
 
       - name: Install pinned official Tectonic
         shell: bash
