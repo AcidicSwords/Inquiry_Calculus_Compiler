@@ -108,6 +108,7 @@ import InquiryCalculus.Legacy.V20.TraversalLearning
 import InquiryCalculus.Legacy.V20.QuestionPatternLearning
 import InquiryCalculus.Legacy.V20.MemoryRecovery
 import InquiryCalculus.Legacy.V20.HistoricalReconstruction
+import InquiryCalculus.Legacy.V20.ClaimLifecycle
 
 /-!
 # Inquiry Calculus formal successor

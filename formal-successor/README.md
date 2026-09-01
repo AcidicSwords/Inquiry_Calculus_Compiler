@@ -124,6 +124,11 @@ nondominated-frontier comparison and does not create direct use or reconstructio
 from generated working candidates and retains protected-distinct candidates as a
 plural inquiry obligation without adding a selection operation.
 
+`PHASE_B_CLAIM_LIFECYCLE.md` keeps generation, semantic truth, partial reification,
+candidacy, typed failure inquiry, warrant, and standing separate. Its finite contrast
+includes both successful unwarranted candidacy and failed reification of a true statement;
+question syntax, answer type, confidence, generation, and candidacy cannot promote standing.
+
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does
