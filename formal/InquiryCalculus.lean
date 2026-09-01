@@ -124,6 +124,7 @@ import InquiryCalculus.Legacy.V20.UnlockField
 import InquiryCalculus.Legacy.V20.Reopening
 import InquiryCalculus.Legacy.V20.PatternSeparation
 import InquiryCalculus.Legacy.V20.SemanticQuestionUniverse
+import InquiryCalculus.Legacy.V20.ExecutableQuestionUniverse
 
 /-!
 # Inquiry Calculus formal successor
