@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-REGENERATIVE-PRESERVATION",
-  "status": "ONE_SPINE_AND_TWELVE_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-RECOVERY-REOPENING-CONTRACT",
+  "status": "ONE_SPINE_AND_THIRTEEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -21,7 +21,8 @@
     "Grounded ingress and monotone closed support now generate intersection-defined least standing while rootless positive cycles and arbitrary fixed points remain excluded",
     "Applicability, support, historical warrant class, and certificate references now remain independently typed across deactivation",
     "A supplied exact quotient now has forward protected-consequence sufficiency while finite tested nondistinction and coarsest characterization remain distinct",
-    "Protected continuation descent now requires a supplied commuting target action, while a quotient-fiber-splitting source action is rejected"
+    "Protected continuation descent now requires a supplied commuting target action, while a quotient-fiber-splitting source action is rejected",
+    "Regenerative preservation now requires a target-to-specified-source witness, while a wrong-source witness fails despite the same quotient image"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -65,7 +66,10 @@
     "tools/exact_representation_quotient_check.js",
     "formal/InquiryCalculus/Legacy/V20/ContinuationSufficiency.lean",
     "formal-successor/PHASE_B_CONTINUATION_SUFFICIENCY.md",
-    "tools/continuation_sufficiency_check.js"
+    "tools/continuation_sufficiency_check.js",
+    "formal/InquiryCalculus/Legacy/V20/RegenerativePreservation.lean",
+    "formal-successor/PHASE_B_REGENERATIVE_PRESERVATION.md",
+    "tools/regenerative_preservation_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -75,7 +79,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-REGENERATIVE-PRESERVATION",
+    "FORMAL-B-RECOVERY-REOPENING-CONTRACT",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
   ],
@@ -94,7 +98,8 @@
     "Exact standing sources, grounded/rootless/nonleast-fixed-point contrasts, seventeen source ablations, and seventeen axiom-free Lean proof audits",
     "Exact applicability/support sources, opposed-use and deactivation contrasts, fourteen source ablations, and thirteen axiom-free Lean proof audits",
     "Exact quotient/consequence/continuation source boundary, overcoarse and finer-map contrasts, six source ablations, and six axiom-free Lean proof audits",
-    "Exact continuation source, compatible and quotient-fiber-splitting contrasts, six source ablations, and four axiom-free Lean proof audits"
+    "Exact continuation source, compatible and quotient-fiber-splitting contrasts, six source ablations, and four axiom-free Lean proof audits",
+    "Exact regenerative sources, right-source/wrong-source witness contrast, five source ablations, and three axiom-free Lean proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",

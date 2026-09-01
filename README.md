@@ -103,6 +103,7 @@ node tools/memory_recovery_check.js --compile
 node tools/historical_reconstruction_check.js --compile
 node tools/exact_representation_quotient_check.js --compile
 node tools/continuation_sufficiency_check.js --compile
+node tools/regenerative_preservation_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -159,6 +160,9 @@ descent stays an explicitly open later obligation.
 The continuation-sufficiency boundary is documented in
 `formal-successor/PHASE_B_CONTINUATION_SUFFICIENCY.md`; a target continuation must be supplied
 and commute with the quotient, while a source action that splits a quotient fiber is rejected.
+The regenerative-preservation boundary is documented in
+`formal-successor/PHASE_B_REGENERATIVE_PRESERVATION.md`; recovery requires an explicit witness
+for the specified source, not merely a retained quotient image.
 
 ## Current implementation state
 

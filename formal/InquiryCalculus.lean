@@ -116,6 +116,7 @@ import InquiryCalculus.Legacy.V20.LeastFixedPointStanding
 import InquiryCalculus.Legacy.V20.ApplicabilitySupportSeparation
 import InquiryCalculus.Legacy.V20.ExactRepresentationQuotient
 import InquiryCalculus.Legacy.V20.ContinuationSufficiency
+import InquiryCalculus.Legacy.V20.RegenerativePreservation
 
 /-!
 # Inquiry Calculus formal successor
