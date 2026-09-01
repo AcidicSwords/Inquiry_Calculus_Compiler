@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-SEMANTIC-QUESTION-UNIVERSE",
+  "frontier": "FORMAL-B-EXECUTABLE-QUESTION-UNIVERSE",
   "status": "ONE_SPINE_AND_NINETEEN_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",

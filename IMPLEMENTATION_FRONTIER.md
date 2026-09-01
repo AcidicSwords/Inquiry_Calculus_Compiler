@@ -17,16 +17,16 @@ Recover the semantic question universe and conservative growth boundary without 
 mathematical unbounded question set as a computably enumerable executable schedule.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-SEMANTIC-QUESTION-UNIVERSE
+id: FORMAL-B-EXECUTABLE-QUESTION-UNIVERSE
 plan_phase: B
-goal: Recover the typed semantic question universe and conservative-extension embedding while preserving its unbounded and potentially noncomputable status.
-protected_difference: Mathematical constructibility differs from executable enumeration; conservative extension differs from rebinding replacement or semantic revision; embedding differs from strict growth.
-discriminator: Construct a finite source language with a conservative extension that embeds its questions, then contrast it with a replacement that loses an old constructor and with an extension that adds no new question.
-horizon: Exact v2.0 semantic-question-universe boundary only; no universal enumerator automatic scheduler execution Rust semantics successor promotion or Gate-B pass
+goal: Recover the executable question universe without treating semantically formable questions as executable merely because they are represented.
+protected_difference: Formable differs from executable; resource availability differs from semantic existence; nonexecution differs from semantic equivalence or absence.
+discriminator: Construct formable questions under two resource profiles where one is executable and the other is not, without changing semantic formability.
+horizon: Exact v2.0 executable-question-universe boundary only; no automatic scheduler execution Rust semantics successor promotion or Gate-B pass
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021, D-9022, D-9024, D-9025, D-9026, D-9028, D-9029, D-9030, D-9031, D-9032, D-9033, D-9034, D-9035, D-9036, D-9037, D-9038, D-9039, D-9040, D-9041, D-9042, D-9043, D-9045, D-9046, D-9047, D-9048, D-9049, D-9050, D-9051, D-9052, D-9053, D-9054, D-9055, D-9056, D-9057, D-9058, D-9059
 relevant_failures: F-9006, F-9007, F-9012, F-9018, F-9019, F-9020, F-9021, F-9022, F-9023, F-9024, F-9025, F-9026, F-9029
-if_pass: retain source-bearing presentation, constructibility, conservative embedding, and strict-growth precondition as distinct relations then regenerate the strongest source-bound residual
-if_fail: retain presentation, constructor preservation, interpretation preservation, embedding, strictness witness, and nonconservative change as distinct residuals
+if_pass: retain semantic formability, resource profile, executability, and nonexecution as distinct relations then regenerate the strongest source-bound residual
+if_fail: retain representation, formability, resource availability, execution route, and semantic distinction as distinct residuals
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
