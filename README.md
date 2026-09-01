@@ -106,6 +106,7 @@ node tools/continuation_sufficiency_check.js --compile
 node tools/regenerative_preservation_check.js --compile
 node tools/recovery_reopening_contract_check.js --compile
 node tools/compression_license_check.js --compile
+node tools/approximate_compression_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -171,6 +172,9 @@ recovery, and unlock coordinates remain independently required for every protect
 The compression-license boundary is documented in
 `formal-successor/PHASE_B_COMPRESSION_LICENSE.md`; a quotient map is only one coordinate of a
 candidate licence and cannot establish exactness by itself.
+The approximate-compression boundary is documented in
+`formal-successor/PHASE_B_APPROXIMATE_COMPRESSION.md`; scalar error never substitutes for the
+directional distortion contract it licenses.
 
 ## Current implementation state
 
