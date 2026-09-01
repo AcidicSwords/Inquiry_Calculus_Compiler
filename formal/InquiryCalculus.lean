@@ -118,6 +118,7 @@ import InquiryCalculus.Legacy.V20.ExactRepresentationQuotient
 import InquiryCalculus.Legacy.V20.ContinuationSufficiency
 import InquiryCalculus.Legacy.V20.RegenerativePreservation
 import InquiryCalculus.Legacy.V20.RecoveryReopeningContract
+import InquiryCalculus.Legacy.V20.CompressionLicense
 
 /-!
 # Inquiry Calculus formal successor

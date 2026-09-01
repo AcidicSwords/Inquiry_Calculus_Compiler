@@ -105,6 +105,7 @@ node tools/exact_representation_quotient_check.js --compile
 node tools/continuation_sufficiency_check.js --compile
 node tools/regenerative_preservation_check.js --compile
 node tools/recovery_reopening_contract_check.js --compile
+node tools/compression_license_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -167,6 +168,9 @@ for the specified source, not merely a retained quotient image.
 The recovery/reopening boundary is documented in
 `formal-successor/PHASE_B_RECOVERY_REOPENING_CONTRACT.md`; provenance, residual, factorization,
 recovery, and unlock coordinates remain independently required for every protected requirement.
+The compression-license boundary is documented in
+`formal-successor/PHASE_B_COMPRESSION_LICENSE.md`; a quotient map is only one coordinate of a
+candidate licence and cannot establish exactness by itself.
 
 ## Current implementation state
 

@@ -6,21 +6,21 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-B-RECOVERY-REOPENING-CONTRACT-001` requires five independent requirement-indexed
-coordinates beyond regeneration. Its finite contrast rejects every one-coordinate-depleted record.
+`FORMAL-B-COMPRESSION-LICENSE-001` retains eight typed coordinates beside a quotient map. Its
+finite contrast rejects missing evidence, missing unlock, and unprotected-source licence claims.
 
 ## Strongest live obligation
 
-Recover the canonical exact compression licence without treating quotient map, protected family,
-scope, recovery, residual, unlock, evidence, or continuation family as interchangeable.
+Recover approximate compression without treating scalar agreement as directional distortion,
+resource gain as admissible error, or approximate licence as exact protected equivalence.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-B-COMPRESSION-LICENSE
+id: FORMAL-B-APPROXIMATE-COMPRESSION
 plan_phase: B
-goal: Recover the canonical v2.0 exact compression licence as a typed coordinate bundle, retaining quotient map, protected relation/profile and continuation families, scope, recovery, residual, unlock, and evidence as distinct fields.
-protected_difference: Compression map differs from protected family; protected family differs from continuation family; scope differs from recovery; recovery differs from residual; unlock differs from evidence; a coordinate bundle differs from exactness inference.
-discriminator: Construct a complete finite licence then remove or replace one coordinate at a time. The depleted licence must fail the declared complete-bundle predicate even when its compression map and current outputs are unchanged.
-horizon: Exact v2.0 compression-license source boundary only; no semantic exactness decision universal adequacy execution Rust semantics successor promotion or Gate-B pass
+goal: Recover the v2.0 approximate-compression licence as a directional distortion and coordinate bundle, retaining protected family, distortion direction, error, gain, residual, reopen, and continuation approximation independently.
+protected_difference: Scalar error differs from directional distortion preorder; over-approximation differs from under-approximation; resource gain differs from admissible error; approximate licence differs from exact protected equivalence.
+discriminator: Construct two approximate candidates with the same scalar error but opposite directional distortion contracts; one must satisfy the declared direction and the other fail. Remove licence coordinates to show scalar agreement alone is insufficient.
+horizon: Exact v2.0 approximate-compression source boundary only; no automatic resource contract semantic approximation decision execution Rust semantics successor promotion or Gate-B pass
 relevant_decisions: D-9003, D-9008, D-9012, D-9013, D-9014, D-9015, D-9016, D-9017, D-9018, D-9019, D-9020, D-9021, D-9022, D-9024, D-9025, D-9026, D-9028, D-9029, D-9030, D-9031, D-9032, D-9033, D-9034, D-9035, D-9036, D-9037, D-9038, D-9039, D-9040, D-9041, D-9042, D-9043, D-9045, D-9046, D-9047, D-9048, D-9049, D-9050, D-9051, D-9052
 relevant_failures: F-9006, F-9007, F-9012, F-9018, F-9019, F-9020, F-9021, F-9022, F-9023, F-9024, F-9025, F-9026
 if_pass: retain typed compression licence coordinates then advance to the strongest newly regenerated compression residual
