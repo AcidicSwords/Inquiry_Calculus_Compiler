@@ -120,6 +120,7 @@ import InquiryCalculus.Legacy.V20.RegenerativePreservation
 import InquiryCalculus.Legacy.V20.RecoveryReopeningContract
 import InquiryCalculus.Legacy.V20.CompressionLicense
 import InquiryCalculus.Legacy.V20.ApproximateCompression
+import InquiryCalculus.Legacy.V20.UnlockField
 
 /-!
 # Inquiry Calculus formal successor

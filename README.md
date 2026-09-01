@@ -107,6 +107,7 @@ node tools/regenerative_preservation_check.js --compile
 node tools/recovery_reopening_contract_check.js --compile
 node tools/compression_license_check.js --compile
 node tools/approximate_compression_check.js --compile
+node tools/unlock_field_check.js --compile
 cd formal
 lake build --wfail
 ```
@@ -175,6 +176,8 @@ candidate licence and cannot establish exactness by itself.
 The approximate-compression boundary is documented in
 `formal-successor/PHASE_B_APPROXIMATE_COMPRESSION.md`; scalar error never substitutes for the
 directional distortion contract it licenses.
+The unlock-field boundary is documented in `formal-successor/PHASE_B_UNLOCK_FIELD.md`; its
+observational, dynamic, and context-contract triggers stay distinct.
 
 ## Current implementation state
 
