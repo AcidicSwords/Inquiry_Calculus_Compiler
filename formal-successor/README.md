@@ -150,6 +150,10 @@ proves the finite no-rootless-positive-support-cycle theorem. Its decisive model
 a strictly larger fixed point, separates dependency emptiness from ingress, and keeps finite
 iteration stabilization distinct from general effective convergence.
 
+`PHASE_B_APPLICABILITY_SUPPORT_SEPARATION.md` retains the seven-coordinate relation profile
+and proves that changing current applicability neither creates support nor erases historical
+warrant class or certificate references.
+
 `PHASE_B_AMBIENT_BOUNDARY.md` records the first checked Phase B relation. Its schema and generated
 spine bind 41 exact v2.0 source identities into 13 ordered elaboration layers, while the Lean
 module distinguishes supplied metalanguage from calculus-declared structure. This local pass does

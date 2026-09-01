@@ -113,6 +113,7 @@ import InquiryCalculus.Legacy.V20.SupportEnvironments
 import InquiryCalculus.Legacy.V20.OpenDependencyBoundary
 import InquiryCalculus.Legacy.V20.ClosedSupport
 import InquiryCalculus.Legacy.V20.LeastFixedPointStanding
+import InquiryCalculus.Legacy.V20.ApplicabilitySupportSeparation
 
 /-!
 # Inquiry Calculus formal successor
