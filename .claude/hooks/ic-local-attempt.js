@@ -41,7 +41,7 @@ function preserveRaw(root, packet, lifecycle, raw, rawFile) {
   if (fs.existsSync(target)) {
     if (!fs.readFileSync(target).equals(Buffer.from(raw))) throw new Error("raw digest collision");
   } else fs.writeFileSync(target, raw, { flag: "wx", mode: 0o600 });
-  const appended = cp.spawnSync(process.execPath, [path.join(__dirname, "ic-append.js"), "append",
+  const appended = cp.spawnSync(process.execPath, [path.join(root, ".claude/hooks/ic-append.js"), "append",
     path.join(root, ".claude/trace", lifecycle.trace)], {
     cwd: root, encoding: "utf8", windowsHide: true,
     input: JSON.stringify({ ts: new Date().toISOString(), kind: "raw", ask_occurrence: packet.occurrence,

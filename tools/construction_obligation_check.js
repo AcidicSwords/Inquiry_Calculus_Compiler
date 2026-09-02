@@ -38,6 +38,7 @@ const FIELD_INPUTS = [
   "formal-successor/DECISIONS.jsonl",
 ];
 const FIELD_TREES = [
+  ".claude/hooks",
   "formal/InquiryCalculus/Successor",
   "formal/InquiryCalculus/Legacy/V20",
 ];

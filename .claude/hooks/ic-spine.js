@@ -296,7 +296,7 @@ function begin(root, seal) {
   fs.mkdirSync(directory, { recursive: true });
   let trace;
   const append = (record) => {
-    const result = cp.spawnSync(process.execPath, [path.join(__dirname, "ic-append.js"), "append", trace, fuel],
+    const result = cp.spawnSync(process.execPath, [path.join(root, ".claude/hooks/ic-append.js"), "append", trace, fuel],
       { cwd: root, encoding: "utf8", windowsHide: true, input: `${JSON.stringify({ ts: new Date().toISOString(), ...record })}\n` });
     if (result.status !== 0) throw new Error(result.stderr || result.stdout);
   };

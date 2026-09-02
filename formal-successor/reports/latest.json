@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "generated_at": "2026-09-02",
-  "frontier": "FORMAL-C-RELATION-CONTEXTUAL-TELESCOPE",
+  "frontier": "FORMAL-C-RELATION-FAITHFUL-ENCODING",
   "status": "AUTONOMOUS_CONSTRUCTION_INTEGRATED_FORMAL_GATE_C_OPEN",
   "changed": [
     "One source-derived construction obligation field now drives selection, exact QuestionPacket contracts, lifecycle and generated frontier; no handwritten cursor.",
@@ -43,7 +43,7 @@
     "Unchosen, blocked, unknown and resource-bounded obligations remain live."
   ],
   "still_open": [
-    "Revalidate the three conditional representability results through source-bound accepted returns; then construct the concrete nonrepresentability model.",
+    "D-9083 accepts the independently rechecked contextual telescope. Revalidate the separate faithful-encoding and existential-carrier results, then construct the concrete nonrepresentability model.",
     "Composition requires relevant encoded-mediator coverage and a checked three-port telescope.",
     "Generated declaration, relation, proof-presupposition, corpus and continuity applicability obligations still require substantive formal inquiry.",
     "Total predecessor regeneration, capability ablations, later successor constructions and Formal Gate F remain open."

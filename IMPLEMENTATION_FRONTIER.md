@@ -18,23 +18,23 @@ correspondence obligations. Regenerate with:
       -> selected occurrence
       -> this projection
 
-required: 5896  live: 5896  executable: 5778  terminal: 0
+required: 5896  live: 5895  executable: 5779  terminal: 1
 
 ## Strongest live obligation
 
-Type the contextual domain and codomain telescope for a predecessor binary Relation and encode a value pair as a closed substitution into it.
+Establish the faithfulness condition on a contextual bridge under which the predecessor identity relation is regularly representable, and prove that representation.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-C-RELATION-CONTEXTUAL-TELESCOPE
+id: FORMAL-C-RELATION-FAITHFUL-ENCODING
 plan_phase: C
-goal: Type the contextual domain and codomain telescope for a predecessor binary Relation and encode a value pair as a closed substitution into it.
-protected_difference: A contextual telescope is not a pair of loose variables; the codomain type must be weakened over the domain port and recovered exactly under the encoded assignment.
-discriminator: Require reindexing the weakened codomain type along the domain assignment to return the codomain type itself, so the second port is well typed at the base context.
-horizon: Gate-C contextual telescope and assignment only
+goal: Establish the faithfulness condition on a contextual bridge under which the predecessor identity relation is regularly representable, and prove that representation.
+protected_difference: Equality introduction makes a formula assertable; it does not make the encoding injective. Without reflection a doctrine identifying all values would represent identity vacuously.
+discriminator: Require entailment from top of equal(encode a)(encode a') to imply a = a', and derive identity representability from equal_refl plus that reflection. A model collapsing all values must fail the condition rather than pass the theorem.
+horizon: Gate-C identity relation representability only; no composition and no countermodel
 relevant_decisions: none
 relevant_failures: none
-if_pass: define representability against the encoded assignment
-if_fail: retain the exact reindexing coherence failure
+if_pass: open composition closure under existential reflection
+if_fail: retain the exact missing reflection or transport failure
 <!-- LIVE_FRONTIER_END -->
 
 ## Selection witness
@@ -45,11 +45,11 @@ Every unchosen live occurrence remains represented.
 
 Next-ranked live executable obligations, retained and unchosen:
 
+- FORMAL-C-RELATION-NONREPRESENTABILITY-MODEL
 - CONT-PCAP-PARTIAL-BINDING-QUESTION-FIBERS
 - CONT-PCAP-SUPPORTED-ANSWER-SOURCE-SUCCESSION
 - CONT-PCAP-PROTECTION-DISCRIMINATION-DETERMINATION
 - CONT-PCAP-COMPRESSION-RECOVERY-REOPENING
-- CONT-PCAP-QUESTION-PRODUCTIVITY-FRONTIER
 
 ## Retained nonterminal accounting
 
