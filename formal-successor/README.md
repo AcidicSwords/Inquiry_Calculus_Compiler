@@ -231,6 +231,10 @@ retain their exact continuation and occurrence evidence. The universal source cl
 crossing under one typed Ask and whole supported Answer. Readiness remains distinct from resolution;
 overlapping route annotations erase before runtime and retain independent authority conditions.
 
+`PHASE_B_ROOT_FRONTIER.md` reconstructs the root frontier entirely by composing admitted root
+production with the checked executable-candidate and required-safe nondominant relations. Required
+work survives ordinary dominance, no preorder preserves the field, and no scheduler is introduced.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

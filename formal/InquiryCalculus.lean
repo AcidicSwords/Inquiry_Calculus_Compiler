@@ -135,6 +135,7 @@ import InquiryCalculus.Legacy.V20.NoUniversalPolarization
 import InquiryCalculus.Legacy.V20.OperationalRootAliases
 import InquiryCalculus.Legacy.V20.StaticPairDiscipline
 import InquiryCalculus.Legacy.V20.AnswerConditionedUnlock
+import InquiryCalculus.Legacy.V20.RootFrontier
 
 /-!
 # Inquiry Calculus formal successor

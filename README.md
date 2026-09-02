@@ -194,6 +194,9 @@ evidence requirements, and semantic backward presentation never manufactures act
 The answer-conditioned-unlock boundary is documented in
 `formal-successor/PHASE_B_ANSWER_CONDITIONED_UNLOCK.md`; a supported Answer may change readiness
 without resolving the continuation, while overlapping route explanations remain non-executing.
+The root-frontier boundary is documented in `formal-successor/PHASE_B_ROOT_FRONTIER.md`; it is a
+transparent composition of admitted root production, executable candidacy, and required-safe
+nondominance, not a new scheduler or frontier schema.
 The reciprocal-regenerative reformulation is integrated through the non-authoritative
 `formal-successor/REGENERATIVE_SPINE.json` dependency projection and the expanded planned theorem
 registry. Neither artifact promotes a candidate relation or creates another live frontier.

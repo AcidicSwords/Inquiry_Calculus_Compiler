@@ -177,6 +177,7 @@ jobs:
           node tools/operational_root_aliases_check.js --compile
           node tools/static_pair_discipline_check.js --compile
           node tools/answer_conditioned_unlock_check.js --compile
+          node tools/root_frontier_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest

@@ -25,6 +25,8 @@ architectural constraints now:
   retains actual use, departure, coverage, whole-fiber, and provenance coordinates.
 - answer-conditioned unlock is a readiness crossing, not resolution; route explanations remain
   overlapping erasable annotations whose stronger claims require independent authority.
+- the root frontier is not a new schema: it regenerates from admitted root production, executable
+  candidacy, and required-safe nondominance, retaining required work and the no-preorder identity.
 - semantic transport, reciprocal mates, and paired-path consequences are candidates derivable
   from relational composition, while actual answer-dependent succession stays distinct.
 - determination, quotient maximality, and the converse reopening witness require explicit
