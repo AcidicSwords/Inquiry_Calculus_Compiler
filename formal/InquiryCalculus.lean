@@ -136,6 +136,7 @@ import InquiryCalculus.Legacy.V20.OperationalRootAliases
 import InquiryCalculus.Legacy.V20.StaticPairDiscipline
 import InquiryCalculus.Legacy.V20.AnswerConditionedUnlock
 import InquiryCalculus.Legacy.V20.RootFrontier
+import InquiryCalculus.Legacy.V20.LocalInterrogativeFixedPoint
 
 /-!
 # Inquiry Calculus formal successor

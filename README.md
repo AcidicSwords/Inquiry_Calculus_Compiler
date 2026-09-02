@@ -197,6 +197,10 @@ without resolving the continuation, while overlapping route explanations remain 
 The root-frontier boundary is documented in `formal-successor/PHASE_B_ROOT_FRONTIER.md`; it is a
 transparent composition of admitted root production, executable candidacy, and required-safe
 nondominance, not a new scheduler or frontier schema.
+The local-interrogative-fixed-point boundary is documented in
+`formal-successor/PHASE_B_LOCAL_INTERROGATIVE_FIXED_POINT.md`; local closure retains all seven
+typed exits and requires a positive newly open occurrence for reopening rather than inferring
+global completion or reopening from a context label.
 The reciprocal-regenerative reformulation is integrated through the non-authoritative
 `formal-successor/REGENERATIVE_SPINE.json` dependency projection and the expanded planned theorem
 registry. Neither artifact promotes a candidate relation or creates another live frontier.

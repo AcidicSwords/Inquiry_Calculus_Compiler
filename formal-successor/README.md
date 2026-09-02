@@ -235,6 +235,11 @@ overlapping route annotations erase before runtime and retain independent author
 production with the checked executable-candidate and required-safe nondominant relations. Required
 work survives ordinary dominance, no preorder preserves the field, and no scheduler is introduced.
 
+`PHASE_B_LOCAL_INTERROGATIVE_FIXED_POINT.md` reconstructs local closure as explicit-coverage exit
+classification plus absence of an open root-frontier residual. Its positive reopening witness keeps
+context change distinct from an exact occurrence becoming newly open, and it grants no global
+completion or scheduling authority.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

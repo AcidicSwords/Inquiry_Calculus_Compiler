@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-B-LOCAL-INTERROGATIVE-FIXED-POINT",
-  "status": "ONE_SPINE_AND_THIRTY_TWO_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
+  "frontier": "FORMAL-B-QUESTION-ROUTE-OCCURRENCE",
+  "status": "ONE_SPINE_AND_THIRTY_THREE_FORMAL_RATCHETS_CHECKED_FRONTIER_ADVANCED",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -42,7 +42,8 @@
     "Eleven operational names are removable root-composition presentations only under exact preservation and non-promotion obligations",
     "Static backward-looking names retain distinct evidence requirements; converse is not inverse and semantic backward presentation is not same-use reciprocal succession",
     "Answer-conditioned unlock is a readiness crossing rather than resolution, and route explanations erase before runtime",
-    "Root frontier is a transparent composition of admitted root production, executable candidacy, and required-safe nondominance"
+    "Root frontier is a transparent composition of admitted root production, executable candidacy, and required-safe nondominance",
+    "Local interrogative closure is explicit-coverage exit classification plus absence of an open root-frontier residual, with positive occurrence-indexed reopening"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -151,7 +152,10 @@
     "tools/answer_conditioned_unlock_check.js",
     "formal/InquiryCalculus/Legacy/V20/RootFrontier.lean",
     "formal-successor/PHASE_B_ROOT_FRONTIER.md",
-    "tools/root_frontier_check.js"
+    "tools/root_frontier_check.js",
+    "formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean",
+    "formal-successor/PHASE_B_LOCAL_INTERROGATIVE_FIXED_POINT.md",
+    "tools/local_interrogative_fixed_point_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -161,7 +165,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-B-LOCAL-INTERROGATIVE-FIXED-POINT",
+    "FORMAL-B-QUESTION-ROUTE-OCCURRENCE",
     "Completion relation, question-use evaluation, observation transport, QMate, determination refinement, factorization, reopening, and productivity obligations remain PLANNED at their lawful gates",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
@@ -202,12 +206,13 @@
     "Exact operational-alias source, well-shaped expansions, complete/depleted transparency contrasts, shared sample-root shapes, twelve source ablations, and fourteen axiom-free proof audits",
     "Exact static-pair sources, many-to-one converse/no-inverse contrast, supplied bridge and reciprocal provenance contrasts, sixteen source ablations, and sixteen axiom-free proof audits",
     "Exact answer-conditioned-unlock sources, readiness crossing and resolution separation, overlapping route erasure, route-authority contrasts, twenty-two source ablations, and fourteen axiom-free proof audits",
-    "Exact root-frontier sources, compositional semantic definition, nine-class eligibility field, required-dominance/no-preorder contrasts, fifteen source ablations, and fourteen axiom-free proof audits"
+    "Exact root-frontier sources, compositional semantic definition, nine-class eligibility field, required-dominance/no-preorder contrasts, fifteen source ablations, and fourteen axiom-free proof audits",
+    "Exact local-interrogative-fixed-point sources, seven exit coordinates, root-frontier open-residual boundary, productive/required breakers, positive reopening and unchanged-context contrasts, fifteen source ablations, and fifteen axiom-free proof audits"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "Local interrogative fixed point is the active predecessor-surface residual; every checked root-frontier, answer-unlock, static-pair, operational-alias, polarization, derived-root, and earlier boundary remains bounded to its supplied finite contract",
+    "Question-route occurrence is the active predecessor-surface residual; every checked local-fixed-point, root-frontier, answer-unlock, static-pair, operational-alias, polarization, derived-root, and earlier boundary remains bounded to its supplied finite contract",
     "The reciprocal-regenerative integration map and theorem registry are planning evidence, not successor semantics or proof",
     "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
   ],

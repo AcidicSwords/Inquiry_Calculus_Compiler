@@ -178,6 +178,7 @@ jobs:
           node tools/static_pair_discipline_check.js --compile
           node tools/answer_conditioned_unlock_check.js --compile
           node tools/root_frontier_check.js --compile
+          node tools/local_interrogative_fixed_point_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest

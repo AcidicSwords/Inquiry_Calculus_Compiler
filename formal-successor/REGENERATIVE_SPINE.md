@@ -27,6 +27,9 @@ architectural constraints now:
   overlapping erasable annotations whose stronger claims require independent authority.
 - the root frontier is not a new schema: it regenerates from admitted root production, executable
   candidacy, and required-safe nondominance, retaining required work and the no-preorder identity.
+- local interrogative closure is not another controller or global completion claim: it reuses the
+  root frontier under explicit coverage, preserves all seven typed exits, and reopens only through
+  a positive exact occurrence that becomes newly open.
 - semantic transport, reciprocal mates, and paired-path consequences are candidates derivable
   from relational composition, while actual answer-dependent succession stays distinct.
 - determination, quotient maximality, and the converse reopening witness require explicit
