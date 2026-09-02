@@ -109,8 +109,10 @@ assert.deepEqual(after, before, "deleting and rebuilding a path projection must 
 const context = cp.execFileSync(process.execPath, [path.join(root, ".claude/hooks/ic-spine.js"), "context", root], { encoding: "utf8" });
 assert.equal((context.match(/"kind": "QuestionPacket"/g) ?? []).length, 1);
 assert.doesNotMatch(context, /recurrence:|live questions:|selected executable occurrence:/);
-const packet = spine.questionPacket(root, requiredEarlier);
-assert.equal(packet.occurrence, requiredEarlier.occurrence);
+assert.throws(() => spine.questionPacket(root, requiredEarlier), /exact current obligation/u,
+  "an unrelated fixture occurrence cannot be spliced into the live obligation");
+const packet = spine.build(root).question_packet;
+assert.equal(packet.obligation_identity, spine.build(root).selection.selected.obligation_identity);
 assert.equal(packet.output_contract.authority, "candidate_only; independent checks and frontier review required");
 
 console.log("inquiry spine checks passed (one controller recurrence, one QuestionPacket, typed paths, CARRY, context identity, selection, closure, regeneration)");

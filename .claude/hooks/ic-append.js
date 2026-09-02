@@ -409,6 +409,12 @@ function validateSpineStateMachine(records) {
             if (record[key] !== value) fail(`line ${record.seq} instance Ask ${key} differs from its represented field`);
           }
         }
+        if (member.obligation_identity) {
+          for (const key of ["obligation_identity", "obligation_fingerprint", "backend"]) {
+            if (record[key] !== member[key]) fail(`line ${record.seq} construction Ask ${key} differs from its occurrence`);
+          }
+          requireRecordString(record, "packet_digest");
+        }
         state.ask = { occurrence: record.occurrence, mode: record.mode, member, seq: record.seq };
         state.askOccurrences.add(record.occurrence);
         break;
@@ -693,6 +699,7 @@ function validateSpineStateMachine(records) {
     surface_dirty: state.dirty || state.fieldRefresh || state.requiredRestore.size > 0,
     restore_required: [...state.requiredRestore], last_checkpoint: state.lastCheckpoint,
     last_checkpoint_resume: state.lastCheckpointResume, last_closure: state.lastClosure, last_stop: state.lastStop,
+    closure_outcome: state.closureOutcome,
     control: state.control, fold_evidence_schema: state.foldEvidenceSchema,
     folds: [...state.folds].map(([id, fold]) => ({ fold_id: id, ...fold })) };
 }
@@ -786,6 +793,12 @@ try {
     }
     if (record.kind === "field") {
       record.field_check = validateFieldRecord(record, path.resolve(__dirname, "../.."));
+    }
+    if (record.kind === "stop" && ["Satisfied", "Equivalent", "Impossible"].includes(record.state) &&
+        path.dirname(absolute) === path.join(repositoryRoot, ".claude/trace")) {
+      if (require("./ic-obligation-index.js").build(repositoryRoot).index.live.length) {
+        fail("construction reference-live obligations prevent a complete task stop; retain the precise partial outcome");
+      }
     }
     if (record.kind === "reify") {
       const policy = records.find((prior) => prior.kind === "policy");

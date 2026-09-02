@@ -69,8 +69,8 @@ function main() {
     occurrence: "OCC-AMBIENT-CAPABILITY-BASIS", prompt: "Can the alleged carrier be removed?",
     disposition: "Required", executable: true, dependencies: ["PROD-QUESTION-ROUTE-OCCURRENCE"]
   };
-  const packet = spine.questionPacket(root, fixtureOccurrence);
-  assert.equal(packet.occurrence, fixtureOccurrence.occurrence);
+  assert.throws(() => spine.questionPacket(root, fixtureOccurrence), /exact current obligation/u);
+  const packet = spine.build(root).question_packet;
   assert.equal(packet.candidate_basis.length, 4);
   assert.deepEqual(Object.keys(packet.output_contract).sort(), ["allowed_dispositions", "authority", "exact_fields"]);
   assert.match(packet.output_contract.authority, /candidate_only/u);

@@ -15,8 +15,15 @@ assert.equal(spine.schema, 1);
 assert.equal(spine.status, "rebuildable_regenerative_dependency_projection_not_semantic_authority");
 assert.equal(spine.candidate_source.manifest, "formal-successor/NORMALIZATION_INPUTS.json");
 assert.equal(spine.candidate_source.continuity, "formal-successor/NORMALIZATION_CONTINUITY.json");
+// The frontier is an OUTPUT of the construction field. The spine stores no cursor:
+// it declares how the selection is derived, and the projection must agree with the
+// derived selection rather than with a stored id.
+const obligationIndex = require(path.join(root, ".claude/hooks/ic-obligation-index.js"));
 const frontierIds = [...frontier.matchAll(/^id: ([A-Z0-9-]+)$/gmu)].map((match) => match[1]);
-assert.deepEqual(frontierIds, [spine.current_strongest_formal_frontier.id]);
+assert.equal(Object.hasOwn(spine.current_strongest_formal_frontier, "id"), false,
+  "the spine must not store a frontier cursor; selection is derived");
+assert.deepEqual(frontierIds, [obligationIndex.build(root).selected?.id ?? "FORMAL-CONSTRUCTION-NO-EXECUTABLE"],
+  "IMPLEMENTATION_FRONTIER.md does not project the derived selected obligation");
 
 const obligationIds = new Set(registry.obligations.map(({ id }) => id));
 const allowed = new Set(["proved", "derivable", "binding-conditional", "broken", "inapplicable", "unresolved"]);

@@ -23,12 +23,14 @@ formal/ plus checked Lean returns
 formal-successor/Questions.txt
   -> overcomplete inquiry/rendering corpus, not semantic authority
 
-IMPLEMENTATION_FRONTIER.md
-  -> the single current project-level open position
-
 Git, source, tools, tests, runtime and raw returns
   -> repository actuality and ancestry
 ```
+
+`IMPLEMENTATION_FRONTIER.md` is **not** in this list. It is a generated projection of the
+derived construction obligation field and carries no upstream authority. Editing it changes
+no live obligation; regenerate it with
+`node .claude/hooks/ic-frontier-generate.js write .`.
 
 `formal-successor/INQUIRY_SPINE_CONTRACT.json` is a compact machine projection of the construction
 specification and question corpus. It is neither semantic authority nor an independent procedure.
@@ -85,6 +87,11 @@ Because an external model call produces actuality, its Ask must be `Probe` and p
 the adapter rejects `Generate`, unsealed, stale, and attempt-exhausted occurrences. Preserve its raw
 return separately before interpretation. Attempt, token, wall-clock, backend, and tool limits bound
 one invocation; exhaustion yields `ResourceBounded`, never semantic closure.
+
+The adapter captures and appends Raw automatically, including malformed responses and transport
+failures. Do not append the same attempt again. One repository lock enforces single invocation;
+after a crashed process, inspect its PID and retained trace before removing a stale lock. Preserve
+uncertain effects as `Unknown`; never reset attempt accounting to retry silently.
 
 ## Branch contract and Rust boundary
 
@@ -152,10 +159,25 @@ Do not ask the user to act as the routine scheduler. Ask only when a consequenti
 distinction depends on genuinely private, normative, preference-dependent, permission-dependent,
 or externally unavailable information.
 
-When no narrower task is active, continue the strongest live position in
-`IMPLEMENTATION_FRONTIER.md` through the same inquiry spine until demonstrated completion or a
-lawful partial outcome. A finite checkpoint regenerates and continues while resources and an
-executable occurrence remain.
+When no narrower task is active, derive ordinary next work from the **derived construction
+obligation field** rather than from any hand-maintained cursor:
+
+```text
+node .claude/hooks/ic-construction-surface.js projection .
+node .claude/hooks/ic-obligation-index.js projection .
+```
+
+The recurrence after every checked return is: rebuild the field, find what remains open,
+generate the lawful inquiry, execute the next supported occurrence. Do not ask which theorem
+to work on next; that is derivable. A finite checkpoint regenerates and continues while
+resources and an executable occurrence remain.
+
+`Live != Executable`. `NoGeneratedQuestion != NoLiveObligation`. `ResourceBounded !=
+SemanticClosure`. A generator gap means a consequential obligation is live but not currently
+generated; it does not mean false, impossible, semantically absent, or formally closed. A
+representation gap is distinct: the admitted question language cannot yet express the required
+distinction. The explicit theorem registry is a seed and audit surface, not the complete
+theorem universe.
 
 ## Fold, method, and closure discipline
 

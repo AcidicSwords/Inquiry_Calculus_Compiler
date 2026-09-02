@@ -12,6 +12,7 @@ const root = path.resolve(__dirname, "..");
 require("./inquiry_spine_check.js");
 require("./integrated_theorem_obligations_check.js");
 require("./regenerative_spine_check.js");
+require("./construction_obligation_check.js");
 
 const read = (relative) => fs.readFileSync(path.join(root, ...relative.split("/")), "utf8");
 const spec = read("formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md");
@@ -35,6 +36,20 @@ const frontierIds = [...frontier.matchAll(/^id: ([A-Z0-9-]+)$/gmu)].map((match) 
 assert.equal(frontierIds.length, 1);
 assert.match(frontierIds[0], /^FORMAL-[A-Z0-9-]+$/u);
 assert.equal(JSON.parse(read("formal-successor/reports/latest.json")).frontier, frontierIds[0]);
+
+// The frontier is generated. It must declare itself generated and must not have
+// drifted from the derived construction obligation field.
+const frontierGenerate = require(path.join(root, ".claude/hooks/ic-frontier-generate.js"));
+assert.match(frontier, /GENERATED FILE\. Do not edit by hand\./u,
+  "IMPLEMENTATION_FRONTIER.md does not declare itself a generated projection");
+assert.equal(frontierGenerate.check(root).drifted, false,
+  "IMPLEMENTATION_FRONTIER.md drifted from the derived obligation field; regenerate it");
+
+// The autonomy contract must not restore the frontier as upstream construction truth.
+assert.doesNotMatch(agents, /IMPLEMENTATION_FRONTIER\.md\s*\n\s*->\s*the single current project-level open position/u,
+  "AGENTS.md still declares the frontier an upstream authority");
+assert.match(agents, /derived construction obligation field/u,
+  "AGENTS.md does not derive ordinary next work from the generated live field");
 
 const runtimeFiles = fs.readdirSync(path.join(root, ".claude/hooks"))
   .map((name) => path.join(root, ".claude/hooks", name)).filter((file) => fs.statSync(file).isFile());

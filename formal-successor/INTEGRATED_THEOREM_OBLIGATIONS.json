@@ -1,6 +1,7 @@
 {
   "schema": 1,
   "status": "planned_candidate_theorem_family_not_successor_semantics",
+  "coverage_boundary": "Explicit seed and audit surface, not the theorem universe. Applicable declaration, relation, deformation, proof-presupposition, continuity, corpus, language, binding and implementation obligations are reconstructed by the construction field.",
   "authority": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md#103.1",
   "source_provenance": {
     "kind": "user_supplied_cohesive_self_hosting_inquiry_spine_specification",

@@ -65,10 +65,8 @@ process.stdout.write(String(value ?? ""));
 }
 
 frontier_context() {
-    local f="$ROOT/IMPLEMENTATION_FRONTIER.md"
-    [ -f "$f" ] || die "IMPLEMENTATION_FRONTIER.md is missing"
-    node "$ROOT/.claude/hooks/ic-frontier.js" "$f" context ||
-        die "IMPLEMENTATION_FRONTIER.md live block failed exact schema validation"
+    node -e 'const o=require(process.argv[1]).build(process.argv[2]); process.stdout.write(`${o.selected?.id ?? "FORMAL-CONSTRUCTION-NO-EXECUTABLE"}\t${o.digest}\n`);' \
+        "$ROOT/.claude/hooks/ic-obligation-index.js" "$ROOT" || die "cannot derive construction context"
 }
 
 repository_actuality() {
@@ -102,6 +100,22 @@ cmd="${1:-}"
 [ -n "$cmd" ] || die "usage: ic-trace <init|status|state|open|mutation-open|stop-pending|control-open|resume|KIND> [k=v ...]"
 shift || true
 resume_requested=false
+
+# Same lifecycle, supplied prospective seal; no independent controller.
+if [ "$cmd" = "begin" ]; then
+    node -e '
+const spine=require(process.argv[1]), root=process.argv[2], seal={};
+for (const arg of process.argv.slice(3)) {
+  const at=arg.indexOf("=");
+  if(at<1) throw Error("begin requires key=value seal fields");
+  const key=arg.slice(0,at);
+  if(!["should_change","invariants","discriminator","wrong_impl","coverage"].includes(key)) throw Error("unknown seal field");
+  seal[key]=arg.slice(at+1);
+}
+process.stdout.write(JSON.stringify(spine.begin(root,seal))+"\n");
+' "$ROOT/.claude/hooks/ic-spine.js" "$ROOT" "$@" || die "cannot begin the derived occurrence"
+    exit 0
+fi
 
 case "$cmd" in
 init)

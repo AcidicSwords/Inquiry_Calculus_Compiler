@@ -29,7 +29,4 @@ for (const entry of targets) {
 assert.equal(targets[0].successor_target, "FORMAL-C-TYPED-RELATIONAL-SURFACE");
 assert.ok(targets.every((entry) => !/CHECKED|PROVED|REGENERATED/u.test(entry.regeneration_status)));
 
-const frontier = fs.readFileSync(path.join(root, "IMPLEMENTATION_FRONTIER.md"), "utf8");
-assert.match(frontier, /source artifacts|artifact (?:list|inventory)/iu);
-assert.match(frontier, /source correspondence/iu);
 console.log("PASS total eight-class regeneration target projection with exact artifacts, candidate ambient dependencies, and no forged correspondence");

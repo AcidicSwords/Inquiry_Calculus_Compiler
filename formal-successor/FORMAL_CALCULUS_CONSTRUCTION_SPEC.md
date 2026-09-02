@@ -6601,3 +6601,253 @@ Task closure is coverage-relative and requires no unresolved Ask, unreified Answ
 open effectful return, newly formable Required/Productive executable question, unchecked relevant
 path transport, or fold awaiting a carried discriminator check. A checkpoint never requests the
 user merely to choose the next ordinary question.
+
+---
+
+# 117. The frontier is an output of the construction field
+
+The governing implementation invariant of the construction harness is
+
+\[
+\boxed{
+\textbf{THE FRONTIER IS AN OUTPUT OF THE CONSTRUCTION FIELD.}
+}
+\]
+
+It is not an input telling the construction field what matters. Likewise
+
+\[
+\boxed{
+\textbf{THE EXPLICIT THEOREM REGISTRY IS A SEED AND AUDIT SURFACE.}
+}
+\]
+
+It is not assumed to be the complete theorem universe.
+
+The required dependency direction is
+
+\[
+\boxed{
+\begin{array}{c}
+\text{checked formal structure}
++\text{ protected predecessor obligations}
++\text{ dependency relations}\
++\text{ open correspondence obligations}
++\text{ breakers}
++\text{ language/corpus/domain obligations}\
+\downarrow\
+\text{required obligation field}
+\rightarrow
+\text{live field}
+\rightarrow
+\text{generated/covered field}\
+\downarrow\
+\text{executable frontier}
+\rightarrow
+\text{selected occurrence}
+\rightarrow
+QuestionPacket
+\rightarrow
+IMPLEMENTATION\_FRONTIER.md.
+\end{array}
+}
+\]
+
+Changing the Markdown must not change what is mathematically live. Relocating a
+hand-maintained cursor into another JSON file does not satisfy this section: the live field
+must be derived from structural obligations, so that the repository can answer
+
+\[
+\boxed{\text{What consequential relation remains unresolved?}}
+\]
+
+from the current construction itself.
+
+## 117.1 Protected construction surface
+
+Construct a rebuildable projection \(ProtSurface_\chi\) from repository-resident authority and
+evidence only. Every item carries stable identity and provenance. This is construction
+metainfrastructure; it is never an Inquiry Calculus semantic primitive.
+
+## 117.2 Required obligation closure
+
+Derive
+
+\[
+ReqObl_\chi=\mu O.\bigl(
+Seed\cup Decl\cup Rel\cup Deform\cup Presup\cup Impact
+\cup Continuity\cup Corpus\cup Language\cup Binding\cup Model\cup Implementation
+\bigr).
+\]
+
+This specifies the required dependency shape, not an implementation class hierarchy. Use the
+smallest implementation that preserves it. The resulting index must be generated,
+deterministic, deletable, reconstructible, and non-authoritative.
+
+## 117.3 Protected theorem completeness
+
+\[
+\boxed{
+\textbf{No theorem required to define, type, distinguish, compose, preserve, regenerate,}
+}
+\]
+\[
+\boxed{
+\textbf{reopen, render, or implement the claimed protected successor surface}
+}
+\]
+\[
+\boxed{
+\textbf{may be silently omitted.}
+}
+\]
+
+This is a coverage condition under the declared construction horizon, not a claim to enumerate
+every mathematical truth. Applicability must be checked: do not generate meaningless
+obligations merely to fill a schema. Every applicable consequential obligation must eventually
+carry a disposition in \(Proved+Broken+Inapplicable+Open\). **Silence is not a disposition.**
+
+## 117.4 Extensional liveness and generator adequacy
+
+Represent the reference live field independently of the question generator:
+
+\[
+Live^\infty_\chi=\{\omega\in ReqObl_\chi\mid Activation_\chi(\omega)\wedge\neg Terminal_\chi(\omega)\}.
+\]
+
+Let \(Reach_{\chi,G}\) be what the generator can materialize and \(\nu\succeq_\chi\omega\) the
+coverage relation. Check
+
+\[
+GeneratorAdequate_\chi(G)\iff\forall\omega\in Live^\infty_\chi,\;\exists\nu\in Reach_{\chi,G}:\nu\succeq_\chi\omega,
+\]
+
+and expose \(GenGap_\chi(G)\). Sharing a subject is not adequacy: coverage requires that the
+occurrence actually discharge that obligation's protected role.
+
+Preserve
+\[
+\text{available}\neq\text{representable}\neq\text{generated}\neq\text{selected}\neq\text{executed},
+\]
+\[
+\boxed{Live\neq Executable,}
+\qquad
+\boxed{NoGeneratedQuestion\neq NoLiveObligation,}
+\qquad
+\boxed{ResourceBounded\neq SemanticClosure.}
+\]
+
+A **generator gap** means a consequential obligation is live but not currently generated. It
+does not mean false, impossible, semantically absent, or formally closed. A **representation
+gap** is distinct: the admitted question language cannot express the required distinction. The
+recovery actions differ; do not collapse them.
+
+## 117.5 Total continuity
+
+Generalize continuity to the whole protected surface:
+
+\[
+Continuity_t:Prot(S_{t-1})\to DispositionWitness_t,
+\qquad
+dom(Continuity_t)=Prot(S_{t-1}).
+\]
+
+Every protected predecessor item requires a disposition. Absence from a later document is never
+a valid disposition.
+
+## 117.6 Self-warrant exclusion
+
+No candidate change may participate in establishing its own acceptance authority. A
+correspondence obligation may not discharge itself, and a discharge reference naming the
+obligation, `self`, `none`, `generated`, `assumed`, or `candidate` is rejected.
+
+## 117.7 Return-to-next-obligation recurrence
+
+After a checked return, propagate and rebuild:
+
+\[
+\omega_t\to r_t\to Check(r_t)\to\Delta_t\to Impact^\ast(\Delta_t)\to ReqObl_{t+1}\to Live^\infty_{t+1}\to\omega_{t+1}.
+\]
+
+The final transition must not require a person to choose \(\omega_{t+1}\). User input is
+appropriate only when the open relation genuinely depends on private information, a normative
+choice, permission, or unavailable external evidence. **Ordinary theorem scheduling is not such
+a case.**
+
+## 117.8 Required breaker tests
+
+The harness is not accepted without mutation breakers demonstrating at minimum: frontier
+inversion, cold frontier reconstruction, a real (non-fixture) packet, protected-target deletion
+detection, obligation generation from a new declaration without a registry edit, generator-gap
+reporting under suppressed generation, dependency-mutation propagation, horizon-refinement
+reopening, representation-versus-generator failure separation, self-warrant rejection, and the
+distinction between a finite presentation and a finite exact semantic closure certificate.
+
+## 117.9 Successor definition closure certificate
+
+A construction-level certificate \(SuccessorDefinitionClosureCert(C^\ast,\mathcal H^\ast)\)
+certifies only that successor construction satisfied this specification's declared closure
+requirements. It is not an Inquiry Calculus semantic primitive. It must fail unless type,
+capability, declaration-obligation, relation-obligation, protected-theorem-completeness,
+proof-presupposition, breaker, dependency, continuity, generator-adequacy, service-accounting,
+corpus, language, domain-pressure, regeneration, self-warrant-exclusion, and
+residual-accounting closure all hold.
+
+Do not stop merely because Lean compiles, registered theorem IDs are resolved, the frontier
+projection is short, local attempts are exhausted, or no sampled counterexample was found.
+
+## 117.10 Evidence, dependency coverage, and operational realization
+
+The implementation rebuilds the protected source inventory and obligation field with
+`ic-construction-surface.js` and `ic-obligation-index.js`. The single `ic-spine.js` projection
+materializes ordinary partially bound `ConstructionDischarge` relations over that field.
+These are construction contracts, not successor semantic primitives. Coverage requires the
+same obligation, statement, protected input fingerprint and typed open witness role; matching
+names alone are insufficient. A missing dependency is operationally unknown, not proof of a
+representation gap. Non-ready obligations remain reference-live.
+
+Source fingerprints include actual Lean bytes and the governing horizon, not only declaration
+names. The initial impact envelope conservatively includes all governing sources and checked
+formal modules. This may reopen more than the minimal dependency slice; it may not omit a
+consequential dependency. Narrowing that envelope itself requires checked coverage evidence.
+Proof-presupposition and inter-declaration connectivity are explicit open obligations until
+checked; a lexical source inventory is not an elaborated proof-dependency certificate.
+
+Accepted construction returns are recorded in the existing `DECISIONS.jsonl` ledger, with the
+exact obligation fingerprint, independent checker identity and bytes, actual raw return and
+digest, coverage, reopening condition, and reviewed acceptance epoch. A working candidate's
+new record is pending, not authority. Only an unchanged record in the accepted Git epoch may
+discharge a current obligation. A file name in `discharged_by` is only a search hint.
+Source, checker, dependency or horizon changes invalidate the return. A broken premise does
+not supply a positive theorem hypothesis; checked breakers retain corrective residuals.
+
+The generated field exposes application/typing audits where the source alone cannot decide
+which laws are consequential. It does not assert that every conceivable law applies. Every
+source question, protected predecessor declaration, normalization commitment and governing
+construction requirement retains identity and an explicit open or checked disposition.
+Discovery of additional required laws updates the owning formal source, theorem seed or
+checked-return record and regenerates the same field; there is no new scheduler registry.
+
+Use `node .claude/hooks/ic-spine.js begin .` with the prospective seal JSON on standard input
+to materialize the field and append the selected Ask and seal through the existing lifecycle.
+This operation rejects an unresolved prior effect, preserves alternatives, and bootstraps a
+fresh checkout without requiring a remembered question. Raw, Interpret, Check, Answer and
+Reify remain distinct existing trace operations. After reification and checked acceptance,
+regenerate the field and frontier. No manual Markdown cursor advancement is required.
+
+Local candidate attempts are counted against the obligation, including explicitly mapped
+prior occurrences. Exhaustion transfers allocation to the frontier-review capability while
+retaining the mathematical obligation. No available backend is `ResourceBounded`, not closure.
+The adapter requires the exact prospectively sealed packet and refuses answered or mismatched
+occurrences. Operational prompt prose remains distinct from canonical calculus prose.
+Every invocation appends its preserved Raw through that same lifecycle before parsing or
+rejecting the response. Transport failure is recorded as transport failure, not model content.
+One repository lock prevents concurrent invocations; a crashed invocation requires explicit
+recovery of its uncertain effect, not silent budget reset. Interpretation and acceptance remain
+separate frontier responsibilities.
+
+The 17-part construction closure certificate is a rebuildable, coverage-relative check. It
+fails while any required source/contract/applicability obligation, generator gap, unresolved
+effect, unexamined carried discriminator or reopening obligation remains. An empty trace field
+cannot override the independent reference-live field. Fair allocation and a finite inventory
+are not convergence, semantic completeness, or finite exact certification.

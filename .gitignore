@@ -13,6 +13,10 @@
 # are not, except when a DECISIONS.jsonl entry cites one as its evidence.
 /.claude/trace/
 
+# Rebuildable construction field; canonical inputs and independent returns are tracked.
+/formal-successor/CONSTRUCTION_OBLIGATION_INDEX.json
+/formal-successor/PROTECTED_CONSTRUCTION_SURFACE.json
+
 # Local configuration and secrets
 .env
 .env.*

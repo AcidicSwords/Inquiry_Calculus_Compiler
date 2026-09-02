@@ -1,55 +1,73 @@
 # Formal Successor Frontier
 
-This is the single live autonomous cursor on `codex/formal-successor`. The predecessor Rust cursor
-at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recorded in
-`formal-successor/PREDECESSOR_BASELINE.md`; Git retains its exact content.
+<!-- GENERATED FILE. Do not edit by hand. -->
 
-## Immediate demonstrated predecessor
+This file is a generated projection of the derived construction obligation field.
+It is not upstream authority: the live obligation is derived from checked formal
+structure, protected predecessor capabilities, dependency relations, and open
+correspondence obligations. Regenerate with:
 
-`FORMAL-C-AMBIENT-REGENERATION-TARGETS-001` projects all eight protected predecessor classes in the
-single regenerative spine to distinct successor targets, exact source artifacts, candidate ambient
-requirements, and an explicit open status. No entry claims a successor construction or source
-correspondence. This demonstrates that a total target inventory is possible but a total uniform
-regeneration witness is not yet constructible: its first dependency is the typed relational surface.
+    node .claude/hooks/ic-frontier-generate.js write .
+
+## Derivation
+
+    protected construction surface
+      -> required obligation closure
+      -> reference live field
+      -> executable field
+      -> selected occurrence
+      -> this projection
+
+required: 5896  live: 5896  executable: 5778  terminal: 0
 
 ## Strongest live obligation
 
-Construct the first successor typed relational surface over the ambient and binding interfaces,
-with an exact predecessor correspondence and without importing downstream question machinery.
+Type the contextual domain and codomain telescope for a predecessor binary Relation and encode a value pair as a closed substitution into it.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-C-TYPED-RELATIONAL-SURFACE
+id: FORMAL-C-RELATION-CONTEXTUAL-TELESCOPE
 plan_phase: C
-goal: Define the smallest successor type form and relation carriers generated from CtxFam RegPred IndPlus and contextual BindingPresentation then give a typed source correspondence for the protected v2 Types Forms and Relations boundary.
-protected_difference: Binding TyCode and El differ from contextual Ty and Tm; relation syntax differs from predicate denotation; arbitrary host relations differ from binding atomic ingress and free regular composites; predecessor embedding differs from reusing predecessor definitions as successor semantics.
-discriminator: Construct successor carriers and an explicit mapping for the exact Types Forms and Relations source artifacts. Reject type-tag erasure context loss relation-syntax/denotation collapse arbitrary-host-Prop import missing binding atom provenance and any use of question completion support or runtime machinery.
-horizon: Gate-C typed carriers forms relation terms denotation and predecessor correspondence only; no partial binding completion questions observation protection source programs Gate-C pass runtime Rust or O22
-relevant_decisions: D-9078, D-9079, D-9080
-relevant_failures: F-9029, F-9030
-if_pass: mark only typed-relational-surface correspondence checked in REGENERATIVE_SPINE and open the next dependency-ordered protected target
-if_fail: retain the exact missing ambient capability ill-typed source mapping type-tag breaker or syntax-denotation gap without advancing the remaining target statuses
+goal: Type the contextual domain and codomain telescope for a predecessor binary Relation and encode a value pair as a closed substitution into it.
+protected_difference: A contextual telescope is not a pair of loose variables; the codomain type must be weakened over the domain port and recovered exactly under the encoded assignment.
+discriminator: Require reindexing the weakened codomain type along the domain assignment to return the codomain type itself, so the second port is well typed at the base context.
+horizon: Gate-C contextual telescope and assignment only
+relevant_decisions: none
+relevant_failures: none
+if_pass: define representability against the encoded assignment
+if_fail: retain the exact reindexing coherence failure
 <!-- LIVE_FRONTIER_END -->
 
-## Smallest decisive breaker
+## Selection witness
 
-Map two predecessor forms with different protected type codes but extensionally equal underlying
-values. Any successor carrier or correspondence that erases the type tag fails before relations or
-questions are considered.
+Selection used explicit relations only: required_discharge, protected_impact, correspondence_order, stable_identity.
+A stable identity tie-break may allocate execution; it asserts no semantic optimality.
+Every unchosen live occurrence remains represented.
 
-## Prohibitions at this boundary
+Next-ranked live executable obligations, retained and unchosen:
 
-- Do not treat the derivation documents, normalization map, harness, local model, or frontier model as proof authority.
-- Do not force a constructor list where only a capability basis up to definitional equivalence is protected.
-- Do not identify semantic existence, representability, executability, support, warrant, or standing.
-- Do not add a named root, method, clock, route, fold, or backend policy as a semantic primitive.
-- Do not jump to O22 before the ambient basis and closure dependencies are checked.
-- Do not use axioms, proof gaps, model agreement, or Rust behavior to bypass typing and breakers.
-- Do not mark Gate C passed from basis setup or finite ablation candidates.
-- Do not rewrite v2.0, advance the deferred Rust frontier, or mix successor state into predecessor ledgers.
+- CONT-PCAP-PARTIAL-BINDING-QUESTION-FIBERS
+- CONT-PCAP-SUPPORTED-ANSWER-SOURCE-SUCCESSION
+- CONT-PCAP-PROTECTION-DISCRIMINATION-DETERMINATION
+- CONT-PCAP-COMPRESSION-RECOVERY-REOPENING
+- CONT-PCAP-QUESTION-PRODUCTIVITY-FRONTIER
+
+## Retained nonterminal accounting
+
+Representation gaps (expressible-language failures, not semantic absence):
+
+- none
+
+## Non-collapse at this boundary
+
+- Live is not executable, and no generated question is not no live obligation.
+- ResourceBounded is not semantic closure.
+- A generator gap means the obligation is not currently generated, not that it is false, impossible, or closed.
+- Model output is not proof; harness state is not semantic authority.
+- The explicit theorem registry is a seed and audit surface, not the complete theorem universe.
 
 ## Exit
 
-On pass, retain only the smallest typed capability basis, exact dependency map, and protected
-regeneration witnesses. On failure, retain the first missing capability, ill-typed derivation,
-failed regeneration, or decisive ablation breaker. Dependent Gate-C theorem families and Gates D–N
-remain live.
+On pass, apply the obligation's declared pass continuation, rebuild the obligation
+field, and let the changed field determine the next live obligation. On failure,
+retain the exact breaker or missing structure, rebuild the field, and continue from
+the resulting live residual.

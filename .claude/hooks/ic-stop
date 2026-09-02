@@ -43,4 +43,11 @@ if bash "$HERE/ic-trace" stop-pending >/dev/null 2>&1; then
     block 'The active field has no challenged task-level closure and lawful stop. A checkpoint is replayable progress, not task completion. Continue the executable Frontier or record an explicitly supported partial stop state after closure.'
 fi
 
+outcome="$(printf '%s' "$lifecycle" | node -e 'const fs=require("fs");process.stdout.write(String(JSON.parse(fs.readFileSync(0,"utf8")).closure_outcome??""));')"
+case "$outcome" in Unknown|Blocked|ResourceBounded) exit 0 ;; esac
+if ! node -e 'const s=require(process.argv[1]).build(process.argv[2]);process.exit(s.closure_certificate.established?0:1);' \
+    "$HERE/ic-spine.js" "$(cd "$HERE/../.." && pwd)"; then
+    block 'The independent construction field still has live obligations or unchecked closure requirements. Trace quiescence is not successor closure.'
+fi
+
 exit 0

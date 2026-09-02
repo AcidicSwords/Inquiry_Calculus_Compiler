@@ -24,6 +24,9 @@ jobs:
       - name: Check successor authority and predecessor freeze
         run: node tools/successor_control_check.js
 
+      - name: Check bounded local return accountability without a model service
+        run: node tools/local_candidate_return_check.js
+
       - name: Build and independently check the formal successor
         uses: leanprover/lean-action@v1
         env:
@@ -184,6 +187,8 @@ jobs:
           node tools/successor_ambient_capability_basis_check.js --compile
           node tools/successor_uniform_generation_check.js --compile
           node tools/ambient_regeneration_targets_check.js
+          node tools/successor_typed_relational_surface_check.js --compile
+          node tools/successor_relation_representability_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest

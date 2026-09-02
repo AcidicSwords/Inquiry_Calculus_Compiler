@@ -67,12 +67,20 @@ structure RegPred (context : CtxFam.{u, v, w, x}) where
   reindex_id : ∀ {Γ} (P : Pred Γ), reindex P (context.id Γ) = P
   reindex_comp : ∀ {Γ Δ Θ} (P : Pred Θ) (τ : context.Sub Δ Θ) (σ : context.Sub Γ Δ),
     reindex P (context.comp τ σ) = reindex (reindex P τ) σ
+  reindex_top : ∀ {Γ Δ} (σ : context.Sub Γ Δ), reindex top σ = top
+  reindex_meet : ∀ {Γ Δ} (P Q : Pred Δ) (σ : context.Sub Γ Δ),
+    reindex (meet P Q) σ = meet (reindex P σ) (reindex Q σ)
   reindex_monotone : ∀ {Γ Δ} {P Q : Pred Δ} (σ : context.Sub Γ Δ),
     Entails P Q → Entails (reindex P σ) (reindex Q σ)
   equal : ∀ {Γ} {A : context.Ty Γ}, context.Tm Γ A → context.Tm Γ A → Pred Γ
   equal_reindex : ∀ {Γ Δ} (σ : context.Sub Γ Δ) {A : context.Ty Δ}
       (left right : context.Tm Δ A),
     reindex (equal left right) σ = equal (context.reindexTm σ left) (context.reindexTm σ right)
+  /-- Equality introduction. Without this rule `equal` is an opaque family and even the
+  predecessor identity relation has no representing regular formula, so the doctrine could
+  not regenerate a protected predecessor capability. It is the smallest addition that
+  removes that specific failure; it grants no complement, implication, or universal. -/
+  equal_refl : ∀ {Γ} {A : context.Ty Γ} (term : context.Tm Γ A), Entails top (equal term term)
   existsAlong : ∀ {Γ} (A : context.Ty Γ), Pred (context.extend Γ A) → Pred Γ
   exists_adjunction : ∀ {Γ} (A : context.Ty Γ) (P : Pred (context.extend Γ A)) (Q : Pred Γ),
     Entails (existsAlong A P) Q ↔ Entails P (reindex Q (context.projection A))
@@ -163,6 +171,10 @@ structure BindingPresentation (context : CtxFam.{u, v, w, x})
   logicArity : LogicOperator → Nat
   logicInterpretation : ∀ operator Γ,
     (Fin (logicArity operator) → predicates.Pred Γ) → predicates.Pred Γ
+  logicNatural : ∀ operator {Γ Δ} (σ : context.Sub Γ Δ)
+      (arguments : Fin (logicArity operator) → predicates.Pred Δ),
+    predicates.reindex (logicInterpretation operator Δ arguments) σ =
+      logicInterpretation operator Γ (fun index => predicates.reindex (arguments index) σ)
   LogicLaw : Type s
   logicLawContext : LogicLaw → context.Ctx
   logicLawPremise : ∀ law, predicates.Pred (logicLawContext law)

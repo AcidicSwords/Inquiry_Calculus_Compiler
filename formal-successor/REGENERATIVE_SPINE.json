@@ -6,7 +6,7 @@
     "construction": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
     "checked_mathematics": "formal/ plus Lean kernel returns",
     "theorem_obligations": "formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json",
-    "live_frontier": "IMPLEMENTATION_FRONTIER.md"
+    "live_frontier": "derived:.claude/hooks/ic-obligation-index.js; IMPLEMENTATION_FRONTIER.md is its generated projection and carries no authority"
   },
   "candidate_source": {
     "kind": "normalized_multi_input_construction_pressure",
@@ -29,7 +29,137 @@
         "bindingPresentation"
       ],
       "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
-      "dependency_order": 1
+      "dependency_order": 1,
+      "checked_partial_artifact": "formal/InquiryCalculus/Successor/Relational/TypedSurface.lean",
+      "checked_partial_result": "binding forms contextual forms regular syntax derived reindexing denotation naturality type-tag foil and conditional type/form bridge",
+      "remaining_correspondence": [
+        {
+          "id": "FORMAL-C-RELATION-CONTEXTUAL-TELESCOPE",
+          "gate": "C",
+          "order": 1,
+          "depends_on": [],
+          "goal": "Type the contextual domain and codomain telescope for a predecessor binary Relation and encode a value pair as a closed substitution into it.",
+          "protected_difference": "A contextual telescope is not a pair of loose variables; the codomain type must be weakened over the domain port and recovered exactly under the encoded assignment.",
+          "discriminator": "Require reindexing the weakened codomain type along the domain assignment to return the codomain type itself, so the second port is well typed at the base context.",
+          "horizon": "Gate-C contextual telescope and assignment only",
+          "if_pass": "define representability against the encoded assignment",
+          "if_fail": "retain the exact reindexing coherence failure",
+          "relevant_decisions": [],
+          "relevant_failures": [],
+          "discharged_by": "formal/InquiryCalculus/Successor/Relational/Representability.lean"
+        },
+        {
+          "id": "FORMAL-C-RELATION-FAITHFUL-ENCODING",
+          "gate": "C",
+          "order": 2,
+          "depends_on": [
+            "FORMAL-C-RELATION-CONTEXTUAL-TELESCOPE"
+          ],
+          "goal": "Establish the faithfulness condition on a contextual bridge under which the predecessor identity relation is regularly representable, and prove that representation.",
+          "protected_difference": "Equality introduction makes a formula assertable; it does not make the encoding injective. Without reflection a doctrine identifying all values would represent identity vacuously.",
+          "discriminator": "Require entailment from top of equal(encode a)(encode a') to imply a = a', and derive identity representability from equal_refl plus that reflection. A model collapsing all values must fail the condition rather than pass the theorem.",
+          "horizon": "Gate-C identity relation representability only; no composition and no countermodel",
+          "if_pass": "open composition closure under existential reflection",
+          "if_fail": "retain the exact missing reflection or transport failure",
+          "relevant_decisions": [],
+          "relevant_failures": [],
+          "discharged_by": "formal/InquiryCalculus/Successor/Relational/Representability.lean"
+        },
+        {
+          "id": "FORMAL-C-RELATION-EXISTENTIAL-REFLECTION",
+          "gate": "C",
+          "order": 3,
+          "depends_on": [
+            "FORMAL-C-RELATION-FAITHFUL-ENCODING"
+          ],
+          "goal": "State the existential reflection condition at the base context and derive existential introduction from the declared adjunction, isolating exactly which direction must be supplied.",
+          "protected_difference": "The derived introduction rule differs from supplied witness extraction. A contextual witnessing term is not automatically an encoded predecessor mediator value, so this carrier does not establish composition correspondence.",
+          "discriminator": "Derive introduction from the adjunction and isolate exactly the supplied term-extraction direction in exists_iff_witness; retain predecessor mediator coverage and composite telescope construction as separate open requirements.",
+          "horizon": "Gate-C existential carrier and conditional witnessing terms only; no composition correspondence",
+          "if_pass": "build the three-port composite telescope and prove serial composition closure",
+          "if_fail": "retain the exact missing reflection principle as a candidate ambient capability",
+          "relevant_decisions": [],
+          "relevant_failures": [],
+          "discharged_by": "formal/InquiryCalculus/Successor/Relational/Representability.lean"
+        },
+        {
+          "id": "FORMAL-C-RELATION-NONREPRESENTABILITY-MODEL",
+          "prior_occurrences": ["OCC-RELATION-NONREPRESENTABILITY-MODEL"],
+          "gate": "C",
+          "order": 4,
+          "depends_on": [
+            "FORMAL-C-RELATION-CONTEXTUAL-TELESCOPE"
+          ],
+          "goal": "Instantiate NonRepresentabilityWitness in a concrete finite CtxFam and RegPred model, exhibiting one predecessor relation with no regular representation.",
+          "protected_difference": "Failed search is not a negative theorem. A checked countermodel is required, and the invariant interface alone does not exhibit one.",
+          "discriminator": "Build a finite model whose regular fragment is closed under top, meet, existential and equality but excludes the chosen relation, then discharge separates.",
+          "horizon": "Gate-C concrete countermodel only",
+          "if_pass": "close the regular relation representability characterization",
+          "if_fail": "retain the exact model coherence obligation that blocked the countermodel",
+          "relevant_decisions": [],
+          "relevant_failures": [],
+          "discharged_by": null
+        },
+        {
+          "id": "FORMAL-C-REGULAR-RELATION-REPRESENTABILITY",
+          "gate": "C",
+          "order": 5,
+          "depends_on": [
+            "FORMAL-C-RELATION-COMPOSITION-TELESCOPE",
+            "FORMAL-C-RELATION-NONREPRESENTABILITY-MODEL"
+          ],
+          "goal": "Type the contextual domain and codomain translation for predecessor Relation values and characterize exactly which are representable by successor RegularFormula with a denotational soundness witness.",
+          "protected_difference": "Arbitrary host Prop relations differ from binding-declared atoms and free regular composites; representability differs from semantic existence; a formula token differs from an extensional soundness proof; rejected universality differs from losing a protected predecessor capability.",
+          "discriminator": "Give the strongest typed bridge from predecessor admitted domain/codomain and values into one contextual telescope and require pointwise equivalence between legacy holds and formula denotation under encoded assignments. Construct the documented nonrepresentable semantic-section or complement breaker and retain an explicit binding extension path for protected nonregular relations.",
+          "horizon": "Gate-C relation representability contextual assignment and denotational soundness only; no partial binding question completion protection source program Gate-C pass runtime Rust or O22",
+          "if_pass": "complete the typed-relational-surface predecessor correspondence or split its binding-regular and binding-extension cases exactly then open partial binding question fibers",
+          "if_fail": "retain the exact nonrepresentable relation contextualization failure or missing binding extension without advancing the target status",
+          "relevant_decisions": [
+            "D-9078",
+            "D-9080",
+            "D-9081"
+          ],
+          "relevant_failures": [
+            "F-9029",
+            "F-9030"
+          ],
+          "discharged_by": null
+        },
+        {
+          "id": "FORMAL-C-TYPED-RELATIONAL-SURFACE-CLOSURE",
+          "gate": "C",
+          "order": 6,
+          "depends_on": [
+            "FORMAL-C-REGULAR-RELATION-REPRESENTABILITY"
+          ],
+          "goal": "Close the typed-relational-surface protected correspondence by exhibiting the exact predecessor-to-successor type, form, and relation translation with its retained binding-extension residual.",
+          "protected_difference": "A checked partial surface differs from a complete protected correspondence; a per-case bridge differs from a total translation; a retained residual differs from an unremarked omission.",
+          "discriminator": "Require every consequential predecessor Types/Forms/Relations declaration to have either a checked successor translation or an explicitly typed binding-extension residual, with no silently unclassified source item.",
+          "horizon": "Gate-C typed relational surface correspondence only; no question fibers, protection, programs, or Gate-C pass",
+          "if_pass": "mark the typed-relational-surface protected capability regenerated at declared coverage and open partial binding question fibers",
+          "if_fail": "retain the exact unmatched predecessor declaration or failed translation without advancing the target status",
+          "relevant_decisions": [],
+          "relevant_failures": [],
+          "discharged_by": null
+        },
+        {
+          "id": "FORMAL-C-RELATION-COMPOSITION-TELESCOPE",
+          "gate": "C",
+          "order": 4.5,
+          "depends_on": [
+            "FORMAL-C-RELATION-EXISTENTIAL-REFLECTION"
+          ],
+          "goal": "Build the three-port composite formula for serial composition and prove Represents for serialCompose under existential reflection plus exact coverage of the relevant contextual witnesses by encoded predecessor mediator values.",
+          "protected_difference": "An isolated existential carrier is not a composite formula. Explicit substitutions must identify the intended ports. A contextual mediator outside the image of encode can satisfy both component formulas while no predecessor mediator exists; term extraction alone does not prevent this.",
+          "discriminator": "Require the composite formula to typecheck in relationCtx bridge A C with the mediator existentially bound, and require pointwise agreement with the legacy serialCompose holds under encoded assignments.",
+          "horizon": "Gate-C serial composition telescope only",
+          "if_pass": "close the regular relation representability characterization with the countermodel",
+          "if_fail": "retain the exact substitution or port-identification failure",
+          "relevant_decisions": [],
+          "relevant_failures": [],
+          "discharged_by": null
+        }
+      ]
     },
     {
       "id": "partial-binding-question-fibers",
@@ -290,6 +420,30 @@
       "theorem": "consequence sufficiency does not imply coarsest characterization",
       "artifact": "formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean",
       "status": "proved"
+    },
+    {
+      "scope": "successor typed-relational partial boundary only",
+      "theorem": "regular formula denotation commutes with structurally derived reindexing and erasing a protected binding type tag is noninjective",
+      "artifact": "formal/InquiryCalculus/Successor/Relational/TypedSurface.lean",
+      "status": "proved_partial_target_evidence"
+    },
+    {
+      "scope": "successor relation representability contextual boundary only",
+      "theorem": "a predecessor binary relation has a typed contextual telescope and closed encoded assignment, representability is two-way denotational agreement, every regular formula denotation satisfies any regular-closed invariant so an invariant-separated relation is provably nonrepresentable, and an admitted binding atom is the typed retention route",
+      "artifact": "formal/InquiryCalculus/Successor/Relational/Representability.lean",
+      "status": "proved_partial_target_evidence"
+    },
+    {
+      "scope": "successor identity-relation representability boundary only",
+      "theorem": "the identity formula is assertable at every diagonal assignment from equality introduction and the substitution laws alone, and the predecessor identity relation is regularly representable exactly under a supplied encoding-reflection condition",
+      "artifact": "formal/InquiryCalculus/Successor/Relational/Representability.lean",
+      "status": "proved_conditional_on_supplied_faithfulness"
+    },
+    {
+      "scope": "successor existential carrier boundary only",
+      "theorem": "existential introduction is derivable from the declared adjunction and reindexing laws, and asserted existence coincides with actual witnessing exactly under a supplied reflection condition",
+      "artifact": "formal/InquiryCalculus/Successor/Relational/Representability.lean",
+      "status": "proved_carrier_not_composition_closure"
     }
   ],
   "candidate_inquiries": [
@@ -604,7 +758,9 @@
     "an empty current frontier does not establish global completion; context change alone does not reopen without a positive newly open occurrence",
     "a remaining-coordinate view cannot recover an independently varying removed capability, but this information breaker does not establish semantic ablation minimality",
     "a standalone host-Prop binding has no typed ambient relation and cannot regenerate contextual atoms logic or theory",
-    "atomizing every desired composite makes expressivity-only constructor minimality vacuous; semantic ablation needs uniform generation under conservative atom extension"
+    "atomizing every desired composite makes expressivity-only constructor minimality vacuous; semantic ablation needs uniform generation under conservative atom extension",
+    "a doctrine identifying every encoded value satisfies the diagonal assertion while the predecessor relation still separates the values, so assertion without reflection represents identity vacuously",
+    "a doctrine satisfying every existential with no witnessing term obeys all declared regular laws, so asserted existence is not an actual mediator value"
   ],
   "unresolved_typed_obligations": [
     "IC-THM-C-000",
@@ -620,9 +776,9 @@
     "IC-THM-H-008"
   ],
   "current_strongest_formal_frontier": {
-    "id": "FORMAL-C-TYPED-RELATIONAL-SURFACE",
-    "authority": "IMPLEMENTATION_FRONTIER.md",
-    "duplication_status": "checked synchronized projection only"
+    "derivation": "protected_predecessor_capabilities[].remaining_correspondence ordered by dependency_order then order, restricted to undischarged entries whose depends_on are discharged",
+    "projection": ".claude/hooks/ic-obligation-index.js",
+    "duplication_status": "no stored cursor; IMPLEMENTATION_FRONTIER.md is a generated projection of the derived selection"
   },
   "reconstruction_questions": [
     "Could the current successor be reconstructed from v2.0 plus this spine?",

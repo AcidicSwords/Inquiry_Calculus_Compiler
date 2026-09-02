@@ -140,6 +140,8 @@ import InquiryCalculus.Legacy.V20.LocalInterrogativeFixedPoint
 import InquiryCalculus.Legacy.V20.QuestionRouteOccurrence
 import InquiryCalculus.Successor.Ambient.CapabilityBasis
 import InquiryCalculus.Successor.Ambient.UniformGeneration
+import InquiryCalculus.Successor.Relational.TypedSurface
+import InquiryCalculus.Successor.Relational.Representability
 
 /-!
 # Inquiry Calculus formal successor

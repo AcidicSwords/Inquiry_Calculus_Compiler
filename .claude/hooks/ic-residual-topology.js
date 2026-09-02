@@ -8,6 +8,7 @@
 const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
+const obligationIndex = require("./ic-obligation-index.js");
 
 function fail(message) {
   throw new Error(message);
@@ -39,15 +40,21 @@ function requireStringArray(object, field, owner, allowEmpty = false) {
   }
 }
 
-function frontier(root) {
-  const relative = "IMPLEMENTATION_FRONTIER.md";
-  const bytes = fs.readFileSync(path.join(root, relative));
-  const text = bytes.toString("utf8");
-  const block = text.match(
-    /<!-- LIVE_FRONTIER_BEGIN -->[\s\S]*?^id:\s*([^\r\n]+)[\s\S]*?<!-- LIVE_FRONTIER_END -->/mu,
-  );
-  if (!block) fail("cannot read the one live Frontier id");
-  return { id: block[1].trim(), digest: sha256(bytes), relative };
+// The active residual is DERIVED from the construction obligation field, not read
+// from IMPLEMENTATION_FRONTIER.md. The Markdown is a generated projection of this
+// selection, so editing it changes no live obligation.
+function derivedSelection(root) {
+  const { index, selected, digest } = obligationIndex.build(root);
+  const retained = selected ?? { id: "FORMAL-CONSTRUCTION-NO-EXECUTABLE", gate: "C",
+    statement: "Live construction obligations remain retained; no executable occurrence is currently available.",
+    depends_on: [], coverage: "operational interruption, not semantic closure", provenance: "derived obligation field" };
+  return {
+    id: retained.id,
+    digest,
+    relative: "derived:.claude/hooks/ic-obligation-index.js",
+    obligation: retained,
+    index,
+  };
 }
 
 function csv(value) {
@@ -168,8 +175,11 @@ function validateSeed(root) {
   if (seed.status !== "explicit_project_obligation_seed_not_successor_semantics_or_moving_history") {
     fail("residual obligations must remain classified outside semantics and moving history");
   }
-  if (seed.selection_source !== "IMPLEMENTATION_FRONTIER.md") {
-    fail("residual obligation selection source must be IMPLEMENTATION_FRONTIER.md");
+  // The seed supplies stable obligations and dependency edges. It must not name a
+  // hand-maintained document as the mathematical selection source: selection is
+  // derived from the construction obligation field.
+  if (seed.selection_source !== "derived:.claude/hooks/ic-obligation-index.js") {
+    fail("residual obligation selection source must be the derived construction obligation index");
   }
   if (JSON.stringify(seed.states) !== JSON.stringify(["active", "blocked", "latent", "reopened"])) {
     fail("residual states must be active, blocked, latent, reopened");
@@ -232,7 +242,7 @@ function validateSeed(root) {
 
 function build(root) {
   const { seed, nodes, conditions, source } = validateSeed(root);
-  const selected = frontier(root);
+  const selected = derivedSelection(root);
   const { occurrences, sources, lifecycle } = readTraceOccurrences(root);
 
   for (const occurrence of occurrences) {
@@ -263,13 +273,13 @@ function build(root) {
     nodes.set(selected.id, {
       id: selected.id,
       state: "active",
-      phase: "frontier",
-      obligation: "See the one live block in IMPLEMENTATION_FRONTIER.md.",
-      depends_on: [],
+      phase: selected.obligation.gate ?? "derived",
+      obligation: selected.obligation.statement,
+      depends_on: selected.obligation.depends_on.filter((id) => nodes.has(id)),
       conditions: [],
-      coverage: "declared by the live Frontier",
-      evidence: ["IMPLEMENTATION_FRONTIER.md"],
-      reopen_when: ["the live Frontier changes"],
+      coverage: selected.obligation.coverage,
+      evidence: [selected.obligation.provenance],
+      reopen_when: ["the derived construction obligation field changes its selection"],
     });
   }
 

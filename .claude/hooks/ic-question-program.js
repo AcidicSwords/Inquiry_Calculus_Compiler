@@ -145,6 +145,8 @@ function validateFieldRecord(record, root) {
   const { contract } = activeInputs(root);
   const forms = contractLoader.formMap(contract);
   const occurrences = new Set();
+  const construction = members.some((member) => member.obligation_identity && member.executable) ?
+    new Map(require("./ic-obligation-index.js").build(root).index.obligations.map((entry) => [entry.id, entry])) : null;
   for (const member of members) {
     if (!member || Array.isArray(member) || typeof member !== "object") throw new Error("field member must be an object");
     for (const key of ["occurrence", "question_form", "rendering", "prompt", "context", "path", "disposition"]) {
@@ -172,6 +174,14 @@ function validateFieldRecord(record, root) {
     }
     if (!contract.lifecycle.live_dispositions.includes(member.disposition)) {
       throw new Error(`${member.occurrence}: disposition is not live`);
+    }
+    if (member.obligation_identity && member.executable) {
+      const obligation = construction.get(member.obligation_identity);
+      if (!obligation || !obligation.executable || member.obligation_fingerprint !== obligation.evidence_fingerprint ||
+          member.bound_roles?.obligation?.id !== obligation.id || member.open_relation?.statement !== obligation.statement ||
+          member.open_roles?.[0]?.carrier !== `DispositionWitness(${obligation.id})`) {
+        throw new Error(`${member.occurrence}: stale or mismatched construction occurrence`);
+      }
     }
   }
   return fieldRecordCheck(record);

@@ -16,9 +16,9 @@ const digest = (value) => crypto.createHash("sha256").update(value).digest("hex"
 
 const requiredGroups = {
   CtxFam: ["Sub", "comp_assoc", "reindexTy", "reindexTm", "extend", "projection", "genericTerm", "pair", "pair_unique", "lift"],
-  RegPred: ["Entails", "top", "meet", "reindex", "equal", "existsAlong", "exists_adjunction", "beckChevalley", "frobenius"],
+  RegPred: ["Entails", "top", "meet", "reindex", "reindex_top", "reindex_meet", "equal", "existsAlong", "exists_adjunction", "beckChevalley", "frobenius"],
   IndPlus: ["PositiveIndexedOperator", "PositiveAlgebra", "InitialPositiveAlgebra", "strictlyPositive", "initial"],
-  BindingPresentation: ["TyCode", "El", "RelAtom", "atomContext", "atomInterpretation", "LogicOperator", "logicInterpretation", "LogicLaw", "logicLawValid", "TheoryStatement", "theoryValid"]
+  BindingPresentation: ["TyCode", "El", "RelAtom", "atomContext", "atomInterpretation", "LogicOperator", "logicInterpretation", "logicNatural", "LogicLaw", "logicLawValid", "TheoryStatement", "theoryValid"]
 };
 
 function validateLean(lean) {

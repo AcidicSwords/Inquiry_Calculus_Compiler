@@ -34,7 +34,7 @@ promotion without the separately required formal evidence.
 `REGENERATIVE_SPINE.json` is the compact rebuildable construction memory for those candidates. It
 maps proposed relations to the exact current definitions they touch, records hypotheses, derivation
 status, breakers, propagation surfaces, predecessor-preservation conditions, and primitive
-elimination, and mirrors the one live frontier under an exact synchronization check. It is neither
+elimination, and contributes obligations to the generated live field. It is neither
 a second history nor a second scheduler, and its `proved` entries remain scoped to the checked
 predecessor modules unless a successor theorem is separately promoted.
 
@@ -61,13 +61,25 @@ node .claude/hooks/ic-local-attempt.js .
 The local return remains a candidate. The current Codex task is the frontier reviewer and remains
 responsible for framing, independent checking, propagation, and acceptance. Neither model can
 warrant itself. Invocation budget exhaustion is `ResourceBounded`, not closure.
+The adapter appends preserved Raw automatically even on malformed output or transport failure;
+do not append that attempt twice. A single-invocation lock prevents concurrent local requests.
 
 `.claude/hooks/ic-spine.js` is the sole public context projection. It reconstructs the current
 relational surface, typed compositional paths, transported discriminators, folds, executable
 frontier, and coverage-relative closure. Its fields, path indexes, and contexts are deletable
-projections over append-only evidence and the single `IMPLEMENTATION_FRONTIER.md` cursor. The
+projections over formal construction sources and append-only evidence. `IMPLEMENTATION_FRONTIER.md`
+is a generated output, never a cursor supplying mathematical content. The
 event lifecycle makes returns accountable beneath the recurrence; it is not another reasoning
 loop or semantic authority.
+
+The obligation projection derives exact construction-discharge questions. Use
+`ic-trace begin` with the five prospective seal fields to append the generated field, Ask and
+seal through the existing lifecycle. The Node equivalent is `ic-spine.js begin .` with seal JSON
+on standard input. After Raw/Interpret/Check/Answer/Reify, repeat from the rebuilt field.
+Accepted scoped returns belong in `DECISIONS.jsonl`; a new candidate record cannot grant itself
+authority before the checked Git ratchet. Source, horizon or checker changes reopen evidence.
+Local exhaustion selects frontier review, not semantic closure. The complete successor closure
+certificate remains false while any relevant open, blocked or unchecked obligation remains.
 
 The earlier preformal harness, search-asymmetry, question-rhythm, autonomous-iteration,
 Q1--Q14-construction, and question-bank-exploration documents were absorbed and removed. Git
