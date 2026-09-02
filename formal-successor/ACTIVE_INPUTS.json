@@ -11,7 +11,7 @@
     {
       "path": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
       "role": "single_successor_construction_and_acceptance_authority",
-      "sha256": "b8ee16395bd687cb29a1872cc2ed4fbf73172124be88d16c2233959863d518f9"
+      "sha256": "fc417d43cee696bf81d7347ae66252705b5e907fa03251aed4b8557e410d5c40"
     },
     {
       "path": "formal-successor/Questions.txt",
@@ -27,7 +27,7 @@
   "derived_construction_memory": {
     "path": "formal-successor/REGENERATIVE_SPINE.json",
     "role": "rebuildable_regenerative_dependency_projection_not_semantic_authority",
-      "sha256": "dd85f3337baa53aad4e78d02e0adad7e8f4d07e04fcee70e3de29fcfd2bebce6"
+    "sha256": "0a5df3b718d92ff9de7e5e2e311b829a0e8641623199d4c6188a9632f5a98cd0"
   },
   "derived_planning_registries": [
     {
@@ -50,7 +50,7 @@
     {
       "path": "formal-successor/BACKEND_PROFILES.json",
       "role": "operational_candidate_allocation_not_semantic_authority",
-      "sha256": "9cce3a50b1ff51174ba27dd608b676a86f34bc4be52089baa21e25c6d1e4adb4"
+      "sha256": "daaa275f60b595c35bd4e2c23cf5976d4c361f7be66e5215eeb2c8c6c59d1fb6"
     }
   ]
 }

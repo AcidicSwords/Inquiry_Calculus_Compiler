@@ -81,8 +81,10 @@ Invoke the local backend only on the current packet:
 node .claude/hooks/ic-local-attempt.js .
 ```
 
-Preserve its raw return separately before interpretation. Attempt, token, wall-clock, backend, and
-tool limits bound one invocation; exhaustion yields `ResourceBounded`, never semantic closure.
+Because an external model call produces actuality, its Ask must be `Probe` and prospectively sealed;
+the adapter rejects `Generate`, unsealed, stale, and attempt-exhausted occurrences. Preserve its raw
+return separately before interpretation. Attempt, token, wall-clock, backend, and tool limits bound
+one invocation; exhaustion yields `ResourceBounded`, never semantic closure.
 
 ## Branch contract and Rust boundary
 

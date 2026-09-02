@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "generated_at": "2026-09-01",
-  "frontier": "FORMAL-C-AMBIENT-CAPABILITY-BASIS",
-  "status": "PHASE_B_SOURCE_SURFACE_CHECKED_AND_B_TO_C_NORMALIZATION_ACTIVE",
+  "frontier": "FORMAL-C-AMBIENT-UNIFORM-REGENERATION-MAP",
+  "status": "GATE_C_UNIFORM_GENERATION_CHECKED_AMBIENT_REGENERATION_ACTIVE",
   "changed": [
     "One public model-facing recurrence replaces the independent engineering clock, question rhythm, and exploration schedulers",
     "The accountable lifecycle is retained beneath RETURN as typed trace protocol rather than exposed as a second reasoning loop",
@@ -48,7 +48,12 @@
     "P1-P22 construction pressure is totally dispositioned into the existing theorem graph without promotion",
     "The current candidate basis is CtxFam plus RegPred plus Ind+ plus explicit binding presentation, pending four independent ablations",
     "The model-facing harness emits exactly one QuestionPacket while retaining the field and recurrence in the controller",
-    "A host-tuned Qwen3-Coder 30B local backend generates bounded candidates and mandatory frontier review remains separate"
+    "A host-tuned Qwen3-Coder 30B local backend generates bounded candidates and mandatory frontier review remains separate",
+    "Gate-C ambient capability interfaces are exact and kernel-checked; finite coordinate independence is retained as partial evidence without promoting semantic minimality",
+    "External local-model returns are prospectively sealed Probe actuality; Generate unsealed stale and exhausted dispatches are rejected",
+    "BindingPresentation was corrected from disconnected host propositions to contextual atomic denotations logical extensions and theory sequents over CtxFam and RegPred",
+    "The ambient regeneration attempt localized UniformGeneration under conservative atom extension as the missing typed boundary for semantic minimality",
+    "UniformGeneration now retains construction source correspondence coverage and conservative witness transport; an axiom-audited foil separates pointwise atomization from uniform generation"
   ],
   "dependency_closure": [
     "AGENTS.md",
@@ -160,7 +165,15 @@
     "tools/root_frontier_check.js",
     "formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean",
     "formal-successor/PHASE_B_LOCAL_INTERROGATIVE_FIXED_POINT.md",
-    "tools/local_interrogative_fixed_point_check.js"
+    "tools/local_interrogative_fixed_point_check.js",
+    "formal/InquiryCalculus/Successor/Ambient/CapabilityBasis.lean",
+    "formal-successor/GATE_C_AMBIENT_CAPABILITY_BASIS.md",
+    "tools/successor_ambient_capability_basis_check.js",
+    ".claude/hooks/ic-local-attempt.js",
+    "formal-successor/BACKEND_PROFILES.json",
+    "formal/InquiryCalculus/Successor/Ambient/UniformGeneration.lean",
+    "formal-successor/GATE_C_UNIFORM_GENERATION.md",
+    "tools/successor_uniform_generation_check.js"
   ],
   "preserved": [
     "Inquiry_Calculus_v2_0.tex remains predecessor semantic authority",
@@ -170,7 +183,7 @@
     "Unchosen live questions remain represented"
   ],
   "still_open": [
-    "FORMAL-C-AMBIENT-CAPABILITY-BASIS",
+    "FORMAL-C-AMBIENT-UNIFORM-REGENERATION-MAP, four semantic ablations, and IC-THM-C-000",
     "Completion relation, question-use evaluation, observation transport, QMate, determination refinement, factorization, reopening, and productivity obligations remain PLANNED at their lawful gates",
     "Formal Gate B and all later promotion gates",
     "Arbitrary semantic continuation correspondence beyond the finite first-order contract"
@@ -214,14 +227,18 @@
     "Exact root-frontier sources, compositional semantic definition, nine-class eligibility field, required-dominance/no-preorder contrasts, fifteen source ablations, and fourteen axiom-free proof audits",
     "Exact local-interrogative-fixed-point sources, seven exit coordinates, root-frontier open-residual boundary, productive/required breakers, positive reopening and unchanged-context contrasts, fifteen source ablations, and fifteen axiom-free proof audits",
     "Exact question-route sources, equal semantic projection collision, occurrence-indexed removal fibers, protected coordinate ablations, and six axiom-free proof audits",
-    "P1-P22 normalization continuity, four-entry basis, single QuestionPacket, bounded backend policy, local model presence, and mandatory frontier-review checks"
+    "P1-P22 normalization continuity, four-entry basis, single QuestionPacket, bounded backend policy, local model presence, and mandatory frontier-review checks",
+    "Exact Gate-C ambient interfaces, four structural ablations, finite remaining-view non-recoverability, and two Lean proof audits",
+    "Typed UniformGeneration boundary conservative target and witness transport four structural ablations and four Lean proof audits including the atomization foil"
   ],
   "coverage_limits": [
     "The compact contract governs construction inquiry; it does not define successor semantics",
     "A green harness check does not warrant a generated Answer",
-    "The ambient capability basis is the active successor-normalization residual; every checked question-route, local-fixed-point, root-frontier, and earlier predecessor boundary remains bounded to its supplied finite contract",
+    "The typed ambient interfaces and finite coordinate breaker do not yet establish protected predecessor regeneration or semantic ablation minimality",
     "The reciprocal-regenerative integration map and theorem registry are planning evidence, not successor semantics or proof",
-    "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits"
+    "The trace coverage gap for prior unlock/reopening commits is retained as a reopenable process failure; later current checker returns do not retroactively authorize those commits",
+    "The binding dependency correction and finite coordinate breaker do not prove UniformGeneration protected sufficiency or semantic ablation minimality",
+    "The generic UniformGeneration theorem and foil are not yet an ambient instance total predecessor regeneration map or semantic capability ablation"
   ],
   "question_corpus_rerun": true,
   "regeneration_rerun": true,

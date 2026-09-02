@@ -138,6 +138,8 @@ import InquiryCalculus.Legacy.V20.AnswerConditionedUnlock
 import InquiryCalculus.Legacy.V20.RootFrontier
 import InquiryCalculus.Legacy.V20.LocalInterrogativeFixedPoint
 import InquiryCalculus.Legacy.V20.QuestionRouteOccurrence
+import InquiryCalculus.Successor.Ambient.CapabilityBasis
+import InquiryCalculus.Successor.Ambient.UniformGeneration
 
 /-!
 # Inquiry Calculus formal successor

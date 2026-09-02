@@ -181,6 +181,8 @@ jobs:
           node tools/local_interrogative_fixed_point_check.js --compile
           node tools/question_route_occurrence_check.js --compile
           node tools/successor_normalization_harness_check.js
+          node tools/successor_ambient_capability_basis_check.js --compile
+          node tools/successor_uniform_generation_check.js --compile
 
   phase-0:
     runs-on: ubuntu-latest

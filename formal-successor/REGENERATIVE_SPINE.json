@@ -50,6 +50,8 @@
     {"scope":"predecessor finite frontier boundary only","theorem":"root frontier composes existing relations while required work survives ordinary dominance and no preorder preserves the eligible field","artifact":"formal/InquiryCalculus/Legacy/V20/RootFrontier.lean","status":"proved"},
     {"scope":"predecessor finite local-closure boundary only","theorem":"local closure requires explicit coverage complete allowed-exit classification and no open root-frontier residual while reopening requires a positive newly open occurrence","artifact":"formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean","status":"proved"},
     {"scope":"predecessor finite question-route boundary only","theorem":"equal semantic route projections retain distinct occurrence continuation resolution-path and support ancestry while pure actual coordinates remain absent and removal fibers remain occurrence-indexed","artifact":"formal/InquiryCalculus/Legacy/V20/QuestionRouteOccurrence.lean","status":"proved"},
+    {"scope":"successor ambient interface-information boundary only","theorem":"CtxFam RegPred IndPlus and BindingPresentation have exact typed interfaces and no removed Boolean capability coordinate is recoverable from the remaining-coordinate view","artifact":"formal/InquiryCalculus/Successor/Ambient/CapabilityBasis.lean","status":"proved_partial_basis_evidence"},
+    {"scope":"successor generic uniform-generation boundary only","theorem":"uniform generation implies pointwise generation while pointwise generation by current-target atomization does not imply uniform generation after conservative extension","artifact":"formal/InquiryCalculus/Successor/Ambient/UniformGeneration.lean","status":"proved_boundary_and_foil"},
     {"scope":"predecessor deterministic-signature analogue only","theorem":"exact image factorization is equivalent to signature-kernel inclusion","artifact":"formal/InquiryCalculus/Legacy/V20/ExactDeterminationSignature.lean","status":"proved"},
     {"scope":"predecessor finite quotient countermodels only","theorem":"consequence sufficiency does not imply coarsest characterization","artifact":"formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean","status":"proved"}
   ],
@@ -190,11 +192,14 @@
     "a many-to-one converse has a plural reverse fiber and no strict inverse; generic backward presentation lacks same-use reciprocal provenance",
     "an already-ready stalled wrong-contract or wrong-continuation step does not unlock; a route label cannot supply authority or alter execution",
     "root production alone does not establish admission or execution; ordinary dominance cannot remove required work and missing preorder cannot shrink the field",
-    "an empty current frontier does not establish global completion; context change alone does not reopen without a positive newly open occurrence"
+    "an empty current frontier does not establish global completion; context change alone does not reopen without a positive newly open occurrence",
+    "a remaining-coordinate view cannot recover an independently varying removed capability, but this information breaker does not establish semantic ablation minimality",
+    "a standalone host-Prop binding has no typed ambient relation and cannot regenerate contextual atoms logic or theory",
+    "atomizing every desired composite makes expressivity-only constructor minimality vacuous; semantic ablation needs uniform generation under conservative atom extension"
   ],
   "unresolved_typed_obligations": ["IC-THM-C-000","IC-THM-C-007","IC-THM-C-008","IC-THM-C-009","IC-THM-C-010","IC-THM-C-011","IC-THM-C-012","IC-THM-E-004","IC-THM-H-006","IC-THM-H-007","IC-THM-H-008"],
   "current_strongest_formal_frontier": {
-    "id": "FORMAL-C-AMBIENT-CAPABILITY-BASIS",
+    "id": "FORMAL-C-AMBIENT-UNIFORM-REGENERATION-MAP",
     "authority": "IMPLEMENTATION_FRONTIER.md",
     "duplication_status": "checked synchronized projection only"
   },

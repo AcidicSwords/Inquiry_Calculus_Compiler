@@ -43,6 +43,7 @@ function main() {
   assert.ok(profiles.backends.every((entry) => entry.may_warrant === false));
   const local = profiles.backends.find((entry) => entry.id === "local-qwen-candidate");
   assert.equal(local.model, "inquiry-qwen3-coder:30b");
+  assert.equal(local.trace_mode, "Probe");
   assert.deepEqual(local.limits, {
     context_tokens: 8192, output_tokens: 2048, parallel_requests: 1,
     attempts_per_occurrence: 2, wall_clock_seconds: 900
@@ -52,6 +53,11 @@ function main() {
     "FROM qwen3-coder:30b-a3b-q4_K_M", "PARAMETER num_ctx 8192",
     "PARAMETER num_predict 2048", "never claim that you, a checker, or generated text warrants a theorem"
   ]) assert.ok(modelFile.includes(expected), expected);
+  const localAdapter = read(".claude/hooks/ic-local-attempt.js").toString();
+  for (const expected of [
+    "requireSealedProbe", "ask.mode !== \"Probe\"", "has no prospective seal", "is stale after",
+    "exhausted its", "backend.trace_mode !== \"Probe\"", "ic-local-attempt\\.js"
+  ]) assert.ok(localAdapter.includes(expected), expected);
 
   const context = childProcess.spawnSync(process.execPath, [".claude/hooks/ic-spine.js", "context", "."], {
     cwd: root, encoding: "utf8", windowsHide: true

@@ -36,7 +36,9 @@ User-level Ollama limits are `OLLAMA_NUM_PARALLEL=1`, `OLLAMA_MAX_LOADED_MODELS=
 
 That return was a smoke-test candidate and was not accepted as mathematics. Real inquiry must write
 the raw response to an evidence file, interpret it separately, run the relevant proof or breaker,
-and submit the result to frontier review.
+and submit the result to frontier review. Every live adapter call is an actual external return and
+must therefore be issued as a prospectively sealed `Probe`. The adapter rejects `Generate`, missing
+seals, stale occurrences, and exhausted per-occurrence attempt budgets before contacting Ollama.
 
 ## Roles
 

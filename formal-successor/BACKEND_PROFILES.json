@@ -23,6 +23,7 @@
       "base_model": "qwen3-coder:30b-a3b-q4_K_M",
       "model": "inquiry-qwen3-coder:30b",
       "endpoint": "http://127.0.0.1:11434/api/generate",
+      "trace_mode": "Probe",
       "capabilities": ["typed_candidate", "countermodel_candidate", "dependency_localization", "code_candidate"],
       "limits": {"context_tokens": 8192, "output_tokens": 2048, "parallel_requests": 1, "attempts_per_occurrence": 2, "wall_clock_seconds": 900},
       "cost_rank": 0,

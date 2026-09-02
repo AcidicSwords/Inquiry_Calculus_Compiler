@@ -117,7 +117,7 @@ try:
     if theorem_registry.get("status") != "planned_candidate_theorem_family_not_successor_semantics":
         fail("integrated theorem registry claims semantic authority")
     obligations = theorem_registry.get("obligations", [])
-    if len(obligations) != 34 or any(item.get("status") != "PLANNED" for item in obligations):
+    if len(obligations) != 35 or any(item.get("status") != "PLANNED" for item in obligations):
         fail("integrated theorem registry is incomplete or contains an unsupported promotion")
 except (json.JSONDecodeError, OSError, TypeError) as error:
     fail(f"INTEGRATED_THEOREM_OBLIGATIONS.json: {error}")

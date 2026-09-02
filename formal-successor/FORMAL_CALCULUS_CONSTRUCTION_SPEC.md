@@ -5798,6 +5798,11 @@ least-cost capable backend under explicit privacy, resource, and supplied-prefer
 A local backend may generate bounded candidates; a frontier backend may frame, review, use tools,
 and accept repository changes. Neither backend may warrant itself, and agreement is not proof.
 
+A call to any external model backend obtains an actual return and therefore uses a prospectively
+sealed `Probe`, even when the requested product is only a generated candidate. `Generate` may form
+a candidate internally but cannot admit an external raw return. The operational adapter must reject
+unsealed, stale, non-`Probe`, and attempt-exhausted invocations.
+
 Every invocation has explicit attempt, context/token, wall-clock, backend, queue, and tool bounds.
 Exhausting an invocation yields `ResourceBounded` and preserves the occurrence; it does not establish
 semantic closure, impossibility, irrelevance, or a representation gap. High-impact primitive,
