@@ -15,158 +15,567 @@
     "instruction_boundary": "candidate mathematical content only; the user's integration task, construction specification, and repository AGENTS.md govern its use"
   },
   "protected_predecessor_capabilities": [
-    {"id":"typed-relational-surface","artifacts":["formal/InquiryCalculus/Legacy/V20/Types.lean","formal/InquiryCalculus/Legacy/V20/Forms.lean","formal/InquiryCalculus/Legacy/V20/Relations.lean"]},
-    {"id":"partial-binding-question-fibers","artifacts":["formal/InquiryCalculus/Legacy/V20/RelationSchemaPorts.lean","formal/InquiryCalculus/Legacy/V20/PartialBindingFiber.lean","formal/InquiryCalculus/Legacy/V20/CanonicalQuestionSyntax.lean","formal/InquiryCalculus/Legacy/V20/AnswerCarrierValidity.lean"]},
-    {"id":"supported-answer-source-succession","artifacts":["formal/InquiryCalculus/Legacy/V20/InquirySourceGrammar.lean","formal/InquiryCalculus/Legacy/V20/OccurrenceIndexedQuestionSuccession.lean"]},
-    {"id":"protection-discrimination-determination","artifacts":["formal/InquiryCalculus/Legacy/V20/QuestionConditionedDiscrimination.lean","formal/InquiryCalculus/Legacy/V20/ProtectedBehavioralEquivalence.lean","formal/InquiryCalculus/Legacy/V20/ProtectedDetermination.lean"]},
-    {"id":"compression-recovery-reopening","artifacts":["formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean","formal/InquiryCalculus/Legacy/V20/CompressionLicense.lean","formal/InquiryCalculus/Legacy/V20/Reopening.lean"]},
-    {"id":"question-productivity-frontier","artifacts":["formal/InquiryCalculus/Legacy/V20/QuestionProductivity.lean","formal/InquiryCalculus/Legacy/V20/DerivedQuestionAvailability.lean","formal/InquiryCalculus/Legacy/V20/SemanticExecutableFrontier.lean","formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean","formal/InquiryCalculus/Legacy/V20/RootFrontier.lean","formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean"]},
-    {"id":"question-route-occurrence-regeneration","artifacts":["formal/InquiryCalculus/Legacy/V20/OccurrenceIndexedQuestionSuccession.lean","formal/InquiryCalculus/Legacy/V20/QuestionRouteOccurrence.lean"]},
-    {"id":"canonical-language-roots-and-static-pairs","artifacts":["formal/InquiryCalculus/Legacy/V20/CanonicalRenderingElaboration.lean","formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean","formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean","formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean"]}
+    {
+      "id": "typed-relational-surface",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/Types.lean",
+        "formal/InquiryCalculus/Legacy/V20/Forms.lean",
+        "formal/InquiryCalculus/Legacy/V20/Relations.lean"
+      ],
+      "successor_target": "FORMAL-C-TYPED-RELATIONAL-SURFACE",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 1
+    },
+    {
+      "id": "partial-binding-question-fibers",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/RelationSchemaPorts.lean",
+        "formal/InquiryCalculus/Legacy/V20/PartialBindingFiber.lean",
+        "formal/InquiryCalculus/Legacy/V20/CanonicalQuestionSyntax.lean",
+        "formal/InquiryCalculus/Legacy/V20/AnswerCarrierValidity.lean"
+      ],
+      "successor_target": "IC-THM-C-007",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "indPlus",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 2
+    },
+    {
+      "id": "supported-answer-source-succession",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/InquirySourceGrammar.lean",
+        "formal/InquiryCalculus/Legacy/V20/OccurrenceIndexedQuestionSuccession.lean"
+      ],
+      "successor_target": "IC-THM-E-SOURCE-SUCCESSION",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "indPlus",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 3
+    },
+    {
+      "id": "protection-discrimination-determination",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/QuestionConditionedDiscrimination.lean",
+        "formal/InquiryCalculus/Legacy/V20/ProtectedBehavioralEquivalence.lean",
+        "formal/InquiryCalculus/Legacy/V20/ProtectedDetermination.lean"
+      ],
+      "successor_target": "IC-THM-C-012",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 4
+    },
+    {
+      "id": "compression-recovery-reopening",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean",
+        "formal/InquiryCalculus/Legacy/V20/CompressionLicense.lean",
+        "formal/InquiryCalculus/Legacy/V20/Reopening.lean"
+      ],
+      "successor_target": "IC-THM-H-006",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 5
+    },
+    {
+      "id": "question-productivity-frontier",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/QuestionProductivity.lean",
+        "formal/InquiryCalculus/Legacy/V20/DerivedQuestionAvailability.lean",
+        "formal/InquiryCalculus/Legacy/V20/SemanticExecutableFrontier.lean",
+        "formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean",
+        "formal/InquiryCalculus/Legacy/V20/RootFrontier.lean",
+        "formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean"
+      ],
+      "successor_target": "IC-THM-E-004",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "indPlus",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 6
+    },
+    {
+      "id": "question-route-occurrence-regeneration",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/OccurrenceIndexedQuestionSuccession.lean",
+        "formal/InquiryCalculus/Legacy/V20/QuestionRouteOccurrence.lean"
+      ],
+      "successor_target": "IC-THM-D-QUESTION-ROUTE",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "indPlus",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 7
+    },
+    {
+      "id": "canonical-language-roots-and-static-pairs",
+      "artifacts": [
+        "formal/InquiryCalculus/Legacy/V20/CanonicalRenderingElaboration.lean",
+        "formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean",
+        "formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean",
+        "formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean"
+      ],
+      "successor_target": "IC-THM-D-CANONICAL-LANGUAGE",
+      "candidate_ambient_requirements": [
+        "ctxFam",
+        "regPred",
+        "indPlus",
+        "bindingPresentation"
+      ],
+      "regeneration_status": "OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE",
+      "dependency_order": 8
+    }
   ],
   "current_semantic_kernel": {
     "status": "candidate_until_gate_c_and_gate_f",
-    "primitive_candidates": ["CtxFam: context-indexed types terms substitution and comprehension","RegPred: proof-insensitive regular predicate doctrine with equality finite meet existential reindexing Beck-Chevalley and Frobenius","Ind+: substitution-stable positive indexed generation","explicit binding presentation over the ambient"],
+    "primitive_candidates": [
+      "CtxFam: context-indexed types terms substitution and comprehension",
+      "RegPred: proof-insensitive regular predicate doctrine with equality finite meet existential reindexing Beck-Chevalley and Frobenius",
+      "Ind+: substitution-stable positive indexed generation",
+      "explicit binding presentation over the ambient"
+    ],
     "candidate_basis_obligation": "IC-THM-C-000",
-    "not_primitive": ["relation composition syntax","partial binding semantics","evidence species","source succession transition","interrogative roots","operational root aliases","static pair names","route explanation labels","root frontier schema","observation pullback","QMate","determination","fold","reopening","productivity","selection policy","engineering clock","backend allocation"]
+    "not_primitive": [
+      "relation composition syntax",
+      "partial binding semantics",
+      "evidence species",
+      "source succession transition",
+      "interrogative roots",
+      "operational root aliases",
+      "static pair names",
+      "route explanation labels",
+      "root frontier schema",
+      "observation pullback",
+      "QMate",
+      "determination",
+      "fold",
+      "reopening",
+      "productivity",
+      "selection policy",
+      "engineering clock",
+      "backend allocation"
+    ]
   },
   "derived_definition_candidates": [
-    {"name":"completion relation","obligation":"IC-THM-C-007"},
-    {"name":"question-use evaluation","obligation":"IC-THM-C-008"},
-    {"name":"observation pullback","obligation":"IC-THM-C-009"},
-    {"name":"QMate","obligation":"IC-THM-C-010"},
-    {"name":"paired path consequence","obligation":"IC-THM-C-011"},
-    {"name":"determination and horizon alternatives","obligation":"IC-THM-C-012"},
-    {"name":"continuation discrimination productivity","obligation":"IC-THM-E-004"},
-    {"name":"factorization kernel","obligation":"IC-THM-H-006"},
-    {"name":"exact fold and semantic quotient","obligation":"IC-THM-H-007"},
-    {"name":"positive reopening","obligation":"IC-THM-H-008"}
+    {
+      "name": "completion relation",
+      "obligation": "IC-THM-C-007"
+    },
+    {
+      "name": "question-use evaluation",
+      "obligation": "IC-THM-C-008"
+    },
+    {
+      "name": "observation pullback",
+      "obligation": "IC-THM-C-009"
+    },
+    {
+      "name": "QMate",
+      "obligation": "IC-THM-C-010"
+    },
+    {
+      "name": "paired path consequence",
+      "obligation": "IC-THM-C-011"
+    },
+    {
+      "name": "determination and horizon alternatives",
+      "obligation": "IC-THM-C-012"
+    },
+    {
+      "name": "continuation discrimination productivity",
+      "obligation": "IC-THM-E-004"
+    },
+    {
+      "name": "factorization kernel",
+      "obligation": "IC-THM-H-006"
+    },
+    {
+      "name": "exact fold and semantic quotient",
+      "obligation": "IC-THM-H-007"
+    },
+    {
+      "name": "positive reopening",
+      "obligation": "IC-THM-H-008"
+    }
   ],
   "proved_theorem_spine": [
-    {"scope":"predecessor source-bound only","theorem":"six interrogative roots have transparent canonical presentations and reification reuses the same root family","artifact":"formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean","status":"proved"},
-    {"scope":"predecessor finite presentation boundary only","theorem":"operational aliases are transparent only with all preservation coordinates and no primitive opcode or scheduler promotion","artifact":"formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean","status":"proved"},
-    {"scope":"predecessor finite presentation boundary only","theorem":"many-to-one converse is not a strict inverse and same-use reciprocal return requires exact occurrence provenance","artifact":"formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean","status":"proved"},
-    {"scope":"predecessor finite transition boundary only","theorem":"answer-conditioned readiness crossing does not resolve its continuation and overlapping route labels erase before runtime","artifact":"formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean","status":"proved"},
-    {"scope":"predecessor finite frontier boundary only","theorem":"root frontier composes existing relations while required work survives ordinary dominance and no preorder preserves the eligible field","artifact":"formal/InquiryCalculus/Legacy/V20/RootFrontier.lean","status":"proved"},
-    {"scope":"predecessor finite local-closure boundary only","theorem":"local closure requires explicit coverage complete allowed-exit classification and no open root-frontier residual while reopening requires a positive newly open occurrence","artifact":"formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean","status":"proved"},
-    {"scope":"predecessor finite question-route boundary only","theorem":"equal semantic route projections retain distinct occurrence continuation resolution-path and support ancestry while pure actual coordinates remain absent and removal fibers remain occurrence-indexed","artifact":"formal/InquiryCalculus/Legacy/V20/QuestionRouteOccurrence.lean","status":"proved"},
-    {"scope":"successor ambient interface-information boundary only","theorem":"CtxFam RegPred IndPlus and BindingPresentation have exact typed interfaces and no removed Boolean capability coordinate is recoverable from the remaining-coordinate view","artifact":"formal/InquiryCalculus/Successor/Ambient/CapabilityBasis.lean","status":"proved_partial_basis_evidence"},
-    {"scope":"successor generic uniform-generation boundary only","theorem":"uniform generation implies pointwise generation while pointwise generation by current-target atomization does not imply uniform generation after conservative extension","artifact":"formal/InquiryCalculus/Successor/Ambient/UniformGeneration.lean","status":"proved_boundary_and_foil"},
-    {"scope":"predecessor deterministic-signature analogue only","theorem":"exact image factorization is equivalent to signature-kernel inclusion","artifact":"formal/InquiryCalculus/Legacy/V20/ExactDeterminationSignature.lean","status":"proved"},
-    {"scope":"predecessor finite quotient countermodels only","theorem":"consequence sufficiency does not imply coarsest characterization","artifact":"formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean","status":"proved"}
+    {
+      "scope": "predecessor source-bound only",
+      "theorem": "six interrogative roots have transparent canonical presentations and reification reuses the same root family",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "predecessor finite presentation boundary only",
+      "theorem": "operational aliases are transparent only with all preservation coordinates and no primitive opcode or scheduler promotion",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "predecessor finite presentation boundary only",
+      "theorem": "many-to-one converse is not a strict inverse and same-use reciprocal return requires exact occurrence provenance",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "predecessor finite transition boundary only",
+      "theorem": "answer-conditioned readiness crossing does not resolve its continuation and overlapping route labels erase before runtime",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "predecessor finite frontier boundary only",
+      "theorem": "root frontier composes existing relations while required work survives ordinary dominance and no preorder preserves the eligible field",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/RootFrontier.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "predecessor finite local-closure boundary only",
+      "theorem": "local closure requires explicit coverage complete allowed-exit classification and no open root-frontier residual while reopening requires a positive newly open occurrence",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "predecessor finite question-route boundary only",
+      "theorem": "equal semantic route projections retain distinct occurrence continuation resolution-path and support ancestry while pure actual coordinates remain absent and removal fibers remain occurrence-indexed",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/QuestionRouteOccurrence.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "successor ambient interface-information boundary only",
+      "theorem": "CtxFam RegPred IndPlus and BindingPresentation have exact typed interfaces and no removed Boolean capability coordinate is recoverable from the remaining-coordinate view",
+      "artifact": "formal/InquiryCalculus/Successor/Ambient/CapabilityBasis.lean",
+      "status": "proved_partial_basis_evidence"
+    },
+    {
+      "scope": "successor generic uniform-generation boundary only",
+      "theorem": "uniform generation implies pointwise generation while pointwise generation by current-target atomization does not imply uniform generation after conservative extension",
+      "artifact": "formal/InquiryCalculus/Successor/Ambient/UniformGeneration.lean",
+      "status": "proved_boundary_and_foil"
+    },
+    {
+      "scope": "predecessor deterministic-signature analogue only",
+      "theorem": "exact image factorization is equivalent to signature-kernel inclusion",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/ExactDeterminationSignature.lean",
+      "status": "proved"
+    },
+    {
+      "scope": "predecessor finite quotient countermodels only",
+      "theorem": "consequence sufficiency does not imply coarsest characterization",
+      "artifact": "formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean",
+      "status": "proved"
+    }
   ],
   "candidate_inquiries": [
     {
-      "id":"RS-COMPLETION",
-      "touches":["RelationSchemaSignature","PartialBindingSyntax","CompletionFiberSyntax","CanonicalQuestionSyntax","AnswerCarrierSyntax","ValidCompletionSyntax"],
-      "current_meaning":"Data-only schema, open-port, candidate-fiber, question, answer-carrier, and completion syntax; relation satisfaction is still an explicit obligation.",
-      "proposed_relation":"C_(R,I)(beta,a) iff the typed disjoint merge beta+ a satisfies R, with Fib(?_I R[beta]) = Prof_C(beta).",
-      "making_question":"What exact typed relation turns the current candidate completion carrier into the valid completion fiber of one partial binding?",
-      "types_and_hypotheses":["finite typed port family","nonempty open family","closed/open partition","typed disjoint merge","relation-schema denotation and satisfaction"],
-      "derivation_attempt":"Blocked at the current predecessor surface because RelationSchemaSignature is deliberately data-only and satisfaction is not yet defined.",
-      "missing_structure":["schema denotation","total closed/open assignment representation","typed merge satisfaction"],
-      "breaker":"A port that is neither assigned nor requested is silently existential, or candidate coordinates are accepted without relation satisfaction.",
-      "disposition":"unresolved",
-      "propagate_to":["question fiber","question use","support answer typing","render/elaborate","compiler question IR","conformance fixtures"],
-      "predecessor_preservation":"Recover every v2.0 typed partial binding and valid completion; do not collapse candidate, completion, return, support, or standing.",
-      "primitive_elimination":"If proved, completion fiber becomes a profile and duplicate shaped-hole semantics is demoted.",
-      "theorem_obligations":["IC-THM-C-007"]
+      "id": "RS-COMPLETION",
+      "touches": [
+        "RelationSchemaSignature",
+        "PartialBindingSyntax",
+        "CompletionFiberSyntax",
+        "CanonicalQuestionSyntax",
+        "AnswerCarrierSyntax",
+        "ValidCompletionSyntax"
+      ],
+      "current_meaning": "Data-only schema, open-port, candidate-fiber, question, answer-carrier, and completion syntax; relation satisfaction is still an explicit obligation.",
+      "proposed_relation": "C_(R,I)(beta,a) iff the typed disjoint merge beta+ a satisfies R, with Fib(?_I R[beta]) = Prof_C(beta).",
+      "making_question": "What exact typed relation turns the current candidate completion carrier into the valid completion fiber of one partial binding?",
+      "types_and_hypotheses": [
+        "finite typed port family",
+        "nonempty open family",
+        "closed/open partition",
+        "typed disjoint merge",
+        "relation-schema denotation and satisfaction"
+      ],
+      "derivation_attempt": "Blocked at the current predecessor surface because RelationSchemaSignature is deliberately data-only and satisfaction is not yet defined.",
+      "missing_structure": [
+        "schema denotation",
+        "total closed/open assignment representation",
+        "typed merge satisfaction"
+      ],
+      "breaker": "A port that is neither assigned nor requested is silently existential, or candidate coordinates are accepted without relation satisfaction.",
+      "disposition": "unresolved",
+      "propagate_to": [
+        "question fiber",
+        "question use",
+        "support answer typing",
+        "render/elaborate",
+        "compiler question IR",
+        "conformance fixtures"
+      ],
+      "predecessor_preservation": "Recover every v2.0 typed partial binding and valid completion; do not collapse candidate, completion, return, support, or standing.",
+      "primitive_elimination": "If proved, completion fiber becomes a profile and duplicate shaped-hole semantics is demoted.",
+      "theorem_obligations": [
+        "IC-THM-C-007"
+      ]
     },
     {
-      "id":"RS-QUESTION-USE",
-      "touches":["QuestionSupportProfileSyntax","LocalQuestionEquivalenceSyntax","DiscRole construction-spec boundary"],
-      "current_meaning":"Question-conditioned discrimination keeps a question and live carrier token but leaves complete answer compatibility, profile fibers, and functional projection open.",
-      "proposed_relation":"A semantic question-use is delta : X ⇝ B_(R,I), and Eval = C_(R,I) ∘ delta.",
-      "making_question":"Which part of DiscRole remains protectedly necessary after its evaluation behavior is represented by an ordinary typed binding relation?",
-      "types_and_hypotheses":["checked completion relation","typed carrier X","binding relation delta","separate applicability/scope/representation/execution witnesses where required"],
-      "derivation_attempt":"Composition derives evaluation behavior, but it cannot derive operational applicability, syntax representability, or executability.",
-      "missing_structure":["completion relation","typed applicability boundary","semantic-use to syntax-use correspondence"],
-      "breaker":"Two uses have the same delta but different declared applicability or executable capability; deleting those coordinates would make an inapplicable use executable.",
-      "disposition":"binding-conditional",
-      "propagate_to":["DiscRole","question equivalence","semantic question universe","transport","adequacy","rendering","runtime dispatch"],
-      "predecessor_preservation":"Preserve every independently typed role/scope coordinate; demote only opaque semantics duplicated by delta.",
-      "primitive_elimination":"DiscRole is reduced to delta plus the exact non-derivable witnesses exposed by breakers.",
-      "theorem_obligations":["IC-THM-C-008"]
+      "id": "RS-QUESTION-USE",
+      "touches": [
+        "QuestionSupportProfileSyntax",
+        "LocalQuestionEquivalenceSyntax",
+        "DiscRole construction-spec boundary"
+      ],
+      "current_meaning": "Question-conditioned discrimination keeps a question and live carrier token but leaves complete answer compatibility, profile fibers, and functional projection open.",
+      "proposed_relation": "A semantic question-use is delta : X ⇝ B_(R,I), and Eval = C_(R,I) ∘ delta.",
+      "making_question": "Which part of DiscRole remains protectedly necessary after its evaluation behavior is represented by an ordinary typed binding relation?",
+      "types_and_hypotheses": [
+        "checked completion relation",
+        "typed carrier X",
+        "binding relation delta",
+        "separate applicability/scope/representation/execution witnesses where required"
+      ],
+      "derivation_attempt": "Composition derives evaluation behavior, but it cannot derive operational applicability, syntax representability, or executability.",
+      "missing_structure": [
+        "completion relation",
+        "typed applicability boundary",
+        "semantic-use to syntax-use correspondence"
+      ],
+      "breaker": "Two uses have the same delta but different declared applicability or executable capability; deleting those coordinates would make an inapplicable use executable.",
+      "disposition": "binding-conditional",
+      "propagate_to": [
+        "DiscRole",
+        "question equivalence",
+        "semantic question universe",
+        "transport",
+        "adequacy",
+        "rendering",
+        "runtime dispatch"
+      ],
+      "predecessor_preservation": "Preserve every independently typed role/scope coordinate; demote only opaque semantics duplicated by delta.",
+      "primitive_elimination": "DiscRole is reduced to delta plus the exact non-derivable witnesses exposed by breakers.",
+      "theorem_obligations": [
+        "IC-THM-C-008"
+      ]
     },
     {
-      "id":"RS-OBS-QMATE-PATH",
-      "touches":["question transport","discriminator pullback","reciprocal section","represented paths","OccurrenceIndexedQuestionSuccession"],
-      "current_meaning":"Transport and reciprocal composition are planned; actual answer-conditioned succession is already occurrence-indexed and forward.",
-      "proposed_relation":"Obs(X)=Sigma A.Rel(X,A), T*E=E∘T, QMate(T,uX,L,uY) iff L∘E_uX=E_uY∘T, with compositional mates and paired-path invariance.",
-      "making_question":"What earlier typed observation has exactly the same composed consequence as a later observation, without claiming reverse execution?",
-      "types_and_hypotheses":["typed relational identities and associativity","compatible observation codomains","typed answer translation L","finite typed represented path"],
-      "derivation_attempt":"The laws are algebraically derivable from associativity once the successor relation core and semantic question-use map exist.",
-      "missing_structure":["successor relation core","semantic question-use evaluation","finite represented-path definition"],
-      "breaker":"Equal total composed relations arise from two different occurrence histories; transport must not rewrite QSucc or ledger ancestry.",
-      "disposition":"derivable",
-      "propagate_to":["transport obligations","reciprocal question forms","path laws","protection","explanation","render/elaborate","compiler path IR"],
-      "predecessor_preservation":"Preserve converse/inverse/reciprocal and represented-path/actual-history non-collapse laws.",
-      "primitive_elimination":"Transport and reciprocal mate are derived composition laws, not primitive operators.",
-      "theorem_obligations":["IC-THM-C-002","IC-THM-C-003","IC-THM-C-009","IC-THM-C-010","IC-THM-C-011","IC-THM-D-003"]
+      "id": "RS-OBS-QMATE-PATH",
+      "touches": [
+        "question transport",
+        "discriminator pullback",
+        "reciprocal section",
+        "represented paths",
+        "OccurrenceIndexedQuestionSuccession"
+      ],
+      "current_meaning": "Transport and reciprocal composition are planned; actual answer-conditioned succession is already occurrence-indexed and forward.",
+      "proposed_relation": "Obs(X)=Sigma A.Rel(X,A), T*E=E∘T, QMate(T,uX,L,uY) iff L∘E_uX=E_uY∘T, with compositional mates and paired-path invariance.",
+      "making_question": "What earlier typed observation has exactly the same composed consequence as a later observation, without claiming reverse execution?",
+      "types_and_hypotheses": [
+        "typed relational identities and associativity",
+        "compatible observation codomains",
+        "typed answer translation L",
+        "finite typed represented path"
+      ],
+      "derivation_attempt": "The laws are algebraically derivable from associativity once the successor relation core and semantic question-use map exist.",
+      "missing_structure": [
+        "successor relation core",
+        "semantic question-use evaluation",
+        "finite represented-path definition"
+      ],
+      "breaker": "Equal total composed relations arise from two different occurrence histories; transport must not rewrite QSucc or ledger ancestry.",
+      "disposition": "derivable",
+      "propagate_to": [
+        "transport obligations",
+        "reciprocal question forms",
+        "path laws",
+        "protection",
+        "explanation",
+        "render/elaborate",
+        "compiler path IR"
+      ],
+      "predecessor_preservation": "Preserve converse/inverse/reciprocal and represented-path/actual-history non-collapse laws.",
+      "primitive_elimination": "Transport and reciprocal mate are derived composition laws, not primitive operators.",
+      "theorem_obligations": [
+        "IC-THM-C-002",
+        "IC-THM-C-003",
+        "IC-THM-C-009",
+        "IC-THM-C-010",
+        "IC-THM-C-011",
+        "IC-THM-D-003"
+      ]
     },
     {
-      "id":"RS-DETERMINATION-REFINEMENT",
-      "touches":["protectedDetermines","ProtectedQuotientSingleton","solutionFieldOfWeb","horizonMonotonicityUnproved"],
-      "current_meaning":"Every survivor is horizon-equivalent to a representative; membership, equivalence laws, and the general quotient theorem remain open, while ablative regeneration has a supplied-equivalence finite model.",
-      "proposed_relation":"Determines_H(W,x) includes x∈Sol(W) and quotient-image singletonhood; under prior determination and H⊆H', failure at H' is exactly a nonempty Alt field and opens a typed Delta completion question.",
-      "making_question":"Which newly protected discriminator splits the previously single protected solution class, and what additional conditions remove all split alternatives?",
-      "types_and_hypotheses":["solution predicate","protected equivalence laws","x membership","typed horizon inclusion","quotient or quotient-image formulation"],
-      "derivation_attempt":"The proposed equivalences fail without x membership; the horizon theorem also needs prior determination under H and equivalence refinement from H inclusion.",
-      "missing_structure":["checked protected equivalence family","membership-strengthened Determines","typed condition union and completion formation"],
-      "breaker":"Sol(W) is empty: the survivor-only current predicate is vacuous, but the claimed singleton quotient is false.",
-      "disposition":"binding-conditional",
-      "propagate_to":["determination prose","condition-solution polarity","question adequacy","reopening","completion questions","understanding/regeneration claims"],
-      "predecessor_preservation":"Preserve plural-but-protectedly-single answers and explicitly correct vacuous determination if the predecessor permits it.",
-      "primitive_elimination":"Determination becomes the bridge between Sol and protected kernels; separate understanding prose is derived.",
-      "theorem_obligations":["IC-THM-C-006","IC-THM-C-012"]
+      "id": "RS-DETERMINATION-REFINEMENT",
+      "touches": [
+        "protectedDetermines",
+        "ProtectedQuotientSingleton",
+        "solutionFieldOfWeb",
+        "horizonMonotonicityUnproved"
+      ],
+      "current_meaning": "Every survivor is horizon-equivalent to a representative; membership, equivalence laws, and the general quotient theorem remain open, while ablative regeneration has a supplied-equivalence finite model.",
+      "proposed_relation": "Determines_H(W,x) includes x∈Sol(W) and quotient-image singletonhood; under prior determination and H⊆H', failure at H' is exactly a nonempty Alt field and opens a typed Delta completion question.",
+      "making_question": "Which newly protected discriminator splits the previously single protected solution class, and what additional conditions remove all split alternatives?",
+      "types_and_hypotheses": [
+        "solution predicate",
+        "protected equivalence laws",
+        "x membership",
+        "typed horizon inclusion",
+        "quotient or quotient-image formulation"
+      ],
+      "derivation_attempt": "The proposed equivalences fail without x membership; the horizon theorem also needs prior determination under H and equivalence refinement from H inclusion.",
+      "missing_structure": [
+        "checked protected equivalence family",
+        "membership-strengthened Determines",
+        "typed condition union and completion formation"
+      ],
+      "breaker": "Sol(W) is empty: the survivor-only current predicate is vacuous, but the claimed singleton quotient is false.",
+      "disposition": "binding-conditional",
+      "propagate_to": [
+        "determination prose",
+        "condition-solution polarity",
+        "question adequacy",
+        "reopening",
+        "completion questions",
+        "understanding/regeneration claims"
+      ],
+      "predecessor_preservation": "Preserve plural-but-protectedly-single answers and explicitly correct vacuous determination if the predecessor permits it.",
+      "primitive_elimination": "Determination becomes the bridge between Sol and protected kernels; separate understanding prose is derived.",
+      "theorem_obligations": [
+        "IC-THM-C-006",
+        "IC-THM-C-012"
+      ]
     },
     {
-      "id":"RS-FACTORIZATION-REOPENING",
-      "touches":["ExactSignatureFactorization","ConsequenceSufficient","CoarsestCharacterization","CompressionLicense","ReopeningRecord"],
-      "current_meaning":"Deterministic image factorization already has a kernel theorem; relational descent, protected-family reduction, maximal quotient, and positive reopening equivalence remain unproved successor obligations.",
-      "proposed_relation":"E descends through functional c iff ker(c)⊆ker*E; ExactFold_H(c) iff ker(c)⊆equiv_H; quotient by equiv_H is maximally identifying when available; Break is positive collapsed-fiber separation.",
-      "making_question":"Which exact protected consequence fails to factor through this identification, and which collapsed pair witnesses the loss?",
-      "types_and_hypotheses":["functional c","typed relation E","relational extensionality","protected family on one carrier","quotient formation only for maximal quotient","explicit logic for converse Break witness"],
-      "derivation_attempt":"The deterministic signature result is an analogue, not the relational theorem. Forward factorization and Break directions are direct; quotient maximality and the existential converse require their stated ambient assumptions.",
-      "missing_structure":["general relational descent","profile kernel","protected family intersection","quotient interface","support status of new discriminator"],
-      "breaker":"A finer exact map refutes uniqueness of representation; an unsupported or merely unsearched discriminator does not reopen; a nonfunctional compression is outside the theorem.",
-      "disposition":"binding-conditional",
-      "propagate_to":["compression exactness","license","recovery","unlock","reopening","residue","compiler representation","conformance tests"],
-      "predecessor_preservation":"Retain recovery, provenance, residual, scope, and evidence coordinates even when semantic exactness reduces to kernel inclusion.",
-      "primitive_elimination":"Duplicate exact-compression prose is derived from factorization; operational license coordinates survive if independent breakers require them.",
-      "theorem_obligations":["IC-THM-H-003","IC-THM-H-004","IC-THM-H-006","IC-THM-H-007","IC-THM-H-008"]
+      "id": "RS-FACTORIZATION-REOPENING",
+      "touches": [
+        "ExactSignatureFactorization",
+        "ConsequenceSufficient",
+        "CoarsestCharacterization",
+        "CompressionLicense",
+        "ReopeningRecord"
+      ],
+      "current_meaning": "Deterministic image factorization already has a kernel theorem; relational descent, protected-family reduction, maximal quotient, and positive reopening equivalence remain unproved successor obligations.",
+      "proposed_relation": "E descends through functional c iff ker(c)⊆ker*E; ExactFold_H(c) iff ker(c)⊆equiv_H; quotient by equiv_H is maximally identifying when available; Break is positive collapsed-fiber separation.",
+      "making_question": "Which exact protected consequence fails to factor through this identification, and which collapsed pair witnesses the loss?",
+      "types_and_hypotheses": [
+        "functional c",
+        "typed relation E",
+        "relational extensionality",
+        "protected family on one carrier",
+        "quotient formation only for maximal quotient",
+        "explicit logic for converse Break witness"
+      ],
+      "derivation_attempt": "The deterministic signature result is an analogue, not the relational theorem. Forward factorization and Break directions are direct; quotient maximality and the existential converse require their stated ambient assumptions.",
+      "missing_structure": [
+        "general relational descent",
+        "profile kernel",
+        "protected family intersection",
+        "quotient interface",
+        "support status of new discriminator"
+      ],
+      "breaker": "A finer exact map refutes uniqueness of representation; an unsupported or merely unsearched discriminator does not reopen; a nonfunctional compression is outside the theorem.",
+      "disposition": "binding-conditional",
+      "propagate_to": [
+        "compression exactness",
+        "license",
+        "recovery",
+        "unlock",
+        "reopening",
+        "residue",
+        "compiler representation",
+        "conformance tests"
+      ],
+      "predecessor_preservation": "Retain recovery, provenance, residual, scope, and evidence coordinates even when semantic exactness reduces to kernel inclusion.",
+      "primitive_elimination": "Duplicate exact-compression prose is derived from factorization; operational license coordinates survive if independent breakers require them.",
+      "theorem_obligations": [
+        "IC-THM-H-003",
+        "IC-THM-H-004",
+        "IC-THM-H-006",
+        "IC-THM-H-007",
+        "IC-THM-H-008"
+      ]
     },
     {
-      "id":"RS-PRODUCTIVITY",
-      "touches":["QuestionProductivity.Productive","DerivedQuestionAvailability","live frontier"],
-      "current_meaning":"Productivity is already occurrence-indexed protected difference between lawful supported answers, but its successor continuation-observation factorization is not yet available.",
-      "proposed_relation":"Productivity is protected profile discrimination of the answer-dependent continuation relation, with formability, applicability, executability, selection, support, and warrant separate.",
-      "making_question":"Can two lawful supported answers at this exact occurrence produce protectedly different continuation profiles, and what independent coordinate remains after that relation is exposed?",
-      "types_and_hypotheses":["occurrence-indexed whole supported answers","typed continuation semantics","protected observation family","separate formability/applicability/executability/selection/support/warrant"],
-      "derivation_attempt":"The current finite predecessor model establishes occurrence-sensitive protected difference; the reduction to observation profiles awaits successor program semantics.",
-      "missing_structure":["typed successor program behavior relation","semantic observation family over continuation results"],
-      "breaker":"The same normalized question and return class is productive at one occurrence but not another; selection or execution cannot be inferred from that fact.",
-      "disposition":"binding-conditional",
-      "propagate_to":["productivity","derived availability","live frontier","question corpus classification","control prose"],
-      "predecessor_preservation":"Preserve occurrence identity and every selection/admissibility/support/warrant separation.",
-      "primitive_elimination":"A separate productivity shape is demoted only if the continuation observation relation regenerates its full occurrence-indexed meaning.",
-      "theorem_obligations":["IC-THM-E-004"]
+      "id": "RS-PRODUCTIVITY",
+      "touches": [
+        "QuestionProductivity.Productive",
+        "DerivedQuestionAvailability",
+        "live frontier"
+      ],
+      "current_meaning": "Productivity is already occurrence-indexed protected difference between lawful supported answers, but its successor continuation-observation factorization is not yet available.",
+      "proposed_relation": "Productivity is protected profile discrimination of the answer-dependent continuation relation, with formability, applicability, executability, selection, support, and warrant separate.",
+      "making_question": "Can two lawful supported answers at this exact occurrence produce protectedly different continuation profiles, and what independent coordinate remains after that relation is exposed?",
+      "types_and_hypotheses": [
+        "occurrence-indexed whole supported answers",
+        "typed continuation semantics",
+        "protected observation family",
+        "separate formability/applicability/executability/selection/support/warrant"
+      ],
+      "derivation_attempt": "The current finite predecessor model establishes occurrence-sensitive protected difference; the reduction to observation profiles awaits successor program semantics.",
+      "missing_structure": [
+        "typed successor program behavior relation",
+        "semantic observation family over continuation results"
+      ],
+      "breaker": "The same normalized question and return class is productive at one occurrence but not another; selection or execution cannot be inferred from that fact.",
+      "disposition": "binding-conditional",
+      "propagate_to": [
+        "productivity",
+        "derived availability",
+        "live frontier",
+        "question corpus classification",
+        "control prose"
+      ],
+      "predecessor_preservation": "Preserve occurrence identity and every selection/admissibility/support/warrant separation.",
+      "primitive_elimination": "A separate productivity shape is demoted only if the continuation observation relation regenerates its full occurrence-indexed meaning.",
+      "theorem_obligations": [
+        "IC-THM-E-004"
+      ]
     },
     {
-      "id":"RS-ROOTS",
-      "touches":["DerivedInterrogativeRoots","canonical question forms","question-about-question reification"],
-      "current_meaning":"The v2.0 family names six roots; Orient has forward and converse presentations and reification reuses the same family.",
-      "proposed_relation":"Each root is a transparent canonical-language presentation with no added primitive, actuality, authority, or scheduling power.",
-      "making_question":"Which ordinary canonical relation or question construction does each named root present, and does any root retain a protected role after that construction is exposed?",
-      "types_and_hypotheses":["ordinary relation carrier","ordinary question carrier","one optional orientation coordinate","checked question reification"],
-      "derivation_attempt":"A source-bound Lean model gives all six roots canonical presentations, rejects a seventh constructor split, and reuses the family after reification.",
-      "missing_structure":[],
-      "breaker":"Splitting Orient into forward and converse roots creates seven constructors; granting a presentation authority or scheduling power changes the protected boundary.",
-      "disposition":"proved",
-      "propagate_to":["root renderer","question corpus classification","primitive inventory","control prose"],
-      "predecessor_preservation":"Retains all six v2.0 names and both Orient presentations without inverse synthesis.",
-      "primitive_elimination":"All roots are derived presentations; reification is not a seventh root.",
-      "theorem_obligations":[]
+      "id": "RS-ROOTS",
+      "touches": [
+        "DerivedInterrogativeRoots",
+        "canonical question forms",
+        "question-about-question reification"
+      ],
+      "current_meaning": "The v2.0 family names six roots; Orient has forward and converse presentations and reification reuses the same family.",
+      "proposed_relation": "Each root is a transparent canonical-language presentation with no added primitive, actuality, authority, or scheduling power.",
+      "making_question": "Which ordinary canonical relation or question construction does each named root present, and does any root retain a protected role after that construction is exposed?",
+      "types_and_hypotheses": [
+        "ordinary relation carrier",
+        "ordinary question carrier",
+        "one optional orientation coordinate",
+        "checked question reification"
+      ],
+      "derivation_attempt": "A source-bound Lean model gives all six roots canonical presentations, rejects a seventh constructor split, and reuses the family after reification.",
+      "missing_structure": [],
+      "breaker": "Splitting Orient into forward and converse roots creates seven constructors; granting a presentation authority or scheduling power changes the protected boundary.",
+      "disposition": "proved",
+      "propagate_to": [
+        "root renderer",
+        "question corpus classification",
+        "primitive inventory",
+        "control prose"
+      ],
+      "predecessor_preservation": "Retains all six v2.0 names and both Orient presentations without inverse synthesis.",
+      "primitive_elimination": "All roots are derived presentations; reification is not a seventh root.",
+      "theorem_obligations": []
     }
   ],
   "canonical_question_and_prose_source": "formal-successor/INQUIRY_SPINE_CONTRACT.json",
@@ -197,9 +606,21 @@
     "a standalone host-Prop binding has no typed ambient relation and cannot regenerate contextual atoms logic or theory",
     "atomizing every desired composite makes expressivity-only constructor minimality vacuous; semantic ablation needs uniform generation under conservative atom extension"
   ],
-  "unresolved_typed_obligations": ["IC-THM-C-000","IC-THM-C-007","IC-THM-C-008","IC-THM-C-009","IC-THM-C-010","IC-THM-C-011","IC-THM-C-012","IC-THM-E-004","IC-THM-H-006","IC-THM-H-007","IC-THM-H-008"],
+  "unresolved_typed_obligations": [
+    "IC-THM-C-000",
+    "IC-THM-C-007",
+    "IC-THM-C-008",
+    "IC-THM-C-009",
+    "IC-THM-C-010",
+    "IC-THM-C-011",
+    "IC-THM-C-012",
+    "IC-THM-E-004",
+    "IC-THM-H-006",
+    "IC-THM-H-007",
+    "IC-THM-H-008"
+  ],
   "current_strongest_formal_frontier": {
-    "id": "FORMAL-C-AMBIENT-UNIFORM-REGENERATION-MAP",
+    "id": "FORMAL-C-TYPED-RELATIONAL-SURFACE",
     "authority": "IMPLEMENTATION_FRONTIER.md",
     "duplication_status": "checked synchronized projection only"
   },

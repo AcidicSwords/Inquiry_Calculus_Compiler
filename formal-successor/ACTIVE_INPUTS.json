@@ -27,7 +27,7 @@
   "derived_construction_memory": {
     "path": "formal-successor/REGENERATIVE_SPINE.json",
     "role": "rebuildable_regenerative_dependency_projection_not_semantic_authority",
-    "sha256": "0a5df3b718d92ff9de7e5e2e311b829a0e8641623199d4c6188a9632f5a98cd0"
+    "sha256": "878058db041164ff0e57d9a480e5ea03f40ea0b60efa01a0990281faf1ae7d60"
   },
   "derived_planning_registries": [
     {

@@ -6,36 +6,35 @@ at branch point `4a18e2e308f359a64f19b7d056652f19fd9aaeae` is deferred and recor
 
 ## Immediate demonstrated predecessor
 
-`FORMAL-C-UNIFORM-GENERATION-BOUNDARY-001` has been independently checked. A regeneration witness
-now retains construction, source, correspondence, and coverage; conservative extensions transport
-old targets and complete witnesses. Uniform generation quantifies over all protected targets after
-every supplied conservative extension. A checked finite foil proves that generating every current
-target by atomization does not imply uniform generation. Ambient instantiation, total predecessor
-regeneration, semantic ablations, and `IC-THM-C-000` remain open.
+`FORMAL-C-AMBIENT-REGENERATION-TARGETS-001` projects all eight protected predecessor classes in the
+single regenerative spine to distinct successor targets, exact source artifacts, candidate ambient
+requirements, and an explicit open status. No entry claims a successor construction or source
+correspondence. This demonstrates that a total target inventory is possible but a total uniform
+regeneration witness is not yet constructible: its first dependency is the typed relational surface.
 
 ## Strongest live obligation
 
-Instantiate uniform generation over the ambient basis and every protected predecessor capability,
-then construct or break each semantic capability ablation.
+Construct the first successor typed relational surface over the ambient and binding interfaces,
+with an exact predecessor correspondence and without importing downstream question machinery.
 
 <!-- LIVE_FRONTIER_BEGIN -->
-id: FORMAL-C-AMBIENT-UNIFORM-REGENERATION-MAP
+id: FORMAL-C-TYPED-RELATIONAL-SURFACE
 plan_phase: C
-goal: Instantiate UniformGenerationBoundary with ambient presentations and a total protected predecessor target family then give exact regeneration witnesses and source correspondences for every protected class before testing four semantic ablations.
-protected_difference: A generic checked generation boundary differs from an ambient instance; a total target-indexed witness differs from an artifact list; inherited predecessor capability differs from reconstructed successor meaning; interface dependency differs from semantic necessity.
-discriminator: Require one typed target for every protected_predecessor_capabilities entry exact source ancestry construction source correspondence and coverage. Reject a missing class duplicate target artifact-name-only witness forged correspondence and any ablation lacking a survivor presentation plus one lost protected target.
-horizon: Gate-C ambient UniformGeneration instantiation total protected predecessor regeneration map and four semantic ablations only; no dependent theorem promotion Gate-C pass runtime semantics Rust semantic change or O22
-relevant_decisions: D-9077, D-9078, D-9079
+goal: Define the smallest successor type form and relation carriers generated from CtxFam RegPred IndPlus and contextual BindingPresentation then give a typed source correspondence for the protected v2 Types Forms and Relations boundary.
+protected_difference: Binding TyCode and El differ from contextual Ty and Tm; relation syntax differs from predicate denotation; arbitrary host relations differ from binding atomic ingress and free regular composites; predecessor embedding differs from reusing predecessor definitions as successor semantics.
+discriminator: Construct successor carriers and an explicit mapping for the exact Types Forms and Relations source artifacts. Reject type-tag erasure context loss relation-syntax/denotation collapse arbitrary-host-Prop import missing binding atom provenance and any use of question completion support or runtime machinery.
+horizon: Gate-C typed carriers forms relation terms denotation and predecessor correspondence only; no partial binding completion questions observation protection source programs Gate-C pass runtime Rust or O22
+relevant_decisions: D-9078, D-9079, D-9080
 relevant_failures: F-9029, F-9030
-if_pass: resolve or refine IC-THM-C-000 retain the smallest sufficient basis and open the highest-impact dependent Gate-C theorem
-if_fail: retain the exact unmapped target failed source correspondence survivor derivation or semantic ablation breaker and revise the basis without duplicating predecessor machinery
+if_pass: mark only typed-relational-surface correspondence checked in REGENERATIVE_SPINE and open the next dependency-ordered protected target
+if_fail: retain the exact missing ambient capability ill-typed source mapping type-tag breaker or syntax-denotation gap without advancing the remaining target statuses
 <!-- LIVE_FRONTIER_END -->
 
 ## Smallest decisive breaker
 
-Delete one ambient capability while retaining a well-typed survivor presentation. A valid ablation
-must identify a mapped protected target with no regeneration witness; merely making the dependent
-bundle ill-typed or failing to find a term is not a semantic breaker.
+Map two predecessor forms with different protected type codes but extensionally equal underlying
+values. Any successor carrier or correspondence that erases the type tag fails before relations or
+questions are considered.
 
 ## Prohibitions at this boundary
 

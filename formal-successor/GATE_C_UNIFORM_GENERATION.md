@@ -42,3 +42,11 @@ The next application must instantiate presentations and targets from the ambient
 protected predecessor capability with exact ancestry, prove construction/source correspondence and
 coverage, and then construct the four semantic ablations. A failed derivation search, a missing
 Boolean capability coordinate, or the boundary definition itself is not a semantic ablation proof.
+
+The single `REGENERATIVE_SPINE` now projects all eight protected predecessor classes to distinct
+successor targets, exact source artifacts, candidate ambient requirements, and the explicit status
+`OPEN_NO_SUCCESSOR_CONSTRUCTION_OR_CORRESPONDENCE`. This is a total obligation map, not a total
+regeneration witness. Because no successor construction yet exists for the first class, the generic
+boundary cannot honestly be instantiated over all eight at once. Dependency order therefore opens
+`FORMAL-C-TYPED-RELATIONAL-SURFACE` first; later entries remain represented rather than becoming a
+second schedule.

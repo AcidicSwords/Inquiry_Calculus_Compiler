@@ -183,6 +183,7 @@ jobs:
           node tools/successor_normalization_harness_check.js
           node tools/successor_ambient_capability_basis_check.js --compile
           node tools/successor_uniform_generation_check.js --compile
+          node tools/ambient_regeneration_targets_check.js
 
   phase-0:
     runs-on: ubuntu-latest
