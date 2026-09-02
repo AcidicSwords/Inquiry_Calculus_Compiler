@@ -5,6 +5,7 @@
 // evidence and relations; only this module composes them into model context.
 
 const crypto = require("node:crypto");
+const fs = require("node:fs");
 const path = require("node:path");
 const { read: readContract } = require("./ic-contract.js");
 const relational = require("./ic-relational-surface.js");
@@ -127,6 +128,47 @@ function evaluateClosure(surface, questions, carried) {
   return { admissible: reasons.length === 0, reasons, coverage_relative: true };
 }
 
+function frontierRecord(root) {
+  const text = fs.readFileSync(path.join(root, "IMPLEMENTATION_FRONTIER.md"), "utf8");
+  const match = text.match(/<!-- LIVE_FRONTIER_BEGIN -->\s*([\s\S]*?)\s*<!-- LIVE_FRONTIER_END -->/u);
+  if (!match) throw new Error("live frontier block is missing");
+  return Object.fromEntries(match[1].trim().split(/\r?\n/u).map((line) => {
+    const at = line.indexOf(":");
+    return [line.slice(0, at).trim(), line.slice(at + 1).trim()];
+  }));
+}
+
+function questionPacket(root, selected) {
+  if (!selected) return null;
+  const frontier = frontierRecord(root);
+  const instance = selected.relational_instance ?? null;
+  const memory = JSON.parse(fs.readFileSync(path.join(root, "formal-successor/REGENERATIVE_SPINE.json"), "utf8"));
+  const candidateBasis = memory.current_semantic_kernel?.primitive_candidates ?? [];
+  return {
+    schema: 1,
+    kind: "QuestionPacket",
+    occurrence: selected.occurrence,
+    exact_question: selected.prompt,
+    canonical_prose: `${selected.prompt} Apply this independently to each entry of the candidate basis, then attempt to derive every alleged nonprimitive from the survivors.`,
+    answer_type: "CandidateReturn",
+    bound_roles: instance?.bindings ?? {},
+    open_roles: instance?.open_roles ?? [],
+    activation_witness: { disposition: selected.disposition, executable: selected.executable, frontier: frontier.id },
+    protected_consequence: frontier.protected_difference,
+    dependency_context: selected.dependencies ?? [],
+    candidate_basis: candidateBasis,
+    live_goal: frontier.goal,
+    decisive_breakers: [frontier.discriminator, frontier.if_fail],
+    horizon: selected.horizon ?? frontier.horizon,
+    coverage: selected.coverage ?? "declared by occurrence ancestry",
+    output_contract: {
+      exact_fields: ["candidate", "exact_types", "hypotheses", "derivation_attempt", "breaker", "disposition", "propagation", "residuals"],
+      allowed_dispositions: ["proved_candidate", "derivable_candidate", "binding_conditional", "broken", "inapplicable", "unresolved"],
+      authority: "candidate_only; independent checks and frontier review required"
+    }
+  };
+}
+
 function build(root) {
   const loaded = readContract(root);
   const surface = relational.build(root);
@@ -148,6 +190,7 @@ function build(root) {
     transported_discriminators: carried,
     folds: surface.folds,
     selection,
+    question_packet: questionPacket(root, selection.selected),
     closure,
     generation_failures: surface.generation_failures,
   };
@@ -155,26 +198,16 @@ function build(root) {
 
 function render(root) {
   const spine = build(root);
-  const selected = spine.selection.selected;
+  const packet = spine.question_packet;
   return [
-    "INQUIRY SPINE — CURRENT DERIVED CONTEXT",
-    `recurrence: ${spine.recurrence.join(" -> ")} -> RELATE`,
-    "The lifecycle records RETURN evidence beneath this recurrence; it is not another reasoning loop.",
-    `Frontier: ${spine.frontier}`,
-    `represented relations: ${spine.relations.length}; live questions: ${spine.questions.length}; typed paths: ${spine.paths.paths.length}${spine.paths.bounded ? " (ResourceBounded)" : ""}`,
-    `transported discriminators: ${spine.transported_discriminators.length}; folds: ${spine.folds.length}`,
-    `selected executable occurrence: ${selected?.occurrence ?? "none"}${selected ? ` [${selected.disposition}; context=${selected.context}; path=${selected.path}]` : ""}`,
-    ...spine.questions.slice(0, 8).map((question) =>
-      `  ${question.occurrence} [${question.disposition}; ${question.executable ? "executable" : "not executable"}; context=${question.context}; path=${question.path}] ${question.prompt}`),
-    ...spine.transported_discriminators.slice(0, 6).map((item) =>
-      `  ${item.transport_id} [Generated; non-standing] ${item.composition}`),
-    `closure: ${spine.closure.admissible ? "admissible at declared coverage" : `open — ${spine.closure.reasons.join("; ")}`}`,
-    "Use RELATE to reconstruct what is represented; OPEN a typed position; TURN through a lawful deformation; obtain RETURN at its required authority; DISTINGUISH exactly what changed; FOLD only with positive regeneration/reopening evidence; CARRY new discriminators through compatible ancestry; recur.",
+    "INQUIRY CALCULUS — ONE QUESTION PACKET",
+    packet ? JSON.stringify(packet, null, 2) : JSON.stringify({ schema: 1, kind: "QuestionPacket", status: "no_executable_occurrence" }, null, 2),
+    "Return exactly one CandidateReturn matching output_contract. Do not claim acceptance or warrant.",
     "",
   ].join("\n");
 }
 
-module.exports = { build, derivePaths, evaluateClosure, pathRecord, render, selectExecutable, transport };
+module.exports = { build, derivePaths, evaluateClosure, pathRecord, questionPacket, render, selectExecutable, transport };
 
 if (require.main === module) {
   try {
@@ -185,7 +218,8 @@ if (require.main === module) {
     else if (command === "paths") process.stdout.write(`${JSON.stringify(build(root).paths, null, 2)}\n`);
     else if (command === "questions") process.stdout.write(`${JSON.stringify(build(root).questions, null, 2)}\n`);
     else if (command === "select") process.stdout.write(`${JSON.stringify(build(root).selection, null, 2)}\n`);
-    else throw new Error("usage: ic-spine.js context|json|paths|questions|select [ROOT]");
+    else if (command === "packet") process.stdout.write(`${JSON.stringify(build(root).question_packet, null, 2)}\n`);
+    else throw new Error("usage: ic-spine.js context|json|paths|questions|select|packet [ROOT]");
   } catch (error) {
     process.stderr.write(`ic-spine: ${error.message}\n`);
     process.exitCode = 1;

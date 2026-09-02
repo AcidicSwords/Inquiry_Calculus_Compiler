@@ -12,6 +12,7 @@ const registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
 const spec = fs.readFileSync(specPath, "utf8");
 
 const expected = [
+  ["IC-THM-C-000", "C"],
   ["IC-THM-C-001", "C"], ["IC-THM-C-002", "C"], ["IC-THM-C-003", "C"],
   ["IC-THM-C-004", "C"], ["IC-THM-C-005", "C"], ["IC-THM-C-006", "C"],
   ["IC-THM-C-007", "C"], ["IC-THM-C-008", "C"], ["IC-THM-C-009", "C"],
@@ -61,6 +62,7 @@ for (const obligation of registry.obligations) {
 }
 
 const requiredTitles = [
+  "Ambient capability basis and primitive elimination",
   "Contextual occurrence", "Question transport", "Discriminator pullback composition",
   "Co-anchored meet", "Co-anchored versus sequential noncollapse", "Three-way arrangement distinction",
   "Adjacent-order localization", "Path-sensitive answer section", "Forward distinction transport",

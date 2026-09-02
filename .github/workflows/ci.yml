@@ -179,6 +179,8 @@ jobs:
           node tools/answer_conditioned_unlock_check.js --compile
           node tools/root_frontier_check.js --compile
           node tools/local_interrogative_fixed_point_check.js --compile
+          node tools/question_route_occurrence_check.js --compile
+          node tools/successor_normalization_harness_check.js
 
   phase-0:
     runs-on: ubuntu-latest

@@ -11,7 +11,7 @@
     {
       "path": "formal-successor/FORMAL_CALCULUS_CONSTRUCTION_SPEC.md",
       "role": "single_successor_construction_and_acceptance_authority",
-      "sha256": "3856044f40975b0c83eb10bb191060f42832d97227a39249daf5a0f44425e448"
+      "sha256": "b8ee16395bd687cb29a1872cc2ed4fbf73172124be88d16c2233959863d518f9"
     },
     {
       "path": "formal-successor/Questions.txt",
@@ -27,13 +27,30 @@
   "derived_construction_memory": {
     "path": "formal-successor/REGENERATIVE_SPINE.json",
     "role": "rebuildable_regenerative_dependency_projection_not_semantic_authority",
-      "sha256": "8efeba66ee963148e23cc19da1ec42a7bf5d3013fa07cb625bfdd22d824f0290"
+      "sha256": "dd85f3337baa53aad4e78d02e0adad7e8f4d07e04fcee70e3de29fcfd2bebce6"
   },
   "derived_planning_registries": [
     {
       "path": "formal-successor/INTEGRATED_THEOREM_OBLIGATIONS.json",
       "role": "gate_indexed_candidate_theorem_obligations_not_semantic_authority",
-      "sha256": "96b438f8a4221b7ce003366f59cde90875e4968ac56cdcf1d24fc98ea49061ca"
+      "sha256": "e6393cf4da974301408a9836df3b2d6da4a9a6fc42b622878cefcdeeb36a8eca"
+    }
+  ],
+  "derived_normalization_inputs": [
+    {
+      "path": "formal-successor/NORMALIZATION_INPUTS.json",
+      "role": "digested_user_supplied_construction_pressure_not_semantic_authority",
+      "sha256": "4865ddff2ffb839e0f4ca96e697708d0555bc25919bc03b702735b6c950bb4cf"
+    },
+    {
+      "path": "formal-successor/NORMALIZATION_CONTINUITY.json",
+      "role": "total_P1_P22_disposition_projection_not_theorem_promotion",
+      "sha256": "e4d68f7be5ebdba086e77fea94fa22f8569564fd328e2934046698bfa97a86c9"
+    },
+    {
+      "path": "formal-successor/BACKEND_PROFILES.json",
+      "role": "operational_candidate_allocation_not_semantic_authority",
+      "sha256": "9cce3a50b1ff51174ba27dd608b676a86f34bc4be52089baa21e25c6d1e4adb4"
     }
   ]
 }

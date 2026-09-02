@@ -9,9 +9,10 @@
     "live_frontier": "IMPLEMENTATION_FRONTIER.md"
   },
   "candidate_source": {
-    "kind": "user_supplied_reciprocal_regenerative_reformulation",
-    "sha256": "ac529ef95b8bdbbcf6c83c8bc7a74545970bc0754ad4b8ebcde3946fe1733c83",
-    "instruction_boundary": "candidate mathematical content only; the user's integration task and repository AGENTS.md govern its use"
+    "kind": "normalized_multi_input_construction_pressure",
+    "manifest": "formal-successor/NORMALIZATION_INPUTS.json",
+    "continuity": "formal-successor/NORMALIZATION_CONTINUITY.json",
+    "instruction_boundary": "candidate mathematical content only; the user's integration task, construction specification, and repository AGENTS.md govern its use"
   },
   "protected_predecessor_capabilities": [
     {"id":"typed-relational-surface","artifacts":["formal/InquiryCalculus/Legacy/V20/Types.lean","formal/InquiryCalculus/Legacy/V20/Forms.lean","formal/InquiryCalculus/Legacy/V20/Relations.lean"]},
@@ -20,12 +21,14 @@
     {"id":"protection-discrimination-determination","artifacts":["formal/InquiryCalculus/Legacy/V20/QuestionConditionedDiscrimination.lean","formal/InquiryCalculus/Legacy/V20/ProtectedBehavioralEquivalence.lean","formal/InquiryCalculus/Legacy/V20/ProtectedDetermination.lean"]},
     {"id":"compression-recovery-reopening","artifacts":["formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean","formal/InquiryCalculus/Legacy/V20/CompressionLicense.lean","formal/InquiryCalculus/Legacy/V20/Reopening.lean"]},
     {"id":"question-productivity-frontier","artifacts":["formal/InquiryCalculus/Legacy/V20/QuestionProductivity.lean","formal/InquiryCalculus/Legacy/V20/DerivedQuestionAvailability.lean","formal/InquiryCalculus/Legacy/V20/SemanticExecutableFrontier.lean","formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean","formal/InquiryCalculus/Legacy/V20/RootFrontier.lean","formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean"]},
+    {"id":"question-route-occurrence-regeneration","artifacts":["formal/InquiryCalculus/Legacy/V20/OccurrenceIndexedQuestionSuccession.lean","formal/InquiryCalculus/Legacy/V20/QuestionRouteOccurrence.lean"]},
     {"id":"canonical-language-roots-and-static-pairs","artifacts":["formal/InquiryCalculus/Legacy/V20/CanonicalRenderingElaboration.lean","formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean","formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean","formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean"]}
   ],
   "current_semantic_kernel": {
     "status": "candidate_until_gate_c_and_gate_f",
-    "primitive_candidates": ["typed carriers","typed relation syntax and denotation","relational composition and identities","explicit partial binding","source Ask/Return formation","authority-bearing resolution constructors"],
-    "not_primitive": ["interrogative roots","operational root aliases","static pair names","route explanation labels","root frontier schema","observation pullback","QMate","determination","fold","reopening","productivity","selection policy","engineering clock"]
+    "primitive_candidates": ["CtxFam: context-indexed types terms substitution and comprehension","RegPred: proof-insensitive regular predicate doctrine with equality finite meet existential reindexing Beck-Chevalley and Frobenius","Ind+: substitution-stable positive indexed generation","explicit binding presentation over the ambient"],
+    "candidate_basis_obligation": "IC-THM-C-000",
+    "not_primitive": ["relation composition syntax","partial binding semantics","evidence species","source succession transition","interrogative roots","operational root aliases","static pair names","route explanation labels","root frontier schema","observation pullback","QMate","determination","fold","reopening","productivity","selection policy","engineering clock","backend allocation"]
   },
   "derived_definition_candidates": [
     {"name":"completion relation","obligation":"IC-THM-C-007"},
@@ -46,6 +49,7 @@
     {"scope":"predecessor finite transition boundary only","theorem":"answer-conditioned readiness crossing does not resolve its continuation and overlapping route labels erase before runtime","artifact":"formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean","status":"proved"},
     {"scope":"predecessor finite frontier boundary only","theorem":"root frontier composes existing relations while required work survives ordinary dominance and no preorder preserves the eligible field","artifact":"formal/InquiryCalculus/Legacy/V20/RootFrontier.lean","status":"proved"},
     {"scope":"predecessor finite local-closure boundary only","theorem":"local closure requires explicit coverage complete allowed-exit classification and no open root-frontier residual while reopening requires a positive newly open occurrence","artifact":"formal/InquiryCalculus/Legacy/V20/LocalInterrogativeFixedPoint.lean","status":"proved"},
+    {"scope":"predecessor finite question-route boundary only","theorem":"equal semantic route projections retain distinct occurrence continuation resolution-path and support ancestry while pure actual coordinates remain absent and removal fibers remain occurrence-indexed","artifact":"formal/InquiryCalculus/Legacy/V20/QuestionRouteOccurrence.lean","status":"proved"},
     {"scope":"predecessor deterministic-signature analogue only","theorem":"exact image factorization is equivalent to signature-kernel inclusion","artifact":"formal/InquiryCalculus/Legacy/V20/ExactDeterminationSignature.lean","status":"proved"},
     {"scope":"predecessor finite quotient countermodels only","theorem":"consequence sufficiency does not imply coarsest characterization","artifact":"formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean","status":"proved"}
   ],
@@ -188,9 +192,9 @@
     "root production alone does not establish admission or execution; ordinary dominance cannot remove required work and missing preorder cannot shrink the field",
     "an empty current frontier does not establish global completion; context change alone does not reopen without a positive newly open occurrence"
   ],
-  "unresolved_typed_obligations": ["IC-THM-C-007","IC-THM-C-008","IC-THM-C-009","IC-THM-C-010","IC-THM-C-011","IC-THM-C-012","IC-THM-E-004","IC-THM-H-006","IC-THM-H-007","IC-THM-H-008"],
+  "unresolved_typed_obligations": ["IC-THM-C-000","IC-THM-C-007","IC-THM-C-008","IC-THM-C-009","IC-THM-C-010","IC-THM-C-011","IC-THM-C-012","IC-THM-E-004","IC-THM-H-006","IC-THM-H-007","IC-THM-H-008"],
   "current_strongest_formal_frontier": {
-    "id": "FORMAL-B-QUESTION-ROUTE-OCCURRENCE",
+    "id": "FORMAL-C-AMBIENT-CAPABILITY-BASIS",
     "authority": "IMPLEMENTATION_FRONTIER.md",
     "duplication_status": "checked synchronized projection only"
   },

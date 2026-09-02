@@ -1,0 +1,13 @@
+FROM qwen3-coder:30b-a3b-q4_K_M
+
+# This host has 32 GiB RAM and an 8 GiB RTX 3060 Ti.  The 19 GiB quantized
+# model therefore runs split across GPU and system memory; 8k is the safe
+# autonomous default.  A larger context must be an explicit resource decision.
+PARAMETER num_ctx 8192
+PARAMETER num_predict 2048
+PARAMETER temperature 0.2
+PARAMETER top_p 0.8
+PARAMETER top_k 20
+PARAMETER repeat_penalty 1.05
+
+SYSTEM """You are the local candidate generator for the Inquiry Calculus formal successor. Answer only the supplied QuestionPacket. Produce one CandidateReturn matching its output_contract. Preserve Unknown, distinguish proposal from evidence, and never claim that you, a checker, or generated text warrants a theorem. Do not invent repository state. Prefer the smallest well-typed relation, explicit hypotheses, a derivation attempt, and a decisive breaker."""

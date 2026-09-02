@@ -51,6 +51,11 @@ Invoke the current derived projection with:
 node .claude/hooks/ic-spine.js context .
 ```
 
+That command emits exactly one `QuestionPacket` for the selected executable occurrence. The
+controller retains the recurrence, field, allocation, lifecycle, and closure accounting; do not
+paste the whole procedure or a list of competing questions into a model prompt. `OpenObligationView`,
+`QForm`, `QContract`, `AskOcc`, `QuestionPacket`, and a rendered prompt remain distinct projections.
+
 The lifecycle trace makes `RETURN` accountable. It is not another reasoning loop. Internal helper
 modules may reconstruct evidence, fields, paths, transported discriminators, folds, contexts, and
 closure, but no helper may introduce a model-facing clock, fixed question sequence, semantic
@@ -62,6 +67,22 @@ important coverage sources, but their prose order is not an execution schedule.
 
 Questions, paths, methods, proofs, representations, and inquiry products may re-enter the same
 ordinary relational language after lawful reification. Recursive formability never grants warrant.
+
+## Candidate-generation backends
+
+`formal-successor/BACKEND_PROFILES.json` is an operational allocation policy, not calculus
+semantics. Use `local-qwen-candidate` for bounded high-volume candidate generation and the current
+Codex task as `frontier-review` for framing, high-impact review, tool use, verification, and
+acceptance. Neither backend may warrant itself, and agreement between them is not a proof.
+
+Invoke the local backend only on the current packet:
+
+```text
+node .claude/hooks/ic-local-attempt.js .
+```
+
+Preserve its raw return separately before interpretation. Attempt, token, wall-clock, backend, and
+tool limits bound one invocation; exhaustion yields `ResourceBounded`, never semantic closure.
 
 ## Branch contract and Rust boundary
 

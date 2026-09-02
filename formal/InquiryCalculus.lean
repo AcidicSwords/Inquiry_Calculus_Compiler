@@ -137,6 +137,7 @@ import InquiryCalculus.Legacy.V20.StaticPairDiscipline
 import InquiryCalculus.Legacy.V20.AnswerConditionedUnlock
 import InquiryCalculus.Legacy.V20.RootFrontier
 import InquiryCalculus.Legacy.V20.LocalInterrogativeFixedPoint
+import InquiryCalculus.Legacy.V20.QuestionRouteOccurrence
 
 /-!
 # Inquiry Calculus formal successor

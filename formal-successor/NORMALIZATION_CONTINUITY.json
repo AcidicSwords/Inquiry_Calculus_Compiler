@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "status": "total_derivation_input_disposition_not_theorem_promotion",
+  "coverage": "P1-P20 derivation claims and P21-P22 reconciliation additions",
+  "entries": [
+    {"pass":"P1","relation":"exact emptiness requires a covered refutation certificate","disposition":"mapped_planned","obligations":["IC-THM-C-007"]},
+    {"pass":"P2","relation":"resolution residual control remains outside supported-answer source succession","disposition":"mapped_planned","obligations":["IC-THM-E-002"]},
+    {"pass":"P3","relation":"reciprocal sections and protected recovery derive through one relation plus exact factorization","disposition":"mapped_planned","obligations":["IC-THM-D-003","IC-THM-H-006","IC-THM-H-007"]},
+    {"pass":"P4","relation":"binding is reindexing, exposure is interface, hiding is existential projection","disposition":"opens_basis_check","obligations":["IC-THM-C-000","IC-THM-C-007"]},
+    {"pass":"P5","relation":"regular relational capability basis; nonregular complement is binding-supplied","disposition":"opens_basis_check","obligations":["IC-THM-C-000","IC-THM-C-001"]},
+    {"pass":"P6","relation":"evidence is one judgement-indexed derivation family and standing is derived","disposition":"mapped_planned","obligations":["IC-THM-H-001"]},
+    {"pass":"P7","relation":"source is positive initial binding syntax; succession is substitution plus head observation","disposition":"mapped_planned","obligations":["IC-THM-E-002","IC-THM-L-001"]},
+    {"pass":"P8","relation":"evidence steps are ordinary typed relations plus positive inductive closure","disposition":"opens_basis_check","obligations":["IC-THM-C-000","IC-THM-H-001"]},
+    {"pass":"P9","relation":"reindexing is required capability rather than a privileged constructor","disposition":"opens_basis_check","obligations":["IC-THM-C-000"]},
+    {"pass":"P10","relation":"candidate ambient is CtxFam plus RegPred plus Ind+ with binding presentation","disposition":"live_frontier","obligations":["IC-THM-C-000"]},
+    {"pass":"P11","relation":"equality regimes form a web and change of regime is factorization","disposition":"mapped_planned","obligations":["IC-THM-H-006","IC-THM-H-007"]},
+    {"pass":"P12","relation":"render-elaborate round trip is exact folding, not visible-text equality","disposition":"mapped_planned","obligations":["IC-THM-J-001","IC-THM-H-007"]},
+    {"pass":"P13","relation":"acceptance is indexed by a frozen predecessor epoch","disposition":"mapped_planned","obligations":["IC-THM-L-003"]},
+    {"pass":"P14","relation":"disposition is staged and does not collapse with source response","disposition":"mapped_planned","obligations":["IC-THM-E-002"]},
+    {"pass":"P15","relation":"representation gap is exact-fold failure between induced equivalences","disposition":"mapped_planned","obligations":["IC-THM-H-007","IC-THM-H-008"]},
+    {"pass":"P16","relation":"local closure is post-fixpoint envelope plus typed pointwise quiescence","disposition":"mapped_requires_strengthening","obligations":["IC-THM-H-001","IC-THM-H-002"]},
+    {"pass":"P17","relation":"generator adequacy is protected role coverage; language, generator, enumeration and scheduler differ","disposition":"mapped_requires_strengthening","obligations":["IC-THM-H-005"]},
+    {"pass":"P18","relation":"fair service is execution or evidenced retirement; generation and selection fairness differ","disposition":"unresolved_typed_obligation","obligations":["IC-THM-H-002"]},
+    {"pass":"P19","relation":"convergence needs stable episode, progress-live opportunity and Noetherian closure progress","disposition":"mapped_requires_strengthening","obligations":["IC-THM-H-002"]},
+    {"pass":"P20","relation":"finite carrier, generation, presentation and checked certificate remain distinct","disposition":"unresolved_typed_obligation","obligations":["IC-THM-H-001","IC-THM-H-002"]},
+    {"pass":"P21","relation":"every protected predecessor commitment requires a witnessed successor disposition","disposition":"normalization_certificate_obligation","obligations":["IC-THM-L-003"]},
+    {"pass":"P22","relation":"contradictory, determined and open are semantic poles independent of worklist and finite certification","disposition":"mapped_planned","obligations":["IC-THM-C-006","IC-THM-C-012"]}
+  ],
+  "later_not_immediate": {"id":"O22","relation":"typed descriptor/proof interface for symbolic closure certificates","reason":"depends on the ambient basis and closure dependency proofs"},
+  "continuity_rule": "A mapped entry is not proved by this map; its obligation must terminate in checked proof, checked breaker, typed inapplicability, or an explicit unresolved residual."
+}

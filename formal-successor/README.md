@@ -38,6 +38,30 @@ elimination, and mirrors the one live frontier under an exact synchronization ch
 a second history nor a second scheduler, and its `proved` entries remain scoped to the checked
 predecessor modules unless a successor theorem is separately promoted.
 
+## Normalized autonomous construction
+
+`NORMALIZATION_INPUTS.json` records the two current construction inputs by digest without granting
+them semantic authority. `NORMALIZATION_CONTINUITY.json` gives every P1–P22 result a disposition in
+the existing theorem graph. `B_TO_C_NORMALIZATION.md` states the resulting four-entry candidate
+basis and the dependency corrections that must be checked rather than inherited as prose.
+
+The model-facing projection emits one `QuestionPacket`:
+
+```text
+node .claude/hooks/ic-spine.js context .
+```
+
+The host-tuned local candidate generator is built from `.ollama/Modelfile.qwen3-coder-30b` and can
+be invoked on that packet with:
+
+```text
+node .claude/hooks/ic-local-attempt.js .
+```
+
+The local return remains a candidate. The current Codex task is the frontier reviewer and remains
+responsible for framing, independent checking, propagation, and acceptance. Neither model can
+warrant itself. Invocation budget exhaustion is `ResourceBounded`, not closure.
+
 `.claude/hooks/ic-spine.js` is the sole public context projection. It reconstructs the current
 relational surface, typed compositional paths, transported discriminators, folds, executable
 frontier, and coverage-relative closure. Its fields, path indexes, and contexts are deletable

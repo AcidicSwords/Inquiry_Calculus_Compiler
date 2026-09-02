@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "status": "construction_pressure_not_semantic_authority",
+  "inputs": [
+    {
+      "name": "FORMAL_SUCCESSOR_RECONCILIATION_REVISED.md",
+      "supplied_path": "C:/Users/Justin/Downloads/FORMAL_SUCCESSOR_RECONCILIATION_REVISED.md",
+      "sha256": "8ac49fc18cf9af8a650bf3dd10eac64560f01f14e23151da96269af7e7526458",
+      "accepted_pressure": "B-to-C normalization, one QuestionPacket, capability-indexed backend allocation, bounded autonomy, total continuity disposition, and compact regenerative memory",
+      "instruction_boundary": "The user's request authorizes direction and implementation; this document supplies candidate architecture and does not prove it."
+    },
+    {
+      "name": "inquiry-calculus-derivation-spine.md",
+      "supplied_path": "C:/Users/Justin/Downloads/inquiry-calculus-derivation-spine.md",
+      "sha256": "b47f3b4b44f52468c31b9845c222e39fac088e5663d92705e1bf622b8f22303e",
+      "accepted_pressure": "P1-P20 derivation, four-entry candidate basis, closure/quiescence correction, generator adequacy, fairness, conditional convergence, and finite-certificate distinctions",
+      "instruction_boundary": "Pass results are candidates until mapped to checked repository artifacts or retained as planned obligations."
+    }
+  ],
+  "retention_rule": "Retain accepted relations, dependencies, breakers, and unresolved obligations; do not copy exploratory prose into semantic authority."
+}

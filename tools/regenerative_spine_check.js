@@ -13,14 +13,16 @@ const frontier = read("IMPLEMENTATION_FRONTIER.md");
 
 assert.equal(spine.schema, 1);
 assert.equal(spine.status, "rebuildable_regenerative_dependency_projection_not_semantic_authority");
-assert.equal(spine.candidate_source.sha256,
-  "ac529ef95b8bdbbcf6c83c8bc7a74545970bc0754ad4b8ebcde3946fe1733c83");
+assert.equal(spine.candidate_source.manifest, "formal-successor/NORMALIZATION_INPUTS.json");
+assert.equal(spine.candidate_source.continuity, "formal-successor/NORMALIZATION_CONTINUITY.json");
 const frontierIds = [...frontier.matchAll(/^id: ([A-Z0-9-]+)$/gmu)].map((match) => match[1]);
 assert.deepEqual(frontierIds, [spine.current_strongest_formal_frontier.id]);
 
 const obligationIds = new Set(registry.obligations.map(({ id }) => id));
 const allowed = new Set(["proved", "derivable", "binding-conditional", "broken", "inapplicable", "unresolved"]);
 assert.equal(spine.candidate_inquiries.length, 7);
+assert.equal(spine.current_semantic_kernel.candidate_basis_obligation, "IC-THM-C-000");
+assert.equal(spine.current_semantic_kernel.primitive_candidates.length, 4);
 for (const inquiry of spine.candidate_inquiries) {
   for (const field of [
     "id", "touches", "current_meaning", "proposed_relation", "making_question", "types_and_hypotheses",

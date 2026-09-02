@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "status": "operational_allocation_policy_not_semantic_authority",
+  "noncollapse": [
+    "candidate_generation_is_not_checking",
+    "checking_is_not_warrant",
+    "backend_allocation_is_not_semantic_selection",
+    "local_return_is_not_actual_repository_state",
+    "resource_stop_is_not_task_closure"
+  ],
+  "host_profile": {
+    "cpu": "AMD Ryzen 5 7600X 6C/12T",
+    "system_memory_gib": 31.6,
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "gpu_memory_gib": 8,
+    "model_storage_volume_free_gib_at_setup": 110
+  },
+  "backends": [
+    {
+      "id": "local-qwen-candidate",
+      "role": "bounded_high_volume_candidate_generation",
+      "provider": "ollama",
+      "base_model": "qwen3-coder:30b-a3b-q4_K_M",
+      "model": "inquiry-qwen3-coder:30b",
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "capabilities": ["typed_candidate", "countermodel_candidate", "dependency_localization", "code_candidate"],
+      "limits": {"context_tokens": 8192, "output_tokens": 2048, "parallel_requests": 1, "attempts_per_occurrence": 2, "wall_clock_seconds": 900},
+      "cost_rank": 0,
+      "may_warrant": false
+    },
+    {
+      "id": "frontier-review",
+      "role": "framing_review_verification_and_acceptance",
+      "provider": "current_codex_task",
+      "capabilities": ["frontier_framing", "high_impact_review", "tool_use", "formal_verification", "repository_acceptance"],
+      "activation": ["primitive_boundary_change", "protected_capability_change", "theorem_promotion", "high_impact_breaker", "gate_transition", "local_attempts_exhausted"],
+      "cost_rank": 1,
+      "may_warrant": false
+    }
+  ],
+  "allocation": {
+    "candidate_generation": "least_cost_capable_backend",
+    "default_candidate_backend": "local-qwen-candidate",
+    "required_review_backend": "frontier-review",
+    "stable_identity_tie_break_is_operational_only": true
+  }
+}

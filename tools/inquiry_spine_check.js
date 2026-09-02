@@ -107,7 +107,10 @@ const after = spine.derivePaths(JSON.parse(JSON.stringify(surface)));
 assert.deepEqual(after, before, "deleting and rebuilding a path projection must be exact");
 
 const context = cp.execFileSync(process.execPath, [path.join(root, ".claude/hooks/ic-spine.js"), "context", root], { encoding: "utf8" });
-assert.equal((context.match(/recurrence:/g) ?? []).length, 1);
-assert.match(context, /RELATE -> OPEN -> TURN -> RETURN -> DISTINGUISH -> FOLD -> CARRY -> RELATE/);
+assert.equal((context.match(/"kind": "QuestionPacket"/g) ?? []).length, 1);
+assert.doesNotMatch(context, /recurrence:|live questions:|selected executable occurrence:/);
+const packet = spine.questionPacket(root, requiredEarlier);
+assert.equal(packet.occurrence, requiredEarlier.occurrence);
+assert.equal(packet.output_contract.authority, "candidate_only; independent checks and frontier review required");
 
-console.log("inquiry spine checks passed (one recurrence, typed paths, CARRY, context identity, selection, closure, regeneration)");
+console.log("inquiry spine checks passed (one controller recurrence, one QuestionPacket, typed paths, CARRY, context identity, selection, closure, regeneration)");

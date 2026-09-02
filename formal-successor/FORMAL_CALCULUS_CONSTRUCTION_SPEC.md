@@ -5688,6 +5688,7 @@ discharge it.
 
 | ID | Earliest gate | Planned formal return |
 |---|---:|---|
+| `IC-THM-C-000` | C | Ambient capability basis and primitive elimination |
 | `IC-THM-C-001` | C | Contextual occurrence typing and composition |
 | `IC-THM-C-002` | C | Question transport along a represented path |
 | `IC-THM-C-003` | C | Discriminator pullback composition |
@@ -5772,6 +5773,36 @@ relations are open and what evidence may discharge them.
 
 Stop a branch only at a lawful coverage-relative status. Do not manufacture closure by weakening
 the horizon or hiding an unresolved breaker.
+
+## 104.1 One question packet per model return
+
+The recurrence is controller structure. For one selected executable occurrence, materialize one
+derived `QuestionPacket` containing:
+
+- the exact ordinary question and its canonical prose;
+- answer type and represented bound/open roles;
+- the positive activation witness;
+- protected consequence and decisive breaker;
+- the smallest dependency context sufficient to answer;
+- horizon, coverage, and an exact output contract.
+
+Do not send the full construction specification, a model-facing clock, or a list of competing live
+questions as the operational prompt. `OpenObligationView`, `QForm`, `QContract`, `AskOcc`,
+`QuestionPacket`, and prompt rendering are distinct. The field and every unchosen occurrence remain
+represented in the controller.
+
+## 104.2 Capability-indexed backend allocation
+
+Backend profiles and allocation are operational relations, never semantic primitives. Select the
+least-cost capable backend under explicit privacy, resource, and supplied-preference constraints.
+A local backend may generate bounded candidates; a frontier backend may frame, review, use tools,
+and accept repository changes. Neither backend may warrant itself, and agreement is not proof.
+
+Every invocation has explicit attempt, context/token, wall-clock, backend, queue, and tool bounds.
+Exhausting an invocation yields `ResourceBounded` and preserves the occurrence; it does not establish
+semantic closure, impossibility, irrelevance, or a representation gap. High-impact primitive,
+protected-capability, theorem-promotion, and gate-transition changes require frontier review plus
+the independently required formal return.
 
 ---
 

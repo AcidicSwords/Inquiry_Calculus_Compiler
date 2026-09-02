@@ -36,6 +36,17 @@
   },
   "obligations": [
     {
+      "id": "IC-THM-C-000",
+      "title": "Ambient capability basis and primitive elimination",
+      "gate": "C",
+      "kind": "basis_definition_countermodels_and_regeneration",
+      "statement": "Test whether CtxFam + RegPred + Ind+ with an explicit binding presentation is the smallest capability basis, up to definitional equivalence, from which the protected predecessor surface and accepted successor constructions regenerate.",
+      "depends_on": [],
+      "disposition": "prove_break_or_refine_each_capability_and_ablation",
+      "decisive_check": "Give exact types and laws for each capability; derive every proposed primitive; ablate CtxFam, regular predication, positive indexed generation, and binding presentation separately; retain a capability only when a protected predecessor distinction fails to regenerate.",
+      "status": "PLANNED"
+    },
+    {
       "id": "IC-THM-C-001",
       "title": "Contextual occurrence typing and composition",
       "gate": "C",
