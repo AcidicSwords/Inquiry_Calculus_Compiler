@@ -23,6 +23,8 @@ architectural constraints now:
 - static backward-looking names remain presentations with distinct evidence requirements: converse
   is not inverse, a supplied adjoint law is not co-availability, and same-use reciprocal return
   retains actual use, departure, coverage, whole-fiber, and provenance coordinates.
+- answer-conditioned unlock is a readiness crossing, not resolution; route explanations remain
+  overlapping erasable annotations whose stronger claims require independent authority.
 - semantic transport, reciprocal mates, and paired-path consequences are candidates derivable
   from relational composition, while actual answer-dependent succession stays distinct.
 - determination, quotient maximality, and the converse reopening witness require explicit

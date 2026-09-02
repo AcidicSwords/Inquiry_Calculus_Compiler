@@ -191,6 +191,9 @@ holds.
 The static-pair boundary is documented in `formal-successor/PHASE_B_STATIC_PAIR_DISCIPLINE.md`;
 converse, inverse, logical dual, supplied adjoint, and same-use reciprocal return retain distinct
 evidence requirements, and semantic backward presentation never manufactures actual succession.
+The answer-conditioned-unlock boundary is documented in
+`formal-successor/PHASE_B_ANSWER_CONDITIONED_UNLOCK.md`; a supported Answer may change readiness
+without resolving the continuation, while overlapping route explanations remain non-executing.
 The reciprocal-regenerative reformulation is integrated through the non-authoritative
 `formal-successor/REGENERATIVE_SPINE.json` dependency projection and the expanded planned theorem
 registry. Neither artifact promotes a candidate relation or creates another live frontier.

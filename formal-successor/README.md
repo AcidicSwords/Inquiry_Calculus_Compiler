@@ -227,6 +227,10 @@ binding-supplied adjoint, and same-use reciprocal return as five presentation id
 many-to-one countermodel separates converse from strict inverse; bridge and reciprocal witnesses
 retain their exact continuation and occurrence evidence. The universal source claim remains open.
 
+`PHASE_B_ANSWER_CONDITIONED_UNLOCK.md` reconstructs unlock as the exact false-to-true readiness
+crossing under one typed Ask and whole supported Answer. Readiness remains distinct from resolution;
+overlapping route annotations erase before runtime and retain independent authority conditions.
+
 ## Propagation back to Rust
 
 Before Formal Gate F, Rust semantic expansion is frozen. After Gate F, an accepted formal change

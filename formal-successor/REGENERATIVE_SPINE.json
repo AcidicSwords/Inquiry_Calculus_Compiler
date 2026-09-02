@@ -19,13 +19,13 @@
     {"id":"supported-answer-source-succession","artifacts":["formal/InquiryCalculus/Legacy/V20/InquirySourceGrammar.lean","formal/InquiryCalculus/Legacy/V20/OccurrenceIndexedQuestionSuccession.lean"]},
     {"id":"protection-discrimination-determination","artifacts":["formal/InquiryCalculus/Legacy/V20/QuestionConditionedDiscrimination.lean","formal/InquiryCalculus/Legacy/V20/ProtectedBehavioralEquivalence.lean","formal/InquiryCalculus/Legacy/V20/ProtectedDetermination.lean"]},
     {"id":"compression-recovery-reopening","artifacts":["formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean","formal/InquiryCalculus/Legacy/V20/CompressionLicense.lean","formal/InquiryCalculus/Legacy/V20/Reopening.lean"]},
-    {"id":"question-productivity-frontier","artifacts":["formal/InquiryCalculus/Legacy/V20/QuestionProductivity.lean","formal/InquiryCalculus/Legacy/V20/DerivedQuestionAvailability.lean","formal/InquiryCalculus/Legacy/V20/SemanticExecutableFrontier.lean"]},
+    {"id":"question-productivity-frontier","artifacts":["formal/InquiryCalculus/Legacy/V20/QuestionProductivity.lean","formal/InquiryCalculus/Legacy/V20/DerivedQuestionAvailability.lean","formal/InquiryCalculus/Legacy/V20/SemanticExecutableFrontier.lean","formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean"]},
     {"id":"canonical-language-roots-and-static-pairs","artifacts":["formal/InquiryCalculus/Legacy/V20/CanonicalRenderingElaboration.lean","formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean","formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean","formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean"]}
   ],
   "current_semantic_kernel": {
     "status": "candidate_until_gate_c_and_gate_f",
     "primitive_candidates": ["typed carriers","typed relation syntax and denotation","relational composition and identities","explicit partial binding","source Ask/Return formation","authority-bearing resolution constructors"],
-    "not_primitive": ["interrogative roots","operational root aliases","static pair names","observation pullback","QMate","determination","fold","reopening","productivity","selection policy","engineering clock"]
+    "not_primitive": ["interrogative roots","operational root aliases","static pair names","route explanation labels","observation pullback","QMate","determination","fold","reopening","productivity","selection policy","engineering clock"]
   },
   "derived_definition_candidates": [
     {"name":"completion relation","obligation":"IC-THM-C-007"},
@@ -43,6 +43,7 @@
     {"scope":"predecessor source-bound only","theorem":"six interrogative roots have transparent canonical presentations and reification reuses the same root family","artifact":"formal/InquiryCalculus/Legacy/V20/DerivedInterrogativeRoots.lean","status":"proved"},
     {"scope":"predecessor finite presentation boundary only","theorem":"operational aliases are transparent only with all preservation coordinates and no primitive opcode or scheduler promotion","artifact":"formal/InquiryCalculus/Legacy/V20/OperationalRootAliases.lean","status":"proved"},
     {"scope":"predecessor finite presentation boundary only","theorem":"many-to-one converse is not a strict inverse and same-use reciprocal return requires exact occurrence provenance","artifact":"formal/InquiryCalculus/Legacy/V20/StaticPairDiscipline.lean","status":"proved"},
+    {"scope":"predecessor finite transition boundary only","theorem":"answer-conditioned readiness crossing does not resolve its continuation and overlapping route labels erase before runtime","artifact":"formal/InquiryCalculus/Legacy/V20/AnswerConditionedUnlock.lean","status":"proved"},
     {"scope":"predecessor deterministic-signature analogue only","theorem":"exact image factorization is equivalent to signature-kernel inclusion","artifact":"formal/InquiryCalculus/Legacy/V20/ExactDeterminationSignature.lean","status":"proved"},
     {"scope":"predecessor finite quotient countermodels only","theorem":"consequence sufficiency does not imply coarsest characterization","artifact":"formal/InquiryCalculus/Legacy/V20/ExactRepresentationQuotient.lean","status":"proved"}
   ],
@@ -180,11 +181,12 @@
     "same normalized question can differ in occurrence productivity",
     "Orient variants do not form two roots and converse is not inverse",
     "two operational names may share one root shape, so wording does not establish a distinct semantic operation",
-    "a many-to-one converse has a plural reverse fiber and no strict inverse; generic backward presentation lacks same-use reciprocal provenance"
+    "a many-to-one converse has a plural reverse fiber and no strict inverse; generic backward presentation lacks same-use reciprocal provenance",
+    "an already-ready stalled wrong-contract or wrong-continuation step does not unlock; a route label cannot supply authority or alter execution"
   ],
   "unresolved_typed_obligations": ["IC-THM-C-007","IC-THM-C-008","IC-THM-C-009","IC-THM-C-010","IC-THM-C-011","IC-THM-C-012","IC-THM-E-004","IC-THM-H-006","IC-THM-H-007","IC-THM-H-008"],
   "current_strongest_formal_frontier": {
-    "id": "FORMAL-B-ANSWER-CONDITIONED-UNLOCK",
+    "id": "FORMAL-B-ROOT-FRONTIER",
     "authority": "IMPLEMENTATION_FRONTIER.md",
     "duplication_status": "checked synchronized projection only"
   },
